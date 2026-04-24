@@ -1,0 +1,12 @@
+{
+  "name": "unified-skills",
+  "version": "1.0.0",
+  "description": "统一技能套件 — 宪法 + 30 技能 + 6 命令，按阶段加载的开发技能集",
+  "author": "ZeroZ-lab",
+  "license": "MIT",
+  "keywords": ["skills", "claude-code", "ai-agent", "development-workflow"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZeroZ-lab/unified-skills"
+  }
+}
