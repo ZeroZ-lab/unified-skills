@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.8.0] - 2026-04-25
+
+### Added
+- Plan workflow: `02-plan.md` can now act as a controller plan with `plans/*.md` subplans for large or parallel work
+- Plan template: added Plan Topology, Subplans, Parallel Execution Matrix, Integration Order, and subplan contract template
+- validate: added checks for the multi-plan parallel contract
+
+### Changed
+- `skills/` is now the real tracked skill source directory instead of symlinks into `.agents/skills/`
+- README/AGENTS/CLAUDE document `plans/*.md` as optional `/plan` outputs for large or parallel tasks
+
+### Fixed
+- hooks/freeze.sh: replaced regex path boundary checks with normalized path containment checks and JSON-safe output
+- hooks/careful.sh: improved safe generated-directory deletion detection for common build/cache paths
+- hooks/hooks.json: quoted plugin hook paths so plugin roots with spaces work correctly
+- validate: tightened placeholder scanning to avoid false positives on normal Chinese prose
+
 ## [1.7.0] - 2026-04-24
 
 ### Added
