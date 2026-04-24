@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.0] - 2026-04-24
+
+### Added
+- Codex CLI 包装器: save、restore、learn 三个 SKILL.md（$save / $restore / $learn）
+
+### Fixed
+- commands/save.md、restore.md、learn.md: 新增 YAML frontmatter（description + cuando 触发条件）
+- commands/refine.md: 补充 define-workflow-spec 后续路径说明
+- .agents/skills/refine/SKILL.md: 补充 define-workflow-spec 后续路径说明
+- load-manifest.json: code-review taskType 关键词收紧 — 移除裸 "review" 避免误触发
+- hooks/hooks.json: 修复 PreToolUse 注册缺失（careful.sh 和 freeze.sh 之前从未执行）
+- hooks/careful.sh: 重写安全目录旁路逻辑（从命令文本匹配改为目标路径匹配）+ 扩展破坏性模式检测
+
 ## [1.6.1] - 2026-04-24
 
 ### Fixed

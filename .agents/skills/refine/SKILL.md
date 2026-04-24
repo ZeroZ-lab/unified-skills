@@ -17,6 +17,10 @@ description: 模糊想法收敛 → 规范 spec + External Scan + 多角色 idea
 6. 明确 `artifact_type`: software / document / article / deck / visual，默认 software
 7. 产出 `docs/features/<name>/01-spec.md`
 
+## 后续
+
+想法收敛后，可继续 `$plan`，或先用 `define-workflow-spec` 编写更详细的 spec。
+
 ## External Scan
 
 External Scan 是 Unified 原生流程，不引用 gstack 或任何特定第三方技能。使用当前宿主可用的 WebSearch、browser、文档检索或用户提供资料；工具不可用时记录 unavailable 并继续。

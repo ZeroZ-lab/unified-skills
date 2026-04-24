@@ -130,7 +130,7 @@ unified/
 ├── commands/            8 命令入口（Claude Code 斜杠命令）
 ├── .agents/skills/       5 命令入口（Codex CLI skill 命令）
 ├── agents/              15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
-├── templates/           7 文档模板
+├── templates/           6 文档模板
 └── docs/                设计文档
 ```
 

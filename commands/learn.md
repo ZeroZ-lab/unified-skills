@@ -1,3 +1,6 @@
+---
+description: 跨 session 学习记录管理。使用 cuando 需要记录模式、陷阱、偏好或架构洞察时
+---
 # /learn — 跨 session 学习
 
 加载技能：`maintain-workflow-learn`

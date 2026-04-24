@@ -128,7 +128,7 @@
     "code-review": {
       "description": "代码审查、PR review",
       "detect": {
-        "anyKeywords": ["review", "审查", "code review", "PR review", "PR审查", "代码审查"]
+        "anyKeywords": ["code review", "审查", "PR review", "PR审查", "代码审查"]
       },
       "skills": ["verify-workflow-review"]
     },
