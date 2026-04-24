@@ -1,0 +1,13 @@
+{
+  "name": "unified-skills",
+  "description": "统一开发技能套件 — 宪法 + 30 技能 + 5 命令",
+  "homepage": "https://github.com/ZeroZ-lab/unified-skills",
+  "plugins": [
+    {
+      "name": "unified",
+      "description": "统一开发技能套件 — 宪法 + 30 技能 + 5 命令，按阶段加载",
+      "homepage": "https://github.com/ZeroZ-lab/unified-skills",
+      "source": "."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -u
+
+status=0
+
+fail() {
+  printf 'FAIL: %s\n' "$1"
+  status=1
+}
+
+require_cmd() {
+  command -v "$1" >/dev/null 2>&1 || fail "缺少命令: $1"
+}
+
+require_cmd rg
+require_cmd find
+
+printf '== 检查占位符 ==\n'
+placeholder_output=$(rg -n 'STUB|PLACEHOLDER|待补充|未完成' skills commands agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
+if [ -n "$placeholder_output" ]; then
+  printf '%s\n' "$placeholder_output"
+  fail '发现占位符标记'
+else
+  printf '通过\n'
+fi
+
+printf '\n== 检查技能命名 ==\n'
+while IFS= read -r file; do
+  dir=$(basename "$(dirname "$file")")
+  case "$dir" in
+    define-*|build-*|verify-*|ship-*|maintain-*|reflect-*) ;;
+    *) fail "命名违规: $dir" ;;
+  esac
+done < <(find skills -name 'SKILL.md' | sort)
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查技能核心章节 ==\n'
+while IFS= read -r file; do
+  rg -q '^## .*入口/出口' "$file" || fail "缺少入口/出口章节: $file"
+  rg -q '^## .*常见说辞' "$file" || fail "缺少常见说辞章节: $file"
+  rg -q '^## .*红旗' "$file" || fail "缺少红旗章节: $file"
+  rg -q '^## .*验证清单' "$file" || fail "缺少验证清单章节: $file"
+done < <(find skills -name 'SKILL.md' | sort)
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查强纪律技能 Iron Law ==\n'
+for file in \
+  skills/build-quality-tdd/SKILL.md \
+  skills/verify-workflow-debug/SKILL.md \
+  skills/verify-workflow-review/SKILL.md \
+  skills/ship-workflow-ship/SKILL.md
+do
+  rg -q '^## Iron Law' "$file" || fail "缺少 Iron Law: $file"
+done
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 技能行数统计 ==\n'
+find skills -name 'SKILL.md' -exec wc -l {} + | sort -n
+
+exit "$status"
