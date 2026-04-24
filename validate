@@ -16,7 +16,7 @@ require_cmd rg
 require_cmd find
 
 printf '== 检查占位符 ==\n'
-placeholder_output=$(rg -n 'STUB|PLACEHOLDER|待补充|未完成' skills commands agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
+placeholder_output=$(rg -n 'STUB|PLACEHOLDER|待补充|未完成' skills commands .agents/skills agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
 if [ -n "$placeholder_output" ]; then
   printf '%s\n' "$placeholder_output"
   fail '发现占位符标记'
@@ -41,6 +41,25 @@ while IFS= read -r file; do
   rg -q '^## .*红旗' "$file" || fail "缺少红旗章节: $file"
   rg -q '^## .*验证清单' "$file" || fail "缺少验证清单章节: $file"
 done < <(find skills -name 'SKILL.md' | sort)
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查 Codex 命令包装技能 ==\n'
+while IFS= read -r file; do
+  rg -q '^name: ' "$file" || fail "缺少 name frontmatter: $file"
+  rg -q '^description: ' "$file" || fail "缺少 description frontmatter: $file"
+  rg -q '^# ' "$file" || fail "缺少标题: $file"
+  rg -q '^## 流程' "$file" || fail "缺少流程章节: $file"
+  rg -q '加载 `.*SKILL\.md`' "$file" || fail "未声明加载的核心技能: $file"
+done < <(find .agents/skills -name 'SKILL.md' | sort)
+
+if rg -n '第 9 条（Every Feature Leaves a Trace|CANON\.md 9 条|9 条不可变|宪法的 9 条|Use AskUserQuestion, Never Plain Text|禁止.*纯文本' \
+  CANON.md README.md CLAUDE.md AGENTS.md .agents/skills skills docs >/tmp/unified-validate-stale-canon.$$ 2>/dev/null; then
+  cat /tmp/unified-validate-stale-canon.$$
+  rm -f /tmp/unified-validate-stale-canon.$$
+  fail '发现过期宪法编号或不可移植提问规则'
+else
+  rm -f /tmp/unified-validate-stale-canon.$$
+fi
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查强纪律技能 Iron Law ==\n'

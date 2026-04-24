@@ -346,5 +346,5 @@ unified/
     ├── design-document.md
     └── directory-architecture.md
 
-总计: 3 根文件 + 30 技能（30 SKILL.md） + 5 命令 + 4 agent + 7 模板 + 2 设计文档 = 51 文件
+核心资产: 3 根文件 + 30 技能（30 SKILL.md） + 5 命令 + 3 并行审查角色 + 7 模板 + 2 设计文档。平台包装入口（如 `.agents/skills/`）单独计数，避免安装目标变化导致统计漂移。
 ```

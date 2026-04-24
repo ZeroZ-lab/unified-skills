@@ -60,7 +60,7 @@ Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$p
 | agent-skills 流程详细但缺少纪律约束 | 每技能加 Iron Law + 红旗表 |
 | superpowers 纪律强但不教怎么做 | 每技能保留完整执行步骤 + 代码示例 |
 | gstack 编排强但技能间互相不知对方存在 | 统一命名规范 + 入口/出口/指向 链接链 |
-| 三个集合的术语和哲学不一致 | CANON.md 9 条宪法是所有技能的单一真相源 |
+| 三个集合的术语和哲学不一致 | CANON.md 10 条宪法是所有技能的单一真相源 |
 
 **Unified 不追求比三个源更"多"，而是追求更"一致"。** 30 个技能共享同一套宪法、同一套命名、同一套文档模板、同一套验证标准。
 
@@ -90,7 +90,7 @@ Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/buil
 
 ## 宪法
 
-[CANON.md](CANON.md) — 9 条不可变纪律，所有技能自动引用。技能可以增加纪律，不能放松宪法条款。
+[CANON.md](CANON.md) — 10 条不可变纪律，所有技能自动引用。技能可以增加纪律，不能放松宪法条款。
 
 1. **Surface Assumptions** — 实现非平凡任务前陈述假设
 2. **Simple First** — 三个相似代码行 > 一个过早抽象
@@ -100,7 +100,8 @@ Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/buil
 6. **4-Phase Debugging** — 根因在前，修复在后。3 次修复失败 → 质疑架构
 7. **Push Back** — 不做 yes-machine。有具体问题直说，量化影响
 8. **Manage Confusion** — 遇到矛盾 → STOP → 命名困惑 → 等待解决
-9. **Every Feature Leaves a Trace** — 完整档案：spec + plan + ADR + review + ship
+9. **Structured Questions With Portable Fallback** — 需要输入时优先结构化提问；工具不可用时单问题纯文本降级
+10. **Every Feature Leaves a Trace** — 完整档案：spec + plan + ADR + review + ship
 
 ## 项目结构
 
@@ -149,7 +150,7 @@ docs/bugs/<name>/
 2. 用 `templates/feature/` 下的模板作为起点
 3. 遵循命名规范：`<phase>-<role>-<skill>/SKILL.md`
 4. 确保技能包含：入口/出口条件、流程步骤、常见说辞表、红旗清单、验证清单
-5. 跑 `./validate` 检查占位符残留和命名违规
+5. 跑 `./validate` 检查占位符残留、命名规范、核心章节、命令包装入口和强纪律技能
 6. 新增技能链接到本 README 的总览表
 
 **不能做的事：** 添加无操作流程的"空泛建议"、仅服务特定领域的技能（这类放独立插件）、重复其他技能的内容、放松宪法条款。

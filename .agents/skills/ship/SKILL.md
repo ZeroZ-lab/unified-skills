@@ -17,4 +17,4 @@ description: 发布检查 + Go/No-Go + 回滚计划。使用 cuando 功能代码
 
 ## 同时加载
 
-- `CANON.md` — 宪法第 9 条（Every Feature Leaves a Trace）
+- `CANON.md` — 宪法第 10 条（Every Feature Leaves a Trace）

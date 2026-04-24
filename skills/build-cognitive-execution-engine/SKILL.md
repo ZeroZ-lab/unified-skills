@@ -92,7 +92,7 @@ Phase 3: 分派 Code Quality Reviewer subagent（五轴审查）
 - Spec Reviewer **不信任 Implementer 的报告** — 独立验证
 - Code Quality Reviewer **必须等到 spec 合规确认后才开始** — 绝不提前审查不合规的代码
 - **严禁**并行分派 Implementer → 并行实现产生合并冲突
-- 两个审查 agent 可以并行分派（spec 审查 + 质量审查同时进行）
+- 审查阶段串行门控：先 Spec Reviewer，只有 `SPEC_MATCH` 后才分派 Code Quality Reviewer
 
 ## Subagent 模型选择
 
