@@ -106,6 +106,18 @@ for type in software document article deck visual; do
 done
 [ "$status" -eq 0 ] && printf '通过（跳过已删除技能检查，当前处于迁移中）\n'
 
+printf '\n== 检查多计划并行契约 ==\n'
+for pattern in 'Plan Topology' 'Subplans' 'Parallel Safety'; do
+  sgrep "$pattern" skills/build-workflow-plan/SKILL.md || fail "plan 技能缺少 $pattern"
+done
+for pattern in 'plans/' 'Parallel Execution Matrix' 'Write Scope'; do
+  sgrep "$pattern" templates/feature/02-plan.md || fail "plan 模板缺少 $pattern"
+done
+sgrep 'plans/\*\.md' README.md || fail "README 缺少 plans/*.md 文档产出链"
+sgrep 'plans/\*\.md' AGENTS.md || fail "AGENTS 缺少 plans/*.md 文档产出链"
+sgrep 'plans/\*\.md' CLAUDE.md || fail "CLAUDE 缺少 plans/*.md 文档产出链"
+[ "$status" -eq 0 ] && printf '通过\n'
+
 printf '\n== 检查 refine External Scan ==\n'
 sgrep 'Phase 1\.4：External Scan' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 Phase 1.4 External Scan"
 sgrep 'Fact / Pattern / Inference / Unknown / Adopt / Reject' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 External Scan 分层契约"

@@ -88,6 +88,7 @@ reflect/   → retro（回顾）、documentation（文档）
 docs/features/<name>/
 ├── 01-spec.md              ← /refine
 ├── 02-plan.md              ← /plan
+├── plans/*.md              ← /plan（大型/并行任务的子计划）
 ├── adr/<num>.md            ← /build（决策时）
 ├── review.md               ← /review
 ├── ship.md                 ← /ship

@@ -12,10 +12,12 @@ description: 任务分解与计划。使用 cuando spec 已批准、需要将需
 1. 读取 `docs/features/<name>/01-spec.md`
 2. 读取 `artifact_type`，按软件、文档、文章、PPT 或视觉稿选择任务拆分方式
 3. 加载 `build-workflow-plan/SKILL.md` 执行只读分析 + 依赖图 + 垂直切片拆分
-4. 自审通过后，**并行分派 Plan Review Army**（CEO + Eng + Design + Security 四视角审查）
-5. 合并审查反馈，修改 plan
-6. 产出 `docs/features/<name>/02-plan.md`，附审查摘要
-7. 用户批准后建议 `$build`
+4. 判断 Plan Topology：`serial` / `parallel` / `gated-parallel`
+5. 小型任务只产出 `docs/features/<name>/02-plan.md`
+6. 大型/并行任务额外产出 `docs/features/<name>/plans/*.md` 子计划，并在总计划写明 Write Scope、Dependencies、Parallel Safety、Integration Order
+7. 自审通过后，**并行分派 Plan Review Army**（CEO + Eng + Design + Security 四视角审查）
+8. 合并审查反馈，修改 plan
+9. 用户批准后建议 `$build`
 
 ## Plan Review Army
 
