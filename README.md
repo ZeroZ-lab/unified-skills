@@ -80,6 +80,8 @@ Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/buil
 
 多产物扩展技能采用角色化方法论：先定义角色责任、长期原则和决策框架，再给出流程和验证证据；它们不是工具清单。
 
+`/refine` 使用 Unified 原生 External Scan：按 `artifact_type` 搜索已有方案、事实来源、设计/技术模式，并把结果分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject，再交给 Idea Scout Army 审查。
+
 ## 工作流
 
 ```

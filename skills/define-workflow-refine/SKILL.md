@@ -21,7 +21,7 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 **在用户批准设计之前，禁止调用任何实现技能、写任何代码、创建任何项目脚手架。**
 无论你认为功能多简单，这个门不跳过。"简单"正是最多未检查假设导致返工的地方。
 
-## 流程：3 阶段
+## 流程：3 阶段 + 外部扫描
 
 ### Phase 1 理解与探索（发散）
 
@@ -40,18 +40,67 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 5. **约束** — 时间、技术、资源、格式、品牌或导出限制？
 6. **上下文** — 之前有人试过吗？现有代码或素材里有什么相关？
 
-**Step 1.4（可选）：Visual Companion**
+### Phase 1.4：External Scan（外部扫描）
+
+在提出方案和分派 scout 前，先判断是否需要搜索外部世界。External Scan 是 Unified 原生流程，不依赖任何特定第三方技能；使用当前宿主可用的 WebSearch、browser、文档检索或用户提供资料。工具不可用时，明确记录"Search unavailable"，只基于本地上下文和内置知识继续。
+
+**默认执行条件：**
+- 中大型功能、用户可见功能、市场/竞品/内容/视觉/技术方案不确定
+- 用户问"有没有已有方案"、"别人怎么做"、"参考什么"
+- `artifact_type` 为 `document` / `article` / `deck` / `visual`
+- `software` 需求引入新框架、新库、新架构模式、AI/浏览器/支付/认证等外部依赖
+
+**跳过条件：**
+- 单文件修复、纯配置、拼写/文案小改
+- 用户明确禁止联网或外部搜索
+- 已有 spec/素材已经给出足够外部依据
+
+**按 artifact_type 搜索：**
+
+| artifact_type | 搜索目标 |
+|---------------|----------|
+| `software` | 竞品功能、现有库/框架能力、技术最佳实践、已知坑 |
+| `document` / `article` | 目标读者、同类文章/报告结构、事实来源、写作范式 |
+| `deck` | 同类演示结构、叙事模式、页面信息密度、数据表达方式 |
+| `visual` | 竞品视觉、品牌/媒介规范、布局模式、可读性要求 |
+
+**输出必须分层：**
+
+分层契约固定为：Fact / Pattern / Inference / Unknown / Adopt / Reject。
+
+```markdown
+## External Scan
+- Search status: completed / skipped / unavailable
+- Sources:
+  - [source] — why relevant
+- Fact:
+  - 有来源支撑的事实
+- Pattern:
+  - 多个来源重复出现的做法
+- Inference:
+  - 基于事实和模式得出的推断
+- Unknown:
+  - 仍需用户确认的问题
+- Adopt:
+  - 采纳什么，以及为什么
+- Reject:
+  - 不采纳什么，以及为什么
+```
+
+搜索结果不能直接变成需求。只有进入 `Adopt` 且和用户目标、约束、artifact_type 一致的内容，才能进入方案或 spec。进入 `Reject` 的内容要写明原因，防止后续反复膨胀 scope。
+
+**Step 1.5（可选）：Visual Companion**
 如果涉及 UI mockup、流程图、布局对比等视觉内容，**单独发送一条消息**询问：
 > "有些内容用浏览器展示更清楚，我可以打开 browser 做 mockup 和可视化方案对比。要试一下吗？"
 
 这条消息不混合澄清问题或其他内容。用户同意后再用 browser 展示。
 
-### Phase 1.5：Idea Scout Army（想法侦察军团）
+### Phase 1.6：Idea Scout Army（想法侦察军团）
 
-Phase 1 完成用户澄清后，在提出方案前，**并行分派** 3 个 scout 验证 idea 的可行性：
+Phase 1 完成用户澄清和 External Scan 后，在提出方案前，**并行分派** scout 验证 idea 的可行性：
 
 ```
-Idea draft (after Phase 1 clarification)
+Idea draft (clarification + External Scan + local context)
     │
     ├── agents/refine-ceo-scout.md     → CEO 视角: 问题验证、方案杠杆、优先级、成功标准
     ├── agents/refine-eng-scout.md     → Eng 视角: 可行性、规模估算、依赖、替代方案
@@ -61,7 +110,34 @@ Idea draft (after Phase 1 clarification)
     收集反馈 → 分级合并 → 修正假设 → 进入 Phase 2
 ```
 
-每个 scout 输出 Blocking / Important / Suggestion 三级反馈。
+**Scout 输入必须包含：**
+- 用户澄清结果
+- `artifact_type`
+- External Scan 摘要（含 Adopt / Reject / Unknown）
+- 当前项目上下文
+- 明确的"不做/待确认"边界
+
+**Scout 输出必须使用统一结构：**
+
+```markdown
+## Verdict
+Blocking / Important / Suggestion
+
+## Evidence Used
+- local:
+- external:
+- inferred:
+
+## Findings
+- [Blocking] ...
+- [Important] ...
+- [Suggestion] ...
+
+## Spec Impact
+- adopt:
+- reject:
+- ask user:
+```
 
 **反馈处理规则：**
 - **Blocking** — 必须解决（如：问题假设被推翻、技术上不可行），修正后重新验证
@@ -75,7 +151,7 @@ Idea draft (after Phase 1 clarification)
 
 ### Phase 2 方案与收敛
 
-基于 Phase 1 用户输入和 Phase 1.5 Scout Army 反馈，提出 **2-3 种方案**，每种包含优点、代价、推荐理由：
+基于 Phase 1 用户输入、Phase 1.4 External Scan 和 Phase 1.6 Scout Army 反馈，提出 **2-3 种方案**，每种包含优点、代价、推荐理由：
 
 ```
 方案 A: [主推] — [一句话说明]
@@ -116,6 +192,23 @@ Idea draft (after Phase 1 clarification)
 artifact_type: software
 
 Allowed: software / document / article / deck / visual
+
+## External References
+- Search status: completed / skipped / unavailable
+- Fact:
+- Pattern:
+- Inference:
+- Unknown:
+- Adopt:
+- Reject:
+
+## Scout Review Summary
+- CEO:
+- Eng:
+- Design:
+- Blocking resolved:
+- Important adopted:
+- Suggestions deferred:
 
 ## 核心假设（待验证）
 - [ ] 假设 1 — 如何验证
@@ -165,6 +258,10 @@ Allowed: software / document / article / deck / visual
 
 - [ ] 清晰的"为谁、解决什么问题"已定义
 - [ ] artifact_type 已明确；未明确时按 software 处理
+- [ ] External Scan 已完成、跳过或标记不可用，并记录原因
+- [ ] 搜索结果已区分 Fact / Pattern / Inference / Unknown
+- [ ] Adopt / Reject 已写入，不把外部资料直接变成 scope
+- [ ] 必要 scout 已读取用户澄清、artifact_type、External Scan 和本地上下文
 - [ ] 探索了多个方向，不是只有第一个想法
 - [ ] 隐藏假设已列出（含验证方案）
 - [ ] "不做清单"让 trade-off 明确

@@ -80,6 +80,26 @@ for file in templates/feature/01-spec.md templates/feature/02-plan.md skills/def
   rg -q 'artifact_type' "$file" || fail "缺少 artifact_type 说明: $file"
 done
 
+printf '\n== 检查 refine External Scan ==\n'
+rg -q 'Phase 1\.4：External Scan' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 Phase 1.4 External Scan"
+rg -q 'Fact / Pattern / Inference / Unknown / Adopt / Reject' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 External Scan 分层契约"
+rg -q '^## External References' templates/feature/01-spec.md || fail "spec 模板缺少 External References"
+rg -q '^## Scout Review Summary' templates/feature/01-spec.md || fail "spec 模板缺少 Scout Review Summary"
+
+for file in agents/refine-ceo-scout.md agents/refine-eng-scout.md agents/refine-design-scout.md; do
+  [ -f "$file" ] || fail "缺少 refine scout agent: $file"
+  for section in "Verdict" "Evidence Used" "Findings" "Spec Impact"; do
+    rg -q "^## $section" "$file" || fail "refine scout 缺少章节 $section: $file"
+  done
+done
+
+for file in commands/refine.md .agents/skills/refine/SKILL.md; do
+  rg -q 'Phase 1\.4：External Scan' "$file" || fail "refine 入口缺少 Phase 1.4 External Scan: $file"
+  rg -q 'Phase 1\.6：Idea Scout Army' "$file" || fail "refine 入口缺少 Phase 1.6 Idea Scout Army: $file"
+  rg -q 'Fact / Pattern / Inference / Unknown / Adopt / Reject' "$file" || fail "refine 入口缺少 External Scan 分层说明: $file"
+done
+[ "$status" -eq 0 ] && printf '通过\n'
+
 for file in README.md CLAUDE.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do
   rg -q '35 技能|35 SKILL' "$file" || fail "缺少 35 技能说明: $file"
 done

@@ -11,6 +11,29 @@
 ## 选定方案
 [架构概览、核心思路，约 200 字]
 
+## External References
+- Search status: completed / skipped / unavailable
+- Fact:
+  - <有来源支撑的事实>
+- Pattern:
+  - <多个来源重复出现的模式>
+- Inference:
+  - <基于事实和模式得出的推断>
+- Unknown:
+  - <仍需用户确认的问题>
+- Adopt:
+  - <采纳什么，以及为什么>
+- Reject:
+  - <不采纳什么，以及为什么>
+
+## Scout Review Summary
+- CEO:
+- Eng:
+- Design:
+- Blocking resolved:
+- Important adopted:
+- Suggestions deferred:
+
 ## 未选择的方案
 - 方案 A: <描述> → 放弃原因
 - 方案 B: <描述> → 放弃原因

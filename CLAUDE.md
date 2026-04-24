@@ -94,6 +94,8 @@ spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `doc
 
 多产物扩展技能采用角色化方法论：先定义角色责任、长期原则和决策框架，再给出流程和验证证据；它们不是工具清单。
 
+`/refine` 使用 Unified 原生 External Scan：按 `artifact_type` 搜索已有方案、事实来源、设计/技术模式，并把结果分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject，再交给 Idea Scout Army 审查。
+
 ## 约定
 
 ### 命名规范
