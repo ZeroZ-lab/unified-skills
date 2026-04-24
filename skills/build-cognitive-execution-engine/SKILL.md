@@ -5,7 +5,6 @@ description: 任务执行引擎——选择正确的执行模式。使用 cuando
 
 # 执行引擎 — 3 种执行模式
 
-> 来源: superpowers subagent-driven-development + dispatching-parallel-agents + gstack review-army | 宪法: 第 2（Simple First）、3（Scope Discipline）、5（Verify Don't Assume）条
 
 ## 入口/出口
 - **入口**: `build-workflow-plan` 完成，任务列表已就绪

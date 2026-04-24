@@ -5,7 +5,6 @@ description: 文档工程——记录决策、API、代码约定。使用 cuando
 
 # Documentation — 文档工程
 
-> 来源: agent-skills documentation-and-adrs | 宪法: 第 9 条（Every Feature Leaves a Trace）
 
 ## 入口/出口
 - **入口**: 功能完成、架构决策做出、API 新增/修改、项目约定发现

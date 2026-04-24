@@ -5,7 +5,6 @@ description: 集成测试——验证组件间交互和边界契约。使用 cua
 
 # Integration Testing — 集成测试
 
-> 来源: agent-skills testing-patterns + superpowers TDD test pyramid | 宪法: 第 5 条（Verify Don't Assume）
 
 ## 入口/出口
 - **入口**: 单元测试覆盖了单组件逻辑，需要验证组件间交互

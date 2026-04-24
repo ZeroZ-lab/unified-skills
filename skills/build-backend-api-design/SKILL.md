@@ -5,7 +5,6 @@ description: API 和接口设计——稳定合约、清晰边界。使用 cuand
 
 # API Design — 接口与合约设计
 
-> 来源: agent-skills api-and-interface-design | 宪法: 第 2（Simple First）、8（Manage Confusion）条
 
 ## 入口/出口
 - **入口**: 需要定义新 API 端点、模块接口或跨服务合约

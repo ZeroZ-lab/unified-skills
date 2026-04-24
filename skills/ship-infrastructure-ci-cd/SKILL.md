@@ -5,7 +5,6 @@ description: CI/CD 管道——自动化质量门和部署流水线。使用 cua
 
 # CI/CD — 持续集成与持续部署
 
-> 来源: agent-skills ci-cd-and-automation + gstack ship CI pipeline | 宪法: 第 5 条（Verify Don't Assume）
 
 ## 入口/出口
 - **入口**: 新项目需要 CI、现有 CI 需要修改、部署自动化配置

@@ -5,7 +5,6 @@ description: 前端 UI 工程——构建可生产、可访问、视觉精良的
 
 # UI Engineering — 前端界面工程
 
-> 来源: agent-skills frontend-ui-engineering + gstack design-review | 宪法: 第 2（Simple First）、3（Scope Discipline）条
 
 ## 入口/出口
 - **入口**: build 中需要 UI 组件或页面

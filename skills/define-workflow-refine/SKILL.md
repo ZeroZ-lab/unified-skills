@@ -5,7 +5,6 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 
 # Refine — 想法收敛
 
-> 来源: superpowers brainstorming（结构化）+ agent-skills idea-refine（轻量入口）
 > 领域: workflow | 宪法: 第 1（Surface Assumptions）、第 8（Manage Confusion）条
 
 ## 入口/出口

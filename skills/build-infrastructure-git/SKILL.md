@@ -5,7 +5,6 @@ description: 版本控制工作流——原子提交、整洁历史。使用 cua
 
 # Git — 版本控制工作流
 
-> 来源: agent-skills git-workflow-and-versioning + superpowers using-git-worktrees | 宪法: 第 3（Scope Discipline）、9（Every Feature Leaves a Trace）条
 
 ## 入口/出口
 - **入口**: build 过程中需要提交代码或创建分支

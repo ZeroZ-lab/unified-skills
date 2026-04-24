@@ -5,7 +5,6 @@ description: 可访问性保障——WCAG 2.1 AA 合规。使用 cuando 构建 U
 
 # Accessibility — 可访问性保障
 
-> 来源: agent-skills accessibility-checklist + frontend-ui-engineering WCAG section | 宪法: 第 5 条（Verify Don't Assume）
 
 ## 入口/出口
 - **入口**: 构建 UI 组件、表单、导航、或交互元素

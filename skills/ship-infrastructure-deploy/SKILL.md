@@ -5,7 +5,6 @@ description: 部署管理——安全、可逆、可观测的上线。使用 cua
 
 # Deploy — 部署管理
 
-> 来源: agent-skills shipping-and-launch + gstack ship deploy pipeline | 宪法: 第 5 条（Verify Don't Assume）
 
 ## 入口/出口
 - **入口**: 准备上线、`/ship` 流程的部署阶段

@@ -92,7 +92,6 @@ commands/plan.md    → skills/build-workflow-plan/SKILL.md
 commands/build.md   → skills/build-workflow-execute/SKILL.md
                      + skills/build-quality-tdd/SKILL.md
                      + skills/build-cognitive-execution-engine/SKILL.md
-commands/debug.md   → skills/maintain-workflow-debug/SKILL.md
 commands/review.md  → skills/verify-workflow-review/SKILL.md
                      + agents/*（并行发散时）
 commands/ship.md    → skills/ship-workflow-ship/SKILL.md
@@ -154,6 +153,7 @@ skills/
 │
 ├── <verify>                         ← 验证阶段：质量把关
 │   ├── verify-workflow-review       → 五轴代码审查
+│   ├── verify-workflow-debug        → 4 阶段调试 + Phase 4.5 架构质疑门
 │   ├── verify-frontend-accessibility
 │   ├── verify-quality-integration-testing
 │   ├── verify-quality-performance
@@ -166,7 +166,6 @@ skills/
 │   └── ship-infrastructure-deploy   → 部署策略
 │
 ├── <maintain>                       ← 维护阶段：运维+修复
-│   ├── maintain-workflow-debug      → 4 阶段调试 + Phase 4.5 架构质疑门
 │   ├── maintain-infrastructure-observability
 │   └── maintain-team-deprecation-migration
 │
@@ -194,7 +193,7 @@ ship-workflow-ship            → ship.md + README.md（事后总结）
 ─────────────────────────────────────────────
 define-workflow-refine/SKILL.md   → templates/feature/01-spec.md
 build-workflow-plan/SKILL.md      → templates/feature/02-plan.md
-maintain-workflow-debug/SKILL.md  → templates/bug/*
+verify-workflow-debug/SKILL.md  → templates/bug/*
 verify-workflow-review/SKILL.md   → templates/feature/review.md
 ship-workflow-ship/SKILL.md       → templates/feature/ship.md
                                   + templates/feature/README.md
@@ -237,7 +236,7 @@ ship-workflow-ship/SKILL.md       → templates/feature/ship.md
 | 技能文件 | 固定文件名 | `SKILL.md` |
 | 阶段值 | kebab-case | `define`, `build`, `verify`, `ship`, `maintain`, `reflect` |
 | 角色值 | kebab-case | `workflow`, `frontend`, `backend`, `quality`, `cognitive`, `infrastructure`, `team` |
-| 命令 | kebab-case | `review.md`, `debug.md` |
+| 命令 | kebab-case | `review.md` |
 | Agent | kebab-case | `code-reviewer.md` |
 | 模板 | 数字前缀 + kebab-case | `01-spec.md`, `02-plan.md` |
 | 产出文档 | 数字前缀 + kebab-case | `01-spec.md`, `01-root-cause.md` |
@@ -289,6 +288,8 @@ unified/
 │   │
 │   ├── verify-workflow-review/
 │   │   └── SKILL.md
+│   ├── verify-workflow-debug/
+│   │   └── SKILL.md
 │   ├── verify-frontend-accessibility/
 │   │   └── SKILL.md
 │   ├── verify-quality-integration-testing/
@@ -307,8 +308,6 @@ unified/
 │   ├── ship-infrastructure-deploy/
 │   │   └── SKILL.md
 │   │
-│   ├── maintain-workflow-debug/
-│   │   └── SKILL.md
 │   ├── maintain-infrastructure-observability/
 │   │   └── SKILL.md
 │   ├── maintain-team-deprecation-migration/
@@ -323,7 +322,6 @@ unified/
 │   ├── refine.md
 │   ├── plan.md
 │   ├── build.md
-│   ├── debug.md
 │   ├── review.md
 │   └── ship.md
 │
@@ -348,5 +346,5 @@ unified/
     ├── design-document.md
     └── directory-architecture.md
 
-总计: 3 根文件 + 30 技能（30 SKILL.md） + 6 命令 + 4 agent + 7 模板 + 2 设计文档 = 52 文件
+总计: 3 根文件 + 30 技能（30 SKILL.md） + 5 命令 + 4 agent + 7 模板 + 2 设计文档 = 51 文件
 ```

@@ -1,6 +1,6 @@
 # Unified Skills
 
-> 宪法 + 30 技能 + 6 命令 = 按阶段加载的开发技能套件。
+> 宪法 + 30 技能 + 5 命令 = 按阶段加载的开发技能套件。
 
 ## 如果你是一个 AI Agent
 
@@ -34,12 +34,12 @@ unified/
 ├── skills/                  30 技能 / 6 阶段
 │   ├── define/              定义（3）
 │   ├── build/               构建（13）
-│   ├── verify/              验证（6）
+│   ├── verify/              验证（7）
 │   ├── ship/                发布（3）
-│   ├── maintain/            维护（3）
+│   ├── maintain/            维护（2）
 │   └── reflect/             复盘（2）
 │
-├── commands/                6 命令入口（每个 .md 定义命令行为）
+├── commands/                5 命令入口（每个 .md 定义命令行为）
 ├── agents/                  3 并行审查角色
 ├── templates/               7 文档模板
 └── docs/                    设计文档
@@ -54,10 +54,10 @@ build/     → plan（计划）、execute（执行）、tdd（测试驱动）、
              decision-record（决策记录）、git（版本控制）、
              ui-engineering（UI 工程）、browser-testing（浏览器测试）、
              api-design（API 设计）、database（数据库）、service-patterns（服务模式）
-verify/    → review（审查）、accessibility（无障碍）、integration-testing（集成测试）、
+verify/    → review（审查）、debug（调试）、accessibility（无障碍）、integration-testing（集成测试）、
              performance（性能）、security（安全）、code-review-standards（审查标准）
 ship/      → ship（发布）、ci-cd（持续集成部署）、deploy（部署）
-maintain/  → debug（调试）、observability（可观测性）、deprecation-migration（废弃迁移）
+maintain/  → observability（可观测性）、deprecation-migration（废弃迁移）
 reflect/   → retro（回顾）、documentation（文档）
 ```
 
@@ -68,7 +68,6 @@ reflect/   → retro（回顾）、documentation（文档）
 | `/refine` | define-workflow-refine | 规范 spec | `docs/features/<name>/01-spec.md` |
 | `/plan` | build-workflow-plan | 任务计划 | `docs/features/<name>/02-plan.md` |
 | `/build` | build-workflow-execute + build-quality-tdd + build-cognitive-execution-engine | 代码+测试+ADR | `docs/features/<name>/adr/` |
-| `/debug` | maintain-workflow-debug | 根因报告+修复 | `docs/bugs/<name>/` |
 | `/review` | verify-workflow-review | 审查报告 | `docs/features/<name>/review.md` |
 | `/ship` | ship-workflow-ship | 发布记录+README | `docs/features/<name>/ship.md` |
 
@@ -84,8 +83,8 @@ docs/features/<name>/
 └── README.md               ← /ship 后聚合
 
 docs/bugs/<name>/
-├── 01-root-cause.md        ← /debug Phase 1-3
-└── 02-fix-plan.md          ← /debug Phase 4
+├── 01-root-cause.md        ← verify-workflow-debug Phase 1-3
+└── 02-fix-plan.md          ← verify-workflow-debug Phase 4
 ```
 
 ## 约定

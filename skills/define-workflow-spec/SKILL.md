@@ -5,7 +5,6 @@ description: 从 refine 产出到结构化 spec。使用 cuando refine 完成后
 
 # Spec — 规范编写
 
-> 来源: agent-skills spec-driven-development | 宪法: 第 1（Surface Assumptions）、第 9（Every Feature Leaves a Trace）条
 
 ## 入口/出口
 - **入口**: `define-workflow-refine` 完成，用户已批准方向

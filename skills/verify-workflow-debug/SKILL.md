@@ -1,11 +1,10 @@
 ---
-name: maintain-workflow-debug
+name: verify-workflow-debug
 description: 系统化根因调试。使用 cuando 遇到 bug、测试失败或意外行为
 ---
 
 # Debug — 系统化调试
 
-> 来源: superpowers systematic-debugging + agent-skills debugging-and-error-recovery | 宪法: 第 6 条（4-Phase Debugging）
 
 ## 入口/出口
 - **入口**: Bug 报告、测试失败、意外行为、性能问题、构建失败

@@ -5,12 +5,11 @@ description: 可观测性——日志、指标、追踪三支柱。使用 cuando
 
 # Observability — 可观测性
 
-> 来源: agent-skills logging/monitoring patterns + gstack canary | 宪法: 第 5（Verify Don't Assume）、6（4-Phase Debugging）条
 
 ## 入口/出口
 - **入口**: 服务上线前、生产问题调查、监控配置
 - **出口**: 可工作的监控 Dashboard + 告警规则
-- **指向**: 上线后持续监控，异常时进入 `/debug`
+- **指向**: 上线后持续监控，异常时进入 `verify-workflow-debug`
 - **假设已加载**: CANON.md
 
 ## 三支柱

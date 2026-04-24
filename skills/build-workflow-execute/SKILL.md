@@ -5,12 +5,11 @@ description: 按计划增量实现代码。使用 cuando plan 已批准需要开
 
 # Execute — 增量实现
 
-> 来源: agent-skills incremental-implementation | 宪法: 第 2（Simple First）、第 3（Scope Discipline）、第 5（Verify Don't Assume）条
 
 ## 入口/出口
 - **入口**: 已批准 plan（`docs/features/<name>/02-plan.md`）
 - **出口**: 功能代码 + 测试 + ADR（如有决策）
-- **指向**: 完成 → `verify-workflow-review`；遇到 Bug → `maintain-workflow-debug`
+- **指向**: 完成 → `verify-workflow-review`；遇到 Bug → `verify-workflow-debug`
 - **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-cognitive-execution-engine/SKILL.md`
 
 ## 何时不使用
