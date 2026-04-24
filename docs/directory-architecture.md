@@ -77,7 +77,7 @@ skills/                        ← 容器目录
 示例：`build-quality-tdd` = "构建阶段 → 质量角色 → TDD 技能"
 
 **为什么不用嵌套目录：**
-- 35 个技能无需嵌套，每个目录名已包含完整语义
+- 43 个技能无需嵌套，每个目录名已包含完整语义
 - `/build` 命令可以 `skills/build-*` glob 加载整个阶段
 - `ls skills/` 按阶段自动分组排序（define-* → build-* → verify-* → ship-* → maintain-* → reflect-*）
 - 新增技能只需 `skills/<phase>-<role>-<skill>/SKILL.md`，不需要抉择放在哪个领域目录
@@ -293,9 +293,16 @@ unified/
 │   ├── build-infrastructure-git/
 │   │   └── SKILL.md
 │   │
+│   ├── build-content-writing/
+│   │   └── SKILL.md
+│   ├── build-content-layout/
+│   │   └── SKILL.md
+│   │
 │   ├── verify-workflow-review/
 │   │   └── SKILL.md
 │   ├── verify-workflow-debug/
+│   │   └── SKILL.md
+│   ├── verify-workflow-receiving-review/
 │   │   └── SKILL.md
 │   ├── verify-frontend-accessibility/
 │   │   └── SKILL.md
@@ -307,14 +314,34 @@ unified/
 │   │   └── SKILL.md
 │   ├── verify-team-code-review-standards/
 │   │   └── SKILL.md
+│   ├── verify-content-review/
+│   │   └── SKILL.md
+│   ├── verify-visual-review/
+│   │   └── SKILL.md
+│   ├── verify-quality-simplify/
+│   │   └── SKILL.md
 │   │
 │   ├── ship-workflow-ship/
+│   │   └── SKILL.md
+│   ├── ship-workflow-canary/
+│   │   └── SKILL.md
+│   ├── ship-workflow-land/
+│   │   └── SKILL.md
+│   ├── ship-workflow-doc-sync/
 │   │   └── SKILL.md
 │   ├── ship-infrastructure-ci-cd/
 │   │   └── SKILL.md
 │   ├── ship-infrastructure-deploy/
 │   │   └── SKILL.md
+│   ├── ship-artifact-export/
+│   │   └── SKILL.md
 │   │
+│   ├── maintain-workflow-context-save/
+│   │   └── SKILL.md
+│   ├── maintain-workflow-context-restore/
+│   │   └── SKILL.md
+│   ├── maintain-workflow-learn/
+│   │   └── SKILL.md
 │   ├── maintain-infrastructure-observability/
 │   │   └── SKILL.md
 │   ├── maintain-team-deprecation-migration/
@@ -330,13 +357,28 @@ unified/
 │   ├── plan.md
 │   ├── build.md
 │   ├── review.md
-│   └── ship.md
+│   ├── ship.md
+│   ├── save.md
+│   ├── restore.md
+│   └── learn.md
 │
 ├── agents/
 │   ├── README.md
 │   ├── code-reviewer.md
 │   ├── security-auditor.md
-│   └── test-engineer.md
+│   ├── test-engineer.md
+│   ├── plan-ceo-reviewer.md
+│   ├── plan-eng-reviewer.md
+│   ├── plan-design-reviewer.md
+│   ├── plan-security-reviewer.md
+│   ├── refine-ceo-scout.md
+│   ├── refine-eng-scout.md
+│   ├── refine-design-scout.md
+│   ├── review-accessibility-checker.md
+│   ├── ship-security-auditor.md
+│   ├── ship-performance-auditor.md
+│   ├── ship-accessibility-auditor.md
+│   └── ship-docs-auditor.md
 │
 ├── templates/
 │   ├── feature/

@@ -171,7 +171,7 @@ docs/bugs/<name>/
 A: Debug 是验证失败后的自然下一步 — 当 review 发现问题、测试失败时触发。它和 verification是紧耦合循环。Maintain 阶段留给持续运维（observability + deprecation）。
 
 **Q: 技能目录为什么不用嵌套结构（如 `skills/build/quality/tdd/`）？**
-A: 35 个技能不需要三层嵌套。扁平命名 `build-quality-tdd`、`build-content-writing` 已包含完整语义，glob 加载 `skills/build-*` 方便，ls 自动按阶段排序。
+A: 43 个技能不需要三层嵌套。扁平命名 `build-quality-tdd`、`build-content-writing` 已包含完整语义，glob 加载 `skills/build-*` 方便，ls 自动按阶段排序。
 
 **Q: Unified 和其他技能集的关系是什么？**
 A: Unified 吸取了多种工程实践精华——流程深度、纪律硬度、并行编排模式——融合为一个一致性体系。不依赖任何外部技能集。

@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.6.1] - 2026-04-24
+
+### Fixed
+- AGENTS.md: 项目结构树、技能列表、命令映射全面更新（35→43 技能，5→8 命令，缺失 9 技能补回）
+- README.md: FAQ 中 "35 个技能" → 43
+- docs/directory-architecture.md: "35 个技能无需嵌套" → 43，完整文件清单补回 14 缺失项
+- CHANGELOG.md: v1.3.0 条目中 "35 技能 + 5 命令" → 43 技能 + 8 命令
+- CLAUDE.md: load-manifest taskTypes 计数 35 → 40
+- load-manifest.json: 补回遗漏的 verify-team-code-review-standards 条目
+- validate: 错误消息文字 "35" → "43"，stale 模式新增中文括号格式和命令/模板数检测
+
 ## [1.6.0] - 2026-04-24
 
 ### Added
@@ -50,7 +61,7 @@
 ### Changed
 - validate script: `rg` dependency removed — `grep -E` fallback when ripgrep unavailable
 - README.md: removed all external skill package references (agent-skills/superpowers/gstack)
-- Updated all descriptions: "35 技能 + 5 命令 + 15 审查角色" across plugin.json, package.json, marketplace.json, CLAUDE.md, README.md
+- Updated all descriptions: "43 技能 + 8 命令 + 15 审查角色" across plugin.json, package.json, marketplace.json, CLAUDE.md, README.md
 
 ## [1.2.0] - 2026-04-24
 

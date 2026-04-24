@@ -111,7 +111,7 @@ done
 [ "$status" -eq 0 ] && printf '通过\n'
 
 for file in README.md CLAUDE.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do
-  sgrep '43 技能|43 SKILL' "$file" || fail "缺少 35 技能说明: $file"
+  sgrep '43 技能|43 SKILL' "$file" || fail "缺少 43 技能说明: $file"
 done
 
 for type in software document article deck visual; do
@@ -171,7 +171,7 @@ else
   rm -f /tmp/unified-validate-stale-canon.$$
 fi
 
-if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|构建 \| 13|verify 验证 \| [79]|ship 发布 \| [34]|维护 \| 2' \
+if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2\）|5 命令|7 模板' \
   README.md CLAUDE.md AGENTS.md docs package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-count.$$
   rm -f /tmp/unified-validate-stale-count.$$

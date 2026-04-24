@@ -278,6 +278,13 @@
         "anyKeywords": ["execution engine", "执行模式", "mode", "inline", "subagent", "parallel"]
       },
       "skills": ["build-cognitive-execution-engine"]
+    },
+    "code-review-standards": {
+      "description": "代码审查标准、审查规范、review guideline",
+      "detect": {
+        "anyKeywords": ["code review standard", "审查标准", "review guideline", "审查规范", "review standard"]
+      },
+      "skills": ["verify-team-code-review-standards"]
     }
   },
   "checkpoints": {

@@ -31,18 +31,18 @@ unified/
 ├── CANON.md                 宪法（10 条，最高优先级）
 ├── AGENTS.md                入口配置（本文件）
 │
-├── skills/                  35 技能 / 6 阶段
+├── skills/                  43 技能 / 6 阶段
 │   ├── define/              定义（3）
-│   ├── build/               构建（13）
-│   ├── verify/              验证（7）
-│   ├── ship/                发布（3）
-│   ├── maintain/            维护（2）
+│   ├── build/               构建（15）
+│   ├── verify/              验证（11）
+│   ├── ship/                发布（7）
+│   ├── maintain/            维护（5）
 │   └── reflect/             复盘（2）
 │
-├── commands/                5 命令入口（Claude Code 斜杠命令）
+├── commands/                8 命令入口（Claude Code 斜杠命令）
 ├── .agents/skills/           5 命令入口（Codex CLI skill 命令）
-├── agents/                  3 并行审查角色
-├── templates/               7 文档模板
+├── agents/                  15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
+├── templates/               6 文档模板
 └── docs/                    设计文档
 ```
 
@@ -58,9 +58,12 @@ build/     → plan（计划）、execute（执行）、tdd（测试驱动）、
              content-writing（内容写作）、content-layout（版式）
 verify/    → review（审查）、debug（调试）、accessibility（无障碍）、integration-testing（集成测试）、
              performance（性能）、security（安全）、code-review-standards（审查标准）、
-             content-review（内容审查）、visual-review（视觉审查）
-ship/      → ship（发布）、ci-cd（持续集成部署）、deploy（部署）、artifact-export（产物导出）
-maintain/  → observability（可观测性）、deprecation-migration（废弃迁移）
+             content-review（内容审查）、visual-review（视觉审查）、
+             receiving-review（接收审查反馈）、simplify（代码简化）
+ship/      → ship（发布）、ci-cd（持续集成部署）、deploy（部署）、artifact-export（产物导出）、
+             canary（金丝雀监控）、land（合并部署）、doc-sync（文档同步）
+maintain/  → observability（可观测性）、deprecation-migration（废弃迁移）、
+             context-save（保存上下文）、context-restore（恢复上下文）、learn（跨 session 学习）
 reflect/   → retro（回顾）、documentation（文档）
 ```
 
@@ -73,6 +76,9 @@ reflect/   → retro（回顾）、documentation（文档）
 | `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/<name>/adr/` |
 | `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/<name>/review.md` |
 | `/ship` | ship-workflow-ship + artifact-export（非 software） | 发布/导出记录+README | `docs/features/<name>/ship.md` |
+| `/save` | maintain-workflow-context-save | 工作上下文 checkpoint | `.claude/checkpoints/YYYYMMDD-HHMMSS-{title}.md` |
+| `/restore` | maintain-workflow-context-restore | 恢复上下文 | — |
+| `/learn` | maintain-workflow-learn | 学习记录管理 | `.claude/learnings.jsonl` |
 
 ### Codex CLI 命令
 
@@ -103,6 +109,8 @@ docs/features/<name>/
 ├── adr/<num>.md            ← /build（决策时）
 ├── review.md               ← /review
 ├── ship.md                 ← /ship
+├── canary-report.md        ← ship-workflow-canary
+├── deploy-report.md        ← ship-workflow-land
 └── README.md               ← /ship 后聚合
 
 docs/bugs/<name>/
