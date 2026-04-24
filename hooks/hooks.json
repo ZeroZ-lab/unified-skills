@@ -1,16 +1,16 @@
 [
   {
     "event": "SessionStart",
-    "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh"
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh\""
   },
   {
     "event": "PreToolUse",
     "matcher": "Bash",
-    "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/careful.sh"
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/careful.sh\""
   },
   {
     "event": "PreToolUse",
     "matcher": "Edit|Write",
-    "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/freeze.sh"
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/freeze.sh\""
   }
 ]

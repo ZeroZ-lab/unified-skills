@@ -47,20 +47,56 @@ destructive_patterns=(
   'aws s3 rm'
 )
 
-# Safe target paths (only these paths are allowed to be destroyed)
-safe_paths='node_modules|.next|dist|__pycache__|.cache|build|.turbo|coverage|.gradle|target|vendor|tmp|temp'
+# Safe generated directories that may be removed without confirmation when used
+# as rm targets. Absolute paths and parent traversal are never bypassed.
+is_safe_rm_command() {
+  python3 - "$1" <<'PY'
+import os
+import shlex
+import sys
+
+safe_roots = {
+    "node_modules", ".next", "dist", "__pycache__", ".cache", "build",
+    ".turbo", "coverage", ".gradle", "target", "vendor", "tmp", "temp",
+}
+
+try:
+    parts = shlex.split(sys.argv[1])
+except ValueError:
+    sys.exit(1)
+
+if not parts or parts[0] != "rm":
+    sys.exit(1)
+
+recursive = False
+targets = []
+for part in parts[1:]:
+    if part == "--":
+        targets.extend(parts[parts.index(part) + 1:])
+        break
+    if part.startswith("-"):
+        recursive = recursive or "r" in part or "R" in part
+        continue
+    targets.append(part)
+
+if not recursive or not targets:
+    sys.exit(1)
+
+for target in targets:
+    normalized = os.path.normpath(target)
+    if os.path.isabs(normalized) or normalized == ".." or normalized.startswith("../"):
+        sys.exit(1)
+    root = normalized.split(os.sep, 1)[0]
+    if root not in safe_roots:
+        sys.exit(1)
+
+sys.exit(0)
+PY
+}
 
 for pattern in "${destructive_patterns[@]}"; do
   if printf '%s' "$cmd" | grep -qE "$pattern"; then
-    # Check safe target: extract the path argument after rm/git etc.
-    # Only allow if the TARGET path matches a safe directory
-    target=$(printf '%s' "$cmd" | grep -oE '(rm -rf |rm -r )[^ ]+' | sed 's/^rm -[rf]* //' || true)
-    if [ -n "$target" ] && printf '%s' "$target" | grep -qE "^($safe_paths)$"; then
-      continue
-    fi
-    # Also allow if the entire command's last argument is a safe path
-    last_arg=$(printf '%s' "$cmd" | awk '{print $NF}' || true)
-    if printf '%s' "$last_arg" | grep -qE "^($safe_paths)$"; then
+    if printf '%s' "$pattern" | grep -qE '^rm -r' && is_safe_rm_command "$cmd"; then
       continue
     fi
     printf '{"permissionDecision":"ask","message":"[careful] 检测到破坏性命令: %s。确认执行？"}\n' "$pattern"

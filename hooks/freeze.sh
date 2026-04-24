@@ -29,19 +29,35 @@ if [ -z "$boundary" ]; then
   exit 0
 fi
 
-# Resolve both paths to absolute
-resolved_file=$(cd "$(dirname "$file_path")" 2>/dev/null && pwd)/$(basename "$file_path") 2>/dev/null || echo "$file_path"
-resolved_boundary=$(cd "$boundary" 2>/dev/null && pwd) || echo "$boundary"
+python3 - "$file_path" "$boundary" <<'PY'
+import json
+import os
+import sys
+from pathlib import Path
 
-# Normalize: remove trailing slashes
-resolved_file="${resolved_file%/}"
-resolved_boundary="${resolved_boundary%/}"
+file_path = sys.argv[1]
+boundary = sys.argv[2]
 
-# Check if file is within boundary
-if printf '%s' "$resolved_file" | grep -qE "^${resolved_boundary}(/|\$)"; then
-  # Inside boundary — allow
-  printf '{}\n'
-else
-  # Outside boundary — deny
-  printf '{"permissionDecision":"deny","message":"[freeze] 编辑范围被限制在 %s。文件 %s 在范围外。"}\n' "$resolved_boundary" "$resolved_file"
-fi
+resolved_file = Path(file_path).expanduser()
+if not resolved_file.is_absolute():
+    resolved_file = Path.cwd() / resolved_file
+resolved_file = resolved_file.resolve(strict=False)
+
+resolved_boundary = Path(boundary).expanduser()
+if not resolved_boundary.is_absolute():
+    resolved_boundary = Path.cwd() / resolved_boundary
+resolved_boundary = resolved_boundary.resolve(strict=False)
+
+try:
+    inside = os.path.commonpath([str(resolved_file), str(resolved_boundary)]) == str(resolved_boundary)
+except ValueError:
+    inside = False
+
+if inside:
+    print("{}")
+else:
+    print(json.dumps({
+        "permissionDecision": "deny",
+        "message": f"[freeze] 编辑范围被限制在 {resolved_boundary}。文件 {resolved_file} 在范围外。"
+    }, ensure_ascii=False))
+PY
