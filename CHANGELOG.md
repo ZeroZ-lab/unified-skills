@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0] - 2026-04-24
+
+### Changed
+- validate script: `rg` dependency removed — `grep -E` fallback when ripgrep unavailable
+- README.md: removed all external skill package references (agent-skills/superpowers/gstack)
+- Updated all descriptions: "35 技能 + 5 命令 + 15 审查角色" across plugin.json, package.json, marketplace.json, CLAUDE.md, README.md
+
 ## [1.2.0] - 2026-04-24
 
 ### Added

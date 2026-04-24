@@ -12,10 +12,20 @@ require_cmd() {
   command -v "$1" >/dev/null 2>&1 || fail "缺少命令: $1"
 }
 
-require_cmd rg
 require_cmd find
 require_cmd git
 require_cmd python3
+
+# rg 优先，不可用时降级为 grep -E
+if command -v rg >/dev/null 2>&1; then
+  # rg: 支持正则、-q 静默、-n 行号
+  sgrep() { rg -q "$@"; }
+  sgrep_n() { rg -n "$@"; }
+else
+  # grep -E: 扩展正则兼容 rg 的正则语法
+  sgrep() { grep -Eq "$@"; }
+  sgrep_n() { grep -En "$@"; }
+fi
 
 printf '== 检查版本号 ==\n'
 
@@ -56,8 +66,8 @@ else
   fi
 fi
 
-printf '== 检查占位符 ==\n'
-placeholder_output=$(rg -n 'STUB|PLACEHOLDER|待补充|未完成' skills commands .agents/skills agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
+printf '\n== 检查占位符 ==\n'
+placeholder_output=$(sgrep_n 'STUB|PLACEHOLDER|待补充|未完成' skills commands .agents/skills agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
 if [ -n "$placeholder_output" ]; then
   printf '%s\n' "$placeholder_output"
   fail '发现占位符标记'
@@ -77,35 +87,35 @@ if [ "$template_count" != "6" ]; then
 fi
 
 for file in templates/feature/01-spec.md templates/feature/02-plan.md skills/define-workflow-spec/SKILL.md README.md CLAUDE.md AGENTS.md; do
-  rg -q 'artifact_type' "$file" || fail "缺少 artifact_type 说明: $file"
+  sgrep 'artifact_type' "$file" || fail "缺少 artifact_type 说明: $file"
 done
 
 printf '\n== 检查 refine External Scan ==\n'
-rg -q 'Phase 1\.4：External Scan' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 Phase 1.4 External Scan"
-rg -q 'Fact / Pattern / Inference / Unknown / Adopt / Reject' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 External Scan 分层契约"
-rg -q '^## External References' templates/feature/01-spec.md || fail "spec 模板缺少 External References"
-rg -q '^## Scout Review Summary' templates/feature/01-spec.md || fail "spec 模板缺少 Scout Review Summary"
+sgrep 'Phase 1\.4：External Scan' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 Phase 1.4 External Scan"
+sgrep 'Fact / Pattern / Inference / Unknown / Adopt / Reject' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 External Scan 分层契约"
+sgrep '^## External References' templates/feature/01-spec.md || fail "spec 模板缺少 External References"
+sgrep '^## Scout Review Summary' templates/feature/01-spec.md || fail "spec 模板缺少 Scout Review Summary"
 
 for file in agents/refine-ceo-scout.md agents/refine-eng-scout.md agents/refine-design-scout.md; do
   [ -f "$file" ] || fail "缺少 refine scout agent: $file"
   for section in "Verdict" "Evidence Used" "Findings" "Spec Impact"; do
-    rg -q "^## $section" "$file" || fail "refine scout 缺少章节 $section: $file"
+    sgrep "^## $section" "$file" || fail "refine scout 缺少章节 $section: $file"
   done
 done
 
 for file in commands/refine.md .agents/skills/refine/SKILL.md; do
-  rg -q 'Phase 1\.4：External Scan' "$file" || fail "refine 入口缺少 Phase 1.4 External Scan: $file"
-  rg -q 'Phase 1\.6：Idea Scout Army' "$file" || fail "refine 入口缺少 Phase 1.6 Idea Scout Army: $file"
-  rg -q 'Fact / Pattern / Inference / Unknown / Adopt / Reject' "$file" || fail "refine 入口缺少 External Scan 分层说明: $file"
+  sgrep 'Phase 1\.4：External Scan' "$file" || fail "refine 入口缺少 Phase 1.4 External Scan: $file"
+  sgrep 'Phase 1\.6：Idea Scout Army' "$file" || fail "refine 入口缺少 Phase 1.6 Idea Scout Army: $file"
+  sgrep 'Fact / Pattern / Inference / Unknown / Adopt / Reject' "$file" || fail "refine 入口缺少 External Scan 分层说明: $file"
 done
 [ "$status" -eq 0 ] && printf '通过\n'
 
 for file in README.md CLAUDE.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do
-  rg -q '35 技能|35 SKILL' "$file" || fail "缺少 35 技能说明: $file"
+  sgrep '35 技能|35 SKILL' "$file" || fail "缺少 35 技能说明: $file"
 done
 
 for type in software document article deck visual; do
-  rg -q "$type" templates/feature/01-spec.md || fail "spec 模板缺少 artifact_type 取值: $type"
+  sgrep "$type" templates/feature/01-spec.md || fail "spec 模板缺少 artifact_type 取值: $type"
 done
 
 for file in \
@@ -117,7 +127,7 @@ for file in \
 do
   [ -f "$file" ] || fail "缺少多产物扩展技能: $file"
   for section in "角色定位" "核心原则" "决策框架" "反模式修复表" "好/坏示例" "验证证据"; do
-    rg -q "^## $section" "$file" || fail "多产物方法论技能缺少章节 $section: $file"
+    sgrep "^## $section" "$file" || fail "多产物方法论技能缺少章节 $section: $file"
   done
 done
 [ "$status" -eq 0 ] && printf '通过\n'
@@ -134,23 +144,25 @@ done < <(find skills -name 'SKILL.md' | sort)
 
 printf '\n== 检查技能核心章节 ==\n'
 while IFS= read -r file; do
-  rg -q '^## .*入口/出口' "$file" || fail "缺少入口/出口章节: $file"
-  rg -q '^## .*常见说辞' "$file" || fail "缺少常见说辞章节: $file"
-  rg -q '^## .*红旗' "$file" || fail "缺少红旗章节: $file"
-  rg -q '^## .*验证清单' "$file" || fail "缺少验证清单章节: $file"
+  sgrep '^## .*入口/出口' "$file" || fail "缺少入口/出口章节: $file"
+  sgrep '^## .*常见说辞' "$file" || fail "缺少常见说辞章节: $file"
+  sgrep '^## .*红旗' "$file" || fail "缺少红旗章节: $file"
+  sgrep '^## .*验证清单' "$file" || fail "缺少验证清单章节: $file"
 done < <(find skills -name 'SKILL.md' | sort)
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查 Codex 命令包装技能 ==\n'
 while IFS= read -r file; do
-  rg -q '^name: ' "$file" || fail "缺少 name frontmatter: $file"
-  rg -q '^description: ' "$file" || fail "缺少 description frontmatter: $file"
-  rg -q '^# ' "$file" || fail "缺少标题: $file"
-  rg -q '^## 流程' "$file" || fail "缺少流程章节: $file"
-  rg -q '加载 `.*SKILL\.md`' "$file" || fail "未声明加载的核心技能: $file"
+  sgrep '^name: ' "$file" || fail "缺少 name frontmatter: $file"
+  sgrep '^description: ' "$file" || fail "缺少 description frontmatter: $file"
+  sgrep '^# ' "$file" || fail "缺少标题: $file"
+  sgrep '^## 流程' "$file" || fail "缺少流程章节: $file"
+  sgrep '加载 `.*SKILL\.md`' "$file" || fail "未声明加载的核心技能: $file"
 done < <(find .agents/skills -name 'SKILL.md' | sort)
+[ "$status" -eq 0 ] && printf '通过\n'
 
-if rg -n '第 9 条（Every Feature Leaves a Trace|CANON\.md 9 条|9 条不可变|宪法的 9 条|Use AskUserQuestion, Never Plain Text|禁止.*纯文本' \
+printf '\n== 检查过期内容 ==\n'
+if sgrep_n '第 9 条（Every Feature Leaves a Trace|CANON\.md 9 条|9 条不可变|宪法的 9 条|Use AskUserQuestion, Never Plain Text|禁止.*纯文本' \
   CANON.md README.md CLAUDE.md AGENTS.md .agents/skills skills docs >/tmp/unified-validate-stale-canon.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-canon.$$
   rm -f /tmp/unified-validate-stale-canon.$$
@@ -159,7 +171,7 @@ else
   rm -f /tmp/unified-validate-stale-canon.$$
 fi
 
-if rg -n '30 技能|30 SKILL|30 个技能|构建 \| 13|verify 验证 \| 7|ship 发布 \| 3' \
+if sgrep_n '30 技能|30 SKILL|30 个技能|构建 \| 13|verify 验证 \| 7|ship 发布 \| 3' \
   README.md CLAUDE.md AGENTS.md docs package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-count.$$
   rm -f /tmp/unified-validate-stale-count.$$
@@ -168,7 +180,7 @@ else
   rm -f /tmp/unified-validate-stale-count.$$
 fi
 
-if rg -n '7 模板|templates/feature/review\.md|templates/feature/ship\.md' \
+if sgrep_n '7 模板|templates/feature/review\.md|templates/feature/ship\.md' \
   README.md CLAUDE.md AGENTS.md docs >/tmp/unified-validate-stale-template.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-template.$$
   rm -f /tmp/unified-validate-stale-template.$$
@@ -185,7 +197,7 @@ for file in \
   skills/verify-workflow-review/SKILL.md \
   skills/ship-workflow-ship/SKILL.md
 do
-  rg -q '^## Iron Law' "$file" || fail "缺少 Iron Law: $file"
+  sgrep '^## Iron Law' "$file" || fail "缺少 Iron Law: $file"
 done
 [ "$status" -eq 0 ] && printf '通过\n'
 
