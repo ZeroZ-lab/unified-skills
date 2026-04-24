@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.1] - 2026-04-25
+
+### Fixed
+- hooks/hooks.json: changed Claude hook registration from a top-level array to the required `{ "hooks": ... }` object schema
+- validate: added a hooks schema check so invalid hook registrations fail before release
+
 ## [1.8.0] - 2026-04-25
 
 ### Added

@@ -261,6 +261,37 @@ for group in ['taskTypes','checkpoints']:
   [ "$status" -eq 0 ] && printf '通过\n'
 fi
 
+printf '\n== 检查 hooks.json ==\n'
+if [ ! -f "hooks/hooks.json" ]; then
+  fail "缺少 hooks/hooks.json"
+else
+  python3 - <<'PY' || fail "hooks/hooks.json schema 无效"
+import json
+import sys
+
+data = json.load(open("hooks/hooks.json"))
+if not isinstance(data, dict):
+    raise SystemExit("top-level must be object")
+hooks = data.get("hooks")
+if not isinstance(hooks, dict):
+    raise SystemExit("missing hooks object")
+for event in ("SessionStart", "PreToolUse"):
+    entries = hooks.get(event)
+    if not isinstance(entries, list) or not entries:
+        raise SystemExit(f"missing {event} hooks")
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise SystemExit(f"{event} entry must be object")
+        nested = entry.get("hooks")
+        if not isinstance(nested, list) or not nested:
+            raise SystemExit(f"{event} entry missing nested hooks")
+        for hook in nested:
+            if hook.get("type") != "command" or not hook.get("command"):
+                raise SystemExit(f"{event} hook must be command with command string")
+PY
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
 printf '\n== 技能行数统计 ==\n'
 find skills -name 'SKILL.md' -exec wc -l {} + | sort -n
 

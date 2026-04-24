@@ -5,7 +5,7 @@
     "name": "ZeroZ-lab",
     "url": "https://github.com/ZeroZ-lab/unified-skills"
   },
-  "version": "1.8.0",
+  "version": "1.8.1",
   "homepage": "https://github.com/ZeroZ-lab/unified-skills",
   "compatibility": {
     "claude-code": ">=1.0.0",
