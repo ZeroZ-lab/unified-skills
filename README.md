@@ -78,6 +78,8 @@ Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/buil
 
 `artifact_type` 在 spec 中声明，默认 `software`。可选值：`software` / `document` / `article` / `deck` / `visual`。软件继续走 TDD、代码审查、CI/CD、部署；非软件产物按需加载内容写作、版式、内容审查、视觉审查和导出技能。
 
+多产物扩展技能采用角色化方法论：先定义角色责任、长期原则和决策框架，再给出流程和验证证据；它们不是工具清单。
+
 ## 工作流
 
 ```

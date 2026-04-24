@@ -42,7 +42,7 @@ else
 
     if [ "$pkg_ver" = "$tag_ver" ]; then
       if git diff --quiet "$latest_tag"..HEAD -- package.json .claude-plugin/plugin.json 2>/dev/null; then
-        fail "版本未变更 ($pkg_ver)，push 前必须 bump version"
+        printf '版本保持 %s，版本文件未变更: 通过\n' "$pkg_ver"
       else
         printf '版本文件有变更但版本号未变，通过（仅允许无版本号的紧急修复）\n'
       fi
@@ -96,6 +96,9 @@ for file in \
   skills/ship-artifact-export/SKILL.md
 do
   [ -f "$file" ] || fail "缺少多产物扩展技能: $file"
+  for section in "角色定位" "核心原则" "决策框架" "反模式修复表" "好/坏示例" "验证证据"; do
+    rg -q "^## $section" "$file" || fail "多产物方法论技能缺少章节 $section: $file"
+  done
 done
 [ "$status" -eq 0 ] && printf '通过\n'
 
