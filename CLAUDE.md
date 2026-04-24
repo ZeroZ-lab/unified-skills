@@ -123,6 +123,15 @@ spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `doc
 - `commands/` 下每个命令一个 `.md` 文件
 - 命令加载技能，但不重复技能内容
 
+## 技能自动加载
+
+`load-manifest.json` 定义场景级技能自动加载规则。三层分级：
+1. **defaults** — 每次任务必载（CANON.md）
+2. **taskTypes** — 关键词/正则检测 → 条件加载技能（35 个场景映射）
+3. **checkpoints** — 工作流节点触发加载（before-review、before-ship、after-review-feedback、during-debug）
+
+agent 在不确定该加载哪个技能时，读 `load-manifest.json` 做关键词匹配。
+
 ## 验证
 
 ```bash

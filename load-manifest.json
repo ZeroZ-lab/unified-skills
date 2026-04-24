@@ -1,0 +1,301 @@
+{
+  "defaults": {
+    "all-tasks": {
+      "description": "每次任务必载 — 宪法是所有技能的行为底线",
+      "skills": ["CANON.md"]
+    }
+  },
+  "taskTypes": {
+    "tdd": {
+      "description": "测试驱动开发、写测试、unit test",
+      "detect": {
+        "anyKeywords": ["test", "测试", "unit test", "tdd", "spec test", "写测试"]
+      },
+      "skills": ["build-quality-tdd"]
+    },
+    "api-design": {
+      "description": "API 设计、接口定义、REST/GraphQL",
+      "detect": {
+        "anyKeywords": ["api", "endpoint", "接口", "REST", "graphql", "openapi", "swagger"]
+      },
+      "skills": ["build-backend-api-design"]
+    },
+    "database": {
+      "description": "数据库设计、schema、migration",
+      "detect": {
+        "anyKeywords": ["db", "database", "数据库", "schema", "migration", "SQL", "table", "索引"]
+      },
+      "skills": ["build-backend-database"]
+    },
+    "service-patterns": {
+      "description": "服务模式、微服务、架构模式",
+      "detect": {
+        "anyKeywords": ["service", "微服务", "pattern", "架构模式", "service pattern", "backend pattern"]
+      },
+      "skills": ["build-backend-service-patterns"]
+    },
+    "ui-engineering": {
+      "description": "前端 UI 工程、组件开发、交互实现",
+      "detect": {
+        "anyKeywords": ["ui", "frontend", "前端", "component", "组件", "交互实现", "页面开发"]
+      },
+      "skills": ["build-frontend-ui-engineering"]
+    },
+    "browser-testing": {
+      "description": "浏览器测试、E2E、截图验证",
+      "detect": {
+        "anyKeywords": ["browser", "浏览器", "e2e", "截图", "screenshot", "devtools", "chrome"]
+      },
+      "skills": ["build-frontend-browser-testing"]
+    },
+    "git-workflow": {
+      "description": "Git 版本控制、分支、提交",
+      "detect": {
+        "anyKeywords": ["git", "commit", "branch", "merge", "版本", "版本控制", "rebase", "cherry-pick"]
+      },
+      "skills": ["build-infrastructure-git"]
+    },
+    "context-engineering": {
+      "description": "上下文工程、加载正确上下文",
+      "detect": {
+        "anyKeywords": ["context", "上下文", "load context", "加载上下文", "context engineering"]
+      },
+      "skills": ["build-cognitive-context"]
+    },
+    "source-driven": {
+      "description": "文档驱动开发、官方文档验证",
+      "detect": {
+        "anyKeywords": ["docs", "文档驱动", "official", "官方文档", "source-driven", "API docs", "SDK docs"]
+      },
+      "skills": ["build-cognitive-source-driven"]
+    },
+    "decision-record": {
+      "description": "架构决策记录、ADR",
+      "detect": {
+        "anyKeywords": ["ADR", "决策", "architecture decision", "决策记录", "decision record"]
+      },
+      "skills": ["build-cognitive-decision-record"]
+    },
+    "content-writing": {
+      "description": "内容写作、文章、PPT叙事、文档内容",
+      "detect": {
+        "anyKeywords": ["写文章", "article", "文档内容", "deck", "PPT", "presentation", "narrative", "叙事", "文案", "content writing"]
+      },
+      "skills": ["build-content-writing"]
+    },
+    "content-layout": {
+      "description": "版式设计、排版、视觉层级、信息架构",
+      "detect": {
+        "anyKeywords": ["版式", "layout", "排版", "视觉层级", "information hierarchy", "内容排版", "页面结构"]
+      },
+      "skills": ["build-content-layout"]
+    },
+    "security": {
+      "description": "安全审查、OWASP、漏洞检测",
+      "detect": {
+        "anyKeywords": ["security", "安全", "OWASP", "漏洞", "vulnerability", "XSS", "SQL injection", "CSRF", "输入验证"]
+      },
+      "skills": ["verify-quality-security"]
+    },
+    "performance": {
+      "description": "性能优化、benchmark、响应时间",
+      "detect": {
+        "anyKeywords": ["performance", "性能", "优化", "benchmark", "latency", "延迟", "N+1", "慢查询", "响应时间"]
+      },
+      "skills": ["verify-quality-performance"]
+    },
+    "accessibility": {
+      "description": "无障碍、a11y、WCAG合规",
+      "detect": {
+        "anyKeywords": ["accessibility", "无障碍", "a11y", "WCAG", "屏幕阅读器", "keyboard navigation", "alt text"]
+      },
+      "skills": ["verify-frontend-accessibility"]
+    },
+    "integration-testing": {
+      "description": "集成测试、E2E测试",
+      "detect": {
+        "anyKeywords": ["integration test", "集成测试", "e2e test", "端到端测试", "integration testing"]
+      },
+      "skills": ["verify-quality-integration-testing"]
+    },
+    "debugging": {
+      "description": "调试、bug修复、根因分析",
+      "detect": {
+        "anyKeywords": ["bug", "debug", "调试", "修复", "error", "报错", "crash", "不工作", "根因"]
+      },
+      "skills": ["verify-workflow-debug"]
+    },
+    "code-review": {
+      "description": "代码审查、PR review",
+      "detect": {
+        "anyKeywords": ["review", "审查", "code review", "PR review", "PR审查", "代码审查"]
+      },
+      "skills": ["verify-workflow-review"]
+    },
+    "content-review": {
+      "description": "内容审查、事实核查、逻辑审查",
+      "detect": {
+        "anyKeywords": ["内容审查", "fact-check", "事实核查", "逻辑审查", "content review", "文档审查", "语气审查"]
+      },
+      "skills": ["verify-content-review"]
+    },
+    "visual-review": {
+      "description": "视觉审查、排版检查、导出预览检查",
+      "detect": {
+        "anyKeywords": ["视觉审查", "visual review", "排版检查", "对齐检查", "层级检查", "导出预览"]
+      },
+      "skills": ["verify-visual-review"]
+    },
+    "receiving-review": {
+      "description": "接收审查反馈、处理 reviewer comments",
+      "detect": {
+        "anyKeywords": ["审查反馈", "reviewer feedback", "收到审查", "处理反馈", "review comment", "反驳"]
+      },
+      "skills": ["verify-workflow-receiving-review"]
+    },
+    "simplify": {
+      "description": "代码简化、重构、去冗余",
+      "detect": {
+        "anyKeywords": ["simplify", "简化", "refactor", "重构", "去冗余", "过长函数", "死代码", "过度抽象"]
+      },
+      "skills": ["verify-quality-simplify"]
+    },
+    "ci-cd": {
+      "description": "CI/CD、流水线、自动化质量门",
+      "detect": {
+        "anyKeywords": ["CI", "CD", "pipeline", "流水线", "GitHub Actions", "Jenkins", "自动化"]
+      },
+      "skills": ["ship-infrastructure-ci-cd"]
+    },
+    "deploy": {
+      "description": "部署、staging、production发布",
+      "detect": {
+        "anyKeywords": ["deploy", "部署", "staging", "production", "上线", "发布到生产", "环境部署"]
+      },
+      "skills": ["ship-infrastructure-deploy"]
+    },
+    "canary": {
+      "description": "金丝雀监控、发布后健康检查",
+      "detect": {
+        "anyKeywords": ["canary", "金丝雀", "发布后监控", "health check", "端点监控", "post-deploy monitor"]
+      },
+      "skills": ["ship-workflow-canary"]
+    },
+    "land-and-deploy": {
+      "description": "合并PR、等CI、部署到生产",
+      "detect": {
+        "anyKeywords": ["land", "merge PR", "合并部署", "deploy to prod", "PR合并"]
+      },
+      "skills": ["ship-workflow-land"]
+    },
+    "doc-sync": {
+      "description": "文档同步、CHANGELOG更新、README更新",
+      "detect": {
+        "anyKeywords": ["文档同步", "CHANGELOG", "README更新", "doc sync", "文档过时", "版本号更新"]
+      },
+      "skills": ["ship-workflow-doc-sync"]
+    },
+    "artifact-export": {
+      "description": "非软件产物导出、PDF/PPTX/DOCX交付",
+      "detect": {
+        "anyKeywords": ["导出", "export", "PDF", "PPTX", "交付物", "artifact export", "DOCX"]
+      },
+      "skills": ["ship-artifact-export"]
+    },
+    "context-save": {
+      "description": "保存工作上下文、checkpoint",
+      "detect": {
+        "anyKeywords": ["save", "保存上下文", "checkpoint", "保存进度", "session save"]
+      },
+      "skills": ["maintain-workflow-context-save"]
+    },
+    "context-restore": {
+      "description": "恢复工作上下文、继续上次工作",
+      "detect": {
+        "anyKeywords": ["restore", "恢复上下文", "继续", "resume", "恢复进度"]
+      },
+      "skills": ["maintain-workflow-context-restore"]
+    },
+    "learn": {
+      "description": "跨session学习、模式记录、陷阱记录",
+      "detect": {
+        "anyKeywords": ["learn", "学习", "模式", "pitfall", "陷阱", "偏好", "preference", "教训"]
+      },
+      "skills": ["maintain-workflow-learn"]
+    },
+    "observability": {
+      "description": "可观测性、日志、监控",
+      "detect": {
+        "anyKeywords": ["observability", "可观测", "logging", "日志", "监控", "metrics", "tracing"]
+      },
+      "skills": ["maintain-infrastructure-observability"]
+    },
+    "deprecation": {
+      "description": "废弃迁移、API版本迁移",
+      "detect": {
+        "anyKeywords": ["deprecation", "废弃", "migration", "迁移", "deprecated API", "版本迁移"]
+      },
+      "skills": ["maintain-team-deprecation-migration"]
+    },
+    "retro": {
+      "description": "回顾、复盘、retrospective",
+      "detect": {
+        "anyKeywords": ["retro", "回顾", "retrospective", "复盘", "事后总结", "post-mortem"]
+      },
+      "skills": ["reflect-team-retro"]
+    },
+    "documentation": {
+      "description": "文档撰写、ADR撰写、项目文档",
+      "detect": {
+        "anyKeywords": ["documentation", "写文档", "ADR write", "项目文档", "API文档", "贡献文档"]
+      },
+      "skills": ["reflect-team-documentation"]
+    },
+    "brainstorm": {
+      "description": "头脑风暴、发散探索",
+      "detect": {
+        "anyKeywords": ["brainstorm", "头脑风暴", "发散", "探索", "ideation", "创意"]
+      },
+      "skills": ["define-cognitive-brainstorm"]
+    },
+    "spec": {
+      "description": "规格编写、spec编写",
+      "detect": {
+        "anyKeywords": ["spec", "规格", "需求规格", "写spec", "feature spec"]
+      },
+      "skills": ["define-workflow-spec"]
+    },
+    "plan": {
+      "description": "任务计划、项目计划",
+      "detect": {
+        "anyKeywords": ["plan", "计划", "任务分解", "排期", "项目计划"]
+      },
+      "skills": ["build-workflow-plan"]
+    },
+    "execution-engine": {
+      "description": "执行引擎、Mode选择、subagent编排",
+      "detect": {
+        "anyKeywords": ["execution engine", "执行模式", "mode", "inline", "subagent", "parallel"]
+      },
+      "skills": ["build-cognitive-execution-engine"]
+    }
+  },
+  "checkpoints": {
+    "before-review": {
+      "description": "进入审查前 — 加载审查技能 + artifact_type 对应审查",
+      "skills": ["verify-workflow-review"]
+    },
+    "before-ship": {
+      "description": "进入发布前 — 加载发布技能 + artifact_type 对应导出",
+      "skills": ["ship-workflow-ship"]
+    },
+    "after-review-feedback": {
+      "description": "收到审查反馈后 — 加载接收审查反馈技能",
+      "skills": ["verify-workflow-receiving-review"]
+    },
+    "during-debug": {
+      "description": "遇到 bug — 加载调试技能",
+      "skills": ["verify-workflow-debug"]
+    }
+  }
+}

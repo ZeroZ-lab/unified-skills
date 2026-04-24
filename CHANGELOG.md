@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.0] - 2026-04-24
+
+### Added
+- load-manifest.json: 声明式技能自动加载配置 — 三层分级（defaults/taskTypes/checkpoints）
+  - defaults: 每次必载 CANON.md
+  - taskTypes: 35 个场景关键词映射到对应技能
+  - checkpoints: 4 个工作流节点触发加载（before-review/before-ship/after-review-feedback/during-debug）
+- CLAUDE.md: 新增技能自动加载说明章节
+- validate: 新增 load-manifest.json 有效性 + 技能引用检查
+
+### Learned from
+- cc-design 的 load-manifest.json 三层自动加载机制（关键词检测 + 条件加载 + checkpoint 触发）
+
 ## [1.5.0] - 2026-04-24
 
 ### Added

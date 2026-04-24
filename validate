@@ -201,6 +201,27 @@ do
 done
 [ "$status" -eq 0 ] && printf '通过\n'
 
+printf '\n== 检查 load-manifest.json ==\n'
+if [ ! -f "load-manifest.json" ]; then
+  fail "缺少 load-manifest.json"
+else
+  python3 -c "import json; json.load(open('load-manifest.json'))" 2>/dev/null || fail "load-manifest.json 不是有效 JSON"
+  # Check that every skill reference in taskTypes exists
+  while IFS= read -r skill_dir; do
+    if [ "$skill_dir" != "CANON.md" ] && [ ! -d "skills/$skill_dir" ]; then
+      fail "load-manifest.json 引用了不存在的技能目录: $skill_dir"
+    fi
+  done < <(python3 -c "
+import json
+m = json.load(open('load-manifest.json'))
+for group in ['taskTypes','checkpoints']:
+  for entry in m.get(group,{}).values():
+    for s in entry.get('skills',[]):
+      print(s)
+" 2>/dev/null)
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
 printf '\n== 技能行数统计 ==\n'
 find skills -name 'SKILL.md' -exec wc -l {} + | sort -n
 
