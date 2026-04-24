@@ -41,7 +41,7 @@ unified/
 │
 ├── commands/                5 命令入口（每个 .md 定义命令行为）
 ├── .agents/skills/           5 命令入口（Codex CLI skill 命令）
-├── agents/                  7 审查角色（3 代码 + 4 计划）
+├── agents/                  15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
 ├── templates/               7 文档模板
 └── docs/                    设计文档
 ```

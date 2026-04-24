@@ -46,9 +46,36 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 
 这条消息不混合澄清问题或其他内容。用户同意后再用 browser 展示。
 
+### Phase 1.5：Idea Scout Army（想法侦察军团）
+
+Phase 1 完成用户澄清后，在提出方案前，**并行分派** 3 个 scout 验证 idea 的可行性：
+
+```
+Idea draft (after Phase 1 clarification)
+    │
+    ├── agents/refine-ceo-scout.md     → CEO 视角: 问题验证、方案杠杆、优先级、成功标准
+    ├── agents/refine-eng-scout.md     → Eng 视角: 可行性、规模估算、依赖、替代方案
+    └── agents/refine-design-scout.md  → Design 视角: UX 方向、心智模型、关键交互、设计范围
+            │
+            ▼
+    收集反馈 → 分级合并 → 修正假设 → 进入 Phase 2
+```
+
+每个 scout 输出 Blocking / Important / Suggestion 三级反馈。
+
+**反馈处理规则：**
+- **Blocking** — 必须解决（如：问题假设被推翻、技术上不可行），修正后重新验证
+- **Important** — 强烈建议纳入方案（如：显著的杠杆点、被忽视的约束），不采纳需记录原因
+- **Suggestion** — 自主判断，采纳后标注来源
+
+**最少触发条件：**
+- 小型变更（单文件修复、纯配置）→ 可跳过 Scout Army
+- 标准功能 → 至少 CEO + Eng 双视角
+- 大型功能（涉及 UI 或有合规需求）→ 三视角全开
+
 ### Phase 2 方案与收敛
 
-提出 **2-3 种方案**，每种包含优点、代价、推荐理由：
+基于 Phase 1 用户输入和 Phase 1.5 Scout Army 反馈，提出 **2-3 种方案**，每种包含优点、代价、推荐理由：
 
 ```
 方案 A: [主推] — [一句话说明]

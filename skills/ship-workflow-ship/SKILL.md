@@ -55,12 +55,40 @@ npm run lint
 npx tsc --noEmit
 ```
 
-### Phase B：质量门（可选并行）
+### Phase B：质量门 — Ship Audit Army（发布审计军团）
 
-高风险变更可同时触发：
-- `verify-quality-security/SKILL.md` — 安全专项审查
-- `verify-quality-performance/SKILL.md` — 性能专项审查
-- `verify-frontend-accessibility/SKILL.md` — 无障碍审查
+预发检查通过后，**并行分派** 4 个 auditor 做发布前专项审计：
+
+```
+Pre-launch checks (Phase A passed)
+    │
+    ├── agents/ship-security-auditor.md      → 安全审计: OWASP、输入边界、认证授权、数据暴露、依赖
+    ├── agents/ship-performance-auditor.md   → 性能审计: 关键路径、N+1查询、内存资源、Bundle影响、退化
+    ├── agents/ship-accessibility-auditor.md → 无障碍审计: WCAG合规、屏幕阅读器、表单错误、动态内容
+    └── agents/ship-docs-auditor.md          → 文档审计: CHANGELOG、README、迁移指南、API文档、错误信息
+            │
+            ▼
+    收集审计结果 → 分级合并 → 修正 → 进入 Staging（Phase B.5）
+```
+
+每个 auditor 输出 Blocking / Important / Suggestion 三级反馈。
+
+**反馈处理规则：**
+- **Blocking** — 必须解决，不上线直到修复
+- **Important** — 强烈建议修复，不修复需在 ship 报告中记录风险接受理由
+- **Suggestion** — 自主判断，采纳后标注来源
+
+**最少触发条件：**
+- 小型变更（单文件、无安全/UI 敏感）→ 可跳过 Audit Army
+- 标准变更 → 至少 security + docs 双审计
+- 有 UI 变更 → 加 accessibility
+- 有性能敏感变更（数据处理、查询、前端 bundle）→ 加 performance
+- 用户指定 `--full` → 4 角色全开
+
+**保留向后兼容：** 高风险变更也可加载专项审查技能：
+- `verify-quality-security/SKILL.md` — 深度安全专项
+- `verify-quality-performance/SKILL.md` — 深度性能专项
+- `verify-frontend-accessibility/SKILL.md` — 深度无障碍专项
 
 ### Phase B.5：Staging 验证（强制）
 

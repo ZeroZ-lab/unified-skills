@@ -104,15 +104,30 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 当前会话中直接执行五轴审查。产出审查报告到 `docs/features/<name>/review.md`。
 
 ### 并行发散模式（高风险 --full）
-同时派发 3 个 subagent 做专业审查：
+同时派发 4 个 subagent 做专业审查：
 
 ```
 安全敏感            → + security-auditor agent
 代码质量敏感         → + code-reviewer agent
 测试覆盖需要验证     → + test-engineer agent
+无障碍合规          → + review-accessibility-checker agent
 ```
 
-触发条件：敏感数据 / >50 行变更 / >2 文件 / 用户指定 `--full`。
+触发条件：敏感数据 / >50 行变更 / >2 文件 / 有 UI 变更 / 用户指定 `--full`。
+
+**最少触发条件：**
+- 小型变更（<50 行、无安全/UI 敏感）→ 可跳过并行模式，用标准模式
+- 标准变更 → 至少 code-reviewer + test-engineer
+- 有 UI 变更 → 加 accessibility-checker
+- 安全敏感 → 加 security-auditor
+- 用户指定 `--full` → 4 角色全开
+
+每个 subagent 输出 Blocking / Important / Suggestion 三级反馈。
+
+**反馈处理规则：**
+- **Blocking** — 必须解决，合并前修复
+- **Important** — 强烈建议采纳，不采纳需在审查报告中记录原因
+- **Suggestion** — 自主判断，采纳后标注来源
 
 ## 审查标准
 

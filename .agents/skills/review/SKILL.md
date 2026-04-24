@@ -1,6 +1,6 @@
 ---
 name: review
-description: 按产物类型审查。使用 cuando 软件、文档、文章、PPT 或视觉稿完成后需要质量把关时
+description: 按产物类型审查 + 多角色并行。使用 cuando 软件、文档、文章、PPT 或视觉稿完成后需要质量把关时
 ---
 
 # Review — 产物审查
@@ -16,11 +16,12 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 5. visual 加载 `verify-visual-review/SKILL.md`
 6. 产出 `docs/features/<name>/review.md`
 
-## 高风险触发并行模式
+## 高风险触发并行模式（4 角色）
 
 - 安全敏感 → `agents/security-auditor.md`
 - 测试覆盖需验证 → `agents/test-engineer.md`
 - 代码质量敏感 → `agents/code-reviewer.md`
+- 有 UI 变更 → `agents/review-accessibility-checker.md`
 
 ## 同时加载
 
