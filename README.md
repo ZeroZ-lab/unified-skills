@@ -128,10 +128,12 @@ unified/
 │   └── reflect/         复盘（2）
 │
 ├── commands/            8 命令入口（Claude Code 斜杠命令）
-├── .agents/skills/       5 命令入口（Codex CLI skill 命令）
+├── .agents/skills/       8 命令入口（Codex CLI skill 命令）
 ├── agents/              15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
 ├── templates/           6 文档模板
-└── docs/                设计文档
+├── references/          编排模式参考文档
+├── docs/                设计文档
+├── skills-lock.json     技能完整性锁文件（SHA-256）
 ```
 
 命名规范：`<phase>-<role>-<skill>/SKILL.md`（如 `build-quality-tdd`、`build-content-writing`）。

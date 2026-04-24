@@ -13,6 +13,7 @@
 
 ## External References
 - Search status: completed / skipped / unavailable
+- Scan date: YYYY-MM-DD
 - Fact:
   - <有来源支撑的事实>
 - Pattern:

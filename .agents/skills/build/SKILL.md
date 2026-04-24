@@ -14,6 +14,7 @@ description: 增量生成软件或内容产物。使用 cuando plan 已批准、
 3. 加载 `build-workflow-execute/SKILL.md` 执行增量循环（每切片：生成/实现 → 验证 → 记录）
 4. 遇到架构决策 → 加载 `build-cognitive-decision-record/SKILL.md` 写 ADR
 5. 遇到 Bug → 加载 `verify-workflow-debug/SKILL.md`
+6. 完成 → 建议 `$review`
 
 ## 同时加载
 

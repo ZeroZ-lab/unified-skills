@@ -28,6 +28,7 @@ unified/                          ← 根目录
 ├── templates/                    ← 文档模板
 │   ├── feature/
 │   └── bug/
+├── references/                   ← 编排模式参考文档
 │
 └── docs/                         ← 项目文档
     ├── design-document.md
@@ -395,5 +396,10 @@ unified/
     ├── design-document.md
     └── directory-architecture.md
 
-核心资产: 3 根文件 + 43 技能（43 SKILL.md） + 8 命令 + 15 审查角色 + 6 模板 + 2 设计文档。平台包装入口（如 `.agents/skills/`）单独计数，避免安装目标变化导致统计漂移。
+├── references/
+│   └── orchestration-patterns.md
+│
+├── skills-lock.json             ← 技能完整性锁文件（SHA-256）
+
+核心资产: 3 根文件 + 43 技能（43 SKILL.md） + 8 命令 + 15 审查角色 + 6 模板 + 2 设计文档 + 1 参考文档 + 1 锁文件。平台包装入口（如 `.agents/skills/`）单独计数，避免安装目标变化导致统计漂移。
 ```

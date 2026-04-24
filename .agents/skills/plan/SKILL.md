@@ -15,6 +15,7 @@ description: 任务分解与计划。使用 cuando spec 已批准、需要将需
 4. 自审通过后，**并行分派 Plan Review Army**（CEO + Eng + Design + Security 四视角审查）
 5. 合并审查反馈，修改 plan
 6. 产出 `docs/features/<name>/02-plan.md`，附审查摘要
+7. 用户批准后建议 `$build`
 
 ## Plan Review Army
 
