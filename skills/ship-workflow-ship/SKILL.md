@@ -149,6 +149,13 @@ Pre-launch checks (Phase A passed)
 - 变更统计（文件数 + 行数）
 - 事后总结（功能负责人 + 观察 + 改进项）
 
+### Phase E：发布后闭环（推荐）
+
+发布完成后，建议执行发布后闭环：
+- `ship-workflow-canary` — 金丝雀监控，curl 关键端点比对基线
+- `ship-workflow-land` — 合并 PR、等 CI、验证生产环境
+- `ship-workflow-doc-sync` — 交叉引用变更，同步更新过时文档
+
 ## Feature Flag 策略
 
 ```typescript

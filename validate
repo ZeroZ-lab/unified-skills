@@ -77,8 +77,8 @@ fi
 
 printf '\n== 检查多产物扩展 ==\n'
 skill_count=$(find skills -name 'SKILL.md' | wc -l | tr -d ' ')
-if [ "$skill_count" != "35" ]; then
-  fail "技能数量应为 35，实际为 $skill_count"
+if [ "$skill_count" != "43" ]; then
+  fail "技能数量应为 43，实际为 $skill_count"
 fi
 
 template_count=$(find templates -type f | wc -l | tr -d ' ')
@@ -111,7 +111,7 @@ done
 [ "$status" -eq 0 ] && printf '通过\n'
 
 for file in README.md CLAUDE.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do
-  sgrep '35 技能|35 SKILL' "$file" || fail "缺少 35 技能说明: $file"
+  sgrep '43 技能|43 SKILL' "$file" || fail "缺少 35 技能说明: $file"
 done
 
 for type in software document article deck visual; do
@@ -171,7 +171,7 @@ else
   rm -f /tmp/unified-validate-stale-canon.$$
 fi
 
-if sgrep_n '30 技能|30 SKILL|30 个技能|构建 \| 13|verify 验证 \| 7|ship 发布 \| 3' \
+if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|构建 \| 13|verify 验证 \| [79]|ship 发布 \| [34]|维护 \| 2' \
   README.md CLAUDE.md AGENTS.md docs package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-count.$$
   rm -f /tmp/unified-validate-stale-count.$$

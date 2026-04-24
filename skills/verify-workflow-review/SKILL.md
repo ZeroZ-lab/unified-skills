@@ -240,3 +240,7 @@ DEAD CODE IDENTIFIED:
 - [ ] 构建成功
 - [ ] 验证故事已记录
 - [ ] 审查产出存到 `docs/features/<name>/review.md`
+
+## 审查反馈后处理
+
+审查完成后，实施反馈时参考 `verify-workflow-receiving-review` 技能，确保反馈被正确理解、分类和实施，而非盲目接受或无视。

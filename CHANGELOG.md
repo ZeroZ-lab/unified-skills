@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.4.0] - 2026-04-24
+
+### Added
+- Hooks system: SessionStart (inject CLAUDE.md context), careful (block destructive commands), freeze (edit scope boundary)
+- Subagent prompt templates: implementer-prompt, spec-reviewer-prompt, quality-reviewer-prompt under build-cognitive-execution-engine
+- Orchestration patterns reference document (references/orchestration-patterns.md)
+- Post-ship closure skills: ship-workflow-canary, ship-workflow-land, ship-workflow-doc-sync
+- Session persistence skills: maintain-workflow-context-save, maintain-workflow-context-restore, maintain-workflow-learn
+- Receiving review feedback skill: verify-workflow-receiving-review
+- Code simplification skill: verify-quality-simplify
+- New commands: /save, /restore, /learn
+
+### Changed
+- Skill count: 35 → 43 (verify +2, ship +3, maintain +3)
+- Command count: 5 → 8
+- ship-workflow-ship: added Phase E post-ship closure reference
+- verify-workflow-review: added receiving-review cross-reference
+- Updated all descriptions across plugin.json, package.json, marketplace.json, CLAUDE.md, README.md, AGENTS.md
+- validate: updated skill count check (35→43) and stale content patterns
+
 ## [1.3.0] - 2026-04-24
 
 ### Changed

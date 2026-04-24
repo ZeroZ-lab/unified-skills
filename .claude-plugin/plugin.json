@@ -1,11 +1,11 @@
 {
   "name": "unified",
-  "description": "统一开发技能套件 — 宪法 + 35 技能 + 5 命令 + 15 审查角色，按阶段加载",
+  "description": "统一开发技能套件 — 宪法 + 43 技能 + 8 命令 + 15 审查角色，按阶段加载",
   "author": {
     "name": "ZeroZ-lab",
     "url": "https://github.com/ZeroZ-lab/unified-skills"
   },
-  "version": "1.3.0",
+  "version": "1.4.0",
   "homepage": "https://github.com/ZeroZ-lab/unified-skills",
   "compatibility": {
     "claude-code": ">=1.0.0",

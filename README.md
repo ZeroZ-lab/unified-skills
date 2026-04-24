@@ -1,6 +1,6 @@
 # Unified Skills
 
-宪法 + 35 技能 + 5 命令 + 15 审查角色 = 按阶段加载的 AI 多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+宪法 + 43 技能 + 8 命令 + 15 审查角色 = 按阶段加载的 AI 多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 目录
 
@@ -44,9 +44,9 @@ Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$p
 |------|--------|----------|
 | define 定义 | 3 | refine（想法收敛）、spec（规格编写）、brainstorm（发散/收敛探索） |
 | build 构建 | 15 | plan、execute、tdd、context、source-driven、execution-engine、decision-record、git、ui-engineering、browser-testing、api-design、database、service-patterns、content-writing、content-layout |
-| verify 验证 | 9 | review、debug、accessibility、integration-testing、performance、security、code-review-standards、content-review、visual-review |
-| ship 发布 | 4 | ship、ci-cd、deploy、artifact-export |
-| maintain 维护 | 2 | observability（可观测性）、deprecation-migration（废弃迁移） |
+| verify 验证 | 11 | review、debug、accessibility、integration-testing、performance、security、code-review-standards、content-review、visual-review、receiving-review、simplify |
+| ship 发布 | 7 | ship、ci-cd、deploy、artifact-export、canary、land、doc-sync |
+| maintain 维护 | 5 | observability（可观测性）、deprecation-migration（废弃迁移）、context-save（保存上下文）、context-restore（恢复上下文）、learn（跨 session 学习） |
 | reflect 复盘 | 2 | retro（回顾）、documentation（文档） |
 
 ## 为什么用 Unified
@@ -58,7 +58,7 @@ Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$p
 | 编排强但技能间互相不知对方存在 | 统一命名规范 + 入口/出口/指向 链接链 |
 | 多个工具的术语和哲学不一致 | CANON.md 10 条宪法是所有技能的单一真相源 |
 
-**Unified 不追求更"多"，而是追求更"一致"。** 35 个技能、15 个审查角色共享同一套宪法、同一套命名、同一套文档模板、同一套验证标准。
+**Unified 不追求更"多"，而是追求更"一致"。** 43 个技能、8 个命令、15 个审查角色共享同一套宪法、同一套命名、同一套文档模板、同一套验证标准。
 
 ## 命令
 
@@ -69,6 +69,9 @@ Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$p
 | `/build` | `$build` | build | 按 `artifact_type` 增量生成软件或内容产物 |
 | `/review` | `$review` | verify | 按 `artifact_type` 做代码、内容或视觉审查 |
 | `/ship` | `$ship` | ship | 发布/导出检查 + README 聚合 |
+| `/save` | — | maintain | 保存工作上下文到 checkpoint |
+| `/restore` | — | maintain | 恢复之前的工作上下文 |
+| `/learn` | — | maintain | 跨 session 学习记录管理 |
 
 Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/build`、`/review` 在工作流中按需加载。
 
@@ -81,13 +84,16 @@ Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/buil
 ## 工作流
 
 ```
-/refine ──→ /plan ──→ /build ──→ /review ──→ /ship
-               │           │            │
+/refine ──→ /plan ──→ /build ──→ /review ──→ /ship ──→ canary/land/doc-sync
+               │           │            │           │
                │           ├──→ verify-workflow-debug（遇到bug）
                │           ├──→ build-cognitive-decision-record（架构决策）
                │           └──→ build-frontend-* / build-backend-* / build-content-*（按产物类型）
                │
                └──→ 回到 /refine（计划不可行）
+
+/save ←→ /restore（跨 session 持久化）
+/learn（跨 session 学习）
 ```
 
 ## 宪法
@@ -113,15 +119,15 @@ unified/
 ├── CLAUDE.md            AI agent 入口配置
 ├── README.md            本文件
 │
-├── skills/              35 技能 / 6 阶段
+├── skills/              43 技能 / 6 阶段
 │   ├── define/          定义（3）
-│   ├── build/           构建（13）
-│   ├── verify/          验证（7）
-│   ├── ship/            发布（3）
-│   ├── maintain/        维护（2）
+│   ├── build/           构建（15）
+│   ├── verify/          验证（11）
+│   ├── ship/            发布（7）
+│   ├── maintain/        维护（5）
 │   └── reflect/         复盘（2）
 │
-├── commands/            5 命令入口（Claude Code 斜杠命令）
+├── commands/            8 命令入口（Claude Code 斜杠命令）
 ├── .agents/skills/       5 命令入口（Codex CLI skill 命令）
 ├── agents/              15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
 ├── templates/           7 文档模板
@@ -139,6 +145,8 @@ docs/features/<name>/
 ├── adr/<num>.md         ← /build（决策时）
 ├── review.md            ← /review
 ├── ship.md              ← /ship
+├── canary-report.md     ← ship-workflow-canary
+├── deploy-report.md     ← ship-workflow-land
 └── README.md            ← /ship 后聚合
 
 docs/bugs/<name>/

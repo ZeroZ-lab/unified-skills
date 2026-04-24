@@ -353,5 +353,5 @@ unified/
     ├── design-document.md
     └── directory-architecture.md
 
-核心资产: 3 根文件 + 35 技能（35 SKILL.md） + 5 命令 + 3 并行审查角色 + 6 模板 + 2 设计文档。平台包装入口（如 `.agents/skills/`）单独计数，避免安装目标变化导致统计漂移。
+核心资产: 3 根文件 + 43 技能（43 SKILL.md） + 8 命令 + 15 审查角色 + 6 模板 + 2 设计文档。平台包装入口（如 `.agents/skills/`）单独计数，避免安装目标变化导致统计漂移。
 ```
