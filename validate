@@ -14,6 +14,46 @@ require_cmd() {
 
 require_cmd rg
 require_cmd find
+require_cmd git
+
+printf '== 检查版本号 ==\n'
+
+# 从 package.json 和 plugin.json 提取当前版本
+pkg_ver=$(python3 -c "import json; print(json.load(open('package.json'))['version'])" 2>/dev/null)
+plugin_ver=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])" 2>/dev/null)
+
+if [ -z "$pkg_ver" ] || [ -z "$plugin_ver" ]; then
+  fail "无法解析版本号"
+else
+  printf 'package.json: %s\n' "$pkg_ver"
+  printf 'plugin.json:  %s\n' "$plugin_ver"
+
+  # 检查两个版本是否一致
+  if [ "$pkg_ver" != "$plugin_ver" ]; then
+    fail "版本号不一致: package.json=$pkg_ver, plugin.json=$plugin_ver"
+  fi
+
+  # 检查 HEAD 是否有未推送的版本变更
+  latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
+  if [ "$latest_tag" != "none" ]; then
+    tag_ver="${latest_tag#v}"
+    printf '最新 tag:    %s\n' "$latest_tag"
+
+    if [ "$pkg_ver" = "$tag_ver" ]; then
+      if git diff --quiet "$latest_tag"..HEAD -- package.json .claude-plugin/plugin.json 2>/dev/null; then
+        fail "版本未变更 ($pkg_ver)，push 前必须 bump version"
+      else
+        printf '版本文件有变更但版本号未变，通过（仅允许无版本号的紧急修复）\n'
+      fi
+    elif [ "$(printf '%s\n%s' "$tag_ver" "$pkg_ver" | sort -V | tail -1)" = "$pkg_ver" ]; then
+      printf '版本已从 %s bump 到 %s: 通过\n' "$tag_ver" "$pkg_ver"
+    else
+      fail "版本号倒退: $tag_ver -> $pkg_ver"
+    fi
+  else
+    printf '无已有 tag，首次发版: 通过\n'
+  fi
+fi
 
 printf '== 检查占位符 ==\n'
 placeholder_output=$(rg -n 'STUB|PLACEHOLDER|待补充|未完成' skills commands .agents/skills agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
