@@ -33,6 +33,14 @@
 ## 第 10 条：Every Feature Leaves a Trace
 每个想法留下完整档案：spec + plan + ADR + review + ship + 事后总结。
 
+## 产物类型映射
+
+第 1–3、5、7–10 条是产物无关的通用行为纪律，对所有 `artifact_type` 等效适用。
+
+第 4 条（TDD Iron Law）适用于 `software`。`document` / `article` / `deck` / `visual` 的等效纪律由各产物技能的 Iron Law 定义——如 `build-content-writing` 的 "读者任务先于表达"、`build-content-layout` 的 "信息层级先于视觉形式"。
+
+第 6 条（4-Phase Debugging）的 "根因在前，修复在后" 原则通用，但具体流程由产物类型决定——software 用四阶段调试，内容产物用事实核查 + 逻辑链修复。
+
 ---
 
 **快速参考：**

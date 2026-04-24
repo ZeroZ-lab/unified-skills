@@ -24,13 +24,18 @@ description: 非软件产物导出与交付。使用 cuando artifact_type 为 do
 
 ## Iron Law
 
-最终导出物才是交付物。没有打开最终文件并记录验证证据，就不能声明已交付。
+最终导出物才是交付物。验证分两层，两层都通过才能声明已交付：
+
+1. **源文件验证**（agent 负责）：结构完整性、frontmatter、链接可达、元数据齐全、格式一致性
+2. **导出验证**（human partner 或 CI 负责）：打开 PDF/PPTX/DOCX 看排版、字体、图片、投屏效果
+
+agent 负责源文件验证并将导出验证标记为 human partner 待办。human partner 完成导出验证后，交付才算完成。
 
 ## 核心原则
 
 1. **source 和 final 分离**: 源文件用于编辑，最终文件用于交付；两者都要可追踪。
 2. **格式契约优先**: 交付格式由 spec 和接收场景决定，不能用方便导出的格式替代。
-3. **最终文件必须打开验证**: 导出过程会引入字体、图片、分页、链接、裁切、透明背景等风险。
+3. **最终文件必须验证**: 导出过程会引入字体、图片、分页、链接、裁切、透明背景等风险。源文件验证由 agent 执行，导出验证由 human partner 或 CI 执行。
 4. **归档要能复现**: 后续维护者应能找到源文件、最终文件、审查记录和导出记录。
 5. **限制必须显式记录**: 已知限制不等于失败，但隐瞒限制会破坏交付可信度。
 6. **命名承载上下文**: 文件名应表达产物、用途、版本或日期，避免“final_final”式不可追踪命名。
@@ -40,7 +45,7 @@ description: 非软件产物导出与交付。使用 cuando artifact_type 为 do
 1. **确认最终格式**: DOCX、PDF、PPTX、PNG、SVG、Markdown、HTML 或组合格式。
 2. **确认 source of truth**: 哪个文件是后续编辑的唯一源头？是否需要一起归档？
 3. **执行导出**: 按 spec 导出最终文件，不把预览截图当正式交付。
-4. **打开 final 验证**: 用接收方会使用的方式打开最终文件，检查页数、尺寸、字体、图片、链接、备注、透明背景等。
+4. **源文件验证 + 导出验证**: 源文件验证（agent）检查结构、链接、元数据、格式一致性；导出验证（human partner/CI）检查打开后的排版、字体、图片、投屏效果。
 5. **记录证据**: 写明 Source、Final、Format、Verification、Known limitations。
 6. **归档交付包**: 把 source、final、review、ship record 放到可追踪位置。
 7. **Go/No-Go**: final 可打开、格式正确、证据完整 → Go；否则 No-Go。
@@ -74,14 +79,25 @@ description: 非软件产物导出与交付。使用 cuando artifact_type 为 do
 - `deck`: PPTX/PDF，必要时附 speaker notes
 - `visual`: PNG/SVG/PDF，必要时附源文件和尺寸说明
 
-### Step 3：打开最终文件验证
+### Step 3a：源文件验证（agent 负责）
 
-至少检查：
+在导出前验证源文件本身：
+- 结构完整性：章节、标题层级无断裂
+- frontmatter 字段齐全（artifact_type、版本、日期）
+- 内部链接可达、图片引用无缺失
+- 元数据（标题、作者、日期）完整
+- 格式与 spec 一致
+
+### Step 3b：导出验证（human partner 或 CI 负责）
+
+导出后由 human partner 打开最终文件检查：
 - 文件能打开
 - 页数、画布数、页面顺序或尺寸正确
 - 字体、图片、表格、图表没有损坏
 - 链接、引用、speaker notes 或元数据可用
 - 文件名和路径符合 spec
+
+agent 在 ship 记录中标记 `Export verification: pending human partner review`，提示 human partner 验证上述项目。human partner 确认后标记 `Export verification: passed`。
 
 ### Step 4：记录交付证据
 
@@ -93,7 +109,7 @@ description: 非软件产物导出与交付。使用 cuando artifact_type 为 do
 - Source: path/to/source
 - Final: path/to/final.pdf
 - Format: PDF
-- Verification: opened final file, checked pages 1-12, links valid
+- Verification: source verified (structure, links, metadata OK); export verified by human partner (pages 1-12, links valid)
 - Known limitations: none
 ```
 
@@ -136,7 +152,7 @@ description: 非软件产物导出与交付。使用 cuando artifact_type 为 do
 - Source: docs/features/q2-review/q2-review.pptx
 - Final: docs/features/q2-review/final/q2-review-v1.pdf
 - Format: PDF
-- Verification: opened PDF, checked 18 slides, charts readable at 100%, links valid, speaker notes retained in source PPTX
+- Verification: source verified; opened PDF, checked 18 slides, charts readable at 100%, links valid, speaker notes retained in source PPTX
 - Known limitations: embedded video exported as static poster frame
 ```
 
@@ -177,7 +193,7 @@ ship 记录至少包含：
 
 | 说辞 | 现实 |
 |------|------|
-| "源文件没问题，导出应该也没问题" | 导出是独立风险点。必须打开最终文件。 |
+| "源文件没问题，导出应该也没问题" | 导出是独立风险点。agent 做源文件验证，human partner 做导出验证。 |
 | "先发这个版本，之后补 PDF" | 没有最终格式就没有完成交付。 |
 | "文件名随便起" | 交付物需要可追踪、可归档、可复现。 |
 | "截图看过了就行" | 截图不能替代打开最终 DOCX/PPTX/PDF。 |
@@ -185,7 +201,8 @@ ship 记录至少包含：
 ## 红旗 — STOP
 
 - 没有最终导出文件
-- 没有打开最终文件验证
+- 没有源文件验证记录
+- 导出验证标记为 pending 但已声明交付完成
 - 只交付源文件但 spec 要求 PDF/PPTX/DOCX
 - 文件名无法识别版本或用途
 - 审查记录和最终文件分离，无法追踪
@@ -196,7 +213,8 @@ ship 记录至少包含：
 
 - [ ] artifact_type 已读取
 - [ ] 最终格式与 spec 一致
-- [ ] 最终文件已打开检查
+- [ ] 源文件验证已完成（agent）
+- [ ] 导出验证已完成（human partner 或 CI）
 - [ ] 源文件、最终文件、审查记录路径已记录
 - [ ] 导出验证写入 ship 记录
 - [ ] 已知限制已记录

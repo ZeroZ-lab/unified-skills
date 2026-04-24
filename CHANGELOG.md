@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0] - 2026-04-24
+
+### Added
+- CANON.md: 产物类型映射章节 — 明确第 4/6 条对非 software 产物的等效纪律映射
+- build-content-writing: 事实来源获取协议 — 优先级排序 + [来源待查] 标记机制
+
+### Changed
+- build-workflow-execute: deck 产物明确先 writing 后 layout（顺序执行，不并行）
+- commands/build.md: 同步更新 deck 加载顺序说明
+- ship-artifact-export: Iron Law 改为两层验证（源文件验证 agent 负责，导出验证 human partner/CI 负责）
+- ship-artifact-export: Step 3 拆为 3a（源文件验证）+ 3b（导出验证，标记 pending human partner）
+
 ## [1.4.0] - 2026-04-24
 
 ### Added

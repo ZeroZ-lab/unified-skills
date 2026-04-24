@@ -24,7 +24,8 @@ description: 按计划增量生成软件或内容产物。使用 cuando plan 已
 
 再读取 spec 的 `artifact_type`：
 - `software`（默认）→ 加载 `build-quality-tdd` 以及需要的 frontend/backend/database 技能
-- `document` / `article` / `deck` → 按需加载 `build-content-writing`；涉及版式时加载 `build-content-layout`
+- `document` / `article` → 按需加载 `build-content-writing`；涉及版式时加载 `build-content-layout`
+- `deck` → **先**加载 `build-content-writing` 完成叙事骨架和逐页标题 → **再**加载 `build-content-layout` 做页面视觉层级。两者顺序执行，不并行。
 - `visual` → 加载 `build-content-layout`，涉及文案时加载 `build-content-writing`
 
 ## 增量循环
