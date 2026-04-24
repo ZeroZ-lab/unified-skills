@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.0] - 2026-04-24
+
+### Added
+- Plan Review Army: /plan now fans out to 4 parallel plan reviewers (CEO, Eng, Design, Security)
+- 4 new plan-review agents: plan-ceo-reviewer, plan-eng-reviewer, plan-design-reviewer, plan-security-reviewer
+- Version bump validation in ./validate
+
+### Changed
+- /plan workflow: Step 7.5 Plan Review Army inserted before user approval
+- All plan commands (Claude Code, Codex CLI) delegate to same multi-role workflow
+
 ## [1.0.0] - 2026-04-24
 
 ### Added

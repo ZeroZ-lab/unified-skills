@@ -1,5 +1,10 @@
 # <Feature Name> — Spec
 
+## Artifact Type
+`artifact_type: software`
+
+可选值：`software` / `document` / `article` / `deck` / `visual`。默认 `software`。
+
 ## 问题
 [为什么要做？解决了什么痛点？现状是什么？]
 

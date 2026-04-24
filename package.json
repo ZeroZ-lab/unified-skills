@@ -1,13 +1,18 @@
 {
   "name": "unified-skills",
-  "version": "1.0.0",
-  "description": "统一技能套件 — 宪法 + 30 技能 + 5 命令，按阶段加载的开发技能集",
+  "version": "1.1.0",
+  "description": "统一技能套件 — 宪法 + 35 技能 + 5 命令，按阶段加载的多产物开发技能集",
   "scripts": {
     "validate": "./validate"
   },
   "author": "ZeroZ-lab",
   "license": "MIT",
-  "keywords": ["skills", "claude-code", "ai-agent", "development-workflow"],
+  "keywords": [
+    "skills",
+    "claude-code",
+    "ai-agent",
+    "development-workflow"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ZeroZ-lab/unified-skills"

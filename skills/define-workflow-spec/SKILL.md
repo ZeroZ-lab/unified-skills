@@ -38,17 +38,18 @@ ASSUMPTIONS I'M MAKING:
 覆盖以下内容：
 
 1. **Objective** — 构建什么、为什么、为谁、成功标准
-2. **Commands** — 完整可执行命令（含参数）：
+2. **Artifact Type** — 交付物类型。默认 `software`；可选 `software` / `document` / `article` / `deck` / `visual`
+3. **Commands / Tools** — 完整可执行命令或产物工具（含参数）：
    ```
    Build: npm run build
    Test: npm test -- --coverage
    Lint: npm run lint --fix
    Dev: npm run dev
    ```
-3. **Project Structure** — 源码路径、测试路径、文档路径
-4. **Code Style** — 一个真实代码片段比三段描述更有效。包含命名约定、格式化规则
-5. **Testing Strategy** — 框架、测试路径、覆盖率要求
-6. **Boundaries（三级系统）**:
+4. **Project Structure / Artifact Paths** — 源码、测试、文档或最终产物路径
+5. **Style / Quality Bar** — 代码风格、文风、版式、视觉风格或演示标准
+6. **Verification Strategy** — 测试、事实核查、版式检查、导出检查或人工验收方式
+7. **Boundaries（三级系统）**:
    - **Always do:** 提交前跑测试、遵循命名约定、验证输入
    - **Ask first:** 数据库 schema 变更、加依赖、改 CI 配置
    - **Never do:** 提交密钥、编辑 vendor 目录、未经批准删除失败测试
@@ -61,20 +62,25 @@ ASSUMPTIONS I'M MAKING:
 ## Objective
 [构建什么、为什么。用户故事或验收条件。]
 
+## Artifact Type
+artifact_type: software
+
+Allowed: software / document / article / deck / visual
+
 ## Tech Stack
-[框架、语言、关键依赖及版本]
+[software 时填写框架、语言、关键依赖；非 software 时填写工具链、格式、模板或品牌约束]
 
-## Commands
-[Build, test, lint, dev — 完整命令]
+## Commands / Tools
+[Build, test, lint, dev，或 DOCX/PPTX/PDF/PNG/SVG 导出工具与命令]
 
-## Project Structure
-[目录布局及说明]
+## Project Structure / Artifact Paths
+[目录布局、源文件路径、最终交付物路径]
 
-## Code Style
-[示例代码 + 关键约定]
+## Style / Quality Bar
+[代码约定，或文风、叙事、版式、视觉标准]
 
-## Testing Strategy
-[框架、测试位置、覆盖率要求、测试层级]
+## Verification Strategy
+[自动测试、事实核查、人工审查、版式检查、导出验证]
 
 ## Boundaries
 - Always: [...]
@@ -137,6 +143,7 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 ## 验证清单
 
 - [ ] spec 覆盖全部 6 个核心区域
+- [ ] artifact_type 已声明；未声明时明确按 `software` 处理
 - [ ] 隐藏假设已列出（Surface Assumptions）
 - [ ] 用户已审查并批准 spec
 - [ ] 成功标准是具体可测试的

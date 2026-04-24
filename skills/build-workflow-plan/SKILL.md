@@ -29,6 +29,12 @@ description: 把 spec 拆成可执行的任务。使用 cuando spec 已批准需
 
 ### Step 2：识别依赖图
 
+先读取 spec 的 `artifact_type`：
+- `software`（默认）→ 使用软件依赖图、TDD 任务、构建/测试命令
+- `document` / `article` → 使用内容依赖图：受众 → 论点 → 结构 → 草稿 → 编辑 → 导出
+- `deck` → 使用演示依赖图：受众 → 叙事线 → 页面结构 → 视觉层级 → speaker notes → 导出
+- `visual` → 使用视觉依赖图：目标场景 → 信息层级 → 构图 → 样式系统 → 规格导出
+
 画出构建顺序：
 
 ```
@@ -60,6 +66,11 @@ Database schema
 
 ### Step 4：垂直切片
 
+如果 `artifact_type` 不是 `software`，垂直切片仍然成立，但切片单位变为读者/观众可验证的一段产物：
+- `document` / `article`: 一个章节或一个论证单元，包含目标、草稿、事实核查、编辑验证
+- `deck`: 一组连续页面或一个叙事段落，包含标题、内容、图表/视觉、演讲备注
+- `visual`: 一个使用场景或一个画面版本，包含构图、文案、样式、导出规格
+
 不要先建所有数据库、再建所有 API、最后建所有 UI——一次构建一个完整功能路径：
 
 **Bad（水平切片）：**
@@ -81,6 +92,28 @@ Task 4: 用户可以查看任务列表（查询 + API + 列表 UI）
 每个垂直切片交付可工作的、可测试的功能。
 
 ### Step 5：写 bite-sized 任务
+
+任务模板按 `artifact_type` 调整。`software` 使用测试驱动模板；非软件产物使用产物验证模板：
+
+```markdown
+### Task N: [产物切片]
+
+**Files:**
+- Create/Modify: `path/to/artifact-source`
+- Export: `path/to/final-artifact`
+
+- [ ] **Step 1: 明确切片验收标准**
+[读者目标、页面目标、视觉目标或导出规格]
+
+- [ ] **Step 2: 生成/修改最小产物**
+[写章节、做页面、调整版式或视觉稿]
+
+- [ ] **Step 3: 按类型验证**
+[事实核查、逻辑审查、版式检查、导出预览]
+
+- [ ] **Step 4: 记录验证证据**
+[审查结论、截图、导出文件路径或人工确认]
+```
 
 每个步骤是 2-5 分钟的一个操作。每个任务包含：
 
@@ -143,9 +176,37 @@ Run: `npm test -- --grep "特定行为"` → PASS
 2. **占位符扫描** — 搜索 TBD/TODO//"implement later" 模式，修复
 3. **类型一致性** — 后面的任务中的函数签名和属性名是否匹配前面定义的？
 
+### Step 7.5：Plan Review Army（计划审查军团）
+
+自审通过后，**并行分派** 4 个 specialist 审查 plan：
+
+```
+Plan draft
+    │
+    ├── agents/plan-ceo-reviewer.md     → CEO 视角: 商业价值、范围、优先级
+    ├── agents/plan-eng-reviewer.md     → Eng 视角: 技术可行、架构、实现风险
+    ├── agents/plan-design-reviewer.md  → Design 视角: 用户体验、交互、一致性
+    └── agents/plan-security-reviewer.md → Security 视角: 数据隐私、攻击面、合规
+            │
+            ▼
+    收集反馈 → 分级合并 → 修改 plan → 进入 Step 8
+```
+
+每个 specialist 输出 Blocking / Important / Suggestion 三级反馈。
+
+**反馈处理规则：**
+- **Blocking** — 必须解决，修改 plan 后再提交批准
+- **Important** — 强烈建议采纳，不采纳需在 plan 中记录原因
+- **Suggestion** — 自主判断，采纳后标注来源
+
+**最少触发条件：**
+- 小型变更（1-3 任务、非安全敏感、无 UI）→ 可跳过 Review Army
+- 标准变更 → 至少 CEO + Eng 双视角
+- 大型变更（>10 任务或有安全/合规需求）→ 四视角全开
+
 ### Step 8：用户批准
 
-请用户审查 plan 文件 → 确认或修改 → 批准后才进入 build。
+请用户审查 plan 文件和 Review Army 反馈 → 确认或修改 → 批准后才进入 build。
 
 ## 任务大小指南
 

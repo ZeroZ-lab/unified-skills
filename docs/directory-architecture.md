@@ -77,7 +77,7 @@ skills/                        ← 容器目录
 示例：`build-quality-tdd` = "构建阶段 → 质量角色 → TDD 技能"
 
 **为什么不用嵌套目录：**
-- 30 个技能无需嵌套，每个目录名已包含完整语义
+- 35 个技能无需嵌套，每个目录名已包含完整语义
 - `/build` 命令可以 `skills/build-*` glob 加载整个阶段
 - `ls skills/` 按阶段自动分组排序（define-* → build-* → verify-* → ship-* → maintain-* → reflect-*）
 - 新增技能只需 `skills/<phase>-<role>-<skill>/SKILL.md`，不需要抉择放在哪个领域目录
@@ -145,6 +145,8 @@ skills/
 │   ├── build-backend-database
 │   ├── build-backend-service-patterns
 │   ├── build-quality-tdd            → TDD 铁律
+│   ├── build-content-writing        → 内容写作与结构打磨
+│   ├── build-content-layout         → 版式与视觉层级
 │   ├── build-cognitive-context
 │   ├── build-cognitive-source-driven
 │   ├── build-cognitive-execution-engine → 3 种执行模式
@@ -158,12 +160,15 @@ skills/
 │   ├── verify-quality-integration-testing
 │   ├── verify-quality-performance
 │   ├── verify-quality-security
-│   └── verify-team-code-review-standards
+│   ├── verify-team-code-review-standards
+│   ├── verify-content-review        → 内容质量审查
+│   └── verify-visual-review         → 视觉质量审查
 │
 ├── <ship>                           ← 发布阶段：交付上线
 │   ├── ship-workflow-ship           → 预发检查 → Go/No-Go → 回滚计划
 │   ├── ship-infrastructure-ci-cd    → CI/CD 管道
-│   └── ship-infrastructure-deploy   → 部署策略
+│   ├── ship-infrastructure-deploy   → 部署策略
+│   └── ship-artifact-export         → 非软件产物导出
 │
 ├── <maintain>                       ← 维护阶段：运维+修复
 │   ├── maintain-infrastructure-observability
@@ -194,9 +199,9 @@ ship-workflow-ship            → ship.md + README.md（事后总结）
 define-workflow-refine/SKILL.md   → templates/feature/01-spec.md
 build-workflow-plan/SKILL.md      → templates/feature/02-plan.md
 verify-workflow-debug/SKILL.md  → templates/bug/*
-verify-workflow-review/SKILL.md   → templates/feature/review.md
-ship-workflow-ship/SKILL.md       → templates/feature/ship.md
-                                  + templates/feature/README.md
+verify-workflow-review/SKILL.md   → 直接产出 docs/features/<name>/review.md
+ship-workflow-ship/SKILL.md       → templates/feature/README.md
+                                  + 直接产出 docs/features/<name>/ship.md
 任意 build 中决策                 → templates/feature/adr/template.md
 ```
 
@@ -211,8 +216,10 @@ ship-workflow-ship/SKILL.md       → templates/feature/ship.md
 ─────────────────────────────────────────
 /refine                 → skills/define-*
 /plan                   → skills/build-workflow-plan
-/build                  → skills/build-*
+/build                  → skills/build-*（按 artifact_type 选择软件或内容/版式技能）
 /build + 需要前端       → skills/build-*（已含 build-frontend-*）
+/build + 文档/文章/PPT  → skills/build-content-writing + build-content-layout（按需）
+/build + 视觉稿         → skills/build-content-layout
 /build + 需要安全审查   → skills/verify-* + skills/verify-quality-security
 /review --full          → skills/verify-* + agents/*
 /build 遇到选型         → skills/build-*（已含 build-cognitive-decision-record）
@@ -220,9 +227,9 @@ ship-workflow-ship/SKILL.md       → templates/feature/ship.md
 
 ### 4.2 为什么 `skills/build-*` 可以一键加载
 
-构建阶段包含了所有与"写代码"相关的技能：前端、后端、数据库、TDD、执行引擎、git。当执行 `/build` 命令时，直接加载 `skills/build-*` 下的所有技能，不需要逐一引用。
+构建阶段包含软件和非软件产物的生成技能：前端、后端、数据库、TDD、执行引擎、git、内容写作、版式。当执行 `/build` 命令时，先读取 spec 的 `artifact_type`，再加载对应的 `skills/build-*`。
 
-覆盖范围：14 个技能，涵盖前端/后端/TDD/认知/基础设施，一次加载，全部可用。
+覆盖范围：15 个 build 技能，涵盖前端/后端/TDD/认知/基础设施/内容/版式。
 
 ---
 
@@ -235,7 +242,7 @@ ship-workflow-ship/SKILL.md       → templates/feature/ship.md
 | 技能目录 | `<phase>-<role>-<skill>` | `build-quality-tdd/` |
 | 技能文件 | 固定文件名 | `SKILL.md` |
 | 阶段值 | kebab-case | `define`, `build`, `verify`, `ship`, `maintain`, `reflect` |
-| 角色值 | kebab-case | `workflow`, `frontend`, `backend`, `quality`, `cognitive`, `infrastructure`, `team` |
+| 角色值 | kebab-case | `workflow`, `frontend`, `backend`, `quality`, `cognitive`, `infrastructure`, `team`, `content`, `visual`, `artifact` |
 | 命令 | kebab-case | `review.md` |
 | Agent | kebab-case | `code-reviewer.md` |
 | 模板 | 数字前缀 + kebab-case | `01-spec.md`, `02-plan.md` |
@@ -346,5 +353,5 @@ unified/
     ├── design-document.md
     └── directory-architecture.md
 
-核心资产: 3 根文件 + 30 技能（30 SKILL.md） + 5 命令 + 3 并行审查角色 + 7 模板 + 2 设计文档。平台包装入口（如 `.agents/skills/`）单独计数，避免安装目标变化导致统计漂移。
+核心资产: 3 根文件 + 35 技能（35 SKILL.md） + 5 命令 + 3 并行审查角色 + 6 模板 + 2 设计文档。平台包装入口（如 `.agents/skills/`）单独计数，避免安装目标变化导致统计漂移。
 ```

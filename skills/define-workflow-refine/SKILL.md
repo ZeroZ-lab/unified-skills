@@ -36,8 +36,9 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 1. **问题/背景** — 要解决的问题是什么？现状是什么？
 2. **目标用户** — 具体为谁做的？谁受益？
 3. **成功标准** — 怎样算"做完了"？可量化的指标是什么？
-4. **约束** — 时间、技术、资源限制？
-5. **上下文** — 之前有人试过吗？现有代码里有什么相关？
+4. **产物类型** — 交付物是 `software`、`document`、`article`、`deck` 还是 `visual`？不明确时默认 `software`
+5. **约束** — 时间、技术、资源、格式、品牌或导出限制？
+6. **上下文** — 之前有人试过吗？现有代码或素材里有什么相关？
 
 **Step 1.4（可选）：Visual Companion**
 如果涉及 UI mockup、流程图、布局对比等视觉内容，**单独发送一条消息**询问：
@@ -83,6 +84,11 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 
 ## 推荐方案及理由
 [2-3 段]
+
+## Artifact Type
+artifact_type: software
+
+Allowed: software / document / article / deck / visual
 
 ## 核心假设（待验证）
 - [ ] 假设 1 — 如何验证
@@ -131,6 +137,7 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 ## 验证清单
 
 - [ ] 清晰的"为谁、解决什么问题"已定义
+- [ ] artifact_type 已明确；未明确时按 software 处理
 - [ ] 探索了多个方向，不是只有第一个想法
 - [ ] 隐藏假设已列出（含验证方案）
 - [ ] "不做清单"让 trade-off 明确

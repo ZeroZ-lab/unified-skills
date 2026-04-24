@@ -1,6 +1,6 @@
 # Unified Skills
 
-宪法 + 30 技能 + 5 命令 = 按阶段加载的 AI 开发技能套件。支持 Claude Code 和 Codex CLI。
+宪法 + 35 技能 + 5 命令 = 按阶段加载的 AI 多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 融合 [agent-skills](https://github.com/anthropics/skills) 的教学深度、superpowers 的纪律硬度、gstack 的工程编排模式。不是要替代它们，而是把三者的精华压缩到一个一致性体系里。
 
@@ -45,9 +45,9 @@ Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$p
 | 阶段 | 技能数 | 核心能力 |
 |------|--------|----------|
 | define 定义 | 3 | refine（想法收敛）、spec（规格编写）、brainstorm（发散/收敛探索） |
-| build 构建 | 13 | plan（任务分解）、execute（增量实现）、tdd（测试驱动）、context（上下文加载）、source-driven（文档驱动）、execution-engine（3 种执行模式）、decision-record（决策记录）、git（版本控制）、ui-engineering、browser-testing、api-design、database、service-patterns |
-| verify 验证 | 7 | review（审查）、debug（四阶段调试）、accessibility（无障碍）、integration-testing、performance、security、code-review-standards |
-| ship 发布 | 3 | ship（发布流水线）、ci-cd（持续集成部署）、deploy（部署） |
+| build 构建 | 15 | plan、execute、tdd、context、source-driven、execution-engine、decision-record、git、ui-engineering、browser-testing、api-design、database、service-patterns、content-writing、content-layout |
+| verify 验证 | 9 | review、debug、accessibility、integration-testing、performance、security、code-review-standards、content-review、visual-review |
+| ship 发布 | 4 | ship、ci-cd、deploy、artifact-export |
 | maintain 维护 | 2 | observability（可观测性）、deprecation-migration（废弃迁移） |
 | reflect 复盘 | 2 | retro（回顾）、documentation（文档） |
 
@@ -62,7 +62,7 @@ Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$p
 | gstack 编排强但技能间互相不知对方存在 | 统一命名规范 + 入口/出口/指向 链接链 |
 | 三个集合的术语和哲学不一致 | CANON.md 10 条宪法是所有技能的单一真相源 |
 
-**Unified 不追求比三个源更"多"，而是追求更"一致"。** 30 个技能共享同一套宪法、同一套命名、同一套文档模板、同一套验证标准。
+**Unified 不追求比三个源更"多"，而是追求更"一致"。** 35 个技能共享同一套宪法、同一套命名、同一套文档模板、同一套验证标准。
 
 ## 命令
 
@@ -70,11 +70,13 @@ Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$p
 |-------------|-----------|------|------|
 | `/refine` | `$refine` | define | 模糊想法 → 规范 spec |
 | `/plan` | `$plan` | build | spec → 任务分解与计划 |
-| `/build` | `$build` | build | 增量实现 + TDD + 决策记录 |
-| `/review` | `$review` | verify | 五轴代码审查 |
-| `/ship` | `$ship` | ship | 发布检查 + README 聚合 |
+| `/build` | `$build` | build | 按 `artifact_type` 增量生成软件或内容产物 |
+| `/review` | `$review` | verify | 按 `artifact_type` 做代码、内容或视觉审查 |
+| `/ship` | `$ship` | ship | 发布/导出检查 + README 聚合 |
 
 Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/build`、`/review` 在工作流中按需加载。
+
+`artifact_type` 在 spec 中声明，默认 `software`。可选值：`software` / `document` / `article` / `deck` / `visual`。软件继续走 TDD、代码审查、CI/CD、部署；非软件产物按需加载内容写作、版式、内容审查、视觉审查和导出技能。
 
 ## 工作流
 
@@ -83,7 +85,7 @@ Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/buil
                │           │            │
                │           ├──→ verify-workflow-debug（遇到bug）
                │           ├──→ build-cognitive-decision-record（架构决策）
-               │           └──→ build-frontend-* / build-backend-*（按领域）
+               │           └──→ build-frontend-* / build-backend-* / build-content-*（按产物类型）
                │
                └──→ 回到 /refine（计划不可行）
 ```
@@ -111,7 +113,7 @@ unified/
 ├── CLAUDE.md            AI agent 入口配置
 ├── README.md            本文件
 │
-├── skills/              30 技能 / 6 阶段
+├── skills/              35 技能 / 6 阶段
 │   ├── define/          定义（3）
 │   ├── build/           构建（13）
 │   ├── verify/          验证（7）
@@ -121,12 +123,12 @@ unified/
 │
 ├── commands/            5 命令入口（Claude Code 斜杠命令）
 ├── .agents/skills/       5 命令入口（Codex CLI skill 命令）
-├── agents/              3 并行审查角色
+├── agents/              7 审查角色（3 代码 + 4 计划）
 ├── templates/           7 文档模板
 └── docs/                设计文档
 ```
 
-命名规范：`<phase>-<role>-<skill>/SKILL.md`（如 `build-quality-tdd`）。
+命名规范：`<phase>-<role>-<skill>/SKILL.md`（如 `build-quality-tdd`、`build-content-writing`）。
 
 ## 文档产出链
 
@@ -161,7 +163,7 @@ docs/bugs/<name>/
 A: Debug 是验证失败后的自然下一步 — 当 review 发现问题、测试失败时触发。它和 verification是紧耦合循环。Maintain 阶段留给持续运维（observability + deprecation）。
 
 **Q: 技能目录为什么不用嵌套结构（如 `skills/build/quality/tdd/`）？**
-A: 30 个技能不需要三层嵌套。扁平命名 `build-quality-tdd` 已包含完整语义，glob 加载 `skills/build-*` 方便，ls 自动按阶段排序。
+A: 35 个技能不需要三层嵌套。扁平命名 `build-quality-tdd`、`build-content-writing` 已包含完整语义，glob 加载 `skills/build-*` 方便，ls 自动按阶段排序。
 
 **Q: Unified 和 agent-skills/superpowers/gstack 的关系是什么？**
 A: Unified 吸收了三者的精华而非替代它们。agent-skills 贡献了流程和代码示例的广度，superpowers 贡献了 Iron Law 和红旗的纪律硬度，gstack 贡献了并行 fan-out 和编排模式。Unified 的价值在于将它们统一到一个一致性体系中。

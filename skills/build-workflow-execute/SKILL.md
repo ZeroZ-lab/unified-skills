@@ -1,14 +1,14 @@
 ---
 name: build-workflow-execute
-description: 按计划增量实现代码。使用 cuando plan 已批准需要开始写代码
+description: 按计划增量生成软件或内容产物。使用 cuando plan 已批准需要开始实现或生成交付物
 ---
 
-# Execute — 增量实现
+# Execute — 增量生成
 
 
 ## 入口/出口
 - **入口**: 已批准 plan（`docs/features/<name>/02-plan.md`）
-- **出口**: 功能代码 + 测试 + ADR（如有决策）
+- **出口**: 软件代码或内容产物 + 验证证据 + ADR（如有决策）
 - **指向**: 完成 → `verify-workflow-review`；遇到 Bug → `verify-workflow-debug`
 - **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-cognitive-execution-engine/SKILL.md`
 
@@ -21,6 +21,11 @@ description: 按计划增量实现代码。使用 cuando plan 已批准需要开
 - **inline** — 当前会话直接执行
 - **subagent** — 每任务一个新 subagent + 两阶段审查
 - **parallel** — 独立任务并行 subagent
+
+再读取 spec 的 `artifact_type`：
+- `software`（默认）→ 加载 `build-quality-tdd` 以及需要的 frontend/backend/database 技能
+- `document` / `article` / `deck` → 按需加载 `build-content-writing`；涉及版式时加载 `build-content-layout`
+- `visual` → 加载 `build-content-layout`，涉及文案时加载 `build-content-writing`
 
 ## 增量循环
 
@@ -44,15 +49,16 @@ description: 按计划增量实现代码。使用 cuando plan 已批准需要开
 
 ### Step 3：测试
 
-每个切片后跑完整测试套件。先 TDD（调用 `build-quality-tdd`）。
+每个切片后跑对应验证：
+- `software`: 跑完整测试套件。先 TDD（调用 `build-quality-tdd`）
+- `document` / `article`: 做事实核查、逻辑链检查、语气一致性检查
+- `deck`: 做叙事线、页面信息密度、speaker notes、导出预览检查
+- `visual`: 做视觉层级、对齐、对比度、规格导出检查
 
 ### Step 4：验证
 
-- 测试全部通过
-- 构建成功
-- 类型检查通过
-- Lint 通过
-- 新功能按预期工作
+- `software`: 测试全部通过、构建成功、类型检查通过、Lint 通过、新功能按预期工作
+- 非软件产物: 对应产物的 review 证据齐全，最终导出物能打开且符合 spec
 
 ### Step 5：提交
 
@@ -125,6 +131,8 @@ const ENABLE_FEATURE = process.env.FEATURE_X === 'true';
 需要 DB   → build-backend-database
 需要模式  → build-backend-service-patterns
 需要 TDD  → build-quality-tdd
+需要文案/论证 → build-content-writing
+需要版式/视觉层级 → build-content-layout
 需要 Git  → build-infrastructure-git
 ```
 

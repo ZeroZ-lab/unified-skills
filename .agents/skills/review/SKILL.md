@@ -1,18 +1,20 @@
 ---
 name: review
-description: 五轴代码审查。使用 cuando 功能完成准备合并、需要在合入前做质量把关时
+description: 按产物类型审查。使用 cuando 软件、文档、文章、PPT 或视觉稿完成后需要质量把关时
 ---
 
-# Review — 代码审查
+# Review — 产物审查
 
-加载 `verify-workflow-review/SKILL.md` 执行五轴审查。
+加载 `verify-workflow-review/SKILL.md`，按 spec 的 `artifact_type` 执行软件、内容或视觉审查。
 
 ## 流程
 
 1. 加载 `verify-workflow-review/SKILL.md`
 2. 执行标准模式（当前会话）或并行发散模式（`--full`）
-3. 五轴：Correctness / Readability / Architecture / Security / Performance
-4. 产出 `docs/features/<name>/review.md`
+3. software 五轴：Correctness / Readability / Architecture / Security / Performance
+4. document/article/deck 加载 `verify-content-review/SKILL.md`
+5. visual 加载 `verify-visual-review/SKILL.md`
+6. 产出 `docs/features/<name>/review.md`
 
 ## 高风险触发并行模式
 

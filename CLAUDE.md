@@ -1,6 +1,6 @@
 # Unified Skills
 
-> 宪法 + 30 技能 + 5 命令 = 按阶段加载的开发技能套件。支持 Claude Code 和 Codex CLI。
+> 宪法 + 35 技能 + 5 命令 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 如果你是一个 AI Agent
 
@@ -31,7 +31,7 @@ unified/
 ├── CANON.md                 宪法（10 条，最高优先级）
 ├── CLAUDE.md                入口配置（本文件）
 │
-├── skills/                  30 技能 / 6 阶段
+├── skills/                  35 技能 / 6 阶段
 │   ├── define/              定义（3）
 │   ├── build/               构建（13）
 │   ├── verify/              验证（7）
@@ -40,7 +40,8 @@ unified/
 │   └── reflect/             复盘（2）
 │
 ├── commands/                5 命令入口（每个 .md 定义命令行为）
-├── agents/                  3 并行审查角色
+├── .agents/skills/           5 命令入口（Codex CLI skill 命令）
+├── agents/                  7 审查角色（3 代码 + 4 计划）
 ├── templates/               7 文档模板
 └── docs/                    设计文档
 ```
@@ -53,10 +54,12 @@ build/     → plan（计划）、execute（执行）、tdd（测试驱动）、
              source-driven（文档驱动）、execution-engine（执行引擎）、
              decision-record（决策记录）、git（版本控制）、
              ui-engineering（UI 工程）、browser-testing（浏览器测试）、
-             api-design（API 设计）、database（数据库）、service-patterns（服务模式）
+             api-design（API 设计）、database（数据库）、service-patterns（服务模式）、
+             content-writing（内容写作）、content-layout（版式）
 verify/    → review（审查）、debug（调试）、accessibility（无障碍）、integration-testing（集成测试）、
-             performance（性能）、security（安全）、code-review-standards（审查标准）
-ship/      → ship（发布）、ci-cd（持续集成部署）、deploy（部署）
+             performance（性能）、security（安全）、code-review-standards（审查标准）、
+             content-review（内容审查）、visual-review（视觉审查）
+ship/      → ship（发布）、ci-cd（持续集成部署）、deploy（部署）、artifact-export（产物导出）
 maintain/  → observability（可观测性）、deprecation-migration（废弃迁移）
 reflect/   → retro（回顾）、documentation（文档）
 ```
@@ -67,9 +70,9 @@ reflect/   → retro（回顾）、documentation（文档）
 |------|-----------|------|----------|
 | `/refine` | define-workflow-refine | 规范 spec | `docs/features/<name>/01-spec.md` |
 | `/plan` | build-workflow-plan | 任务计划 | `docs/features/<name>/02-plan.md` |
-| `/build` | build-workflow-execute + build-quality-tdd + build-cognitive-execution-engine | 代码+测试+ADR | `docs/features/<name>/adr/` |
-| `/review` | verify-workflow-review | 审查报告 | `docs/features/<name>/review.md` |
-| `/ship` | ship-workflow-ship | 发布记录+README | `docs/features/<name>/ship.md` |
+| `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/<name>/adr/` |
+| `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/<name>/review.md` |
+| `/ship` | ship-workflow-ship + artifact-export（非 software） | 发布/导出记录+README | `docs/features/<name>/ship.md` |
 
 ## 文档产出链
 
@@ -87,12 +90,14 @@ docs/bugs/<name>/
 └── 02-fix-plan.md          ← verify-workflow-debug Phase 4
 ```
 
+spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `document` / `article` / `deck` / `visual`。后续阶段按该字段加载软件、内容、版式、审查或导出技能。
+
 ## 约定
 
 ### 命名规范
 - 技能目录：`<阶段>-<角色>-<技能名>/` —— 每个目录下恰好一个 `SKILL.md`
 - 阶段：`define` / `build` / `verify` / `ship` / `maintain` / `reflect`
-- 角色：`workflow` / `frontend` / `backend` / `quality` / `cognitive` / `infrastructure` / `team`
+- 角色：`workflow` / `frontend` / `backend` / `quality` / `cognitive` / `infrastructure` / `team` / `content` / `visual` / `artifact`
 - 技能名：kebab-case，描述动作（如 `tdd`、`debug`、`api-design`）
 
 ### SKILL.md 格式
