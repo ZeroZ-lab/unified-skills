@@ -1,6 +1,6 @@
 # Unified Skills
 
-> 宪法 + 30 技能 + 5 命令 = 按阶段加载的开发技能套件。
+> 宪法 + 30 技能 + 5 命令 = 按阶段加载的开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 如果你是一个 AI Agent
 
@@ -39,7 +39,8 @@ unified/
 │   ├── maintain/            维护（2）
 │   └── reflect/             复盘（2）
 │
-├── commands/                5 命令入口（每个 .md 定义命令行为）
+├── commands/                5 命令入口（Claude Code 斜杠命令）
+├── .agents/skills/           5 命令入口（Codex CLI skill 命令）
 ├── agents/                  3 并行审查角色
 ├── templates/               7 文档模板
 └── docs/                    设计文档
@@ -70,6 +71,20 @@ reflect/   → retro（回顾）、documentation（文档）
 | `/build` | build-workflow-execute + build-quality-tdd + build-cognitive-execution-engine | 代码+测试+ADR | `docs/features/<name>/adr/` |
 | `/review` | verify-workflow-review | 审查报告 | `docs/features/<name>/review.md` |
 | `/ship` | ship-workflow-ship | 发布记录+README | `docs/features/<name>/ship.md` |
+
+### Codex CLI 命令
+
+Codex 中技能通过 `$<skill-name>` 调用：
+
+| 命令 | 加载的技能 | 产出 |
+|------|-----------|------|
+| `$refine` | define-workflow-refine | `docs/features/<name>/01-spec.md` |
+| `$plan` | build-workflow-plan | `docs/features/<name>/02-plan.md` |
+| `$build` | build-workflow-execute + build-quality-tdd + build-cognitive-execution-engine | 代码+测试+ADR |
+| `$review` | verify-workflow-review | `docs/features/<name>/review.md` |
+| `$ship` | ship-workflow-ship | `docs/features/<name>/ship.md` |
+
+Codex 的技能入口在 `.agents/skills/` 目录，每个命令对应一个薄包装技能。
 
 ## 文档产出链
 
@@ -103,7 +118,8 @@ docs/bugs/<name>/
 - 辅助文件仅在内容超过 100 行时才创建
 
 ### 命令
-- `commands/` 下每个命令一个 `.md` 文件
+- `commands/` 下每个命令一个 `.md` 文件（Claude Code 斜杠命令）
+- `.agents/skills/` 下每个命令一个 `SKILL.md`（Codex CLI 技能命令）
 - 命令加载技能，但不重复技能内容
 
 ## 验证
@@ -133,7 +149,12 @@ docs/bugs/<name>/
 
 ## 开发注意事项
 
-`skills/` 下的技能通过 symlink 挂载到 `.Codex/skills/` 时**实时生效**。这意味着：
+技能支持多平台挂载：
+
+- **Claude Code**: `skills/` → `.claude/skills/`（symlink）
+- **Codex CLI**: `skills/` → `.agents/skills/`（symlink）
+
+修改**实时生效**。这意味着：
 - 对 SKILL.md 的修改在下一次调用时立即生效
 - 重构期间的破坏性变更可能导致并行 session 出错
 - 大规模修改前先在隔离环境中测试

@@ -26,10 +26,14 @@
 ## 第 8 条：Manage Confusion
 遇到矛盾 → STOP → 命名困惑 → 呈现权衡 → 等待解决。
 
-## 第 9 条：Every Feature Leaves a Trace
+## 第 9 条：Use AskUserQuestion, Never Plain Text
+
+需要用户输入（澄清需求、选择方案、确认决策）时，**必须**使用 `AskUserQuestion` 工具，**禁止**用纯文本列出问题。一次一个问题，选项用 `(Recommended)` 标注推荐项，确保用户能高效做选择而非被迫打字。
+
+## 第 10 条：Every Feature Leaves a Trace
 每个想法留下完整档案：spec + plan + ADR + review + ship + 事后总结。
 
 ---
 
 **快速参考：**
-1️⃣ Surface Assumptions → 2️⃣ Simple First → 3️⃣ Scope Discipline → 4️⃣ TDD Iron Law → 5️⃣ Verify Don't Assume → 6️⃣ 4-Phase Debugging → 7️⃣ Push Back → 8️⃣ Manage Confusion → 9️⃣ Every Feature Leaves a Trace
+1️⃣ Surface Assumptions → 2️⃣ Simple First → 3️⃣ Scope Discipline → 4️⃣ TDD Iron Law → 5️⃣ Verify Don't Assume → 6️⃣ 4-Phase Debugging → 7️⃣ Push Back → 8️⃣ Manage Confusion → 9️⃣ Use AskUserQuestion, Never Plain Text → 🔟 Every Feature Leaves a Trace

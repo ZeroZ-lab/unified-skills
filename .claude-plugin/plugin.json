@@ -6,5 +6,9 @@
     "url": "https://github.com/ZeroZ-lab/unified-skills"
   },
   "version": "1.0.0",
-  "homepage": "https://github.com/ZeroZ-lab/unified-skills"
+  "homepage": "https://github.com/ZeroZ-lab/unified-skills",
+  "compatibility": {
+    "claude-code": ">=1.0.0",
+    "codex": ">=0.1.0"
+  }
 }
