@@ -40,7 +40,7 @@ unified/
 │   └── reflect/             复盘（2）
 │
 ├── commands/                8 命令入口（Claude Code 斜杠命令）
-├── .agents/skills/           5 命令入口（Codex CLI skill 命令）
+├── .agents/skills/           8 命令入口（Codex CLI skill 命令）
 ├── agents/                  15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
 ├── templates/               6 文档模板
 └── docs/                    设计文档
@@ -91,6 +91,9 @@ Codex 中技能通过 `$<skill-name>` 调用：
 | `$build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR |
 | `$review` | verify-workflow-review + artifact_type 对应审查 | `docs/features/<name>/review.md` |
 | `$ship` | ship-workflow-ship + artifact-export（非 software） | `docs/features/<name>/ship.md` |
+| `$save` | maintain-workflow-context-save | `.claude/checkpoints/YYYYMMDD-HHMMSS-{title}.md` |
+| `$restore` | maintain-workflow-context-restore | 恢复上下文 |
+| `$learn` | maintain-workflow-learn | `.claude/learnings.jsonl` |
 
 Codex 的技能入口在 `.agents/skills/` 目录，每个命令对应一个薄包装技能。
 
@@ -167,8 +170,8 @@ docs/bugs/<name>/
 
 技能支持多平台挂载：
 
-- **Claude Code**: `skills/` → `.claude/skills/`（symlink）
-- **Codex CLI**: `skills/` → `.agents/skills/`（symlink）
+- **Claude Code**: `skills/` 是真实技能目录，可挂载到 `.claude/skills/`
+- **Codex CLI**: `.agents/skills/` 只保留 8 个薄包装命令，底层加载 `skills/` 中的真实技能
 
 修改**实时生效**。这意味着：
 - 对 SKILL.md 的修改在下一次调用时立即生效

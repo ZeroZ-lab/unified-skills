@@ -78,7 +78,7 @@ else
 fi
 
 printf '\n== 检查占位符 ==\n'
-placeholder_output=$(sgrep_n 'STUB|PLACEHOLDER|待补充|未完成' skills commands .agents/skills agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
+placeholder_output=$(sgrep_n 'STUB|PLACEHOLDER|待补充|尚未实现' skills commands .agents/skills agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
 if [ -n "$placeholder_output" ]; then
   printf '%s\n' "$placeholder_output"
   fail '发现占位符标记'

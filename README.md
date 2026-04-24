@@ -32,11 +32,11 @@ git clone https://github.com/ZeroZ-lab/unified-skills.git
 cd unified-skills
 ln -s "$(pwd)/skills" "$HOME/.agents/skills/unified"
 
-# 或者只安装 5 个命令入口技能
+# 或者只安装 8 个命令入口技能
 ln -s "$(pwd)/.agents/skills"/* "$HOME/.agents/skills/"
 ```
 
-Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$plan`、`$build`、`$review`、`$ship` 调用命令。
+Codex 会自动扫描 `.agents/skills/` 发现命令入口。用 `$refine`、`$plan`、`$build`、`$review`、`$ship`、`$save`、`$restore`、`$learn` 调用命令。
 
 ## 总览
 
@@ -69,9 +69,9 @@ Codex 会自动扫描 `.agents/skills/` 发现所有技能。用 `$refine`、`$p
 | `/build` | `$build` | build | 按 `artifact_type` 增量生成软件或内容产物 |
 | `/review` | `$review` | verify | 按 `artifact_type` 做代码、内容或视觉审查 |
 | `/ship` | `$ship` | ship | 发布/导出检查 + README 聚合 |
-| `/save` | — | maintain | 保存工作上下文到 checkpoint |
-| `/restore` | — | maintain | 恢复之前的工作上下文 |
-| `/learn` | — | maintain | 跨 session 学习记录管理 |
+| `/save` | `$save` | maintain | 保存工作上下文到 checkpoint |
+| `/restore` | `$restore` | maintain | 恢复之前的工作上下文 |
+| `/learn` | `$learn` | maintain | 跨 session 学习记录管理 |
 
 Debug 不再作为顶层命令，而是作为 `verify-workflow-debug` 被 `/build`、`/review` 在工作流中按需加载。
 
