@@ -73,11 +73,11 @@ reflect/   → retro（回顾）、documentation（文档）
 
 | 命令 | 加载的技能 | 产出 | 文档路径 |
 |------|-----------|------|----------|
-| `/refine` | define-workflow-refine | 规范 spec | `docs/features/<name>/01-spec.md` |
-| `/plan` | build-workflow-plan | 任务计划 | `docs/features/<name>/02-plan.md` |
-| `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/<name>/adr/` |
-| `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/<name>/review.md` |
-| `/ship` | ship-workflow-ship + artifact-export（非 software） | 发布/导出记录+README | `docs/features/<name>/ship.md` |
+| `/refine` | define-workflow-refine | 规范 spec | `docs/features/YYYYMMDD-<name>/01-spec.md` |
+| `/plan` | build-workflow-plan | 任务计划 | `docs/features/YYYYMMDD-<name>/02-plan.md` |
+| `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/YYYYMMDD-<name>/adr/` |
+| `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/YYYYMMDD-<name>/review.md` |
+| `/ship` | ship-workflow-ship + artifact-export（非 software） | 发布/导出记录+README | `docs/features/YYYYMMDD-<name>/ship.md` |
 | `/save` | maintain-workflow-context-save | 工作上下文 checkpoint | `.claude/checkpoints/YYYYMMDD-HHMMSS-{title}.md` |
 | `/restore` | maintain-workflow-context-restore | 恢复上下文 | — |
 | `/learn` | maintain-workflow-learn | 学习记录管理 | `.claude/learnings.jsonl` |
@@ -85,7 +85,7 @@ reflect/   → retro（回顾）、documentation（文档）
 ## 文档产出链
 
 ```
-docs/features/<name>/
+docs/features/YYYYMMDD-<name>/
 ├── 01-spec.md              ← /refine
 ├── 02-plan.md              ← /plan
 ├── plans/*.md              ← /plan（大型/并行任务的子计划）
@@ -102,6 +102,8 @@ docs/bugs/<name>/
 ```
 
 spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `document` / `article` / `deck` / `visual`。后续阶段按该字段加载软件、内容、版式、审查或导出技能。
+
+`/build` 会读取 `02-plan.md` 总控计划；大型/并行任务还会读取 `plans/*.md` 子计划，并只在 `Parallel Execution Matrix` 证明 `parallel_safe` 时并行分派。
 
 多产物扩展技能采用角色化方法论：先定义角色责任、长期原则和决策框架，再给出流程和验证证据；它们不是工具清单。
 

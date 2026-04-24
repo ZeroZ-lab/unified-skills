@@ -7,7 +7,7 @@ description: 把 spec 拆成可执行的任务。使用 cuando spec 已批准需
 
 
 ## 入口/出口
-- **入口**: 已批准 spec（`docs/features/<name>/01-spec.md`）
+- **入口**: 已批准 spec（`docs/features/YYYYMMDD-<name>/01-spec.md`）
 - **出口**: `docs/features/<name>/02-plan.md`；大型/并行任务额外产出 `docs/features/<name>/plans/*.md` + 用户批准
 - **指向**: 用户批准 plan 后建议调用 `build-workflow-execute`
 - **假设已加载**: CANON.md

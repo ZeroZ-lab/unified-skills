@@ -7,7 +7,7 @@ description: 按计划增量生成软件或内容产物。使用 cuando plan 已
 
 
 ## 入口/出口
-- **入口**: 已批准 plan（`docs/features/<name>/02-plan.md`）
+- **入口**: 已批准 plan（`docs/features/<name>/02-plan.md` + 可选 `docs/features/<name>/plans/*.md`）
 - **出口**: 软件代码或内容产物 + 验证证据 + ADR（如有决策）
 - **指向**: 完成 → `verify-workflow-review`；遇到 Bug → `verify-workflow-debug`
 - **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-cognitive-execution-engine/SKILL.md`
@@ -17,16 +17,59 @@ description: 按计划增量生成软件或内容产物。使用 cuando plan 已
 - 纯配置变更（加环境变量、改 CI 配置）— 直接提交，不需要增量循环
 
 ## 前置
-先调用 `build-cognitive-execution-engine` 选择执行模式：
+先读取计划拓扑，再调用 `build-cognitive-execution-engine` 选择执行模式。
+
+读取顺序：
+1. 读取 `docs/features/<name>/02-plan.md` 总控计划
+2. 如果存在 `docs/features/<name>/plans/*.md`，按文件编号逐份读取子计划
+3. 从总控计划确认 `Plan Topology`、`Subplans`、`Parallel Execution Matrix`、`Integration Order`
+4. 验证每个子计划都有 `Write Scope`、`Read Scope`、`Parallel Safety`、`Verification Evidence`、`Merge Checkpoint`
+
+执行模式：
 - **inline** — 当前会话直接执行
-- **subagent** — 每任务一个新 subagent + 两阶段审查
-- **parallel** — 独立任务并行 subagent
+- **subagent** — 每任务或每个复杂子计划一个新 subagent + 两阶段审查
+- **parallel** — 仅对 `parallel_safe` 子计划并行 subagent
+
+没有 `Parallel Execution Matrix` 或没有 `parallel_safe` 证据时，降级为 `serial` 执行。降级原因必须写入 build 记录。
 
 再读取 spec 的 `artifact_type`：
 - `software`（默认）→ 加载 `build-quality-tdd` 以及需要的 frontend/backend/database 技能
 - `document` / `article` → 按需加载 `build-content-writing`；涉及版式时加载 `build-content-layout`
 - `deck` → **先**加载 `build-content-writing` 完成叙事骨架和逐页标题 → **再**加载 `build-content-layout` 做页面视觉层级。两者顺序执行，不并行。
 - `visual` → 加载 `build-content-layout`，涉及文案时加载 `build-content-writing`
+
+deck 的 writing → layout 顺序高于并行优化。即使计划拆成多个子计划，也不能把同一页面组的叙事骨架和版式实现并行。
+
+## Plan Topology 执行规则
+
+### `serial`
+
+- 只读 `02-plan.md` 时，按任务顺序直接执行
+- 存在 `plans/*.md` 时，按文件编号顺序执行子计划
+- 不分派并行 subagent，除非后续用户明确要求重新规划
+
+### `gated-parallel`
+
+1. 先串行执行 `contracts` / `serial` / `gated` 子计划
+2. 验证共享契约通过：API、schema、design、content、brand 或导出规格已经稳定
+3. 读取依赖这些契约的 `parallel_safe` 子计划
+4. 确认 Write Scope 不重叠后，调用 `build-cognitive-execution-engine` 模式 B fan-out
+5. 并行子计划全部完成并通过验证后，按 `Integration Order` 串行合并和全量验证
+
+### `parallel`
+
+只有同时满足以下条件，才允许 fan-out：
+- `Parallel Execution Matrix` 明确列出这些子计划之间 `parallel_safe: yes`
+- 每个子计划 `Depends On` 为 none 或依赖已完成
+- 每个子计划有明确 `Write Scope`
+- 任意两个 `parallel_safe` 子计划的 `Write Scope` 不重叠
+- 验证方式可独立完成
+
+不满足任一条件时，STOP 或降级串行：
+- 缺少 `Write Scope` → STOP，回到 `/plan` 修补
+- 共享写入范围 → 降级串行或回到 `/plan` 重新切分
+- release/export/ship 子计划标为 `parallel_safe` → STOP，这类收口任务必须串行
+- 共享契约未完成 → 按 `gated-parallel` 先执行契约
 
 ## 增量循环
 
@@ -36,6 +79,7 @@ description: 按计划增量生成软件或内容产物。使用 cuando plan 已
 
 ### Step 1：选切片策略
 
+- **计划拓扑优先** — 如果 `02-plan.md` 定义了 `Plan Topology`，按拓扑执行，不重新发明执行顺序
 - **垂直切片（推荐）** — 一次建一条完整路径：DB + API + UI
   ```
   切片 1: 用户注册（注册的 schema + API + UI）→ 测试通过
@@ -68,6 +112,12 @@ description: 按计划增量生成软件或内容产物。使用 cuando plan 已
 ### Step 6：循环
 
 进入下一个切片，不要重新开始。
+
+多计划模式下，循环单位是子计划：
+- 子计划内按任务切片循环
+- 子计划结束时记录 changed_files / artifact_paths / test_results
+- 主 agent 按 `Integration Order` 合并子计划结果
+- 合并后跑全量验证，确认跨子计划影响
 
 ## 任务偏离处理
 
@@ -144,6 +194,9 @@ const ENABLE_FEATURE = process.env.FEATURE_X === 'true';
 | 测试失败 | 如果是新代码 → 修复代码直到测试通过；如果是已有测试 → 检查是否回归，修复回归 |
 | 构建失败 | 检查错误信息，修复编译/类型错误，不跳过构建直接继续 |
 | 检查点门未通过 | STOP。标记未通过项目 → 回到对应任务修复 → 重新运行检查点 → 全部绿色才继续 |
+| 子计划缺 Write Scope | STOP。不能分派 subagent，回到 `/plan` 修补 |
+| 两个 parallel_safe 子计划写同一路径 | 降级串行或回到 `/plan` 重新切分 |
+| release/export/ship 标 parallel_safe | STOP。收口任务必须串行 |
 | 切片比预期复杂 | 评估是否需分解切片。预计耗时翻倍时与用户沟通 |
 | 架构决策（ADR）阻塞 | 停止实现，记录 ADR，考虑备选方案，可能需要更新 plan |
 | Scope creep | 记录为 "NOTED"，不移出当前范围。Scope Discipline > 效率假象 |
@@ -161,6 +214,10 @@ const ENABLE_FEATURE = process.env.FEATURE_X === 'true';
 ## 红旗
 - 写了超过 100 行还没有跑测试
 - 一个切片里包含多个不相关的变更
+- 未读取 `plans/*.md` 就开始执行多计划任务
+- 没有 `Parallel Execution Matrix` 却并行分派 subagent
+- subagent 修改超出子计划 Write Scope 的文件
+- `parallel_safe` 子计划之间出现 changed_files 冲突
 - "让我快速加这个" scope 膨胀
 - 跳过测试/验证以加快速度
 - 切片之间构建失败或测试中断
@@ -178,3 +235,10 @@ const ENABLE_FEATURE = process.env.FEATURE_X === 'true';
 - [ ] Lint 通过
 - [ ] 新功能按预期工作
 - [ ] 已用描述性信息提交
+
+多计划任务额外检查：
+- [ ] 已读取 `02-plan.md` 和所有 `plans/*.md`
+- [ ] `Plan Topology` 已决定执行模式
+- [ ] `Parallel Execution Matrix` 支持所有 fan-out 决策
+- [ ] 每个 subagent 的 changed_files 没有越过 Write Scope
+- [ ] 合并后全量验证通过

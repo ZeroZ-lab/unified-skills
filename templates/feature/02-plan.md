@@ -62,7 +62,7 @@ Task 4（依赖 2 + 3）
 - **Status:** serial / parallel_safe / gated
 - **Depends On:** none
 - **Write Scope:** `path/or/glob`
-- **Read Scope:** `docs/features/<name>/01-spec.md`, `docs/features/<name>/02-plan.md`
+- **Read Scope:** `docs/features/YYYYMMDD-<name>/01-spec.md`, `docs/features/YYYYMMDD-<name>/02-plan.md`
 - **Parallel Safety:** yes/no + 原因
 - **Verification Evidence:** 测试命令、审查方式、截图、导出预览或人工确认
 - **Merge Checkpoint:** 合并前必须满足的条件

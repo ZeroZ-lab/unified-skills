@@ -8,7 +8,7 @@ description: 从 refine 产出到结构化 spec。使用 cuando refine 完成后
 
 ## 入口/出口
 - **入口**: `define-workflow-refine` 完成，用户已批准方向
-- **出口**: `docs/features/<name>/01-spec.md` + 用户批准
+- **出口**: `docs/features/YYYYMMDD-<name>/01-spec.md` + 用户批准
 - **指向**: 用户批准 spec 后建议调用 `build-workflow-plan`
 - **假设已加载**: CANON.md（可选加载 `build-cognitive-decision-record/SKILL.md` — 有架构决策时再加载）
 
@@ -149,4 +149,4 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 - [ ] 成功标准是具体可测试的
 - [ ] Boundaries（Always/Ask First/Never）已定义
 - [ ] 风险与应对方案已评估
-- [ ] spec 已保存到 `docs/features/<name>/01-spec.md`
+- [ ] spec 已保存到 `docs/features/YYYYMMDD-<name>/01-spec.md`

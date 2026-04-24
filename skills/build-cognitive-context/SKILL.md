@@ -34,7 +34,7 @@ Level 1: 规则文件
   → 始终加载。定义全局行为和宪法纪律。
   
 Level 2: 规格说明
-  docs/features/<name>/01-spec.md / 02-plan.md
+  docs/features/YYYYMMDD-<name>/01-spec.md / 02-plan.md
   → 当前任务需要时加载。定义"做什么"。
   
 Level 3: 源代码

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0] - 2026-04-25
+
+### Added
+- build-workflow-execute: consume `02-plan.md` plus optional `plans/*.md` subplans
+- build-workflow-execute: execute `serial`, `parallel`, and `gated-parallel` plan topologies
+- build-cognitive-execution-engine: support fan-out from `parallel_safe` subplans with Write Scope boundaries
+- validate: check that build execution skills understand Plan Topology, Parallel Execution Matrix, parallel_safe, and Write Scope
+
 ## [1.8.1] - 2026-04-25
 
 ### Fixed

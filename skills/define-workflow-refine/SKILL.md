@@ -9,7 +9,7 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 
 ## 入口/出口
 - **入口**: 模糊想法、功能请求、用户"我想做 X"
-- **出口**: `docs/features/<name>/01-spec.md` + 用户批准
+- **出口**: `docs/features/YYYYMMDD-<name>/01-spec.md` + 用户批准
 - **指向**: 完成后建议调用 `define-workflow-spec`
 - **假设已加载**: CANON.md
 
@@ -180,7 +180,7 @@ Blocking / Important / Suggestion
 
 ### Phase 3 产出 spec
 
-输出结构化的 one-pager 到 `docs/features/<name>/01-spec.md`：
+输出结构化的 one-pager 到 `docs/features/YYYYMMDD-<name>/01-spec.md`（YYYYMMDD 为当天日期）：
 
 ```markdown
 # [功能名称]

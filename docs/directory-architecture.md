@@ -183,7 +183,7 @@ skills/
 ### 3.2 技能到文档产出的映射
 
 ```
-技能完成                       → docs/features/<name>/
+技能完成                       → docs/features/YYYYMMDD-<name>/
 ────────────────────────────────────────────
 define-workflow-refine        → 01-spec.md
 build-workflow-plan           → 02-plan.md
@@ -200,9 +200,9 @@ ship-workflow-ship            → ship.md + README.md（事后总结）
 define-workflow-refine/SKILL.md   → templates/feature/01-spec.md
 build-workflow-plan/SKILL.md      → templates/feature/02-plan.md
 verify-workflow-debug/SKILL.md  → templates/bug/*
-verify-workflow-review/SKILL.md   → 直接产出 docs/features/<name>/review.md
+verify-workflow-review/SKILL.md   → 直接产出 docs/features/YYYYMMDD-<name>/review.md
 ship-workflow-ship/SKILL.md       → templates/feature/README.md
-                                  + 直接产出 docs/features/<name>/ship.md
+                                  + 直接产出 docs/features/YYYYMMDD-<name>/ship.md
 任意 build 中决策                 → templates/feature/adr/template.md
 ```
 

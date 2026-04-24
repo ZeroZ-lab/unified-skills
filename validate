@@ -113,6 +113,10 @@ done
 for pattern in 'plans/' 'Parallel Execution Matrix' 'Write Scope'; do
   sgrep "$pattern" templates/feature/02-plan.md || fail "plan 模板缺少 $pattern"
 done
+for pattern in 'Plan Topology' 'Parallel Execution Matrix' 'parallel_safe' 'Write Scope'; do
+  sgrep "$pattern" skills/build-workflow-execute/SKILL.md || fail "execute 技能缺少 $pattern"
+  sgrep "$pattern" skills/build-cognitive-execution-engine/SKILL.md || fail "execution-engine 技能缺少 $pattern"
+done
 sgrep 'plans/\*\.md' README.md || fail "README 缺少 plans/*.md 文档产出链"
 sgrep 'plans/\*\.md' AGENTS.md || fail "AGENTS 缺少 plans/*.md 文档产出链"
 sgrep 'plans/\*\.md' CLAUDE.md || fail "CLAUDE 缺少 plans/*.md 文档产出链"
