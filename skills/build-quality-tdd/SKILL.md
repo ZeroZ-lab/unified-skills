@@ -19,12 +19,14 @@ description: 测试驱动开发。使用 cuando 需要写逻辑代码、修 bug 
 
 ## Iron Law
 
+<HARD-GATE>
 ```
 没有测试先失败的代码 = 不存在的代码。
 先写实现再补测试？删除重来。
 ```
 
 **违抗这条铁律的字面就是违抗 TDD 精神。** 如果你没说测试先失败，你不能声称代码已完成。
+</HARD-GATE>
 
 ## 流程: RED → GREEN → REFACTOR
 
@@ -138,7 +140,7 @@ export async function completeTask(id: string): Promise<Task> {
 
 ## 测试金字塔
 
-按比例分配测试投入——大多数测试应该小而快，少量端到端：
+按比例分配测试投入——大多数测试小而快，少量端到端：
 
 ```
           ╱╲
@@ -193,7 +195,7 @@ it('调用 db.query 并传入 ORDER BY created_at DESC', async () => {
 
 ### DAMP 优于 DRY
 
-生产代码用 DRY（Don't Repeat Yourself）是正确的。测试用 **DAMP（Descriptive And Meaningful Phrases）** 更好。每个测试应该是独立可读的完整故事，不需要读者追溯共享 helper：
+生产代码用 DRY（Don't Repeat Yourself）是正确的。测试用 **DAMP（Descriptive And Meaningful Phrases）** 更好。每个测试是独立可读的完整故事，不需要读者追溯共享 helper：
 
 ```typescript
 // DAMP: 每个测试自包含、可读数
@@ -302,6 +304,9 @@ describe('TaskService', () => {
 
 ## 红旗 — STOP 走流程
 
+<HARD-GATE>
+以下任何一个想法出现，立即停止并回到 RED：
+
 - 先写实现后看到"测试也加一下"
 - 测试第一次运行就 PASS（没测到真正行为）
 - 跳过 REFACTOR 步骤连续堆代码
@@ -311,6 +316,7 @@ describe('TaskService', () => {
 - 修复 bug 时试图直接改代码而非先写复现测试
 - 修改代码后不跑全量测试
 - **"实现太复杂写不了测试" → 设计错了，测试在告诉你重构**
+</HARD-GATE>
 
 **注意来自人类伙伴的信号：**
 - "这个覆盖了吗？" — 你漏了测试

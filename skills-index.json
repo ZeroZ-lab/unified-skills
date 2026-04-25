@@ -1,0 +1,186 @@
+{
+  "by_phase": {
+    "define": {
+      "skills": ["define-cognitive-brainstorm", "define-workflow-refine", "define-workflow-spec"],
+      "description": "想法模糊、需要方案对比、收敛到规格"
+    },
+    "build": {
+      "skills": [
+        "build-workflow-plan",
+        "build-workflow-execute",
+        "build-quality-tdd",
+        "build-cognitive-context",
+        "build-cognitive-source-driven",
+        "build-cognitive-execution-engine",
+        "build-cognitive-decision-record",
+        "build-infrastructure-git",
+        "build-frontend-ui-engineering",
+        "build-frontend-browser-testing",
+        "build-backend-api-design",
+        "build-backend-database",
+        "build-backend-service-patterns",
+        "build-content-writing",
+        "build-content-layout"
+      ],
+      "description": "拆分任务、增量生成产物"
+    },
+    "verify": {
+      "skills": [
+        "verify-workflow-review",
+        "verify-workflow-debug",
+        "verify-frontend-accessibility",
+        "verify-quality-integration-testing",
+        "verify-quality-performance",
+        "verify-quality-security",
+        "verify-quality-code-review-standards",
+        "verify-content-review",
+        "verify-visual-review",
+        "verify-workflow-receiving-review",
+        "verify-quality-simplify"
+      ],
+      "description": "质量把关、Bug 调查、审查"
+    },
+    "ship": {
+      "skills": [
+        "ship-workflow-ship",
+        "ship-infrastructure-ci-cd",
+        "ship-infrastructure-deploy",
+        "ship-workflow-artifact-export",
+        "ship-workflow-canary",
+        "ship-workflow-land",
+        "ship-workflow-doc-sync"
+      ],
+      "description": "发布检查、部署、监控"
+    },
+    "maintain": {
+      "skills": [
+        "maintain-infrastructure-observability",
+        "maintain-workflow-deprecation-migration",
+        "maintain-workflow-context-save",
+        "maintain-workflow-context-restore",
+        "maintain-workflow-learn"
+      ],
+      "description": "可观测性、上下文管理、学习记录"
+    },
+    "reflect": {
+      "skills": [
+        "reflect-team-retro",
+        "reflect-team-documentation"
+      ],
+      "description": "事后回顾、文档工程"
+    }
+  },
+  "by_artifact_type": {
+    "software": {
+      "required": ["build-quality-tdd", "build-infrastructure-git"],
+      "frontend": ["build-frontend-ui-engineering", "build-frontend-browser-testing", "verify-frontend-accessibility"],
+      "backend": ["build-backend-api-design", "build-backend-database", "build-backend-service-patterns"],
+      "quality": ["verify-quality-security", "verify-quality-performance", "verify-quality-simplify"]
+    },
+    "document": {
+      "required": ["build-content-writing"],
+      "optional": ["build-content-layout"]
+    },
+    "article": {
+      "required": ["build-content-writing", "verify-content-review"]
+    },
+    "deck": {
+      "required": ["build-content-writing", "build-content-layout"],
+      "sequence": ["build-content-writing", "build-content-layout"],
+      "note": "必须先 writing 再 layout，不可并行"
+    },
+    "visual": {
+      "required": ["build-content-layout", "verify-visual-review"]
+    }
+  },
+  "by_trigger": {
+    "user_says": {
+      "bug|error|crash|报错|不工作|失败": ["verify-workflow-debug"],
+      "test|测试|tdd|单元测试": ["build-quality-tdd"],
+      "api|endpoint|接口|REST|GraphQL": ["build-backend-api-design"],
+      "ui|前端|component|组件|页面": ["build-frontend-ui-engineering"],
+      "performance|性能|慢|优化|latency": ["verify-quality-performance"],
+      "security|安全|漏洞|攻击|XSS|SQL注入": ["verify-quality-security"],
+      "database|数据库|schema|migration|查询": ["build-backend-database"],
+      "accessibility|无障碍|a11y|WCAG": ["verify-frontend-accessibility"],
+      "review|审查|code review": ["verify-workflow-review"],
+      "deploy|部署|上线|发布": ["ship-workflow-ship"],
+      "brainstorm|头脑风暴|想法|方案": ["define-cognitive-brainstorm"],
+      "refine|提炼|收敛|spec": ["define-workflow-refine"],
+      "plan|计划|任务|拆分": ["build-workflow-plan"],
+      "document|文档|article|文章": ["build-content-writing"],
+      "deck|PPT|演示|slides": ["build-content-writing", "build-content-layout"],
+      "git|版本控制|commit|branch": ["build-infrastructure-git"],
+      "ci|cd|pipeline|持续集成": ["ship-infrastructure-ci-cd"],
+      "observability|监控|日志|metrics": ["maintain-infrastructure-observability"],
+      "retro|回顾|复盘|postmortem": ["reflect-team-retro"]
+    },
+    "context_signals": {
+      "has_spec_no_plan": ["build-workflow-plan"],
+      "has_plan_no_code": ["build-workflow-execute"],
+      "has_code_no_tests": ["build-quality-tdd"],
+      "has_code_no_review": ["verify-workflow-review"],
+      "has_review_no_ship": ["ship-workflow-ship"],
+      "new_session_has_checkpoint": ["maintain-workflow-context-restore"],
+      "complex_codebase_unfamiliar": ["build-cognitive-context"],
+      "using_unfamiliar_api": ["build-cognitive-source-driven"],
+      "facing_technical_decision": ["build-cognitive-decision-record"]
+    }
+  },
+  "by_risk": {
+    "user_input": ["verify-quality-security"],
+    "authentication": ["verify-quality-security"],
+    "authorization": ["verify-quality-security"],
+    "data_storage": ["verify-quality-security", "build-backend-database"],
+    "ui_change": ["verify-frontend-accessibility"],
+    "performance_critical": ["verify-quality-performance"],
+    "public_api": ["build-backend-api-design", "verify-quality-security"],
+    "breaking_change": ["verify-quality-integration-testing"],
+    "production_deployment": ["ship-workflow-ship", "ship-workflow-canary"]
+  },
+  "skill_descriptions": {
+    "define-cognitive-brainstorm": "想法模糊、开放性问题、需要方案对比",
+    "define-workflow-refine": "模糊想法收敛到 spec",
+    "define-workflow-spec": "规格化文档",
+    "build-workflow-plan": "拆分任务",
+    "build-workflow-execute": "增量生成产物",
+    "build-quality-tdd": "写逻辑代码（MUST）",
+    "build-cognitive-context": "上下文混乱或输出质量下降",
+    "build-cognitive-source-driven": "使用不熟悉的 API/框架",
+    "build-cognitive-execution-engine": "执行引擎",
+    "build-cognitive-decision-record": "面临技术选型或架构决策",
+    "build-infrastructure-git": "版本控制操作",
+    "build-frontend-ui-engineering": "构建/修改 UI 组件",
+    "build-frontend-browser-testing": "浏览器自动化测试",
+    "build-backend-api-design": "设计 API/接口/数据合约",
+    "build-backend-database": "设计 schema/写迁移/优化查询",
+    "build-backend-service-patterns": "服务模式和架构",
+    "build-content-writing": "文档/文章/PPT 内容",
+    "build-content-layout": "版式设计/信息层级",
+    "verify-workflow-review": "产物完成后质量把关",
+    "verify-workflow-debug": "遇到 bug/测试失败/意外行为（MUST）",
+    "verify-frontend-accessibility": "构建 UI 组件/表单/导航",
+    "verify-quality-integration-testing": "集成测试",
+    "verify-quality-performance": "性能不达标或上线前审查",
+    "verify-quality-security": "涉及用户输入/认证/数据存储",
+    "verify-quality-code-review-standards": "代码审查标准",
+    "verify-content-review": "内容审查",
+    "verify-visual-review": "视觉审查",
+    "verify-workflow-receiving-review": "接收审查反馈",
+    "verify-quality-simplify": "代码变得复杂/重复/过度抽象",
+    "ship-workflow-ship": "审查通过后上线或交付",
+    "ship-infrastructure-ci-cd": "设置/修改 CI/CD 管道",
+    "ship-infrastructure-deploy": "部署操作",
+    "ship-workflow-artifact-export": "产物导出",
+    "ship-workflow-canary": "代码已部署需要持续验证",
+    "ship-workflow-land": "PR 合并到主分支并验证部署",
+    "ship-workflow-doc-sync": "文档同步",
+    "maintain-infrastructure-observability": "可观测性",
+    "maintain-workflow-deprecation-migration": "废弃迁移",
+    "maintain-workflow-context-save": "保存工作上下文供后续恢复",
+    "maintain-workflow-context-restore": "新 session 继续之前的工作",
+    "maintain-workflow-learn": "发现项目模式/踩坑/偏好需要持久化",
+    "reflect-team-retro": "功能完成/里程碑达成/事故处理后复盘",
+    "reflect-team-documentation": "记录架构决策或维护项目知识"
+  }
+}

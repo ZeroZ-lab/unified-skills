@@ -7,7 +7,7 @@ description: 内容质量审查。使用 cuando artifact_type 为 document、art
 
 ## 入口/出口
 - **入口**: document / article / deck 草稿或定稿已完成
-- **出口**: 内容审查结论、阻塞问题、修订建议和验证证据
+- **出口**: 内容审查结论、阻塞问题、修订必须和验证证据
 - **指向**: 有问题 → 回到 `build-content-writing`；通过 → `ship-artifact-export`
 - **假设已加载**: CANON.md
 
@@ -40,7 +40,7 @@ description: 内容质量审查。使用 cuando artifact_type 为 document、art
 按这个顺序审查，不要先改字句：
 
 1. **定义审查基准**: 读取 `artifact_type`、目标读者、成功标准、内容路径和来源材料。
-2. **抽取主张清单**: 标出核心结论、关键事实、建议动作、未证实假设。
+2. **抽取主张清单**: 标出核心结论、关键事实、必须动作、未证实假设。
 3. **判断是否退回重写**:
    - 核心主张缺失或错误 → 退回 `build-content-writing`
    - 目标读者错位 → 退回重定受众和结构

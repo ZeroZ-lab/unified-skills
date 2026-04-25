@@ -1,6 +1,26 @@
 # Unified Skills
 
-> 宪法 + 43 技能 + 8 命令 + 22 角色（15 审查 + 7 核心工程）= 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+> 宪法 + 43 技能 + 9 命令 + 22 角色（15 审查 + 7 核心工程）= 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+
+## Session 启动协议
+
+<CRITICAL>
+在响应用户第一条消息之前，必须先调用 `maintain-workflow-using-unified` 技能建立主动发现机制。
+
+如果你在本 session 中已经看到过 `<EXTREMELY-IMPORTANT>` 标签，说明已加载，无需重复。
+</CRITICAL>
+
+## 每个任务的发现协议
+
+收到用户任务后，在采取任何行动之前：
+
+1. 读取 `skills-index.json`
+2. 分析任务特征（阶段/产物类型/触发词/上下文/风险）
+3. 查询相关技能
+4. 加载所有 required 技能 + 1% 可能相关的技能
+5. 宣告并执行
+
+这是非可选流程。
 
 ## 如果你是一个 AI Agent
 
@@ -39,8 +59,8 @@ unified/
 │   ├── maintain/            维护（5）
 │   └── reflect/             复盘（2）
 │
-├── commands/                8 命令入口（每个 .md 定义命令行为）
-├── .agents/skills/           8 命令入口（Codex CLI skill 命令）
+├── commands/                9 命令入口（每个 .md 定义命令行为）
+├── .agents/skills/           9 命令入口（Codex CLI skill 命令）
 ├── agents/                  22 角色（7 核心工程 + 4 review + 4 计划 + 3 refine + 4 ship）
 ├── templates/               6 文档模板
 ├── references/              编排模式参考文档
@@ -73,6 +93,7 @@ reflect/   → retro（回顾）、documentation（文档）
 
 | 命令 | 加载的技能 | 产出 | 文档路径 |
 |------|-----------|------|----------|
+| `/brainstorm` | define-cognitive-brainstorm | 设计文档（2-3 方案 + 推荐） | `docs/features/YYYYMMDD-<name>/brainstorm.md` |
 | `/refine` | define-workflow-refine | 规范 spec | `docs/features/YYYYMMDD-<name>/01-spec.md` |
 | `/plan` | build-workflow-plan | 任务计划 | `docs/features/YYYYMMDD-<name>/02-plan.md` |
 | `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/YYYYMMDD-<name>/adr/` |

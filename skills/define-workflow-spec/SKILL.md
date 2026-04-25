@@ -9,7 +9,7 @@ description: 从 refine 产出到结构化 spec。使用 cuando refine 完成后
 ## 入口/出口
 - **入口**: `define-workflow-refine` 完成，用户已批准方向
 - **出口**: `docs/features/YYYYMMDD-<name>/01-spec.md` + 用户批准
-- **指向**: 用户批准 spec 后建议调用 `build-workflow-plan`
+- **指向**: 用户批准 spec 后必须调用 `build-workflow-plan`
 - **假设已加载**: CANON.md（可选加载 `build-cognitive-decision-record/SKILL.md` — 有架构决策时再加载）
 
 ## 何时不使用

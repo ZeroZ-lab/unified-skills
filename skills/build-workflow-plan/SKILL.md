@@ -9,12 +9,12 @@ description: 把 spec 拆成可执行的任务。使用 cuando spec 已批准需
 ## 入口/出口
 - **入口**: 已批准 spec（`docs/features/YYYYMMDD-<name>/01-spec.md`）
 - **出口**: `docs/features/<name>/02-plan.md`；大型/并行任务额外产出 `docs/features/<name>/plans/*.md` + 用户批准
-- **指向**: 用户批准 plan 后建议调用 `build-workflow-execute`
+- **指向**: 用户批准 plan 后必须调用 `build-workflow-execute`
 - **假设已加载**: CANON.md
 
 ## 何时不使用
 - 变更只涉及 1-2 个文件且 scope 明显
-- spec 已经包含明确定义的任务（此时可以直接进入 build）
+- spec 已经包含明确定义的任务（此时直接进入 build）
 
 ### Step 1：进入只读模式
 
@@ -72,9 +72,9 @@ Database schema
 
 在定义任务前，映射出哪些文件会被创建或修改及各自的职责。这是在锁定分解决策的地方。
 
-- 设计职责清晰、接口明确的单元。每个文件应该有一个明确的职责。
+- 设计职责清晰、接口明确的单元。每个文件有一个明确的职责。
 - 你能在上下文中持有的代码越多，推理越可靠。偏好更小、更聚焦的文件。
-- 一起变化的文件应该放一起。按职责拆分，不是按技术层。
+- 一起变化的文件放一起。按职责拆分，不是按技术层。
 - 在已有代码库中，遵循现有模式。不要单方面重构。
 
 ### Step 4：垂直切片
@@ -96,10 +96,10 @@ Task 4: 连接所有东西
 
 **Good（垂直切片）：**
 ```
-Task 1: 用户可以注册（注册的 schema + API + UI）
-Task 2: 用户可以登录（登录的 schema + API + UI）
-Task 3: 用户可以创建任务（任务的 schema + API + UI）
-Task 4: 用户可以查看任务列表（查询 + API + 列表 UI）
+Task 1: 用户注册（注册的 schema + API + UI）
+Task 2: 用户登录（登录的 schema + API + UI）
+Task 3: 用户创建任务（任务的 schema + API + UI）
+Task 4: 用户查看任务列表（查询 + API + 列表 UI）
 ```
 
 每个垂直切片交付可工作的、可测试的功能。
@@ -240,7 +240,7 @@ Plan draft
 
 **反馈处理规则：**
 - **Blocking** — 必须解决，修改 plan 后再提交批准
-- **Important** — 强烈建议采纳，不采纳需在 plan 中记录原因
+- **Important** — 强烈必须采纳，不采纳需在 plan 中记录原因
 - **Suggestion** — 自主判断，采纳后标注来源
 
 **最少触发条件：**
@@ -287,7 +287,7 @@ Plan draft
 - plan 中没有验证步骤
 - 所有任务都是 L 或 XL 大小
 - 阶段之间没有检查点
-- 依赖顺序没有考虑
+- 依赖顺序没有执行
 - plan 中任务出现 "and" 在标题里（= 两个任务）
 
 ## 并行化机会

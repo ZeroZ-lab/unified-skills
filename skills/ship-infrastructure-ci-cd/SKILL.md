@@ -96,7 +96,7 @@ CI 慢 (>10 min)？
 ├── 测试并行 (按模块分 job)
 ├── 使用本地 CI runner (而非 GitHub hosted)
 ├── 仅跑受影响的测试 (test impact analysis)
-└── 拆分 heavy job (lint + type 可以并行)
+└── 拆分 heavy job (lint + type 并行)
 ```
 
 ## 常见说辞

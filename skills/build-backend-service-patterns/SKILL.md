@@ -103,7 +103,7 @@ async function createOrder(req: CreateOrderRequest): Promise<Order> {
 | 多策略可切换 | Strategy Pattern | 低 |
 | 领域逻辑密集 | Domain-Driven（Entity + Value Object + Aggregate） | 中-高 |
 
-**原则:** 从最简单的模式开始。当代码变复杂**因为模式不够**时才升级，不因为"应该如此"。
+**原则:** 从最简单的模式开始。当代码变复杂**因为模式不够**时才升级，不因为"如此"。
 
 ## 错误处理
 

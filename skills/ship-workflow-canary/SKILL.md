@@ -137,7 +137,7 @@ check_endpoint() {
 [按时间线列出所有非 OK 检查]
 
 ## 建议
-- HEALTHY → 更新基线，建议进入 /retro
+- HEALTHY → 更新基线，必须进入 /retro
 - DEGRADED → 继续监控，调查退化端点
 - BROKEN → 立即回滚，参考回滚计划
 ```

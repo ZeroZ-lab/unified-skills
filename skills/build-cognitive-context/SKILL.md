@@ -55,7 +55,7 @@ Level 5: 对话历史
 | 策略 | 方式 | 适用 |
 |------|------|------|
 | **Brain Dump** | 一次性加载全部相关文件 | 小项目（< 50 文件）、探索阶段 |
-| **Selective Include** | 仅加载任务直接相关的文件 | 常规任务（推荐默认） |
+| **Selective Include** | 仅加载任务直接相关的文件 | 常规任务（默认） |
 | **Hierarchical Summary** | 分层摘要（架构→模块→文件） | 大项目、跨模块重构 |
 
 **默认使用 Selective Include。** Brain Dump 浪费 tokens 和注意力。Hierarchical Summary 成本高。

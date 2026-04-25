@@ -178,7 +178,7 @@ Agent 3 结果 ─┘
 - 两个并行 agent 在改同一文件 — 回退，串行化
 - subagent 修改了 Write Scope 外文件 — 回退该 subagent 变更，重新分派或串行执行
 - `parallel_safe` 不是来自 `Parallel Execution Matrix` 的显式结论 — 停止并行
-- Code Quality Reviewer 发现了 Spec Reviewer 应该发现的问题 — 审查顺序错了
+- Code Quality Reviewer 发现了 Spec Reviewer 发现的问题 — 审查顺序错了
 - Subagent 上下文加载不包含 spec 文档 — 它工作在盲区
 
 ## 验证清单

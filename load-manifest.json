@@ -1,8 +1,8 @@
 {
   "defaults": {
     "all-tasks": {
-      "description": "每次任务必载 — 宪法是所有技能的行为底线",
-      "skills": ["CANON.md"]
+      "description": "每次任务必载 — 宪法 + 引导技能",
+      "skills": ["CANON.md", "maintain-workflow-using-unified"]
     }
   },
   "taskTypes": {

@@ -56,7 +56,7 @@ async function recordUsage(userId: string, amount: number): Promise<void> { ... 
 // 计算总价
 const total = items.reduce((sum, item) => sum + item.price, 0);
 
-// Bad: TODO 应该是 issue
+// Bad: TODO 是 issue
 // TODO: 加错误处理
 async function processPayment() { ... }
 

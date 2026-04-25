@@ -40,7 +40,7 @@ Bad:
   abc123 feat: add task creation, tests, refactor validation, fix typo in README
 ```
 
-**每个提交应该是独立可理解、可 revert、可 bisect 的。**
+**每个提交是独立可理解、可 revert、可 bisect 的。**
 
 ### 3. 描述性提交信息
 
@@ -82,7 +82,7 @@ Bad:
 | **Large** | 300-1000 行 | 需要拆分或更仔细审查 |
 | **XL** | > 1000 行 | 必须拆分 |
 
-**目标: 每次提交约 100 行。** 超过 300 行 → 考虑是否可以拆分。
+**目标: 每次提交约 100 行。** 超过 300 行 → 执行是否拆分。
 
 ## Save Point 模式
 
