@@ -1,5 +1,5 @@
 ---
-name: code-reviewer
+name: review-code-reviewer
 description: 五轴代码审查 specialist
 ---
 

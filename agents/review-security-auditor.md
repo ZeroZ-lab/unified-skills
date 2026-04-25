@@ -1,5 +1,5 @@
 ---
-name: security-auditor
+name: review-security-auditor
 description: 安全审计 specialist
 ---
 

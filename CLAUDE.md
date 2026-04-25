@@ -1,6 +1,6 @@
 # Unified Skills
 
-> 宪法 + 43 技能 + 8 命令 + 15 审查角色 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+> 宪法 + 43 技能 + 8 命令 + 22 角色（15 审查 + 7 核心工程）= 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 如果你是一个 AI Agent
 
@@ -41,7 +41,7 @@ unified/
 │
 ├── commands/                8 命令入口（每个 .md 定义命令行为）
 ├── .agents/skills/           8 命令入口（Codex CLI skill 命令）
-├── agents/                  15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
+├── agents/                  22 角色（7 核心工程 + 4 review + 4 计划 + 3 refine + 4 ship）
 ├── templates/               6 文档模板
 ├── references/              编排模式参考文档
 ├── docs/                    设计文档

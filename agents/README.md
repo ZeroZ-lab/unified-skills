@@ -1,15 +1,27 @@
-# Agents — 并行审查角色
+# Agents — 多角色并行体系
 
-用于 review、plan、refine 和 ship 的多角色并行发散模式。15 个 agent 按工作流阶段分组。
+22 个 agent 按职责分组：7 个核心工程角色 + 15 个审查角色。用于 define、build、review、refine 和 ship 的多角色并行发散模式。
+
+## 核心工程角色（跨阶段复用）
+
+| Agent | 职责 | 调用时机 |
+|-------|------|---------|
+| requirements-analyst | 需求澄清、5W1H、spec 生成 | /refine |
+| task-planner | 任务分解、依赖分析、并行安全性 | /plan, /build |
+| software-engineer | TDD 开发、API/数据库/前后端实现 | /build (software) |
+| data-architect | 数据建模、schema 设计、迁移策略 | /build (软件子领域) |
+| api-designer | API 接口设计、契约定义、版本管理 | /build (软件子领域) |
+| content-writer | 文档/文章/PPT 叙事创作 | /build (document/article/deck) |
+| visual-designer | 版式布局、视觉层级、交互设计 | /build (visual/deck) |
 
 ## Review Army（审查阶段）
 
 | Agent | 职责 | 调用时机 |
 |-------|------|---------|
-| code-reviewer | 五轴审查（正确性、可读性、架构、安全、性能） | review --full |
-| security-auditor | 安全审计（OWASP、威胁建模、密钥扫描） | review --full |
-| test-engineer | 测试覆盖分析（happy path、边界、错误路径、并发） | review --full |
-| review-accessibility-checker | 无障碍审查（WCAG、屏幕阅读器、表单错误、动态内容） | review --full（有 UI 变更时） |
+| review-code-reviewer | 五轴审查（正确性、可读性、架构、安全、性能） | review --full |
+| review-security-auditor | 安全审计（OWASP、威胁建模、密钥扫描） | review --full |
+| review-test-engineer | 测试覆盖分析（happy path、边界、错误路径、并发） | review --full |
+| review-accessibility-auditor | 无障碍审查（WCAG、屏幕阅读器、表单错误、动态内容） | review --full（有 UI 变更时） |
 
 ## Plan Review Army（计划阶段）
 

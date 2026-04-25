@@ -1,5 +1,5 @@
 ---
-name: test-engineer
+name: review-test-engineer
 description: 测试覆盖分析 specialist
 ---
 

@@ -1,6 +1,6 @@
 # Code Quality Reviewer Subagent 提示词模板
 
-> 用于模式 C Phase 3：五轴代码质量审查。仅在 Spec Reviewer 返回 PASS 后分派。审查范围参考 `agents/code-reviewer.md` 定义的 persona。
+> 用于模式 C Phase 3：五轴代码质量审查。仅在 Spec Reviewer 返回 PASS 后分派。审查范围参考 `agents/review-code-reviewer.md` 定义的 persona。
 
 ---
 
@@ -18,7 +18,7 @@
 
 ## 审查范围
 
-基于 `agents/code-reviewer.md` 的 persona 定义：五轴审查 Correctness -> Readability -> Architecture -> Security -> Performance，按严重性分级输出。
+基于 `agents/review-code-reviewer.md` 的 persona 定义：五轴审查 Correctness -> Readability -> Architecture -> Security -> Performance，按严重性分级输出。
 
 审查对象为 `{{BASE_SHA}}..{{HEAD_SHA}}` 的 diff。不审查 diff 范围以外的代码，但可以引用上下文辅助理解。
 

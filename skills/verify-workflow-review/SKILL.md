@@ -107,19 +107,19 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 同时派发 4 个 subagent 做专业审查：
 
 ```
-安全敏感            → + security-auditor agent
-代码质量敏感         → + code-reviewer agent
-测试覆盖需要验证     → + test-engineer agent
-无障碍合规          → + review-accessibility-checker agent
+安全敏感            → + review-security-auditor agent
+代码质量敏感         → + review-code-reviewer agent
+测试覆盖需要验证     → + review-test-engineer agent
+无障碍合规          → + review-accessibility-auditor agent
 ```
 
 触发条件：敏感数据 / >50 行变更 / >2 文件 / 有 UI 变更 / 用户指定 `--full`。
 
 **最少触发条件：**
 - 小型变更（<50 行、无安全/UI 敏感）→ 可跳过并行模式，用标准模式
-- 标准变更 → 至少 code-reviewer + test-engineer
-- 有 UI 变更 → 加 accessibility-checker
-- 安全敏感 → 加 security-auditor
+- 标准变更 → 至少 review-code-reviewer + review-test-engineer
+- 有 UI 变更 → 加 review-accessibility-auditor
+- 安全敏感 → 加 review-security-auditor
 - 用户指定 `--full` → 4 角色全开
 
 每个 subagent 输出 Blocking / Important / Suggestion 三级反馈。

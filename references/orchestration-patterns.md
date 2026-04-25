@@ -37,7 +37,7 @@
 ```
 
 **适用场景:**
-- `/build` 加载执行技能 + code-reviewer persona
+- `/build` 加载执行技能 + review-code-reviewer persona
 - `/review` 加载审查技能 + 审查 persona
 - 需要特定角色视角但不需要并行反馈
 

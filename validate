@@ -194,14 +194,25 @@ done < <(find .agents/skills -name 'SKILL.md' | sort | grep -vE '/(define|build|
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查 Agent 定义结构 ==\n'
-while IFS= read -r file; do
+# 审查类 agent：必须有审查维度 + 输出格式 + Blocking/Important/Suggestion
+for file in agents/review-*.md agents/plan-*.md agents/refine-*.md agents/ship-*.md; do
+  [ -f "$file" ] || continue
   sgrep '^name: ' "$file" || fail "缺少 name frontmatter: $file"
   sgrep '^description: ' "$file" || fail "缺少 description frontmatter: $file"
   sgrep '^# ' "$file" || fail "缺少 H1 标题: $file"
   sgrep '审查维度|审计维度' "$file" || fail "缺少审查维度/审计维度章节: $file"
   sgrep '输出格式' "$file" || fail "缺少输出格式章节: $file"
   sgrep 'Blocking.*Important.*Suggestion' "$file" || fail "缺少 Blocking/Important/Suggestion 分级: $file"
-done < <(find agents -name '*.md' ! -name 'README.md' | sort)
+done
+# 工程类 agent：必须有职责 + 输出格式
+for file in agents/requirements-*.md agents/task-*.md agents/software-*.md agents/data-*.md agents/api-*.md agents/content-*.md agents/visual-*.md; do
+  [ -f "$file" ] || continue
+  sgrep '^name: ' "$file" || fail "缺少 name frontmatter: $file"
+  sgrep '^description: ' "$file" || fail "缺少 description frontmatter: $file"
+  sgrep '^# ' "$file" || fail "缺少 H1 标题: $file"
+  sgrep '职责' "$file" || fail "缺少职责章节: $file"
+  sgrep '输出格式' "$file" || fail "缺少输出格式章节: $file"
+done
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查过期内容 ==\n'

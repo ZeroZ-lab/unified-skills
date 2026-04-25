@@ -245,7 +245,7 @@ ship-workflow-ship/SKILL.md       → templates/feature/README.md
 | 阶段值 | kebab-case | `define`, `build`, `verify`, `ship`, `maintain`, `reflect` |
 | 角色值 | kebab-case | `workflow`, `frontend`, `backend`, `quality`, `cognitive`, `infrastructure`, `team`, `content`, `visual`, `artifact` |
 | 命令 | kebab-case | `review.md` |
-| Agent | kebab-case | `code-reviewer.md` |
+| Agent | kebab-case | `review-code-reviewer.md` |
 | 模板 | 数字前缀 + kebab-case | `01-spec.md`, `02-plan.md` |
 | 产出文档 | 数字前缀 + kebab-case | `01-spec.md`, `01-root-cause.md` |
 
@@ -365,9 +365,9 @@ unified/
 │
 ├── agents/
 │   ├── README.md
-│   ├── code-reviewer.md
-│   ├── security-auditor.md
-│   ├── test-engineer.md
+│   ├── review-code-reviewer.md
+│   ├── review-security-auditor.md
+│   ├── review-test-engineer.md
 │   ├── plan-ceo-reviewer.md
 │   ├── plan-eng-reviewer.md
 │   ├── plan-design-reviewer.md
@@ -375,7 +375,7 @@ unified/
 │   ├── refine-ceo-scout.md
 │   ├── refine-eng-scout.md
 │   ├── refine-design-scout.md
-│   ├── review-accessibility-checker.md
+│   ├── review-accessibility-auditor.md
 │   ├── ship-security-auditor.md
 │   ├── ship-performance-auditor.md
 │   ├── ship-accessibility-auditor.md

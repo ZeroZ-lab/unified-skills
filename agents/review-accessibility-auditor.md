@@ -1,5 +1,5 @@
 ---
-name: review-accessibility-checker
+name: review-accessibility-auditor
 description: 无障碍审查 — 验证代码变更的 a11y 合规性和语义正确性
 ---
 
