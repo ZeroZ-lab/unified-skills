@@ -12,6 +12,16 @@ description: CI/CD 管道——自动化质量门和部署流水线。使用 cua
 - **指向**: CI/CD 配置完成后继续 `/ship` 流程
 - **假设已加载**: CANON.md
 
+## Iron Law
+
+<HARD-GATE>
+```
+每个质量门必须阻塞合并。
+CI 红灯 + 合并 = 把已知问题推给下一个人。
+没有缓存的 CI 是浪费分钟数。
+```
+</HARD-GATE>
+
 ## 核心原则
 
 ### Shift Left
@@ -60,6 +70,76 @@ jobs:
       - run: npm audit --audit-level=high  # 有 high/critical → 失败
 ```
 
+## 好/坏 CI 配置对照
+
+**坏 CI 配置 — 绝不能这样写：**
+
+```yaml
+# Bad: 无缓存、允许失败、密钥硬编码、无超时
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout
+      - run: npm install
+      - run: npm test
+        continue-on-error: true  # 测试失败也继续！
+      - run: npm run deploy
+        env:
+          AWS_SECRET_KEY: abc123hardcoded  # 密钥硬编码！
+```
+
+**好 CI 配置 — 参照这个标准：**
+
+```yaml
+# Good: 缓存、严格失败、密钥安全、超时、分离关注点
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm test -- --coverage
+      - uses: codecov/codecov-action@v4
+
+  deploy:
+    needs: [lint-and-typecheck, test]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm run deploy
+        env:
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+```
+
+## 反模式修复表
+
+| 问题 | 修复 |
+|------|------|
+| CI 中 `continue-on-error: true` | 删除。CI 的意义就是门控。允许失败 = 没有门。 |
+| 无缓存每次全量安装 | 使用 actions/cache 或 setup-node 的 cache 参数 |
+| 手动 SSH 到服务器部署 | 用 GitHub Actions / GitLab CI 自动化部署，可审计、可回滚 |
+| CI 中跳过安全审计 | 添加 npm audit / Snyk / Trivy 步骤，critical 必须阻塞 |
+| 不固定 Action 版本（用 @main） | 固定到 @v4 或 @sha256。@main 可能被供应链攻击。 |
+| 所有步骤塞一个 job | 按关注点分离：lint、test、build、deploy 各自独立 job |
+| 无超时设置 | 每个 job 设 timeout-minutes。防止挂起消耗资源 |
+
 ## CI 失败的反馈循环
 
 CI 失败 → 输出必须告诉开发者：
@@ -107,8 +187,17 @@ CI 慢 (>10 min)？
 | "这个检查失败没关系" | 每次"没关系"都会变成下次"没关系"。最终 CI 完全被无视。 |
 | "手动部署更快" | 手动部署 = 步骤可能遗漏、环境可能不对、回滚步骤不确定。一次手动失误 > 所有自动化成本。 |
 | "CI red 先不管，之后修" | CI red 是项目当前唯一真相。Red CI 上继续提交 = 在不确定的基座上继续盖楼。 |
+| "CI 绿了就安全了" | 绿 CI ≠ 好测试。可能测试覆盖不足或有 allow_failure。 |
+| "E2E 太慢了不需要" | 关键用户流程必须有 E2E。只跑关键路径，不要全覆盖。 |
+| "Flaky test 是别人的问题" | Flaky test 侵蚀团队信任。谁发现谁修，或标记并创建 issue。 |
+| "缓存以后再加" | 第一天就加缓存。CI 慢了再加 = 两个月白等。 |
+| "手动 QA 比 CI 更靠谱" | 手动 QA 不持久、不可重复、不能 bisect。自动化是基线。 |
+| "安全审计步骤加到 CI 太慢了" | 安全审计在 CI 中并行运行，不增加关键路径时间。 |
 
 ## 红旗 — STOP
+
+<HARD-GATE>
+以下任何一个出现，立即停止：
 
 - 某个 CI 门被跳过/注释掉/设为 allow_failure
 - 密钥直接写在 CI yaml 中（用 GitHub Secrets / Vault）
@@ -116,6 +205,23 @@ CI 慢 (>10 min)？
 - 没有自动回滚机制的手动部署
 - E2E 测试在 CI 中被禁用（太慢 → 并行化或给更多 CI 资源，不禁用）
 - CI 配置中没有缓存导致每次都重新安装（浪费 CI 分钟数）
+
+**注意来自人类伙伴的信号：**
+- "CI 过了吗？" — 你可能没等 CI 结果
+- "构建要多久？" — CI 太慢需要优化
+- "能不能跳过安全检查就这一次？" — 绝不能。这是红旗。
+- "为什么 CI 挂了？" — 你需要读错误日志而不是猜测
+</HARD-GATE>
+
+## 验证失败处理
+
+| 失败场景 | 处理方式 |
+|---------|---------|
+| CI flaky（有时过有时不过） | 标记 flaky test。隔离运行确认。修复非确定性（时序、顺序依赖、外部服务）。 |
+| 本地过但 CI 不过 | 检查环境差异（Node 版本、OS、环境变量）。用 CI 相同的 Docker 镜像本地测试。 |
+| CI 构建时间 > 30 分钟 | 优先级：加缓存 > 拆分 job 并行 > 减少依赖 > 增量构建。 |
+| 安全审计发现 Critical CVE | 阻塞合并。评估实际可利用性。有补丁则立即更新，无补丁则评估替代方案。 |
+| E2E 测试超时 | 检查测试等待策略（用 wait-for 而非 sleep）。检查 CI 资源是否足够。 |
 
 ## 验证清单
 

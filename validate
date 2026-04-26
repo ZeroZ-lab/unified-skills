@@ -2,17 +2,23 @@
 set -u
 
 status=0
-EXPECTED_SKILL_COUNT=$(python3 -c "
+_count_output=$(python3 -c "
 import json
 m = json.load(open('load-manifest.json'))
 skills = set()
-for group in ['taskTypes','checkpoints']:
+for group in ['defaults','taskTypes','checkpoints']:
   for entry in m.get(group,{}).values():
     for s in entry.get('skills',[]):
       if s != 'CANON.md':
         skills.add(s)
 print(len(skills))
-" 2>/dev/null || echo '43')
+" 2>/dev/null) || true
+if [ -z "$_count_output" ]; then
+  fail "无法从 load-manifest.json 计算技能数量"
+  EXPECTED_SKILL_COUNT=0
+else
+  EXPECTED_SKILL_COUNT=$_count_output
+fi
 
 fail() {
   printf 'FAIL: %s\n' "$1"
@@ -122,6 +128,17 @@ sgrep 'plans/\*\.md' AGENTS.md || fail "AGENTS 缺少 plans/*.md 文档产出链
 sgrep 'plans/\*\.md' CLAUDE.md || fail "CLAUDE 缺少 plans/*.md 文档产出链"
 [ "$status" -eq 0 ] && printf '通过\n'
 
+printf '\n== 检查命令数量 ==\n'
+_cmd_count=$(ls commands/*.md 2>/dev/null | wc -l | tr -d ' ')
+_expected_cmd_count=9
+if [ "$_cmd_count" != "$_expected_cmd_count" ]; then
+  fail "commands/ 目录应包含 $_expected_cmd_count 个命令，实际为 $_cmd_count"
+fi
+for file in AGENTS.md README.md CLAUDE.md package.json .claude-plugin/plugin.json docs/directory-architecture.md docs/architecture/command-agent-skill-architecture.md; do
+  sgrep "${_expected_cmd_count} 命令" "$file" || fail "缺少 ${_expected_cmd_count} 命令说明: $file"
+done
+[ "$status" -eq 0 ] && printf '通过\n'
+
 printf '\n== 检查 refine External Scan ==\n'
 sgrep 'Phase 1\.4：External Scan' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 Phase 1.4 External Scan"
 sgrep 'Fact / Pattern / Inference / Unknown / Adopt / Reject' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 External Scan 分层契约"
@@ -176,6 +193,9 @@ done < <(find skills -name 'SKILL.md' | sort)
 
 printf '\n== 检查技能核心章节 ==\n'
 while IFS= read -r file; do
+  # maintain-workflow-using-unified 是引导技能，使用非标准格式，跳过章节检查
+  dir=$(basename "$(dirname "$file")")
+  [ "$dir" = "maintain-workflow-using-unified" ] && continue
   sgrep '^## .*入口/出口' "$file" || fail "缺少入口/出口章节: $file"
   sgrep '^## .*常见说辞' "$file" || fail "缺少常见说辞章节: $file"
   sgrep '^## .*红旗' "$file" || fail "缺少红旗章节: $file"
@@ -190,7 +210,7 @@ while IFS= read -r file; do
   sgrep '^# ' "$file" || fail "缺少标题: $file"
   sgrep '^## 流程' "$file" || fail "缺少流程章节: $file"
   sgrep '加载 `.*SKILL\.md`' "$file" || fail "未声明加载的核心技能: $file"
-done < <(find .agents/skills -name 'SKILL.md' | sort | grep -vE '/(define|build|verify|ship|maintain|reflect)-')
+done < <(find .agents/skills -name 'SKILL.md' | sort | grep -vE '/(define|build|verify|ship|maintain|reflect)-|/using-unified/')
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查 Agent 定义结构 ==\n'
@@ -249,9 +269,47 @@ for file in \
   skills/build-quality-tdd/SKILL.md \
   skills/verify-workflow-debug/SKILL.md \
   skills/verify-workflow-review/SKILL.md \
-  skills/ship-workflow-ship/SKILL.md
+  skills/ship-workflow-ship/SKILL.md \
+  skills/verify-quality-security/SKILL.md \
+  skills/ship-infrastructure-deploy/SKILL.md \
+  skills/verify-quality-performance/SKILL.md \
+  skills/build-infrastructure-git/SKILL.md \
+  skills/ship-infrastructure-ci-cd/SKILL.md \
+  skills/ship-workflow-canary/SKILL.md \
+  skills/ship-workflow-land/SKILL.md \
+  skills/verify-content-review/SKILL.md \
+  skills/verify-quality-simplify/SKILL.md \
+  skills/verify-team-code-review-standards/SKILL.md \
+  skills/verify-visual-review/SKILL.md \
+  skills/verify-workflow-receiving-review/SKILL.md \
+  skills/build-frontend-browser-testing/SKILL.md
 do
   sgrep '^## Iron Law' "$file" || fail "缺少 Iron Law: $file"
+done
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查 HARD-GATE 覆盖 ==\n'
+for file in \
+  skills/build-quality-tdd/SKILL.md \
+  skills/verify-workflow-debug/SKILL.md \
+  skills/verify-workflow-review/SKILL.md \
+  skills/ship-workflow-ship/SKILL.md \
+  skills/verify-quality-security/SKILL.md \
+  skills/ship-infrastructure-deploy/SKILL.md \
+  skills/verify-quality-performance/SKILL.md \
+  skills/build-infrastructure-git/SKILL.md \
+  skills/ship-infrastructure-ci-cd/SKILL.md \
+  skills/ship-workflow-canary/SKILL.md \
+  skills/ship-workflow-land/SKILL.md \
+  skills/verify-content-review/SKILL.md \
+  skills/verify-quality-simplify/SKILL.md \
+  skills/verify-team-code-review-standards/SKILL.md \
+  skills/verify-visual-review/SKILL.md \
+  skills/verify-workflow-receiving-review/SKILL.md \
+  skills/build-frontend-browser-testing/SKILL.md \
+  skills/maintain-workflow-using-unified/SKILL.md
+do
+  sgrep '<HARD-GATE>' "$file" || fail "缺少 HARD-GATE: $file"
 done
 [ "$status" -eq 0 ] && printf '通过\n'
 
@@ -274,6 +332,35 @@ for group in ['taskTypes','checkpoints']:
       print(s)
 " 2>/dev/null)
   [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
+printf '\n== 检查 skills-lock.json 完整性 ==\n'
+if [ -f "skills-lock.json" ]; then
+  lock_valid=0
+  while IFS= read -r skill_dir; do
+    if [ ! -f "skills/$skill_dir/SKILL.md" ]; then
+      continue
+    fi
+    lock_hash=$(python3 -c "
+import json
+m = json.load(open('skills-lock.json'))
+entry = m.get('skills',{}).get('$skill_dir',{})
+print(entry.get('computedHash',''))
+" 2>/dev/null)
+    if [ -n "$lock_hash" ]; then
+      actual_hash=$(shasum -a 256 "skills/$skill_dir/SKILL.md" 2>/dev/null | awk '{print $1}')
+      if [ "$lock_hash" != "$actual_hash" ]; then
+        fail "skills-lock.json 哈希不匹配: $skill_dir"
+      fi
+      lock_valid=$((lock_valid + 1))
+    fi
+  done < <(ls -d skills/*/ 2>/dev/null | while IFS= read -r d; do basename "$d"; done | grep -E '^(define|build|verify|ship|maintain|reflect)-')
+  if [ "$lock_valid" -eq 0 ]; then
+    fail "skills-lock.json 中没有有效的技能哈希"
+  fi
+  [ "$status" -eq 0 ] && printf '通过（%d 个技能哈希校验）\n' "$lock_valid"
+else
+  fail "缺少 skills-lock.json"
 fi
 
 printf '\n== 检查 hooks.json ==\n'

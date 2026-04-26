@@ -44,11 +44,15 @@ Transform spec into actionable task plan with multi-perspective review.
 - [ ] 4 个 Reviewers 全部完成
 - [ ] Blocking issues 已识别
 
-### Phase 3: Refine Plan Based on Feedback
+### Phase 3: Present Review to User + Refine
 
 **Agent:** task-planner
 **Skills:** build-workflow-plan（refinement mode）
 **Input:** 02-plan.md（draft）+ plan-review-comments.md
+**Process:**
+1. 向用户展示 draft plan + 分级审查反馈（Blocking / Important / Suggestion）
+2. 等待用户反馈或确认
+3. 根据用户意见修改 plan
 **Output:** docs/features/YYYYMMDD-<name>/02-plan.md（final）
 **Validation:**
 - [ ] 所有 Blocking issues 已解决

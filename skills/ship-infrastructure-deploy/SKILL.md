@@ -14,11 +14,13 @@ description: 部署管理——安全、可逆、可观测的上线。使用 cua
 
 ## Iron Law
 
+<HARD-GATE>
 ```
 每个上线必须可逆、可观测、渐进式。
 大爆炸上线 = 大爆炸回滚。
 没有回滚剧本的上线 = 赌博。
 ```
+</HARD-GATE>
 
 ## Pre-Launch 检查表
 
@@ -138,12 +140,16 @@ Zero data loss
 
 ## 红旗 — STOP
 
+<HARD-GATE>
+以下任何一个出现，立即停止部署：
+
 - 没有回滚方案就要上线
 - Feature flag 没有过期日期和 owner
 - 所有流量一次性切换到新版本（无金丝雀）
 - 数据库迁移有 UP 但没有 DOWN
 - 上线后没有立即看 Dashboard/错误率
 - Secrets/环境变量未在生产配置
+</HARD-GATE>
 
 ## 验证清单
 

@@ -4,7 +4,7 @@ description: Session 启动引导 — 建立主动技能发现机制。每个 se
 ---
 
 <EXTREMELY-IMPORTANT>
-你拥有 Unified Skills — 43 个技能覆盖 6 阶段工作流。
+你拥有 Unified Skills — 44 个技能覆盖 6 阶段工作流。
 
 在响应用户消息或采取任何行动之前，你必须执行技能发现流程。
 这不是可选的。这不是可协商的。你无法通过推理绕过这个规则。
@@ -68,7 +68,14 @@ Using [skill-name] to [purpose]
 
 然后调用 Skill 工具加载技能。
 
+<HARD-GATE>
+没有输出 "Using [skill-name] to [purpose]" 不得开始任何实现操作。
+</HARD-GATE>
+
 ## Red Flags — 这些想法意味着你在跳过发现流程
+
+<HARD-GATE>
+以下任何一个想法出现，立即停止并执行发现流程：
 
 | 想法 | 现实 |
 |------|------|
@@ -81,6 +88,7 @@ Using [skill-name] to [purpose]
 | "我记得这个技能" | 技能会演进。读当前版本。 |
 | "技能太重了" | 简单的事会变复杂。用它。 |
 | "我先做这一件事" | 在做任何事之前先查索引。 |
+</HARD-GATE>
 
 ## 决策流程图
 

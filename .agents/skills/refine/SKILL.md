@@ -13,9 +13,13 @@ description: 模糊想法收敛 → 规范 spec + External Scan + 多角色 idea
 2. 加载 `define-workflow-refine/SKILL.md` 执行 Phase 1（探索 + 澄清）
 3. Phase 1.4：External Scan — 按 artifact_type 搜索已有方案、竞品、事实来源、设计/技术模式，并分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject
 4. Phase 1.6：Idea Scout Army — 并行分派 3 个 scout 验证 idea
-5. Phase 2：基于用户输入、External Scan 和 scout 反馈提出 2-3 种方案 → Phase 3：产出 spec
-6. 明确 `artifact_type`: software / document / article / deck / visual，默认 software
-7. 产出 `docs/features/<name>/01-spec.md`
+5. **向用户展示 Scout 审查结果** — 呈现 spec 初稿 + 分级 Scout 反馈（Blocking / Important / Suggestion）
+6. **等待用户反馈或确认** — 用户可能：
+   - 批准 → 进入步骤 7
+   - 提出修改意见 → 根据意见调整方案
+   - 要求重新审查 → 回到步骤 4 或重新澄清需求
+7. 若用户确认，明确 `artifact_type`: software / document / article / deck / visual，默认 software
+8. 产出 `docs/features/<name>/01-spec.md`
 
 ## 后续
 

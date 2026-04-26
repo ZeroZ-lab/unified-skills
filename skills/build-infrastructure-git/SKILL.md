@@ -12,6 +12,16 @@ description: 版本控制工作流——原子提交、整洁历史。使用 cua
 - **指向**: 继续 build 或进入 `/review`
 - **假设已加载**: CANON.md
 
+## Iron Law
+
+<HARD-GATE>
+```
+原子提交、描述性信息、关注点分离。
+绝不 `git add -A`、绝不 force-push 共享分支、绝不跳过钩子、绝不提交密钥。
+每个提交是独立可理解、可 revert、可 bisect 的。
+```
+</HARD-GATE>
+
 ## 核心原则
 
 ### 1. Trunk-Based Development（推荐）
@@ -156,6 +166,9 @@ git grep "pattern" $(git rev-list --all)   # 在所有提交中搜索
 
 ## 红旗 — STOP
 
+<HARD-GATE>
+以下任何一个出现，立即停止提交：
+
 - staged 文件超过 10 个且不属于同一改动
 - 提交信息 = "fix"、"update"、"WIP"（信息量为零）
 - `git add -A` 把不相关的文件一起 staged
@@ -164,6 +177,7 @@ git grep "pattern" $(git rev-list --all)   # 在所有提交中搜索
 - force-push 到 `main`/`master`（重写共享历史）
 - staged 中包含 `.env` 或密钥文件
 - 合并冲突时用 `--theirs` 整块解决而不是逐一检查
+</HARD-GATE>
 
 ## 验证清单
 

@@ -52,11 +52,15 @@ Transform vague idea into structured spec with multi-perspective validation.
 - [ ] 3 个 Scouts 全部完成
 - [ ] Blocking issues 已识别
 
-### Phase 4: Refine Spec Based on Feedback
+### Phase 4: Present Scout Feedback to User + Refine
 
 **Agent:** requirements-analyst
 **Skills:** define-workflow-refine（迭代部分）
 **Input:** 01-spec.md（draft）+ scout-feedback.md
+**Process:**
+1. 向用户展示 spec 初稿 + 分级 Scout 反馈（Blocking / Important / Suggestion）
+2. 等待用户反馈或确认
+3. 根据用户意见修改 spec
 **Output:** docs/features/YYYYMMDD-<name>/01-spec.md（final）
 **Validation:**
 - [ ] 所有 Blocking issues 已解决

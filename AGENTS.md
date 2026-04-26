@@ -1,6 +1,6 @@
 # Unified Skills
 
-> 宪法 + 43 技能 + 8 命令 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+> 宪法 + 44 技能 + 9 命令 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 如果你是一个 AI Agent
 
@@ -31,7 +31,7 @@ unified/
 ├── CANON.md                 宪法（10 条，最高优先级）
 ├── AGENTS.md                入口配置（本文件）
 │
-├── skills/                  43 技能 / 6 阶段
+├── skills/                  44 技能 / 6 阶段
 │   ├── define/              定义（3）
 │   ├── build/               构建（15）
 │   ├── verify/              验证（11）
@@ -39,8 +39,8 @@ unified/
 │   ├── maintain/            维护（5）
 │   └── reflect/             复盘（2）
 │
-├── commands/                8 命令入口（Claude Code 斜杠命令）
-├── .agents/skills/           8 命令入口（Codex CLI skill 命令）
+├── commands/                9 命令入口（Claude Code 斜杠命令）
+├── .agents/skills/           9 命令入口（Codex CLI skill 命令）
 ├── agents/                  15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
 ├── templates/               6 文档模板
 └── docs/                    设计文档

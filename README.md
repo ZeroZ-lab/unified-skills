@@ -1,6 +1,6 @@
 # Unified Skills
 
-宪法 + 43 技能 + 8 命令 + 15 审查角色 = 按阶段加载的 AI 多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+宪法 + 44 技能 + 9 命令 + 15 审查角色 = 按阶段加载的 AI 多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 目录
 
@@ -121,7 +121,7 @@ unified/
 ├── CLAUDE.md            AI agent 入口配置
 ├── README.md            本文件
 │
-├── skills/              43 技能 / 6 阶段
+├── skills/              44 技能 / 6 阶段
 │   ├── define/          定义（3）
 │   ├── build/           构建（15）
 │   ├── verify/          验证（11）
@@ -129,8 +129,8 @@ unified/
 │   ├── maintain/        维护（5）
 │   └── reflect/         复盘（2）
 │
-├── commands/            8 命令入口（Claude Code 斜杠命令）
-├── .agents/skills/       8 命令入口（Codex CLI skill 命令）
+├── commands/            9 命令入口（Claude Code 斜杠命令）
+├── .agents/skills/       9 命令入口（Codex CLI skill 命令）
 ├── agents/              15 审查角色（3 代码 + 4 计划 + 3 refine + 1 review + 4 ship）
 ├── templates/           6 文档模板
 ├── references/          编排模式参考文档

@@ -13,9 +13,13 @@ description: 任务分解与计划。使用 cuando spec 已批准、需要将需
 2. 读取 `artifact_type`，按软件、文档、文章、PPT 或视觉稿选择任务拆分方式
 3. 加载 `build-workflow-plan/SKILL.md` 执行只读分析 + 依赖图 + 垂直切片拆分
 4. 自审通过后，**并行分派 Plan Review Army**（CEO + Eng + Design + Security 四视角审查）
-5. 合并审查反馈，修改 plan
-6. 产出 `docs/features/<name>/02-plan.md`，附审查摘要
-7. 用户批准后建议 `$build`
+5. **向用户展示审查结果** — 呈现 draft plan + 分级审查反馈（Blocking / Important / Suggestion）
+6. **等待用户反馈或确认** — 用户可能：
+   - 批准 → 进入步骤 7
+   - 提出修改意见 → 根据意见修改 plan
+   - 要求重新审查 → 回到步骤 4 或调整 spec
+7. 若用户确认，产出 `docs/features/<name>/02-plan.md`，附审查摘要
+8. 用户批准后建议 `$build`
 
 ## Plan Review Army
 
