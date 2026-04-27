@@ -1,6 +1,6 @@
 # Unified Skills
 
-> 宪法 + 44 技能 + 9 命令 + 22 角色（15 审查 + 7 核心工程）= 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+> 宪法 + 44 技能 + 10 命令 + 22 角色（15 审查 + 7 核心工程）= 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## Session 启动协议
 
@@ -59,8 +59,8 @@ unified/
 │   ├── maintain/            维护（5）
 │   └── reflect/             复盘（2）
 │
-├── commands/                9 命令入口（每个 .md 定义命令行为）
-├── .agents/skills/           9 命令入口（Codex CLI skill 命令）
+├── commands/                10 命令入口（每个 .md 定义命令行为）
+├── .agents/skills/           10 命令入口（Codex CLI skill 命令）
 ├── agents/                  22 角色（7 核心工程 + 4 review + 4 计划 + 3 refine + 4 ship）
 ├── templates/               6 文档模板
 ├── references/              编排模式参考文档
@@ -102,6 +102,7 @@ reflect/   → retro（回顾）、documentation（文档）
 | `/save` | maintain-workflow-context-save | 工作上下文 checkpoint | `.claude/checkpoints/YYYYMMDD-HHMMSS-{title}.md` |
 | `/restore` | maintain-workflow-context-restore | 恢复上下文 | — |
 | `/learn` | maintain-workflow-learn | 学习记录管理 | `.claude/learnings.jsonl` |
+| `/help` | — | 能力概览 | — |
 
 ## 文档产出链
 

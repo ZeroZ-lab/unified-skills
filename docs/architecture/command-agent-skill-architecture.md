@@ -2409,7 +2409,7 @@ unified/
 ├── CANON.md                          宪法
 ├── CLAUDE.md                         入口配置
 │
-├── commands/                         9 命令（重写为编排协议）
+├── commands/                         10 命令（重写为编排协议）
 │   ├── refine.md                     ← 重写
 │   ├── plan.md                       ← 重写
 │   ├── build.md                      ← 重写
@@ -2419,7 +2419,7 @@ unified/
 │   ├── restore.md                    ← 重写
 │   └── learn.md                      ← 重写
 │
-├── .agents/skills/                    9 命令入口（Codex CLI）
+├── .agents/skills/                    10 命令入口（Codex CLI）
 │
 ├── agents/                           22 审查 + 工程角色
 │   ├── README.md                     ← 更新

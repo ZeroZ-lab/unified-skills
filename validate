@@ -130,7 +130,7 @@ sgrep 'plans/\*\.md' CLAUDE.md || fail "CLAUDE 缺少 plans/*.md 文档产出链
 
 printf '\n== 检查命令数量 ==\n'
 _cmd_count=$(ls commands/*.md 2>/dev/null | wc -l | tr -d ' ')
-_expected_cmd_count=9
+_expected_cmd_count=10
 if [ "$_cmd_count" != "$_expected_cmd_count" ]; then
   fail "commands/ 目录应包含 $_expected_cmd_count 个命令，实际为 $_cmd_count"
 fi

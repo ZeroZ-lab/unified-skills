@@ -1,6 +1,6 @@
 # Unified Skills
 
-> 宪法 + 44 技能 + 9 命令 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+> 宪法 + 44 技能 + 10 命令 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 如果你是一个 AI Agent
 
