@@ -97,6 +97,20 @@ Codex 中技能通过 `$<skill-name>` 调用：
 
 Codex 的技能入口在 `.agents/skills/` 目录，每个命令对应一个薄包装技能。
 
+## Hooks（安全护栏）
+
+Unified Skills 有 3 个 hooks，在两个平台上行为有差异：
+
+| Hook | Claude Code | Codex CLI |
+|------|-------------|-----------|
+| SessionStart | 自动注入宪法+命令上下文 | 自动注入宪法+命令上下文（显示 `$cmd`） |
+| careful（破坏性命令拦截） | `permissionDecision: "ask"` — 提示用户确认 | `permissionDecision: "deny"` — 直接阻止（fail-closed） |
+| freeze（编辑范围冻结） | `permissionDecision: "deny"` — 阻止范围外编辑 | `permissionDecision: "deny"` — 阻止范围外编辑 |
+
+**Codex hooks 激活：** 需在 `.codex/config.toml` 中设置 `[features] codex_hooks = true`。可用 `scripts/install-codex.sh` 一键安装。
+
+**重要差异：** careful hook 在 Codex 上使用 fail-closed 模式（阻止破坏性命令而非提示确认），因为 Codex PreToolUse 的 `permissionDecision: "ask"` 尚未完全生效。
+
 spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `document` / `article` / `deck` / `visual`。后续阶段按该字段加载软件、内容、版式、审查或导出技能。
 
 `/build` 会读取 `02-plan.md` 总控计划；大型/并行任务还会读取 `plans/*.md` 子计划，并只在 `Parallel Execution Matrix` 证明 `parallel_safe` 时并行分派。

@@ -1,0 +1,18 @@
+{
+  "name": "unified",
+  "version": "2.6.0",
+  "description": "统一开发技能套件 — 宪法 + 44 技能 + 10 命令 + 22 角色（15 审查 + 7 核心工程），按阶段加载",
+  "author": {
+    "name": "ZeroZ-lab",
+    "url": "https://github.com/ZeroZ-lab/unified-skills"
+  },
+  "homepage": "https://github.com/ZeroZ-lab/unified-skills",
+  "repository": "https://github.com/ZeroZ-lab/unified-skills",
+  "license": "MIT",
+  "keywords": ["skills", "codex", "ai-agent", "development-workflow"],
+  "skills": "./.agents/skills/",
+  "interface": {
+    "displayName": "Unified Skills",
+    "shortDescription": "宪法 + 44 技能 + 10 命令，按阶段加载"
+  }
+}

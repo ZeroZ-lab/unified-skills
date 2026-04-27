@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 # Unified Skills — careful hook
-# Intercepts destructive Bash commands and asks for user confirmation.
+# Intercepts destructive Bash commands.
+# On Claude Code: prompts user (permissionDecision: "ask")
+# On Codex: blocks by default (permissionDecision: "deny") — fail-closed, safer
 set -u
 
 # Read JSON from stdin
 input=$(cat)
+
+# Detect platform: Codex sends permission_mode, Claude Code does not
+is_codex=0
+permission_mode=$(printf '%s' "$input" | python3 -c 'import sys,json; d=json.loads(sys.stdin.read()); print(d.get("permission_mode",""))' 2>/dev/null || echo "")
+if [ -n "$permission_mode" ]; then
+  is_codex=1
+fi
 
 # Extract command field
 cmd=$(printf '%s' "$input" | python3 -c 'import sys,json; d=json.loads(sys.stdin.read()); print(d.get("tool_input",{}).get("command",""))' 2>/dev/null || echo "")
@@ -94,12 +103,20 @@ sys.exit(0)
 PY
 }
 
+# On Codex: use "deny" (fail-closed — safer than fail-open "ask")
+# On Claude Code: use "ask" (prompts user for confirmation)
+if [ "$is_codex" -eq 1 ]; then
+  decision="deny"
+else
+  decision="ask"
+fi
+
 for pattern in "${destructive_patterns[@]}"; do
   if printf '%s' "$cmd" | grep -qE "$pattern"; then
     if printf '%s' "$pattern" | grep -qE '^rm -r' && is_safe_rm_command "$cmd"; then
       continue
     fi
-    printf '{"permissionDecision":"ask","message":"[careful] 检测到破坏性命令: %s。确认执行？"}\n' "$pattern"
+    printf '{"permissionDecision":"%s","permissionDecisionReason":"[careful] 检测到破坏性命令: %s。"}\n' "$decision" "$pattern"
     exit 0
   fi
 done

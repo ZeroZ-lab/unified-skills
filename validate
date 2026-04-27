@@ -49,26 +49,31 @@ printf '== 检查版本号 ==\n'
 # 从 package.json 和 plugin.json 提取当前版本
 pkg_ver=$(python3 -c "import json; print(json.load(open('package.json'))['version'])" 2>/dev/null)
 plugin_ver=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])" 2>/dev/null)
+codex_plugin_ver=$(python3 -c "import json; print(json.load(open('.codex-plugin/plugin.json'))['version'])" 2>/dev/null)
 
-if [ -z "$pkg_ver" ] || [ -z "$plugin_ver" ]; then
+if [ -z "$pkg_ver" ] || [ -z "$plugin_ver" ] || [ -z "$codex_plugin_ver" ]; then
   fail "无法解析版本号"
 else
-  printf 'package.json: %s\n' "$pkg_ver"
-  printf 'plugin.json:  %s\n' "$plugin_ver"
+  printf 'package.json:         %s\n' "$pkg_ver"
+  printf '.claude-plugin:       %s\n' "$plugin_ver"
+  printf '.codex-plugin:        %s\n' "$codex_plugin_ver"
 
-  # 检查两个版本是否一致
+  # 检查三个版本是否一致
   if [ "$pkg_ver" != "$plugin_ver" ]; then
-    fail "版本号不一致: package.json=$pkg_ver, plugin.json=$plugin_ver"
+    fail "版本号不一致: package.json=$pkg_ver, .claude-plugin/plugin.json=$plugin_ver"
+  fi
+  if [ "$pkg_ver" != "$codex_plugin_ver" ]; then
+    fail "版本号不一致: package.json=$pkg_ver, .codex-plugin/plugin.json=$codex_plugin_ver"
   fi
 
   # 检查 HEAD 是否有未推送的版本变更
   latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
   if [ "$latest_tag" != "none" ]; then
     tag_ver="${latest_tag#v}"
-    printf '最新 tag:    %s\n' "$latest_tag"
+    printf '最新 tag:             %s\n' "$latest_tag"
 
     if [ "$pkg_ver" = "$tag_ver" ]; then
-      if git diff --quiet "$latest_tag"..HEAD -- package.json .claude-plugin/plugin.json 2>/dev/null; then
+      if git diff --quiet "$latest_tag"..HEAD -- package.json .claude-plugin/plugin.json .codex-plugin/plugin.json 2>/dev/null; then
         printf '版本保持 %s，版本文件未变更: 通过\n' "$pkg_ver"
       else
         printf '版本文件有变更但版本号未变，通过（仅允许无版本号的紧急修复）\n'
@@ -395,6 +400,84 @@ for event in ("SessionStart", "PreToolUse"):
             if hook.get("type") != "command" or not hook.get("command"):
                 raise SystemExit(f"{event} hook must be command with command string")
 PY
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
+printf '\n== 检查 Codex plugin manifest ==\n'
+if [ ! -f ".codex-plugin/plugin.json" ]; then
+  fail "缺少 .codex-plugin/plugin.json"
+else
+  codex_plugin_ver=$(python3 -c "import json; print(json.load(open('.codex-plugin/plugin.json'))['version'])" 2>/dev/null)
+  if [ -z "$codex_plugin_ver" ]; then
+    fail "无法解析 .codex-plugin/plugin.json 版本号"
+  else
+    printf '.codex-plugin/plugin.json: %s\n' "$codex_plugin_ver"
+    if [ "$pkg_ver" != "$codex_plugin_ver" ]; then
+      fail "版本号不一致: package.json=$pkg_ver, .codex-plugin/plugin.json=$codex_plugin_ver"
+    fi
+    sgrep 'skills' .codex-plugin/plugin.json || fail ".codex-plugin/plugin.json 缺少 skills 字段"
+    sgrep 'interface' .codex-plugin/plugin.json || fail ".codex-plugin/plugin.json 缺少 interface 字段"
+  fi
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
+printf '\n== 检查 Codex hooks.json ==\n'
+if [ ! -f ".codex/hooks.json" ]; then
+  fail "缺少 .codex/hooks.json"
+else
+  python3 - <<'PY' || fail ".codex/hooks.json schema 无效"
+import json
+import sys
+
+data = json.load(open(".codex/hooks.json"))
+if not isinstance(data, dict):
+    raise SystemExit("top-level must be object")
+hooks = data.get("hooks")
+if not isinstance(hooks, dict):
+    raise SystemExit("missing hooks object")
+for event in ("SessionStart", "PreToolUse"):
+    entries = hooks.get(event)
+    if not isinstance(entries, list) or not entries:
+        raise SystemExit(f"missing {event} hooks")
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise SystemExit(f"{event} entry must be object")
+        nested = entry.get("hooks")
+        if not isinstance(nested, list) or not nested:
+            raise SystemExit(f"{event} entry missing nested hooks")
+        for hook in nested:
+            if hook.get("type") != "command" or not hook.get("command"):
+                raise SystemExit(f"{event} hook must be command with command string")
+            if not hook.get("statusMessage"):
+                raise SystemExit(f"{event} hook missing statusMessage")
+PY
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
+printf '\n== 检查 Codex config.toml ==\n'
+if [ ! -f ".codex/config.toml" ]; then
+  fail "缺少 .codex/config.toml"
+else
+  sgrep 'codex_hooks.*=.*true' .codex/config.toml || fail ".codex/config.toml 缺少 codex_hooks = true"
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
+printf '\n== 检查 Codex wrapper ==\n'
+if [ ! -f "hooks/codex-wrapper.sh" ]; then
+  fail "缺少 hooks/codex-wrapper.sh"
+else
+  [ -x "hooks/codex-wrapper.sh" ] || fail "hooks/codex-wrapper.sh 不可执行"
+  sgrep 'CLAUDE_PLUGIN_ROOT' hooks/codex-wrapper.sh || fail "hooks/codex-wrapper.sh 缺少 CLAUDE_PLUGIN_ROOT 导出"
+  sgrep 'CLAUDE.md' hooks/codex-wrapper.sh || fail "hooks/codex-wrapper.sh 缺少 CLAUDE.md 验证"
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
+printf '\n== 检查 Codex 安装脚本 ==\n'
+if [ ! -f "scripts/install-codex.sh" ]; then
+  fail "缺少 scripts/install-codex.sh"
+else
+  [ -x "scripts/install-codex.sh" ] || fail "scripts/install-codex.sh 不可执行"
+  sgrep 'codex_hooks' scripts/install-codex.sh || fail "scripts/install-codex.sh 缺少 codex_hooks 配置"
   [ "$status" -eq 0 ] && printf '通过\n'
 fi
 

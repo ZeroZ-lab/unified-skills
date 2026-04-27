@@ -12,7 +12,7 @@ npx skills add ZeroZ-lab/unified-skills
 # Codex CLI
 git clone https://github.com/ZeroZ-lab/unified-skills.git
 cd unified-skills
-ln -s "$(pwd)/.agents/skills"/* "$HOME/.agents/skills/"
+bash scripts/install-codex.sh   # 一键安装 skills + hooks
 # 然后：$refine → $plan → $build → $review → $ship
 ```
 
@@ -118,6 +118,34 @@ ln -s "$(pwd)/.claude/skills/"* ~/.claude/skills/
 ln -s "$(pwd)/commands/"* ~/.claude/commands/
 ```
 
+### 手动安装（Codex CLI）
+
+```bash
+git clone https://github.com/ZeroZ-lab/unified-skills.git
+cd unified-skills
+# 一键安装
+bash scripts/install-codex.sh
+# 或手动步骤：
+ln -s "$(pwd)/.agents/skills"/* ~/.agents/skills/
+mkdir -p ~/.codex
+cat > ~/.codex/config.toml <<'EOF'
+[features]
+codex_hooks = true
+EOF
+```
+
+### 跨平台功能矩阵
+
+| 功能 | Claude Code | Codex CLI |
+|------|-------------|-----------|
+| 技能调用 | `/refine` `/plan` `/build` `/review` `/ship` | `$refine` `$plan` `$build` `$review` `$ship` |
+| SessionStart 上下文注入 | 自动 | 自动（需 `codex_hooks = true`） |
+| 破坏性命令拦截 (careful) | 提示确认 (`ask`) | fail-open\*（`ask` 解析但未完全生效） |
+| 编辑范围冻结 (freeze) | 阻止编辑 (`deny`) | 阻止编辑 (`deny`) |
+| 上下文保存/恢复 | `/save` `/restore` | `$save` `$restore` |
+
+\*Codex PreToolUse 的 `permissionDecision: "ask"` 已解析但 fail-open——破坏性命令不会暂停等待用户确认。待 Codex 完全支持后自动生效。freeze 的 `deny` 在两平台均完全生效。
+
 ### 验证
 
 在 Claude Code 中输入 `/refine`，看到需求提炼流程启动即安装成功。
@@ -218,7 +246,7 @@ A: 44 技能不需要三层嵌套。扁平命名 `build-quality-tdd`、`build-co
 A: 吸取了多种工程实践精华，融合为一致性体系。不依赖任何外部技能集。
 
 **Q: Codex CLI 和 Claude Code 体验一致吗？**
-A: 命令层面一致 — `$refine` 和 `/refine` 加载相同的工作流技能。Claude Code 用 `commands/`，Codex CLI 用 `.agents/skills/`，底层同一套 `skills/`。
+A: 命令层面一致 — `$refine` 和 `/refine` 加载相同的工作流技能。Hooks 有差异：careful hook 的破坏性命令拦截在 Codex 上 fail-open（不暂停确认），freeze hook 的编辑范围冻结在两平台均完全生效。见上方功能矩阵。
 
 ## License
 
