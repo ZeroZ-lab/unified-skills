@@ -1,6 +1,6 @@
 {
   "name": "unified-skills",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "统一技能套件 — 宪法 + 44 技能 + 9 命令 + 22 角色（15 审查 + 7 核心工程），按阶段加载的多产物开发技能集",
   "scripts": {
     "validate": "./validate"

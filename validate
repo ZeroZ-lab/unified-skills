@@ -282,7 +282,9 @@ for file in \
   skills/verify-team-code-review-standards/SKILL.md \
   skills/verify-visual-review/SKILL.md \
   skills/verify-workflow-receiving-review/SKILL.md \
-  skills/build-frontend-browser-testing/SKILL.md
+  skills/build-frontend-browser-testing/SKILL.md \
+  skills/verify-frontend-accessibility/SKILL.md \
+  skills/verify-quality-integration-testing/SKILL.md
 do
   sgrep '^## Iron Law' "$file" || fail "缺少 Iron Law: $file"
 done
@@ -307,7 +309,9 @@ for file in \
   skills/verify-visual-review/SKILL.md \
   skills/verify-workflow-receiving-review/SKILL.md \
   skills/build-frontend-browser-testing/SKILL.md \
-  skills/maintain-workflow-using-unified/SKILL.md
+  skills/maintain-workflow-using-unified/SKILL.md \
+  skills/verify-frontend-accessibility/SKILL.md \
+  skills/verify-quality-integration-testing/SKILL.md
 do
   sgrep '<HARD-GATE>' "$file" || fail "缺少 HARD-GATE: $file"
 done
