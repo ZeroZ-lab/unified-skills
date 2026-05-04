@@ -26,12 +26,12 @@ Show what Unified Skills can do: available commands, artifact types, workflow st
 
 | 命令 | 阶段 | 做什么 | 产出 |
 |------|------|--------|------|
-| /brainstorm | Define | 模糊想法 → 2-3 方案 + 推荐 | brainstorm.md |
+| /brainstorm | Define | 模糊想法 → 2-3 方案 + 推荐 | 00-brainstorm.md |
 | /refine | Define | 模糊想法 → 明确 spec | 01-spec.md |
 | /plan | Build | spec → 可执行任务计划 | 02-plan.md |
 | /build | Build | 按计划增量生成产物 | 软件/内容/视觉 + ADR |
-| /review | Verify | 按制品类型质量审查 | review.md |
-| /ship | Ship | 发布/导出检查 + Go/No-Go | ship.md |
+| /review | Verify | 按制品类型质量审查 | 03-review.md |
+| /ship | Ship | 发布/导出检查 + Go/No-Go | 04-ship.md |
 | /save | Maintain | 保存工作上下文 | checkpoint 文件 |
 | /restore | Maintain | 恢复之前的工作上下文 | — |
 | /learn | Maintain | 跨 session 学习记录 | learnings.jsonl |

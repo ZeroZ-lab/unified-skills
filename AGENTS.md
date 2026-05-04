@@ -75,8 +75,8 @@ reflect/   → retro（回顾）、documentation（文档）
 | `/refine` | define-workflow-refine | 规范 spec | `docs/features/YYYYMMDD-<name>/01-spec.md` |
 | `/plan` | build-workflow-plan | 任务计划 | `docs/features/YYYYMMDD-<name>/02-plan.md` |
 | `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/YYYYMMDD-<name>/adr/` |
-| `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/YYYYMMDD-<name>/review.md` |
-| `/ship` | ship-workflow-ship + artifact-export（非 software） | 发布/导出记录+README | `docs/features/YYYYMMDD-<name>/ship.md` |
+| `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/YYYYMMDD-<name>/03-review.md` |
+| `/ship` | ship-workflow-ship + artifact-export（非 software） | 发布/导出记录+README | `docs/features/YYYYMMDD-<name>/04-ship.md` |
 | `/save` | maintain-workflow-context-save | 工作上下文 checkpoint | `.claude/checkpoints/YYYYMMDD-HHMMSS-{title}.md` |
 | `/restore` | maintain-workflow-context-restore | 恢复上下文 | — |
 | `/learn` | maintain-workflow-learn | 学习记录管理 | `.claude/learnings.jsonl` |
@@ -91,8 +91,8 @@ Codex 中技能通过 `$<skill-name>` 调用：
 | `$refine` | define-workflow-refine | `docs/features/YYYYMMDD-<name>/01-spec.md` |
 | `$plan` | build-workflow-plan | `docs/features/YYYYMMDD-<name>/02-plan.md` |
 | `$build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR |
-| `$review` | verify-workflow-review + artifact_type 对应审查 | `docs/features/YYYYMMDD-<name>/review.md` |
-| `$ship` | ship-workflow-ship + artifact-export（非 software） | `docs/features/YYYYMMDD-<name>/ship.md` |
+| `$review` | verify-workflow-review + artifact_type 对应审查 | `docs/features/YYYYMMDD-<name>/03-review.md` |
+| `$ship` | ship-workflow-ship + artifact-export（非 software） | `docs/features/YYYYMMDD-<name>/04-ship.md` |
 | `$save` | maintain-workflow-context-save | `.claude/checkpoints/YYYYMMDD-HHMMSS-{title}.md` |
 | `$restore` | maintain-workflow-context-restore | 恢复上下文 |
 | `$learn` | maintain-workflow-learn | `.claude/learnings.jsonl` |
@@ -126,14 +126,15 @@ spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `doc
 
 ```
 docs/features/YYYYMMDD-<name>/
+├── 00-brainstorm.md        ← /brainstorm
 ├── 01-spec.md              ← /refine
 ├── 02-plan.md              ← /plan
 ├── plans/*.md              ← /plan（大型/并行任务的子计划）
 ├── adr/<num>.md            ← /build（决策时）
-├── review.md               ← /review
-├── ship.md                 ← /ship
-├── canary-report.md        ← ship-workflow-canary
-├── deploy-report.md        ← ship-workflow-land
+├── 03-review.md            ← /review
+├── 04-ship.md              ← /ship
+├── 05-canary-report.md     ← ship-workflow-canary
+├── 06-deploy-report.md     ← ship-workflow-land
 └── README.md               ← /ship 后聚合
 
 docs/bugs/<name>/

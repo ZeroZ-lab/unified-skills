@@ -210,14 +210,15 @@ unified/
 
 ```
 docs/features/<name>/
+├── 00-brainstorm.md      ← /brainstorm
 ├── 01-spec.md            ← /refine
 ├── 02-plan.md            ← /plan
 ├── plans/*.md            ← /plan（大型/并行子计划）
 ├── adr/<num>.md          ← /build（决策时写 ADR）
-├── review.md             ← /review
-├── ship.md               ← /ship
-├── canary-report.md      ← ship-workflow-canary
-├── deploy-report.md      ← ship-workflow-land
+├── 03-review.md          ← /review
+├── 04-ship.md            ← /ship
+├── 05-canary-report.md   ← ship-workflow-canary
+├── 06-deploy-report.md   ← ship-workflow-land
 └── README.md             ← /ship 后聚合
 
 docs/bugs/<name>/

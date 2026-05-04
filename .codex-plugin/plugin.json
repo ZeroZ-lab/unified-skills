@@ -1,6 +1,6 @@
 {
   "name": "unified",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "统一开发技能套件 — 宪法 + 45 技能 + 11 命令 + 22 角色（15 审查 + 7 核心工程），按阶段加载",
   "author": {
     "name": "ZeroZ-lab",

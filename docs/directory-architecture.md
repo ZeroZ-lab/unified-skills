@@ -188,8 +188,8 @@ skills/
 define-workflow-refine        → 01-spec.md
 build-workflow-plan           → 02-plan.md
 build-workflow-execute        → adr/<num>-<title>.md（有决策时）
-verify-workflow-review        → review.md（可选）
-ship-workflow-ship            → ship.md + README.md（事后总结）
+verify-workflow-review        → 03-review.md（可选）
+ship-workflow-ship            → 04-ship.md + README.md（事后总结）
 ```
 
 ### 3.3 技能到模板的映射
@@ -200,9 +200,9 @@ ship-workflow-ship            → ship.md + README.md（事后总结）
 define-workflow-refine/SKILL.md   → templates/feature/01-spec.md
 build-workflow-plan/SKILL.md      → templates/feature/02-plan.md
 verify-workflow-debug/SKILL.md  → templates/bug/*
-verify-workflow-review/SKILL.md   → 直接产出 docs/features/YYYYMMDD-<name>/review.md
+verify-workflow-review/SKILL.md   → 直接产出 docs/features/YYYYMMDD-<name>/03-review.md
 ship-workflow-ship/SKILL.md       → templates/feature/README.md
-                                  + 直接产出 docs/features/YYYYMMDD-<name>/ship.md
+                                  + 直接产出 docs/features/YYYYMMDD-<name>/04-ship.md
 任意 build 中决策                 → templates/feature/adr/template.md
 ```
 

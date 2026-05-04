@@ -186,4 +186,4 @@ grep -r "<模式/函数/抽象名>" --include="*.ts" --include="*.tsx"
 - [ ] 有技术证据支撑每个决定（采纳或反驳）
 - [ ] 实施顺序正确（澄清 → 阻塞 → 简单 → 复杂）
 - [ ] 每条实施后测试通过
-- [ ] 响应记录在 `docs/features/<name>/review.md`
+- [ ] 响应记录在 `docs/features/<name>/03-review.md`

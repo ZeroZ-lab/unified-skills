@@ -94,7 +94,7 @@ reflect/   → retro（回顾）、documentation（文档）
 
 | 命令 | 加载的技能 | 产出 | 文档路径 |
 |------|-----------|------|----------|
-| `/brainstorm` | define-cognitive-brainstorm | 设计文档（2-3 方案 + 推荐） | `docs/features/YYYYMMDD-<name>/brainstorm.md` |
+| `/brainstorm` | define-cognitive-brainstorm | 设计文档（2-3 方案 + 推荐） | `docs/features/YYYYMMDD-<name>/00-brainstorm.md` |
 | `/refine` | define-workflow-refine | 规范 spec | `docs/features/YYYYMMDD-<name>/01-spec.md` |
 | `/plan` | build-workflow-plan | 任务计划 | `docs/features/YYYYMMDD-<name>/02-plan.md` |
 | `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/YYYYMMDD-<name>/adr/` |
@@ -110,14 +110,15 @@ reflect/   → retro（回顾）、documentation（文档）
 
 ```
 docs/features/YYYYMMDD-<name>/
+├── 00-brainstorm.md        ← /brainstorm
 ├── 01-spec.md              ← /refine
 ├── 02-plan.md              ← /plan
 ├── plans/*.md              ← /plan（大型/并行任务的子计划）
 ├── adr/<num>.md            ← /build（决策时）
-├── review.md               ← /review
-├── ship.md                 ← /ship
-├── canary-report.md        ← ship-workflow-canary
-├── deploy-report.md        ← ship-workflow-land
+├── 03-review.md            ← /review
+├── 04-ship.md              ← /ship
+├── 05-canary-report.md     ← ship-workflow-canary
+├── 06-deploy-report.md     ← ship-workflow-land
 └── README.md               ← /ship 后聚合
 
 docs/bugs/<name>/

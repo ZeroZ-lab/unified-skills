@@ -40,7 +40,7 @@ Multi-perspective artifact review with severity-graded feedback.
 **Agent:** 主 session
 **Skills:** verify-workflow-review（合并部分）
 **Input:** 各 Reviewer 反馈
-**Output:** docs/features/YYYYMMDD-<name>/review.md
+**Output:** docs/features/YYYYMMDD-<name>/03-review.md
 **Validation:**
 - [ ] 报告包含所有 Reviewer 反馈
 - [ ] Blocking issues 清晰标注
@@ -52,7 +52,7 @@ Multi-perspective artifact review with severity-graded feedback.
 - [ ] CANON.md 已加载
 
 ## Exit Conditions
-- [ ] review.md 存在
+- [ ] 03-review.md 存在
 - [ ] 反馈已按 Blocking / Important / Suggestion 分级
 
 ## Next Steps

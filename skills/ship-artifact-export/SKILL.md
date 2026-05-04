@@ -101,7 +101,7 @@ agent 在 ship 记录中标记 `Export verification: pending human partner revie
 
 ### Step 4：记录交付证据
 
-在 `docs/features/<name>/ship.md` 或对应 ship 记录中写入：
+在 `docs/features/<name>/04-ship.md` 或对应 ship 记录中写入：
 
 ```markdown
 ## Artifact Export

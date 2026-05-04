@@ -407,7 +407,7 @@ Turn 4: 调用 plan-security-reviewer → 等待完成
 **定义：** 阶段之间的信息传递通过文件系统完成，不依赖对话上下文。
 
 **具体要求：**
-- 每个 Phase 的产出必须写入文件（如 `02-plan.md`、`review.md`）
+- 每个 Phase 的产出必须写入文件（如 `02-plan.md`、`03-review.md`）
 - 下一个 Phase 从文件读取输入，不依赖前一个 Phase 的对话记忆
 - 这确保了 Phase 的幂等性——可以单独重跑某个 Phase
 - Agent 的上下文是独立的，不能假设"之前的对话还记得"
@@ -497,7 +497,7 @@ Command: /review
     （4 个 Agent 在同一个 assistant turn 中并行调用）
   Phase 2: Merge Feedback
     Agent: （主 session 合并）
-    Output: review.md
+    Output: 03-review.md
 ```
 
 **适用命令：** `/plan`（Phase 2）、`/review`、`/refine`（Phase 1.6）、`/ship`（Phase B）
@@ -1981,7 +1981,7 @@ Process:
   2. 按严重度和类别排序
   3. 生成统一审查报告
 Output:
-  - docs/features/YYYYMMDD-<name>/review.md
+  - docs/features/YYYYMMDD-<name>/03-review.md
 
 Validation:
   - [ ] 报告包含所有 Reviewer 的反馈
@@ -1996,7 +1996,7 @@ Validation:
 - [ ] CANON.md 已加载
 
 ## Exit Conditions
-- [ ] review.md 存在
+- [ ] 03-review.md 存在
 - [ ] 所有 Reviewers 已完成
 - [ ] Blocking issues 已识别
 - [ ] 反馈已分级
@@ -2032,7 +2032,7 @@ Skills:
   - ship-workflow-ship（准备部分）
 Input:
   - 产物文件
-  - review.md
+  - 03-review.md
 Process:
   1. 确认所有 Blocking issues 已修复
   2. 准备发布清单
@@ -2056,7 +2056,7 @@ Skills:
   - ship-workflow-ship（审计部分）
 Input:
   - 产物文件
-  - review.md
+  - 03-review.md
 Process:
   1. 并行分派 4 个 Auditors
   2. 每个 Auditor 独立产出审计报告
@@ -2088,11 +2088,11 @@ Process:
      - visual → 导出设计稿
   2. 记录发布信息
 Output:
-  - docs/features/YYYYMMDD-<name>/ship.md
+  - docs/features/YYYYMMDD-<name>/04-ship.md
 
 Validation:
   - [ ] 发布/导出成功
-  - [ ] ship.md 已生成
+  - [ ] 04-ship.md 已生成
 
 ---
 
@@ -2101,7 +2101,7 @@ Agent: （主 session）
 Skills:
   - ship-doc-sync
 Input:
-  - ship.md
+  - 04-ship.md
   - 产物变更摘要
 Process:
   1. 更新 README.md
@@ -2122,13 +2122,13 @@ Validation:
 - [ ] CANON.md 已加载
 
 ## Exit Conditions
-- [ ] ship.md 存在
+- [ ] 04-ship.md 存在
 - [ ] 发布/导出成功
 - [ ] README.md 已更新
 - [ ] 所有 Auditors 通过
 
 ## Next Steps
-- If deploying → 监控 canary-report.md
+- If deploying → 监控 05-canary-report.md
 - If exported → 交付产物
 
 ## Constitutional Rules
@@ -2750,8 +2750,8 @@ skills/
 2. /plan   → 任务分解 → Plan Review Army 并行审查 → plan 生成
 3. /build  → 软件开发（artifact_type: software）→ TDD 循环 → 产物
 4. /build  → 内容创作（artifact_type: document）→ 增量写作 → 产物
-5. /review → 五轴审查 → Review Army 并行审查 → review.md
-6. /ship   → 发布审计 → Ship Audit Army 并行审计 → ship.md
+5. /review → 五轴审查 → Review Army 并行审查 → 03-review.md
+6. /ship   → 发布审计 → Ship Audit Army 并行审计 → 04-ship.md
 7. /save   → 上下文保存 → checkpoint 生成
 8. /restore → checkpoint 恢复
 9. /learn  → 学习记录管理
@@ -2957,10 +2957,10 @@ git tag after-phase-2
   1. 用户输入 /review
   2. Phase 1：确定审查策略（五轴审查）
   3. Phase 2：Review Army 并行审查（4 个 Reviewers）
-  4. Phase 3：合并反馈生成 review.md
+  4. Phase 3：合并反馈生成 03-review.md
 
 预期结果：
-  - review.md 已生成
+  - 03-review.md 已生成
   - 4 个 Reviewers 的反馈已合并
   - 反馈按严重度分级
 ```
@@ -2980,7 +2980,7 @@ git tag after-phase-2
   5. Phase 4：文档同步
 
 预期结果：
-  - ship.md 已生成
+  - 04-ship.md 已生成
   - 发布/导出成功
   - README.md 已更新
 ```
@@ -3267,7 +3267,7 @@ description: 按产物类型审查 + 多角色并行审查
 ## Phases: 3 (Analyze → Review Army → Merge)
 ## Parallel: Phase 2 (4 Reviewers)
 ## Entry: Artifact complete
-## Exit: review.md
+## Exit: 03-review.md
 ## Next: /ship or /build (fix)
 ```
 
@@ -3281,8 +3281,8 @@ description: 发布准备 + 审计 + 导出/发布
 ## Goal: Pre-release audit and publishing
 ## Phases: 4 (Prepare → Audit → Publish → Sync)
 ## Parallel: Phase 2 (4 Auditors)
-## Entry: review.md (no blocking)
-## Exit: ship.md + README.md
+## Entry: 03-review.md (no blocking)
+## Exit: 04-ship.md + README.md
 ## Next: Monitor or deliver
 ```
 
