@@ -126,6 +126,11 @@
       "sourceType": "github",
       "computedHash": "c3dd1c49d71421d753d0865a624b552f3df8603980c8b10d5a8f895db79d79fc"
     },
+    "maintain-workflow-goal": {
+      "source": "ZeroZ-lab/unified-skills",
+      "sourceType": "github",
+      "computedHash": "49e77f7102466eaba311f9254b2d84bc17dc2cd4f3936698fdf17a4dd2b1a5bd"
+    },
     "plan": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",

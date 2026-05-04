@@ -101,7 +101,7 @@ fi
 
 printf '== Installation complete ==\n\n'
 printf 'Available commands:\n'
-printf '  $refine  $plan  $build  $review  $ship  $save  $restore  $learn\n\n'
+printf '  $refine  $plan  $build  $review  $ship  $save  $restore  $learn  $goal\n\n'
 printf 'NOTES:\n'
 printf '  - The careful hook uses fail-closed mode on Codex (blocks destructive\n'
 printf '    commands by default). On Claude Code it prompts for confirmation.\n'

@@ -135,7 +135,7 @@ sgrep 'plans/\*\.md' CLAUDE.md || fail "CLAUDE 缺少 plans/*.md 文档产出链
 
 printf '\n== 检查命令数量 ==\n'
 _cmd_count=$(ls commands/*.md 2>/dev/null | wc -l | tr -d ' ')
-_expected_cmd_count=10
+_expected_cmd_count=11
 if [ "$_cmd_count" != "$_expected_cmd_count" ]; then
   fail "commands/ 目录应包含 $_expected_cmd_count 个命令，实际为 $_cmd_count"
 fi
@@ -250,7 +250,7 @@ else
   rm -f /tmp/unified-validate-stale-canon.$$
 fi
 
-if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2\）|5 命令|7 模板' \
+if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|44 技能|44 SKILL|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令|7 模板' \
   README.md CLAUDE.md AGENTS.md docs package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-count.$$
   rm -f /tmp/unified-validate-stale-count.$$

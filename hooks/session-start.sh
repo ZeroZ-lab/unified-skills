@@ -36,9 +36,9 @@ cmd_map=$(sed -n '/^## 命令映射/,/^## 文档产出链/{ /^## 文档产出链
 
 # Build command syntax hint based on platform
 if [ "$is_codex" -eq 1 ]; then
-  cmd_hint='使用 $refine、$plan、$build、$review、$ship 调用工作流。用 $save 和 $restore 理会话状态。'
+  cmd_hint='使用 $refine、$plan、$build、$review、$ship 调用工作流。用 $save 和 $restore 理会话状态。用 $goal 管理目标。'
 else
-  cmd_hint="使用 /refine、/plan、/build、/review、/ship 调用工作流。用 /save 和 /restore 理会话状态。"
+  cmd_hint="使用 /refine、/plan、/build、/review、/ship 调用工作流。用 /save 和 /restore 理会话状态。用 /goal 管理目标。"
 fi
 
 full_message="Unified Skills 已加载。以下是你的行为约束和可用命令：

@@ -863,11 +863,11 @@ verify/     11 skills (review, debug, accessibility, integration-testing,
                         receiving-review, simplify)
 ship/       7 skills  (ship, ci-cd, deploy, artifact-export,
                         canary, land, doc-sync)
-maintain/   5 skills  (observability, deprecation-migration,
-                        context-save, context-restore, learn)
+maintain/   6 skills  (observability, deprecation-migration,
+                        context-save, context-restore, learn, goal)
 reflect/    2 skills  (retro, documentation)
 ─────────────────────
-Total:     43 skills
+Total:     45 skills
 ```
 
 ### 关键 Workflow Skills 分析
@@ -2409,7 +2409,7 @@ unified/
 ├── CANON.md                          宪法
 ├── CLAUDE.md                         入口配置
 │
-├── commands/                         10 命令（重写为编排协议）
+├── commands/                         11 命令（重写为编排协议）
 │   ├── refine.md                     ← 重写
 │   ├── plan.md                       ← 重写
 │   ├── build.md                      ← 重写
@@ -2419,7 +2419,7 @@ unified/
 │   ├── restore.md                    ← 重写
 │   └── learn.md                      ← 重写
 │
-├── .agents/skills/                    10 命令入口（Codex CLI）
+├── .agents/skills/                    11 命令入口（Codex CLI）
 │
 ├── agents/                           22 审查 + 工程角色
 │   ├── README.md                     ← 更新
@@ -2456,12 +2456,12 @@ unified/
 │       ├── ship-accessibility-auditor.md ✓
 │       └── ship-docs-auditor.md          ✓
 │
-├── skills/                           44 技能（不变）
+├── skills/                           45 技能（不变）
 │   ├── define/  (3)
 │   ├── build/   (15)
 │   ├── verify/  (11)
 │   ├── ship/    (7)
-│   ├── maintain/ (5)
+│   ├── maintain/ (6)
 │   └── reflect/ (2)
 │
 ├── templates/                        6 文档模板

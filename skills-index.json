@@ -58,9 +58,10 @@
         "maintain-workflow-deprecation-migration",
         "maintain-workflow-context-save",
         "maintain-workflow-context-restore",
-        "maintain-workflow-learn"
+        "maintain-workflow-learn",
+        "maintain-workflow-goal"
       ],
-      "description": "可观测性、上下文管理、学习记录"
+      "description": "可观测性、上下文管理、学习记录、目标追踪"
     },
     "reflect": {
       "skills": [
@@ -114,6 +115,7 @@
       "ci|cd|pipeline|持续集成": ["ship-infrastructure-ci-cd"],
       "observability|监控|日志|metrics": ["maintain-infrastructure-observability"],
       "retro|回顾|复盘|postmortem": ["reflect-team-retro"],
+      "goal|目标|意图|追踪": ["maintain-workflow-goal"],
       "Good Goal|Goal Review|Done When|目标质量|目标验收": ["define-workflow-refine", "define-workflow-spec"]
     },
     "context_signals": {
@@ -182,6 +184,7 @@
     "maintain-workflow-context-restore": "新 session 继续之前的工作",
     "maintain-workflow-learn": "发现项目模式/踩坑/偏好需要持久化",
     "reflect-team-retro": "功能完成/里程碑达成/事故处理后复盘",
-    "reflect-team-documentation": "记录架构决策或维护项目知识"
+    "reflect-team-documentation": "记录架构决策或维护项目知识",
+    "maintain-workflow-goal": "创建、追踪、暂停或完成跨 session 的持久化目标"
   }
 }

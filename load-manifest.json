@@ -223,6 +223,13 @@
       },
       "skills": ["maintain-workflow-learn"]
     },
+    "goal": {
+      "description": "目标管理、意图追踪、goal 生命周期",
+      "detect": {
+        "anyKeywords": ["goal", "目标", "意图", "active goal", "当前目标"]
+      },
+      "skills": ["maintain-workflow-goal"]
+    },
     "observability": {
       "description": "可观测性、日志、监控",
       "detect": {
