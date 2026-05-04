@@ -5,6 +5,26 @@
 
 可选值：`software` / `document` / `article` / `deck` / `visual`。默认 `software`。
 
+## Goal Alignment
+- Source Goal: conversation / `GOAL.md` / Codex `/goal`
+- Goal Status: accepted / needs-refinement / blocked
+- Goal Review Score: `<score>/12`
+
+### One-line Goal
+[用一句话写清本次目标。必须具体、可执行、可验证。]
+
+### Done When
+- [ ] Functional: <用户可观察的结果>
+- [ ] Technical: <测试、构建、导出或质量门>
+- [ ] Regression: <不应被破坏的旧行为>
+- [ ] Output: <最终需要交付的说明、文件或证据>
+
+### Stop Conditions
+- [ ] Acceptance 无法验证
+- [ ] 需要修改明确排除范围
+- [ ] 需要改变 API / 权限 / 数据结构 / 生产配置
+- [ ] 实际范围明显大于当前 Goal
+
 ## 问题
 [为什么要做？解决了什么痛点？现状是什么？]
 

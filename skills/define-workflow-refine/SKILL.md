@@ -34,6 +34,48 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 **Step 1.2：Scope 检查**
 如果请求包含多个独立子系统（如"做个带聊天、文件存储、计费、分析的平台"），立即标记——不要细化一个需要先分解的项目。先帮助用户分解成子项目，再 refine 第一个子项目。
 
+**Step 1.2.5：Goal Review（目标质量检查）**
+在继续细化方案前，先判断当前 goal 是否足够清楚，能否安全进入 spec。Goal Review 只检查目标质量，**不替代** `/goal` 的生命周期管理。
+
+按 6 个维度评分，每项 0-2 分：
+
+| Dimension | 0 | 1 | 2 |
+|-----------|---|---|---|
+| Clarity | 目标模糊，无法一句话说明 | 有方向但对象/结果不清 | 一句话能说明具体目标 |
+| Scope | 没有边界或混入多个任务 | 有部分边界但仍有歧义 | Include / Exclude 清楚 |
+| Context | 缺少项目、文件、背景或复现信息 | 有部分上下文但不足以执行 | 相关上下文足够开始 |
+| Constraints | 没有限制或默认可随意改 | 有隐含限制但未写清 | API、行为、依赖、格式等约束明确 |
+| Acceptance | 无法判断完成 | 有成功描述但不可验证 | Done When 具体、可验证 |
+| Safety | 没有风险或停止条件 | 风险隐约存在但未界定 | 高风险区域和 Stop Conditions 明确 |
+
+输出固定结构：
+
+```markdown
+## Goal Review
+- Source Goal: conversation / `GOAL.md` / Codex `/goal`
+- Goal Status: accepted / needs-refinement / blocked
+- Goal Review Score: <score>/12
+- Blocking:
+  - <没有则写 none>
+- Done When:
+  - Functional:
+  - Technical:
+  - Regression:
+  - Output:
+- Stop Conditions:
+  - Acceptance 无法验证
+  - 需要修改明确排除范围
+  - 需要改变 API / 权限 / 数据结构 / 生产配置
+  - 实际范围明显大于当前 Goal
+```
+
+Gate:
+- `10-12`: accepted，可以进入 spec
+- `7-9`: needs-refinement，先补齐弱项再继续
+- `0-6`: blocked，不能进入 build；必须重新澄清或拆分 goal
+
+小型变更（单行修复、纯配置、拼写/文案小改）可记录 `Goal Review: skipped`，但仍要有可验证的完成标准。
+
 **Step 1.3：逐一询问澄清问题**
 优先用宿主环境的结构化提问工具（如 `AskUserQuestion`）**逐一**询问以下问题；如果当前环境没有该工具，则用一条简短纯文本问题降级。一次一个问题，不要列清单：
 1. **问题/背景** — 要解决的问题是什么？现状是什么？
@@ -199,6 +241,26 @@ artifact_type: software
 
 Allowed: software / document / article / deck / visual
 
+## Goal Alignment
+- Source Goal: conversation / `GOAL.md` / Codex `/goal`
+- Goal Status: accepted / needs-refinement / blocked
+- Goal Review Score: <score>/12
+
+### One-line Goal
+[一句话目标]
+
+### Done When
+- [ ] Functional:
+- [ ] Technical:
+- [ ] Regression:
+- [ ] Output:
+
+### Stop Conditions
+- [ ] Acceptance 无法验证
+- [ ] 需要修改明确排除范围
+- [ ] 需要改变 API / 权限 / 数据结构 / 生产配置
+- [ ] 实际范围明显大于当前 Goal
+
 ## External References
 - Search status: completed / skipped / unavailable
 - Fact:
@@ -260,6 +322,8 @@ Allowed: software / document / article / deck / visual
 - 跳过"为谁做"直接开始设计
 - 没有收敛到 2-3 个方案就跳到实现
 - 没有问"之前有人试过吗"
+- Goal Review Score 低于 10 仍继续进入 plan/build
+- Done When 不可验证或缺少 Stop Conditions
 - 没有明示隐藏假设
 - 包含多个独立子系统时没有先分解
 - yes-machine 模式：不质疑弱方案
@@ -269,6 +333,8 @@ Allowed: software / document / article / deck / visual
 ## 验证清单
 
 - [ ] 清晰的"为谁、解决什么问题"已定义
+- [ ] Goal Review 已完成或明确跳过，且跳过理由成立
+- [ ] Goal Alignment 已写入 spec（Source Goal、状态、评分、Done When、Stop Conditions）
 - [ ] artifact_type 已明确；未明确时按 software 处理
 - [ ] External Scan 已完成、跳过或标记不可用，并记录原因
 - [ ] 搜索结果已区分 Fact / Pattern / Inference / Unknown

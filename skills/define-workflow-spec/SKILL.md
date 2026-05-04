@@ -39,17 +39,18 @@ ASSUMPTIONS I'M MAKING:
 
 1. **Objective** — 构建什么、为什么、为谁、成功标准
 2. **Artifact Type** — 交付物类型。默认 `software`；可选 `software` / `document` / `article` / `deck` / `visual`
-3. **Commands / Tools** — 完整可执行命令或产物工具（含参数）：
+3. **Goal Alignment** — 目标来源、目标质量状态、Done When 和 Stop Conditions。它是 spec 的来源/质量摘要，**不是** `/goal` 生命周期管理的替代品。
+4. **Commands / Tools** — 完整可执行命令或产物工具（含参数）：
    ```
    Build: npm run build
    Test: npm test -- --coverage
    Lint: npm run lint --fix
    Dev: npm run dev
    ```
-4. **Project Structure / Artifact Paths** — 源码、测试、文档或最终产物路径
-5. **Style / Quality Bar** — 代码风格、文风、版式、视觉风格或演示标准
-6. **Verification Strategy** — 测试、事实核查、版式检查、导出检查或人工验收方式
-7. **Boundaries（三级系统）**:
+5. **Project Structure / Artifact Paths** — 源码、测试、文档或最终产物路径
+6. **Style / Quality Bar** — 代码风格、文风、版式、视觉风格或演示标准
+7. **Verification Strategy** — 测试、事实核查、版式检查、导出检查或人工验收方式
+8. **Boundaries（三级系统）**:
    - **Always do:** 提交前跑测试、遵循命名约定、验证输入
    - **Ask first:** 数据库 schema 变更、加依赖、改 CI 配置
    - **Never do:** 提交密钥、编辑 vendor 目录、未经批准删除失败测试
@@ -66,6 +67,26 @@ ASSUMPTIONS I'M MAKING:
 artifact_type: software
 
 Allowed: software / document / article / deck / visual
+
+## Goal Alignment
+- Source Goal: conversation / `GOAL.md` / Codex `/goal`
+- Goal Status: accepted / needs-refinement / blocked
+- Goal Review Score: <score>/12
+
+### One-line Goal
+[一句话目标]
+
+### Done When
+- [ ] Functional:
+- [ ] Technical:
+- [ ] Regression:
+- [ ] Output:
+
+### Stop Conditions
+- [ ] Acceptance 无法验证
+- [ ] 需要修改明确排除范围
+- [ ] 需要改变 API / 权限 / 数据结构 / 生产配置
+- [ ] 实际范围明显大于当前 Goal
 
 ## Tech Stack
 [software 时填写框架、语言、关键依赖；非 software 时填写工具链、格式、模板或品牌约束]
@@ -89,6 +110,8 @@ Allowed: software / document / article / deck / visual
 
 ## Success Criteria
 [如何判定"做完"——具体、可测试的条件]
+
+`Done When` 是 goal 级完成定义；`Success Criteria` 是 spec 级验收标准。两者必须一致，不能出现 Done When 说完成但 Success Criteria 无法验证的情况。
 
 ## Risks and Mitigations
 | 风险 | 概率 | 影响 | 应对方案 |
@@ -135,6 +158,8 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 
 - 在 Surface Assumptions 之前就开始写 spec 内容
 - spec 缺少 Success Criteria（成功标准不具体=无法验收）
+- spec 缺少 Goal Alignment（无法追溯目标来源或完成定义）
+- Goal Alignment 与 Success Criteria 冲突
 - "不做清单"没有明确 trade-off
 - 用户已批准的 spec 在实现过程中静默变更
 - 跳过用户审查直接进入 plan
@@ -142,8 +167,10 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 
 ## 验证清单
 
-- [ ] spec 覆盖全部 6 个核心区域
+- [ ] spec 覆盖全部 8 个核心区域
 - [ ] artifact_type 已声明；未声明时明确按 `software` 处理
+- [ ] Goal Alignment 已声明，且 Done When 与 Success Criteria 一致
+- [ ] Stop Conditions 已声明
 - [ ] 隐藏假设已列出（Surface Assumptions）
 - [ ] 用户已审查并批准 spec
 - [ ] 成功标准是具体可测试的

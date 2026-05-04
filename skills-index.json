@@ -113,7 +113,8 @@
       "git|版本控制|commit|branch": ["build-infrastructure-git"],
       "ci|cd|pipeline|持续集成": ["ship-infrastructure-ci-cd"],
       "observability|监控|日志|metrics": ["maintain-infrastructure-observability"],
-      "retro|回顾|复盘|postmortem": ["reflect-team-retro"]
+      "retro|回顾|复盘|postmortem": ["reflect-team-retro"],
+      "Good Goal|Goal Review|Done When|目标质量|目标验收": ["define-workflow-refine", "define-workflow-spec"]
     },
     "context_signals": {
       "has_spec_no_plan": ["build-workflow-plan"],
