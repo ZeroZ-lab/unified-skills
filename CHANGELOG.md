@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.11.0] - 2026-05-05
+
+### Changed
+- release metadata: bump package, Claude plugin, Codex plugin, and marketplace descriptions to 2.11.0
+
 ## [2.10.0] - 2026-05-05
 
 ### Added
