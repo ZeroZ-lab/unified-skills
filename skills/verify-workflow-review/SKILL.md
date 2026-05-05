@@ -19,7 +19,10 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 ## Iron Law
 
 <HARD-GATE>
-没有对应产物类型的审查证据就不能批准。`software` 必须覆盖正确性、可读性、架构、安全、性能；非软件产物必须覆盖目标受众、内容/视觉质量、完整性和导出证据。
+审查必须分两阶段：先 Spec Compliance（功能完整性），再 Code Quality（实现质量）。
+功能不完整的代码不进入质量审查。
+没有两阶段审查证据就不能批准合并。
+`software` 必须覆盖 Spec Compliance + 五轴质量评估；非软件产物必须覆盖目标受众、内容/视觉质量、完整性和导出证据。
 </HARD-GATE>
 
 ### Step 1：理解上下文
@@ -38,47 +41,111 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 - 测试名称描述性？
 - 如果代码改了，测试能捕获回归吗？
 
-### Step 3：五轴审查实现
+### Step 3：两阶段审查
 
 先读取 spec 的 `artifact_type`：
-- `software`（默认）→ 执行下方五轴代码审查
+- `software`（默认）→ 执行下方两阶段审查
 - `document` / `article` / `deck` → 加载 `verify-content-review`
 - `visual` → 加载 `verify-visual-review`
 - `deck` 若视觉复杂，同时加载 `verify-visual-review`
 
-对每个变更文件逐一审查：
+**对 software 产物，必须执行两阶段审查：**
 
-#### 1. Correctness（正确性）
-- 符合 spec/task 要求？
-- 边界情况处理了？（null、空值、边界值）
-- 错误路径处理了？
-- 测试在测正确的东西？
+#### Step 3.1: Spec Compliance 审查（第一关）
 
-#### 2. Readability（可读性）
-- 命名描述性且一致？（没有 `temp`、`data`、`result` 无上下文）
-- 控制流直白？（避免嵌套三元、深层回调）
-- 能更少行数实现吗？（1000 行能 100 行完成 = 失败）
-- 抽象值得其复杂度？（不到第三个使用场景不抽象）
+**REQUIRED SUB-SKILL:** 使用 `verify-workflow-spec-compliance`
 
-#### 3. Architecture（架构）
-- 遵循现有模式或新模式有理由？
-- 保持模块边界清晰？
-- 没有循环依赖？
-- 抽象层级适当？
+检查功能完整性：
+- spec 的每个需求都实现了吗？
+- spec 的每个验收标准都有测试吗？
+- 有没有实现 spec 之外的功能（scope creep）？
 
-#### 4. Security（安全）
-- 输入验证和转义？
-- 密钥没有留在代码/日志/版本控制中？
-- Auth 检查到位？
-- SQL 参数化（无字符串拼接）？
-- 输出的编码防止 XSS？
-- 外部数据源视为不可信？
+**出口条件:** 所有 spec 需求都有对应实现，且没有 Blocking 级别的遗漏。
 
-#### 5. Performance（性能）
-- N+1 查询模式？
-- 无界循环或不受控数据获取？
-- 同步操作异步？
-- 列表端点缺少分页？
+**如果不通过:** 退回 build 阶段，补齐缺失功能后重新审查。**不进入 Step 3.2。**
+
+**审查输出示例:**
+```markdown
+## Spec Compliance 审查结果
+
+**状态:** 通过 / 不通过
+
+### 需求覆盖率
+- 功能需求: 10/10 (100%)
+- 边界条件: 5/5 (100%)
+- 错误场景: 3/3 (100%)
+- 验收标准: 8/8 (100%)
+
+**总体覆盖率: 26/26 (100%)**
+
+### 遗漏需求（如有）
+[列出所有 Blocking 和 Important 级别的遗漏]
+```
+
+---
+
+#### Step 3.2: Code Quality 审查（第二关）
+
+**前置条件:** Step 3.1 已通过（spec compliance ✅）
+
+**REQUIRED SUB-SKILL:** 
+- `artifact_type: software` → 使用 `verify-quality-code-quality`
+- `artifact_type: document/article/deck` → 使用 `verify-content-review`
+- `artifact_type: visual` → 使用 `verify-visual-review`
+
+对 software 产物执行五轴审查：
+
+1. **Correctness（逻辑正确性）**
+   - 边界情况处理了？（null、空值、边界值）
+   - 错误路径处理了？
+   - 测试在测正确的东西？
+
+2. **Readability（可读性）**
+   - 命名描述性且一致？
+   - 控制流直白？
+   - 抽象值得其复杂度？
+
+3. **Architecture（架构）**
+   - 遵循现有模式或新模式有理由？
+   - 保持模块边界清晰？
+   - 没有循环依赖？
+
+4. **Security（安全）**
+   - 输入验证和转义？
+   - 密钥没有留在代码/日志中？
+   - Auth 检查到位？
+   - SQL 参数化？
+
+5. **Performance（性能）**
+   - N+1 查询模式？
+   - 无界循环或不受控数据获取？
+   - 列表端点有分页？
+
+**出口条件:** 五轴全部覆盖，无 Blocking 问题，Important 问题 ≤2 个。
+
+**审查输出示例:**
+```markdown
+## Code Quality 审查结果
+
+**状态:** 通过 / 不通过
+
+### 五轴评分
+| 轴 | 评分 | 状态 |
+|---|------|------|
+| Correctness | 9/10 | ✅ 良好 |
+| Readability | 8/10 | ✅ 良好 |
+| Architecture | 9/10 | ✅ 良好 |
+| Security | 10/10 | ✅ 优秀 |
+| Performance | 8/10 | ✅ 良好 |
+
+**总体评分: 44/50 (88%)**
+
+### Blocking 问题（如有）
+[列出所有必须修复的问题]
+
+### Important 问题（如有）
+[列出所有强烈建议修复的问题]
+```
 
 ### Step 4：分类意见
 
@@ -103,14 +170,19 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 ## 两种审查模式
 
 ### 标准模式（默认）
-当前会话中直接执行五轴审查。产出审查报告到 `docs/features/<name>/03-review.md`。
+当前会话中直接执行两阶段审查。产出审查报告到 `docs/features/<name>/03-review.md`。
+
+**两阶段流程:**
+1. 先执行 Spec Compliance 审查（功能完整性）
+2. 只有通过第一阶段，才进入 Code Quality 审查（实现质量）
+3. 两阶段都通过后，生成最终审查报告
 
 ### 并行发散模式（高风险 --full）
 同时派发 4 个 subagent 做专业审查：
 
 ```
 安全敏感            → + review-security-auditor agent
-代码质量敏感         → + review-code-reviewer agent
+代码质量敏感         → + review-code-quality-auditor agent
 测试覆盖需要验证     → + review-test-engineer agent
 无障碍合规          → + review-accessibility-auditor agent
 ```
@@ -119,10 +191,12 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 
 **最少触发条件：**
 - 小型变更（<50 行、无安全/UI 敏感）→ 可跳过并行模式，用标准模式
-- 标准变更 → 至少 review-code-reviewer + review-test-engineer
+- 标准变更 → 至少 review-spec-compliance-auditor + review-code-quality-auditor
 - 有 UI 变更 → 加 review-accessibility-auditor
 - 安全敏感 → 加 review-security-auditor
 - 用户指定 `--full` → 4 角色全开
+
+**注意:** 即使使用并行模式，也必须先完成 Spec Compliance 审查，再进行 Code Quality 审查。
 
 每个 subagent 输出 Blocking / Important / Suggestion 三级反馈。
 
@@ -229,7 +303,9 @@ DEAD CODE IDENTIFIED:
 以下任何一个出现，立即停止并要求修复：
 
 - PR 未经审查就合入
-- 审查只检查测试是否通过（忽略其他四轴）
+- 跳过 Spec Compliance 审查直接进入 Code Quality 审查
+- 功能不完整时进行质量审查
+- 审查只检查测试是否通过（忽略其他维度）
 - LGTM 而没有实际审查证据
 - 安全敏感变更没有安全审查
 - PR 太大无法审好（要求拆分）
@@ -241,9 +317,10 @@ DEAD CODE IDENTIFIED:
 ## 验证清单
 
 - [ ] 理解变更意图
-- [ ] 五轴都审了
+- [ ] 已执行 Spec Compliance 审查（第一阶段）
+- [ ] Spec Compliance 审查通过后，已执行 Code Quality 审查（第二阶段）
 - [ ] 非 software 产物已按 artifact_type 加载内容/视觉审查技能
-- [ ] critical 问题已解决
+- [ ] Blocking 问题已解决
 - [ ] 测试通过
 - [ ] 构建成功
 - [ ] 验证故事已记录

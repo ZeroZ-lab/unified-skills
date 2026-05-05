@@ -44,14 +44,50 @@ Task 4（依赖 2 + 3）
 4. 运行全量验证。
 5. 串行执行 release/export/ship 收口任务。
 
-### Task N: <名称>
-**文件:** 创建/修改/测试路径
+### Task N: <功能描述>
+
+**Files:**
+- Create: `src/path/to/file.ts`
+- Test: `tests/path/to/test.ts`
+
 **依赖:** Task N-1
-- [ ] 验收标准: 明确本切片完成条件
-- [ ] 生成/实现: 最小可验证产物
-- [ ] 验证: software 跑测试；非 software 做内容/视觉/导出检查
-- [ ] 调整: 根据验证结果修正
-- [ ] COMMIT
+
+- [ ] **Step 1: 写失败测试**
+
+```typescript
+test('描述预期行为', () => {
+  // 测试 spec 中的验收标准
+  const result = targetFunction(input);
+  expect(result).toEqual(expected);
+});
+```
+
+- [ ] **Step 2: 验证测试失败**
+
+Run: `npm test -- --grep "描述预期行为"` → FAIL
+
+- [ ] **Step 3: 写最小实现**
+
+```typescript
+function targetFunction(input: InputType): ReturnType {
+  // 1. 验证输入（null/undefined/边界值）
+  // 2. 执行核心逻辑（参考 spec 第 X 节）
+  // 3. 返回符合 spec 的结果格式
+}
+```
+
+**说明:** 具体实现由执行 agent 根据 spec 和上下文推理。
+
+- [ ] **Step 4: 验证测试通过**
+
+Run: `npm test -- --grep "描述预期行为"` → PASS
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add src/path/to/file.ts tests/path/to/test.ts
+git commit -m "feat: add <功能描述>"
+```
 
 ---
 

@@ -27,12 +27,14 @@
     "verify": {
       "skills": [
         "verify-workflow-review",
+        "verify-workflow-spec-compliance",
+        "verify-quality-code-quality",
         "verify-workflow-debug",
         "verify-frontend-accessibility",
         "verify-quality-integration-testing",
         "verify-quality-performance",
         "verify-quality-security",
-        "verify-quality-code-review-standards",
+        "verify-team-code-review-standards",
         "verify-content-review",
         "verify-visual-review",
         "verify-workflow-receiving-review",

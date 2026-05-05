@@ -106,7 +106,83 @@ Task 4: 用户查看任务列表（查询 + API + 列表 UI）
 
 ### Step 5：写 bite-sized 任务
 
-任务模板按 `artifact_type` 调整。`software` 使用测试驱动模板；非软件产物使用产物验证模板：
+任务模板按 `artifact_type` 调整。`software` 使用测试驱动模板；非软件产物使用产物验证模板。
+
+**代码示例风格原则:**
+
+给执行 agent 提供**方向和约束**，而不是**完整实现**。
+
+**最小示例包含:**
+- 函数签名（参数类型、返回类型）
+- 关键步骤的意图注释（不是实现代码）
+- 边界条件和错误处理的提示
+- 与 spec 的对应关系
+
+**最小示例不包含:**
+- 完整的实现逻辑（让 agent 推理）
+- 具体的算法细节（除非 spec 明确要求）
+- 所有可能的边界情况处理（只提示关键的）
+
+**例外情况使用完整代码:**
+- 复杂的算法（如加密、解析）
+- 精确的数据结构（如 schema 定义）
+- 关键的安全逻辑（如鉴权检查）
+- 非软件产物的具体内容（如 WorldEdit 命令、SQL 语句）
+
+---
+
+**Software 任务模板（TDD）:**
+
+```markdown
+### Task N: <功能描述>
+
+**Files:**
+- Create: `src/path/to/file.ts`
+- Test: `tests/path/to/test.ts`
+
+**依赖:** Task N-1
+
+- [ ] **Step 1: 写失败测试**
+
+```typescript
+test('描述预期行为', () => {
+  // 测试 spec 中的验收标准
+  const result = targetFunction(input);
+  expect(result).toEqual(expected);
+});
+```
+
+- [ ] **Step 2: 验证测试失败**
+
+Run: `npm test -- --grep "描述预期行为"` → FAIL
+
+- [ ] **Step 3: 写最小实现**
+
+```typescript
+function targetFunction(input: InputType): ReturnType {
+  // 1. 验证输入（null/undefined/边界值）
+  // 2. 执行核心逻辑（参考 spec 第 X 节）
+  // 3. 返回符合 spec 的结果格式
+}
+```
+
+**说明:** 具体实现由执行 agent 根据 spec 和上下文推理。
+
+- [ ] **Step 4: 验证测试通过**
+
+Run: `npm test -- --grep "描述预期行为"` → PASS
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add src/path/to/file.ts tests/path/to/test.ts
+git commit -m "feat: add <功能描述>"
+```
+```
+
+---
+
+**非 Software 任务模板（产物验证）:**
 
 ```markdown
 ### Task N: [产物切片]
@@ -210,15 +286,51 @@ Run: `npm test -- --grep "特定行为"` → PASS
 
 **检查点门：** 每个 checkpoint 的全部项目通过后，才能进入下个阶段。没有全部绿色 = 不能继续。未通过的检查点 → 标记阻塞项 → 回到对应任务修复 → 重新验证。
 
-### Step 7：自审
+### Step 7：自审（10 项检查）
 
 写完完整 plan 后，对照 spec 审查：
-1. **Spec 覆盖** — 逐条检查 spec 的每个要求，能找到对应任务吗？
-2. **占位符扫描** — 搜索 TBD/TODO//"implement later" 模式，修复
-3. **类型一致性** — 后面的任务中的函数签名和属性名是否匹配前面定义的？
-4. **Subplans 完整性** — `02-plan.md` 中列出的每个 `plans/*.md` 都存在，并有 `Write Scope`、`Dependencies`、`Parallel Safety`、`Verification Evidence`
-5. **并行安全性** — 任意两个 `parallel_safe` 子计划没有重叠写入范围；共享契约已经由 contracts 子计划定义
-6. **收口顺序** — release/export/ship 类子计划默认串行收口，不能标为 `parallel_safe`
+
+#### 7.1 Spec 覆盖
+逐条检查 spec 的每个要求，能找到对应任务吗？列出任何遗漏。
+
+#### 7.2 占位符扫描
+搜索 TBD/TODO/"implement later"/"添加适当的错误处理"等模式，修复。
+
+#### 7.3 类型一致性
+后面任务中的函数签名和属性名是否匹配前面定义的？
+
+#### 7.4 Subplans 完整性
+`02-plan.md` 中列出的每个 `plans/*.md` 都存在，并有完整的 Subplan Contract。
+
+#### 7.5 并行安全性
+任意两个 `parallel_safe` 子计划没有重叠写入范围。
+
+#### 7.6 收口顺序
+release/export/ship 类子计划默认串行收口，不能标为 `parallel_safe`。
+
+#### 7.7 任务独立性（新增）
+每个任务是否可以独立验证？检查：
+- [ ] 每个任务有明确的验收标准
+- [ ] 每个任务有独立的验证步骤（不依赖后续任务）
+- [ ] 任务之间的依赖关系已明确标注
+
+#### 7.8 验证步骤完整性（新增）
+每个任务的验证步骤是否包含：
+- [ ] 具体的验证命令（带参数）
+- [ ] 预期的输出或结果
+- [ ] 失败时的诊断方法
+
+#### 7.9 代码示例风格（新增）
+检查代码示例是否符合"最小示例 + 意图注释"原则：
+- [ ] 没有完整实现逻辑（除非是复杂算法/安全逻辑/非软件产物）
+- [ ] 有关键步骤的意图注释
+- [ ] 有边界条件和错误处理的提示
+
+#### 7.10 任务粒度（新增）
+检查任务大小是否合理：
+- [ ] 单个任务不超过 5 个文件
+- [ ] 单个任务的步骤数在 3-7 个之间
+- [ ] 任务标题中没有 "and"（有则拆分）
 
 ### Step 7.5：Plan Review Army（计划审查军团）
 

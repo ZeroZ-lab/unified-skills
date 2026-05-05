@@ -132,6 +132,20 @@
       },
       "skills": ["verify-workflow-review"]
     },
+    "spec-compliance": {
+      "description": "Spec 合规性审查、功能完整性检查",
+      "detect": {
+        "anyKeywords": ["spec compliance", "规格符合", "功能完整性", "需求覆盖", "spec 合规", "功能遗漏"]
+      },
+      "skills": ["verify-workflow-spec-compliance"]
+    },
+    "code-quality": {
+      "description": "代码质量审查、五轴评估",
+      "detect": {
+        "anyKeywords": ["code quality", "代码质量", "五轴审查", "质量评估", "correctness", "readability", "architecture", "security", "performance"]
+      },
+      "skills": ["verify-quality-code-quality"]
+    },
     "content-review": {
       "description": "内容审查、事实核查、逻辑审查",
       "detect": {
