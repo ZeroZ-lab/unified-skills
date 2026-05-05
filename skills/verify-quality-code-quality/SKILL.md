@@ -50,13 +50,18 @@ description: 代码质量审查。使用 cuando 需要对已通过 spec complian
 
 **REQUIRED:** 确认代码已通过 Spec Compliance 审查。
 
-检查是否存在 Spec Compliance 审查报告（`docs/features/YYYYMMDD-<name>/03-review.md` 或类似路径）。
+接受以下任一证据：
+- 当前 `/review` 会话中刚完成的 Spec Compliance 结果为"通过"
+- 独立的 Spec Compliance 阶段报告显示"通过"（如 `docs/features/YYYYMMDD-<name>/03-review.md` 中的 Stage 1 区块，或 `docs/features/YYYYMMDD-<name>/reviews/spec-compliance.md`）
+- 外部分派的 `review-spec-compliance-auditor` 返回 PASS，且列出需求覆盖率
 
-如果没有 Spec Compliance 审查报告，或报告显示"不通过"，**立即停止**并告知用户：
+不要要求最终 `03-review.md` 已经存在；`03-review.md` 是两阶段审查合并后的最终产物，通常在 Code Quality 审查之后才生成。
+
+如果没有任何 Spec Compliance 通过证据，或证据显示"不通过"，**立即停止**并告知用户：
 
 ```
 代码质量审查需要先通过 Spec Compliance 审查。
-当前状态: [未找到审查报告 / Spec Compliance 不通过]
+当前状态: [未找到 Stage 1 通过证据 / Spec Compliance 不通过]
 请先运行 Spec Compliance 审查，确保功能完整后再进行质量审查。
 ```
 

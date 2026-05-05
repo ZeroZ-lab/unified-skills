@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.10.0] - 2026-05-05
+
+### Added
+- review workflow: split software review into Spec Compliance and Code Quality stages
+- skills: add `verify-workflow-spec-compliance` and `verify-quality-code-quality`
+- agents: add `review-spec-compliance-auditor` and `review-code-quality-auditor`
+
+### Changed
+- `/review`: require Spec Compliance evidence before Code Quality review
+- plan workflow: tighten self-review guidance for task independence and verification completeness
+- docs: document the two-stage review gate and quality-assurance enhancement
+
+### Fixed
+- skills-index: align artifact-export and deprecation-migration skill names with real skill directories
+- review prompts: replace stale legacy code reviewer references with `review-code-quality-auditor`
+- README: update verify and maintain phase skill counts
+
 ## [1.9.0] - 2026-04-25
 
 ### Added

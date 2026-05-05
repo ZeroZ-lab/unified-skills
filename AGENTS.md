@@ -34,9 +34,9 @@ unified/
 ├── skills/                  47 技能 / 6 阶段
 │   ├── define/              定义（3）
 │   ├── build/               构建（15）
-│   ├── verify/              验证（11）
+│   ├── verify/              验证（13）
 │   ├── ship/                发布（7）
-│   ├── maintain/            维护（6）
+│   ├── maintain/            维护（7）
 │   └── reflect/             复盘（2）
 │
 ├── commands/                11 命令入口（Claude Code 斜杠命令）

@@ -18,7 +18,8 @@
 
 | Agent | 职责 | 调用时机 |
 |-------|------|---------|
-| review-code-reviewer | 五轴审查（正确性、可读性、架构、安全、性能） | review --full |
+| review-spec-compliance-auditor | Spec 合规性审查（需求覆盖、验收标准、scope creep） | review --full Phase 1 |
+| review-code-quality-auditor | 五轴审查（正确性、可读性、架构、安全、性能） | review --full Phase 2 |
 | review-security-auditor | 安全审计（OWASP、威胁建模、密钥扫描） | review --full |
 | review-test-engineer | 测试覆盖分析（happy path、边界、错误路径、并发） | review --full |
 | review-accessibility-auditor | 无障碍审查（WCAG、屏幕阅读器、表单错误、动态内容） | review --full（有 UI 变更时） |

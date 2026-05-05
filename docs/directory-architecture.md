@@ -245,7 +245,7 @@ ship-workflow-ship/SKILL.md       → templates/feature/README.md
 | 阶段值 | kebab-case | `define`, `build`, `verify`, `ship`, `maintain`, `reflect` |
 | 角色值 | kebab-case | `workflow`, `frontend`, `backend`, `quality`, `cognitive`, `infrastructure`, `team`, `content`, `visual`, `artifact` |
 | 命令 | kebab-case | `review.md` |
-| Agent | kebab-case | `review-code-reviewer.md` |
+| Agent | kebab-case | `review-code-quality-auditor.md` |
 | 模板 | 数字前缀 + kebab-case | `01-spec.md`, `02-plan.md` |
 | 产出文档 | 数字前缀 + kebab-case | `01-spec.md`, `01-root-cause.md` |
 
@@ -365,7 +365,8 @@ unified/
 │
 ├── agents/
 │   ├── README.md
-│   ├── review-code-reviewer.md
+│   ├── review-spec-compliance-auditor.md
+│   ├── review-code-quality-auditor.md
 │   ├── review-security-auditor.md
 │   ├── review-test-engineer.md
 │   ├── plan-ceo-reviewer.md

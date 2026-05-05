@@ -47,7 +47,7 @@
         "ship-workflow-ship",
         "ship-infrastructure-ci-cd",
         "ship-infrastructure-deploy",
-        "ship-workflow-artifact-export",
+        "ship-artifact-export",
         "ship-workflow-canary",
         "ship-workflow-land",
         "ship-workflow-doc-sync"
@@ -57,7 +57,7 @@
     "maintain": {
       "skills": [
         "maintain-infrastructure-observability",
-        "maintain-workflow-deprecation-migration",
+        "maintain-team-deprecation-migration",
         "maintain-workflow-context-save",
         "maintain-workflow-context-restore",
         "maintain-workflow-learn",
@@ -176,12 +176,12 @@
     "ship-workflow-ship": "审查通过后上线或交付",
     "ship-infrastructure-ci-cd": "设置/修改 CI/CD 管道",
     "ship-infrastructure-deploy": "部署操作",
-    "ship-workflow-artifact-export": "artifact_type 为非 software，需要导出最终文件",
+    "ship-artifact-export": "artifact_type 为非 software，需要导出最终文件",
     "ship-workflow-canary": "代码已部署需要持续验证",
     "ship-workflow-land": "PR 合并到主分支并验证部署",
     "ship-workflow-doc-sync": "代码已合并需要同步更新项目文档",
     "maintain-infrastructure-observability": "需要监控生产、调查线上问题或配置告警",
-    "maintain-workflow-deprecation-migration": "需要移除、替换或迁移已有功能/API",
+    "maintain-team-deprecation-migration": "需要移除、替换或迁移已有功能/API",
     "maintain-workflow-context-save": "保存工作上下文供后续恢复",
     "maintain-workflow-context-restore": "新 session 继续之前的工作",
     "maintain-workflow-learn": "发现项目模式/踩坑/偏好需要持久化",

@@ -174,7 +174,7 @@ Using [skill-name] to [purpose]
 - `ship-workflow-ship` — 审查通过后上线或交付
 - `ship-infrastructure-ci-cd` — 设置/修改 CI/CD 管道
 - `ship-infrastructure-deploy` — 部署操作
-- `ship-workflow-artifact-export` — 产物导出
+- `ship-artifact-export` — 产物导出
 - `ship-workflow-canary` — 代码已部署需要持续验证
 - `ship-workflow-land` — PR 合并到主分支并验证部署
 - `ship-workflow-doc-sync` — 文档同步
@@ -182,7 +182,7 @@ Using [skill-name] to [purpose]
 ### Maintain 阶段（可观测性、上下文管理、学习记录）
 
 - `maintain-infrastructure-observability` — 可观测性
-- `maintain-workflow-deprecation-migration` — 废弃迁移
+- `maintain-team-deprecation-migration` — 废弃迁移
 - `maintain-workflow-context-save` — 保存工作上下文供后续恢复
 - `maintain-workflow-context-restore` — 新 session 继续之前的工作
 - `maintain-workflow-learn` — 发现项目模式/踩坑/偏好需要持久化

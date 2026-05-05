@@ -219,7 +219,7 @@
     "verify-quality-code-quality": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "24edf49d96251d8a8370c9cec3f3e31a9b7834d8fb6979cdeb613ba283b42173"
+      "computedHash": "69ebf763621d0245986b3ee57b75d36233412dfa9160fa3768c7b78dabb3dd03"
     },
     "verify-quality-integration-testing": {
       "source": "ZeroZ-lab/unified-skills",
@@ -269,12 +269,12 @@
     "verify-workflow-spec-compliance": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "5b6270af46a8749623ccc7081c98a5dbad8c2eca240c4947419f5a6f141576ba"
+      "computedHash": "356cc61527c45c4cc87efd34e883923d39d4aad05d9ff64f1439f8b60c53f86f"
     },
     "maintain-workflow-using-unified": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "f270c925f7df523b5d0806b20a2b705033d79f06e16d35a23f24e638c5de6aa0"
+      "computedHash": "653c7cb30a4806ae78eefb376cd679d171ee17d8ff1be493b5856d567a87dcf1"
     }
   }
 }
