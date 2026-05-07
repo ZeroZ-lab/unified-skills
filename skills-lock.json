@@ -174,7 +174,7 @@
     "ship-artifact-export": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "4869d0b860d840fa25181dfa4819bcc9cb4d170c942e6648d0b0d24de3d61689"
+      "computedHash": "ce51c93610ecff924e671b3815c4e4b41dba3506cb22ccdc2137879ec0142174"
     },
     "ship-infrastructure-ci-cd": {
       "source": "ZeroZ-lab/unified-skills",
@@ -189,7 +189,7 @@
     "ship-workflow-canary": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "5ba6fc337785f93d503a1e837f86086503275ce6b0652a9d6cc4042fe9bc126b"
+      "computedHash": "eb28cb3a56d176ea4bb5725eb41114c1432a6f8a96a049ac3ae08223e0d15e07"
     },
     "ship-workflow-doc-sync": {
       "source": "ZeroZ-lab/unified-skills",
@@ -199,12 +199,12 @@
     "ship-workflow-land": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "840e594fcfc6fdbf4579f93abed1bae1e06e3ccf35dd1546b8493e72c599d2d4"
+      "computedHash": "9775fad976521c27f860eb03fc2c9126dfe96781a8dafd4141068c8c0568499c"
     },
     "ship-workflow-ship": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "191f4a5369bbae16bec329ea338afb95812671cb09f099df7609cfa9c747db27"
+      "computedHash": "d1ebaea9b48289dfbf900938780398e91e9960ebd86634b96a73edd44094719b"
     },
     "verify-content-review": {
       "source": "ZeroZ-lab/unified-skills",
@@ -254,17 +254,18 @@
     "verify-workflow-receiving-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "861f92975da5babcd6b3f2333ba518ed46e0763aff4415bcfb824d9df81c58ca"
+      "computedHash": "6ebbe399e977295e6388ecc444c6037a7d1ae6818b4d203d2416f3afcf53bff5"
     },
     "verify-workflow-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "bd292048e3986026f6ba5c03526be949c7aa5a5c705bb561bf4bb88b24bece71"
+      "computedHash": "b07a686bfa4b11b87f71519548965015ce8176ea235359c18520016105584397"
     },
     "maintain-workflow-using-unified": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
       "computedHash": "f270c925f7df523b5d0806b20a2b705033d79f06e16d35a23f24e638c5de6aa0"
     }
-  }
+  },
+  "generatedAt": "2026-05-04T00:00:00Z"
 }
