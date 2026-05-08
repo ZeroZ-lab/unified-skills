@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.12.4] - 2026-05-08
+
+### Changed
+- `/build`: consume approved plans task-by-task, treating each `Task N` as the execution unit.
+- execution engine: require subagent work to bind to a concrete `Task N` or subplan.
+- plan template: add task-by-task execution rules and `PLAN GAP` repair guidance.
+- validate: enforce the build task-by-task contract across command, template, and execution skills.
+
 ## [2.12.3] - 2026-05-08
 
 ### Fixed

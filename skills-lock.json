@@ -29,7 +29,7 @@
     "build-cognitive-execution-engine": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "c73851f84e48a4394bd377853e953d4a70ece821791b830071bc022f7d0582bc"
+      "computedHash": "353692911538b47a579c34e3609b0f8827c8e48cc5a2b9a74faf9a1026368834"
     },
     "build-cognitive-source-driven": {
       "source": "ZeroZ-lab/unified-skills",
@@ -69,7 +69,7 @@
     "build-workflow-execute": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "d65aa689d4a466be44d90d6d63d38ae5a36d99fbbfbabf9e4659f149266870c1"
+      "computedHash": "ab21dddcba04d3557b95912902ed0a98c97cc886b2c854de508b8df1463e508e"
     },
     "build-workflow-plan": {
       "source": "ZeroZ-lab/unified-skills",

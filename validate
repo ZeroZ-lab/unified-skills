@@ -132,6 +132,19 @@ sgrep 'plans/\*\.md' README.md || fail "README 缺少 plans/*.md 文档产出链
 sgrep 'plans/\*\.md' AGENTS.md || fail "AGENTS 缺少 plans/*.md 文档产出链"
 [ "$status" -eq 0 ] && printf '通过\n'
 
+printf '\n== 检查 build task-by-task 合同 ==\n'
+for file in \
+  skills/build-workflow-execute/SKILL.md \
+  skills/build-cognitive-execution-engine/SKILL.md \
+  commands/build.md \
+  templates/feature/02-plan.md
+do
+  sgrep 'task-by-task' "$file" || fail "缺少 task-by-task 合同: $file"
+done
+sgrep 'Task N' skills/build-workflow-execute/SKILL.md || fail "execute 技能缺少 Task N 执行单元"
+sgrep 'Task N' templates/feature/02-plan.md || fail "plan 模板缺少 Task N 执行单元"
+[ "$status" -eq 0 ] && printf '通过\n'
+
 printf '\n== 检查命令数量 ==\n'
 _cmd_count=$(ls commands/*.md 2>/dev/null | wc -l | tr -d ' ')
 _expected_cmd_count=11

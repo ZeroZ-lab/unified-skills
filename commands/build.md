@@ -17,12 +17,13 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 **Input:** 02-plan.md（final）
 **Process:**
 1. 读取总控计划
-2. 如有并行任务，读取 plans/*.md 子计划
-3. 检查 Parallel Execution Matrix 的 parallel_safe 标记
-4. 选择执行模式：inline / subagent / parallel
-**Output:** 执行模式决策
+2. 提取 `### Task N` task queue
+3. 如有并行任务，读取 plans/*.md 子计划并提取子计划 task queue
+4. 检查 Parallel Execution Matrix 的 parallel_safe 标记
+5. 选择执行模式：inline / subagent / parallel
+**Output:** task queue + 执行模式决策
 
-### Phase 2: Incremental Build (Loop)
+### Phase 2: Task-by-task Build Loop
 
 **Agent selection (by artifact_type):**
 - software → software-engineer
@@ -34,21 +35,23 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 - content-writer: build-content-writing
 - visual-designer: build-content-layout
 - Common: build-workflow-execute, build-cognitive-execution-engine
-**Input:** 02-plan.md（final）+ 当前切片任务
+**Input:** 02-plan.md（final）+ 当前 Task N
 **Process:**
-1. 按切片循环：生成 → 验证 → 记录
-2. 遇到架构决策 → 写 ADR
-3. 遇到 Bug → 进入调试
+1. implement this plan task-by-task：按 Task N 循环生成 → 验证 → 记录
+2. 当前 Task N 未通过自身验证前，不进入下一个 Task N
+3. 只有 Parallel Execution Matrix 证明 parallel_safe 时才并行
+4. 遇到架构决策 → 写 ADR
+5. 遇到 Bug → 进入调试
 **Output:** 增量产物 + adr/*.md（如有）
 
 ### Phase 3: Final Verification
 
 **Agent:** 主 session
 **Skills:** verify-workflow-debug（如有 Bug）+ build-quality-tdd（完整测试）
-**Input:** 所有切片产出
+**Input:** 所有 Task N 产出
 **Output:** 完整产物
 **Validation:**
-- [ ] 所有任务已完成
+- [ ] 所有 Task N 已完成
 - [ ] 所有测试通过
 
 ---
@@ -60,6 +63,7 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 
 ## Exit Conditions
 - [ ] 所有任务已实现
+- [ ] 所有计划 Task N 已完成并有验证证据
 - [ ] 所有测试通过
 - [ ] 产物完整
 

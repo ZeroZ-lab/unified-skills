@@ -12,6 +12,15 @@ description: 任务执行引擎——选择正确的执行模式。使用 cuando
 - **指向**: 全部任务完成后建议 `/review`
 - **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-workflow-execute/SKILL.md`
 
+## 任务输入契约
+
+执行引擎只消费 `/plan` 已批准的任务列表：**implement this plan task-by-task**。
+
+- 每个 `### Task N` 是一个执行单元，必须有验收条件和验证证据。
+- `plans/*.md` 子计划也是执行单元；子计划内部仍按 `### Task N` 逐项执行。
+- 引擎可以选择 inline / subagent / parallel，但不能重新创建正式任务列表。
+- 任何 subagent 输入都必须绑定一个明确的 `Task N` 或 `plans/*.md` 子计划。
+
 ## 三种执行模式
 
 根据任务的性质（独立/依赖/复杂）选择对应模式：
@@ -26,21 +35,22 @@ description: 任务执行引擎——选择正确的执行模式。使用 cuando
 
 ### 模式 A: 直接执行
 
-主 agent 按序执行每个任务。适用单文件修改、简单 bug 修复、配置变更。
+主 agent 按 `### Task N` 顺序执行每个任务。适用单文件修改、简单 bug 修复、配置变更。
 
 **规则:**
-- 实现 → 测试验证 → 提交 → 下一个任务
+- 实现 → 测试验证 → 记录/提交 → 下一个 Task N
+- 当前 Task N 的验证证据未通过前，不进入下一个 Task N
 - 每个任务 < 100 行变更
 - 不要同时开多个实现分支
 
 ### 模式 B: 并行 Fan-Out
 
-当面对 **2+ 个真正独立的任务或 `plans/*.md` 子计划**（无共享文件、无共享状态、无顺序依赖），一次性分派。
+当面对 **2+ 个真正独立的 `Task N` 或 `plans/*.md` 子计划**（无共享文件、无共享状态、无顺序依赖），一次性分派。
 
 **规则:**
 - 一个消息分派所有 subagent（实现真正的并行）
 - 每个 subagent 独立上下文，独立文件，独立结果
-- 多计划输入必须来自 `Parallel Execution Matrix` 中明确 `parallel_safe: yes` 的子计划
+- 并行输入必须来自 `Parallel Execution Matrix` 中明确 `parallel_safe: yes` 的 task 或子计划
 - 每个 subagent 只能修改所属子计划的 `Write Scope`
 - 分派完 → 等结果 → 审查 → 合并
 
@@ -89,7 +99,7 @@ Merge Checkpoint: changed_files 必须全部落在 Write Scope 内
 用于高复杂度任务（跨多个模块、涉及关键业务逻辑、需要安全审查）。采用 **两阶段审查：**
 
 ```
-任务到达
+明确的 Task N 或 subplan 到达
     │
     ▼
 分派 Implementer subagent（新鲜上下文）
@@ -116,6 +126,7 @@ Phase 3: 分派 Code Quality Reviewer subagent（五轴审查）
 ```
 
 **关键规则:**
+- Implementer 输入必须包含具体 `Task N` 或子计划路径、验收条件、Write Scope、Verification Evidence
 - 每个 subagent **新鲜上下文** — 不传递前一个 subagent 的对话历史
 - Spec Reviewer **不信任 Implementer 的报告** — 独立验证
 - Code Quality Reviewer **必须等到 spec 合规确认后才开始** — 绝不提前审查不合规的代码
@@ -150,6 +161,7 @@ Agent 3 结果 ─┘
 - [ ] 每个 agent 的测试通过
 - [ ] 全量测试套件仍然通过（交叉影响检测）
 - [ ] 无文件冲突（两个 agent 不该改同一文件）
+- [ ] 每个 agent 绑定的 Task N / subplan 返回 DONE 或明确 BLOCKED
 - [ ] 每个 agent 的 changed_files 都满足 `changed_files ⊆ Write Scope`
 - [ ] 每个子计划的 Verification Evidence 和 Merge Checkpoint 已满足
 
@@ -171,6 +183,7 @@ Agent 3 结果 ─┘
 
 ## 红旗 — STOP
 
+- 没有明确 `Task N` 或子计划就分派 subagent
 - 模式 B 任务之间不是真正独立的（有隐式依赖或共享文件）
 - Subagent 报告 "DONE" 但没有 changed_files 列表
 - Spec Reviewer 报告 SPEC_MATCH 但没提供独立验证证据
@@ -186,6 +199,7 @@ Agent 3 结果 ─┘
 - [ ] 执行模式匹配任务性质（独立/依赖/复杂）
 - [ ] 并行任务文件不重叠
 - [ ] 多计划 fan-out 只使用 `parallel_safe` 子计划
+- [ ] 每个执行单元绑定明确 `Task N` 或子计划
 - [ ] 每个 subagent 有子计划路径、Write Scope、Read Scope、Verification Evidence、Merge Checkpoint
 - [ ] changed_files 没有越过 Write Scope
 - [ ] Subagent 流水线两阶段审查顺序正确

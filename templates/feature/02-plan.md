@@ -1,7 +1,17 @@
 # <Feature Name> — Implementation Plan
 
+> For execution: implement this plan task-by-task. Treat each `### Task N` block as one execution unit, and do not start the next task until the current task has passing verification evidence unless `Parallel Execution Matrix` explicitly proves `parallel_safe: yes`.
+
 ## Artifact Type
 artifact_type: software
+
+## Task Execution Rules
+
+- `/plan` owns the task list; `/build` consumes it.
+- Each `### Task N` must have files, dependencies, steps, and verification evidence.
+- A task is done only when its own verification passes and evidence is recorded.
+- Parallel execution is allowed only for tasks or subplans proven `parallel_safe: yes`.
+- Missing task detail during `/build` is a `PLAN GAP`; return to `/plan` to repair it.
 
 ## Plan Topology
 topology: serial
