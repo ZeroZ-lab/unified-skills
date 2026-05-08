@@ -66,6 +66,7 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 对查询结果中的每个技能：
 
 - **required 标记的** → 必须加载
+- **用户可见产物规则** → 如果 `artifact_type` 是 `document` / `article` / `deck` / `visual`，必须先加载 `design-workflow-design`
 - **software + UI 规则** → 如果 `artifact_type: software` 且触发词 / 风险 / 上下文表明涉及页面、组件、交互或视觉呈现，必须追加 `by_artifact_type.software.design`
 - **sequence 标记的** → 按顺序加载
 - **其他** → 如果有 1% 可能相关，加载
@@ -161,14 +162,14 @@ Using [skill-name] to [purpose]
 - `define-workflow-refine` — 模糊想法收敛到 spec
 - `define-workflow-spec` — 规格化文档
 
-### Design 阶段（创作设计定稿）
+### Design 阶段（证据驱动的创作设计定稿）
 
-- `design-workflow-design` — 设计阶段总控和 gate
-- `design-experience-interaction` — 交互设计、流程和状态
-- `design-visual-direction` — 视觉方向和风格系统
-- `design-content-script` — 剧本设计、故事线、消息线
-- `design-content-direction` — 导演设计、页序推进、节奏
-- `design-content-layout` — 排版设计、构图、媒介适配
+- `design-workflow-design` — 证据驱动设计阶段总控和 gate
+- `design-experience-interaction` — 基于证据的交互设计、流程和状态
+- `design-visual-direction` — 基于证据的视觉方向和风格系统
+- `design-content-script` — 基于证据的剧本设计、故事线、消息线
+- `design-content-direction` — 基于证据的导演设计、页序推进、节奏
+- `design-content-layout` — 基于证据的排版设计、构图、媒介适配
 
 ### Build 阶段（拆分任务、增量生成产物）
 

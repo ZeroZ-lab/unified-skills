@@ -1,12 +1,12 @@
 ---
-description: 从已批准 spec 到创作设计定稿（交互 / 视觉 / 排版 / 剧本 / 导演）
+description: 从已批准 spec 到证据驱动的创作设计定稿（交互 / 视觉 / 排版 / 剧本 / 导演）
 ---
 
 # Command: /design
 
 ## Goal
 
-Transform approved spec into an approved design contract for user-visible artifacts.
+Transform approved spec into an approved, evidence-driven design contract for user-visible artifacts.
 
 ## Phases
 
@@ -25,7 +25,31 @@ Transform approved spec into an approved design contract for user-visible artifa
 - [ ] 是否需要 design 已明确
 - [ ] skip 仅用于纯后端 / 纯脚本 / 纯迁移
 
-### Phase 2: Create Design Draft
+### Phase 2: Design Best-Practice Scan
+
+**Agent selection (by artifact_type):**
+- software + UI → visual-designer
+- document / article → content-writer
+- deck → content-writer + visual-designer
+- visual → visual-designer
+**Skills:**
+- design-workflow-design
+- artifact_type 对应 design-* 专项技能
+**Input:** 01-spec.md + references/design-best-practices.md + local project context
+**Process:**
+1. 围绕交互 / 视觉 / 排版 / 剧本 / 导演目标重新扫描创作与呈现层最佳实践
+2. 按 Enterprise Product Patterns / Official Systems / Methods / Anti-patterns / Local Project Truth 分层记录来源
+3. 输出 Sources / Patterns / Inferences / Adopt / Reject / Unknown
+4. Search unavailable 时记录原因；关键设计决策无证据时 STOP
+**Output:** design-best-practice-scan（写入 02-design.md）
+**Validation:**
+- [ ] Sources 已按来源层分组
+- [ ] Pattern Synthesis 已提炼
+- [ ] Inferences 已从模式和本地约束推导
+- [ ] Adopt / Reject 已记录
+- [ ] Unknown / Search unavailable 已处理或阻塞
+
+### Phase 3: Create Design Draft
 
 **Agent selection (by artifact_type):**
 - software + UI → visual-designer
@@ -39,24 +63,26 @@ Transform approved spec into an approved design contract for user-visible artifa
 - design-content-script（document / article / deck）
 - design-content-direction（deck）
 - design-content-layout（document / deck / visual）
-**Input:** 01-spec.md
+**Input:** 01-spec.md + design-best-practice-scan
 **Process:**
 1. 只做创作和呈现层设计，不拆任务，不写实现步骤
 2. 按 artifact_type 产出对应设计决策
-3. 明确设计目标、关键决策、设计边界、批准标准、实施前置条件
+3. 只有进入 Adopt 的外部模式才能成为设计决策
+4. 明确设计目标、关键决策、设计边界、批准标准、实施前置条件
 **Output:** docs/features/YYYYMMDD-<name>/02-design.md（draft）
 **Validation:**
+- [ ] Design References / Pattern Synthesis / Inferences / Adopt-Reject 已填写
 - [ ] 设计目标明确
 - [ ] 关键决策已定稿
 - [ ] 不做清单明确
 - [ ] 没有实现任务分解
 
-### Phase 3: Design Review
+### Phase 4: Design Review
 
 **Agent:** design-reviewer
 **Input:** 02-design.md（draft）
 **Process:**
-1. 审查设计目标、关键决策、边界和实施前置条件
+1. 审查设计目标、关键决策、证据质量、边界和实施前置条件
 2. 输出 Blocking / Important / Suggestion
 3. 如有 Blocking，先修设计稿再进入批准
 **Output:** design-review-comments.md
@@ -64,7 +90,7 @@ Transform approved spec into an approved design contract for user-visible artifa
 - [ ] design-reviewer 已完成
 - [ ] Blocking issues 已识别
 
-### Phase 4: Approval
+### Phase 5: Approval
 
 **Agent:** current
 **Skills:** design-workflow-design
@@ -87,6 +113,7 @@ Transform approved spec into an approved design contract for user-visible artifa
 
 ## Exit Conditions
 - [ ] design required 时：02-design.md 存在且已批准
+- [ ] design required 时：02-design.md 包含证据来源、模式综合、Adopt / Reject
 - [ ] design skipped 时：skip 理由已明确记录
 
 ## Next Steps
@@ -97,6 +124,7 @@ Transform approved spec into an approved design contract for user-visible artifa
 ## Constitutional Rules
 - CANON.md Clause 1: Surface Assumptions — 设计前先陈述假设
 - CANON.md Clause 3: Scope Discipline — 设计不偷带实现任务
+- CANON.md Clause 5: Verify Don't Assume — 设计决策必须有来源证据或本地约束背书
 - CANON.md Clause 8: Manage Confusion — 设计目标或媒介冲突时停止推进
 
 ## 实现

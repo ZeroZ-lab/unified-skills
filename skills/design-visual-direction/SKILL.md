@@ -27,6 +27,19 @@ description: 视觉设计——风格、层级、色彩、组件视觉规则
 4. **Mood Must Match Task**
 5. **Visible Consistency Beats Clever Variation**
 
+## 最佳实践输入
+
+先读取 `references/design-best-practices.md`，并把视觉相关证据写入 `02-design.md` 的 `Design References / Pattern Synthesis / Adopt / Reject`。
+
+扫描重点：
+- Enterprise Product Patterns: 同类产品的视觉密度、信任感、品牌气质和组件语言
+- Official Systems / Platform Rules: 品牌规范、设计系统、平台视觉规则、可访问性对比度
+- Methods / Theory / Style Schools: 视觉层级、色彩角色、排版体系、风格流派
+- Anti-patterns / Verification: 单色调滥用、装饰压过信息、卡片泛滥、品牌混搭冲突
+- Local Project Truth: 现有 token、组件库、品牌资产、媒介限制和用户目标
+
+流行风格必须经过 Adopt / Reject；不能把“高级”“科技感”“像某品牌”直接写成结论。
+
 ## 流程
 
 ### Step 1：读取约束
@@ -57,6 +70,7 @@ description: 视觉设计——风格、层级、色彩、组件视觉规则
 - 视觉方向
 - 风格与系统
 - 页面视觉层级
+- Adopt / Reject（视觉模式）
 - 不做清单
 
 ## 验证失败处理
@@ -66,6 +80,7 @@ description: 视觉设计——风格、层级、色彩、组件视觉规则
 | 风格词过于抽象 | 改成可执行的层级、色彩、排版规则 |
 | 视觉方向与品牌冲突 | 以品牌约束为准，记录取舍 |
 | 视觉方向遮蔽信息层级 | 回退装饰，强化主次层级 |
+| 视觉模式无证据 | 补充 best-practice scan，写清来源层和取舍理由 |
 
 ## 常见说辞
 
@@ -78,6 +93,7 @@ description: 视觉设计——风格、层级、色彩、组件视觉规则
 ## 红旗 — STOP
 
 - 没有品牌或场景约束就开始选风格
+- 缺少视觉 best-practice scan 或 Adopt / Reject
 - 把视觉方向写成审美形容词堆砌
 - 同时追求多个相互冲突的气质
 - 视觉规则无法落到页面或组件
@@ -88,4 +104,5 @@ description: 视觉设计——风格、层级、色彩、组件视觉规则
 - [ ] 视觉目标明确
 - [ ] 视觉系统可执行
 - [ ] 不做清单明确
+- [ ] 视觉决策已回溯到来源证据或 Local Project Truth
 - [ ] 已写入 `02-design.md`

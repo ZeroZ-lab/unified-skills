@@ -23,6 +23,19 @@ description: 导演设计——镜头/页面切换意图、情绪推进、演示
 4. **Speaker Load Matters**
 5. **Every Transition Must Earn Its Keep**
 
+## 最佳实践输入
+
+先读取 `references/design-best-practices.md`，并把导演相关证据写入 `02-design.md` 的 `Design References / Pattern Synthesis / Adopt / Reject`。
+
+扫描重点：
+- Enterprise Product Patterns: pitch deck、发布会、产品演示、汇报材料的页序和揭示模式
+- Official Systems / Platform Rules: 演示媒介、时长、品牌语气、动画/导出限制
+- Methods / Theory / Style Schools: 戏剧张力、揭示顺序、节奏控制、speaker load 管理
+- Anti-patterns / Verification: 每页平均用力、无转折、动画代替叙事、一页多功能
+- Local Project Truth: 观众任务、现场/异步阅读场景、页数限制、演讲者能力和素材边界
+
+导演设计必须说明为什么这样推进；不能把页序写成材料清单。
+
 ## 流程
 
 ### Step 1：定义演示目标
@@ -51,6 +64,7 @@ description: 导演设计——镜头/页面切换意图、情绪推进、演示
 - 演讲节奏
 - 页序 / 段落推进
 - 情绪推进 / 转折点
+- Adopt / Reject（导演模式）
 - 不做清单
 
 ## 验证失败处理
@@ -60,6 +74,7 @@ description: 导演设计——镜头/页面切换意图、情绪推进、演示
 | 页序只是在平铺信息 | 重写推进逻辑，增加转折和揭示顺序 |
 | 节奏过密 | 拆页或让 speaker notes 承担细节 |
 | 节奏过散 | 合并页面，强化主线 |
+| 推进模式无证据 | 补充 best-practice scan，写清 Adopt / Reject |
 
 ## 常见说辞
 
@@ -72,6 +87,7 @@ description: 导演设计——镜头/页面切换意图、情绪推进、演示
 ## 红旗 — STOP
 
 - 没有推进逻辑就开始做 deck
+- 缺少导演 best-practice scan 或 Adopt / Reject
 - 情绪推进和故事线相互打架
 - 一页承担多个阶段性功能
 - 把导演设计退化成“加不加动画”
@@ -82,4 +98,5 @@ description: 导演设计——镜头/页面切换意图、情绪推进、演示
 - [ ] 页序推进合理
 - [ ] 节奏控制明确
 - [ ] 呈现约束明确
+- [ ] 导演决策已回溯到来源证据或 Local Project Truth
 - [ ] 已写入 `02-design.md`

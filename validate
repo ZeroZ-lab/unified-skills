@@ -89,7 +89,7 @@ else
 fi
 
 printf '\n== 检查占位符 ==\n'
-placeholder_output=$(sgrep_n 'STUB|PLACEHOLDER|待补充|尚未实现' skills commands agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
+placeholder_output=$(sgrep_n 'STUB|PLACEHOLDER|待补充|尚未实现' skills commands agents templates docs references README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
 if [ -n "$placeholder_output" ]; then
   printf '%s\n' "$placeholder_output"
   fail '发现占位符标记'
@@ -169,6 +169,74 @@ for file in agents/refine-ceo-scout.md agents/refine-eng-scout.md agents/refine-
   done
 done
 
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查 design evidence gate ==\n'
+[ -f references/design-best-practices.md ] || fail "缺少设计最佳实践来源合同: references/design-best-practices.md"
+for pattern in \
+  'Enterprise Product Patterns' \
+  'Official Systems / Platform Rules' \
+  'Methods / Theory / Style Schools' \
+  'Anti-patterns / Verification' \
+  'Local Project Truth'
+do
+  sgrep "$pattern" references/design-best-practices.md || fail "design-best-practices 缺少来源层: $pattern"
+done
+
+sgrep 'Design Best-Practice Scan' commands/design.md || fail "/design 缺少 Design Best-Practice Scan phase"
+sgrep 'Sources / Patterns / Inferences / Adopt / Reject / Unknown' commands/design.md || fail "/design 缺少 scan 输出契约"
+sgrep 'Design References' commands/design.md || fail "/design 缺少 Design References gate"
+
+for pattern in \
+  '^## Design References' \
+  '^## Pattern Synthesis' \
+  '^## Design Inferences' \
+  '^## Adopt / Reject' \
+  '^## Design Evidence Quality'
+do
+  sgrep "$pattern" templates/feature/02-design.md || fail "02-design 模板缺少 $pattern"
+done
+
+sgrep '设计证据质量' agents/design-reviewer.md || fail "design-reviewer 缺少设计证据质量审查"
+sgrep '缺少 Design References' agents/design-reviewer.md || fail "design-reviewer 缺少 Design References blocking"
+sgrep '缺少 Design Inferences' agents/design-reviewer.md || fail "design-reviewer 缺少 Design Inferences blocking"
+sgrep '缺少 Adopt / Reject' agents/design-reviewer.md || fail "design-reviewer 缺少 Adopt / Reject blocking"
+
+python3 - <<'PY' || fail "非 software 用户可见产物未强制加载 design-workflow-design"
+import json
+idx = json.load(open("skills-index.json"))
+for artifact in ("document", "article", "deck", "visual"):
+    required = idx["by_artifact_type"][artifact]["required"]
+    if "design-workflow-design" not in required:
+        raise SystemExit(f"{artifact}.required missing design-workflow-design")
+for trigger in ("document|文档|article|文章", "deck|PPT|演示|slides", "visual|视觉稿|海报|版式|layout"):
+    skills = idx["by_trigger"]["user_says"][trigger]
+    if not skills or skills[0] != "design-workflow-design":
+        raise SystemExit(f"{trigger} does not start with design-workflow-design")
+manifest = json.load(open("load-manifest.json"))
+for task_type in (
+    "ui-engineering",
+    "interaction-design",
+    "visual-direction",
+    "content-writing",
+    "content-layout",
+    "script-design",
+    "direction-design",
+    "layout-design",
+):
+    skills = manifest["taskTypes"][task_type]["skills"]
+    if not skills or skills[0] != "design-workflow-design":
+        raise SystemExit(f"{task_type} does not start with design-workflow-design")
+PY
+
+for file in skills/design-*/SKILL.md; do
+  sgrep 'references/design-best-practices\.md' "$file" || fail "design 技能缺少 best-practices reference: $file"
+  sgrep 'Adopt / Reject' "$file" || fail "design 技能缺少 Adopt / Reject 合同: $file"
+  sgrep 'Local Project Truth' "$file" || fail "design 技能缺少 Local Project Truth: $file"
+done
+
+sgrep '不替代 `/design` 的设计扫描' AGENTS.md || fail "AGENTS 缺少 refine scan 与 design scan 的边界"
+sgrep '不替代 `/design` 的创作与呈现层扫描' docs/architecture/command-agent-skill-architecture.md || fail "架构文档缺少 refine/design scan 边界"
 [ "$status" -eq 0 ] && printf '通过\n'
 
 for file in README.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do

@@ -7,6 +7,42 @@ artifact_type: software
 - Design Status: required / skipped
 - Skip Reason: <仅当 skipped 时填写；纯后端 / 纯脚本 / 纯迁移>
 
+## Design References
+- Scan Date:
+- Search Status: completed / search unavailable / local-only
+- Enterprise Product Patterns:
+- Official Systems / Platform Rules:
+- Methods / Theory / Style Schools:
+- Anti-patterns / Verification:
+- Local Project Truth:
+
+## Pattern Synthesis
+- Repeated Patterns:
+- Conflicting Patterns:
+- Local Constraints That Override External Patterns:
+
+## Design Inferences
+- Inference 1:
+  - Based on:
+  - Implication:
+- Inference 2:
+  - Based on:
+  - Implication:
+- Unknowns / Evidence Gaps:
+
+## Adopt / Reject
+- Adopt:
+  - <pattern> — Source Layer: <layer>; Reason: <why it fits this artifact>
+- Reject:
+  - <pattern> — Source Layer: <layer>; Reason: <why it does not fit>
+
+## Design Evidence Quality
+- [ ] Sources are grouped by source layer
+- [ ] Key decisions trace to sources or Local Project Truth
+- [ ] Adopt / Reject is explicit
+- [ ] Search unavailable or evidence gaps are recorded
+- [ ] No external pattern is copied blindly
+
 ## 设计目标
 - 用户/读者/观众要更快完成什么？
 - 这份设计要减少什么理解成本或操作摩擦？
@@ -22,6 +58,7 @@ artifact_type: software
 
 ## 设计批准标准
 - [ ] 设计方向已定稿
+- [ ] 设计证据已完成，关键决策可回溯
 - [ ] 用户可感知产物的主路径清楚
 - [ ] 关键状态 / 节奏 / 版式方向已覆盖
 - [ ] 没有把实现步骤写进设计稿

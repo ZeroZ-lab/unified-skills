@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.13.0] - 2026-05-08
+
+### Added
+- design: add evidence-driven best-practice scan contract and `references/design-best-practices.md`.
+- templates: require Design References, Pattern Synthesis, Design Inferences, Adopt / Reject, and Evidence Quality in `02-design.md`.
+
+### Changed
+- design skills and reviewer: require source-layered evidence and block approval when required design lacks traceable sources or adopt/reject decisions.
+- skill discovery: route document, article, deck, visual, and UI design paths through `design-workflow-design` before build/execution skills.
+
+### Fixed
+- validate: enforce the design evidence gate, non-software design discovery path, reference placeholder scanning, and updated `skills-lock.json` hashes.
+
 ## [2.12.5] - 2026-05-08
 
 ### Added

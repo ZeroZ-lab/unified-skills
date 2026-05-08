@@ -28,7 +28,7 @@ Show what Unified Skills can do: available commands, artifact types, workflow st
 |------|------|--------|------|
 | /brainstorm | Define | 模糊想法 → 2-3 方案 + 推荐 | 00-brainstorm.md |
 | /refine | Define | 模糊想法 → 明确 spec | 01-spec.md |
-| /design | Design | spec → 创作设计定稿 | 02-design.md |
+| /design | Design | spec → 证据驱动设计定稿 | 02-design.md |
 | /plan | Build | spec + design → 可执行任务计划 | 03-plan.md |
 | /build | Build | 按计划增量生成产物 | 软件/内容/视觉 + ADR |
 | /review | Verify | 按制品类型质量审查 | 04-review.md |

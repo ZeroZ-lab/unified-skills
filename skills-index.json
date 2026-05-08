@@ -13,7 +13,7 @@
         "design-content-direction",
         "design-content-layout"
       ],
-      "description": "创作设计定稿：交互、视觉、排版、剧本、导演"
+      "description": "证据驱动的创作设计定稿：交互、视觉、排版、剧本、导演"
     },
     "build": {
       "skills": [
@@ -94,20 +94,20 @@
       "quality": ["verify-quality-security", "verify-quality-performance", "verify-quality-simplify"]
     },
     "document": {
-      "required": ["design-content-script", "build-content-writing"],
+      "required": ["design-workflow-design", "design-content-script", "build-content-writing"],
       "optional": ["design-content-layout", "build-content-layout"]
     },
     "article": {
-      "required": ["design-content-script", "build-content-writing", "verify-content-review"],
+      "required": ["design-workflow-design", "design-content-script", "build-content-writing", "verify-content-review"],
       "optional": ["design-content-layout"]
     },
     "deck": {
-      "required": ["design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
-      "sequence": ["design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
-      "note": "必须先 design 定稿，再 writing，最后 layout，不可并行"
+      "required": ["design-workflow-design", "design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
+      "sequence": ["design-workflow-design", "design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
+      "note": "必须先通过 design-workflow-design 完成证据驱动设计定稿，再 writing，最后 layout，不可并行"
     },
     "visual": {
-      "required": ["design-visual-direction", "design-content-layout", "build-content-layout", "verify-visual-review"]
+      "required": ["design-workflow-design", "design-visual-direction", "design-content-layout", "build-content-layout", "verify-visual-review"]
     }
   },
   "by_trigger": {
@@ -116,7 +116,7 @@
       "test|测试|tdd|单元测试": ["build-quality-tdd"],
       "api|endpoint|接口|REST|GraphQL": ["build-backend-api-design"],
       "ui|前端|component|组件|页面": ["design-workflow-design", "build-frontend-ui-engineering"],
-      "design|设计|交互|视觉|排版|剧本|导演": ["design-workflow-design"],
+      "design|设计|交互|视觉|排版|剧本|导演|best practice|最佳实践|证据": ["design-workflow-design"],
       "performance|性能|慢|优化|latency": ["verify-quality-performance"],
       "security|安全|漏洞|攻击|XSS|SQL注入": ["verify-quality-security"],
       "database|数据库|schema|migration|查询": ["build-backend-database"],
@@ -126,9 +126,9 @@
       "brainstorm|头脑风暴|想法|方案": ["define-cognitive-brainstorm"],
       "refine|提炼|收敛|spec": ["define-workflow-refine"],
       "plan|计划|任务|拆分": ["build-workflow-plan"],
-      "document|文档|article|文章": ["design-content-script", "build-content-writing"],
-      "deck|PPT|演示|slides": ["design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
-      "visual|视觉稿|海报|版式|layout": ["design-visual-direction", "design-content-layout", "build-content-layout"],
+      "document|文档|article|文章": ["design-workflow-design", "design-content-script", "build-content-writing"],
+      "deck|PPT|演示|slides": ["design-workflow-design", "design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
+      "visual|视觉稿|海报|版式|layout": ["design-workflow-design", "design-visual-direction", "design-content-layout", "build-content-layout"],
       "git|版本控制|commit|branch": ["build-infrastructure-git"],
       "ci|cd|pipeline|持续集成": ["ship-infrastructure-ci-cd"],
       "observability|监控|日志|metrics": ["maintain-infrastructure-observability"],
@@ -160,12 +160,12 @@
     "production_deployment": ["ship-workflow-ship", "ship-workflow-canary"]
   },
   "skill_descriptions": {
-    "design-workflow-design": "需要在 plan/build 前定稿创作设计阶段",
-    "design-experience-interaction": "需要设计用户路径、页面结构、状态或信息架构",
-    "design-visual-direction": "需要确定视觉方向、风格、层级或组件视觉规则",
-    "design-content-script": "需要先定故事线、剧本骨架、段落或页级消息线",
-    "design-content-direction": "需要设计页序推进、演讲节奏或情绪推进",
-    "design-content-layout": "需要先定版式系统、构图、页面层级或导出规格",
+    "design-workflow-design": "需要在 plan/build 前用最佳实践证据定稿创作设计阶段",
+    "design-experience-interaction": "需要用证据设计用户路径、页面结构、状态或信息架构",
+    "design-visual-direction": "需要用证据确定视觉方向、风格、层级或组件视觉规则",
+    "design-content-script": "需要用证据先定故事线、剧本骨架、段落或页级消息线",
+    "design-content-direction": "需要用证据设计页序推进、演讲节奏或情绪推进",
+    "design-content-layout": "需要用证据先定版式系统、构图、页面层级或导出规格",
     "define-cognitive-brainstorm": "想法模糊、开放性问题、需要方案对比",
     "define-workflow-refine": "模糊想法收敛到 spec",
     "define-workflow-spec": "refine 完成后需要编写正式 spec",

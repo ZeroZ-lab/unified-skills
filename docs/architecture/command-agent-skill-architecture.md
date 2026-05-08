@@ -28,6 +28,12 @@
 - 更好的可维护性（每层独立演进）
 - 更高的可理解性（架构意图明确）
 
+## 当前合同补充：Design Evidence Gate（2026-05-08）
+
+当前 `/design` 阶段已经升级为证据驱动的创作设计阶段。Command 负责插入 `Design Best-Practice Scan`，Skill 负责按 `references/design-best-practices.md` 的 4+1 来源模型执行扫描，Agent `design-reviewer` 负责阻断缺少 Sources / Pattern Synthesis / Adopt-Reject / Evidence Quality 的 `02-design.md`。
+
+`/refine` 的 External Scan 仍用于需求和方向探索，但不替代 `/design` 的创作与呈现层扫描。`/plan` 和 `/build` 只消费已批准的 `02-design.md`，不重新承担设计定稿。
+
 ---
 
 ## 目录
@@ -798,7 +804,7 @@ description: 跨 session 学习记录管理
 |-------|------|------|---------|
 | plan-ceo-reviewer | `agents/plan-ceo-reviewer.md` | CEO 视角：市场价值、投资回报 | ✅ phase-lens-role |
 | plan-eng-reviewer | `agents/plan-eng-reviewer.md` | 工程视角：可行性、复杂度 | ✅ phase-lens-role |
-| design-reviewer | `agents/design-reviewer.md` | 设计阶段：审查 `02-design.md` 的交互/视觉/排版/剧本/导演边界 | ✅ phase-lens-role |
+| design-reviewer | `agents/design-reviewer.md` | 设计阶段：审查 `02-design.md` 的证据质量、交互/视觉/排版/剧本/导演边界 | ✅ phase-lens-role |
 | plan-design-reviewer | `agents/plan-design-reviewer.md` | 设计视角：plan 是否忠实消费 design 约束 | ✅ phase-lens-role |
 | plan-security-reviewer | `agents/plan-security-reviewer.md` | 安全视角：数据暴露、合规 | ✅ phase-lens-role |
 

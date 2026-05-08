@@ -44,6 +44,7 @@ unified/
 ├── commands/                12 命令入口（Claude Code 斜杠命令）
 ├── agents/                  24 角色（7 核心工程 + 17 审查 / 侦察）
 ├── templates/               2 模板类别（bug + feature）
+├── references/              编排模式 + 设计最佳实践来源合同
 └── docs/                    设计文档
 ```
 
@@ -77,7 +78,7 @@ reflect/   → retro（回顾）、documentation（文档）
 | 命令 | 加载的技能 | 产出 | 文档路径 |
 |------|-----------|------|----------|
 | `/refine` | define-workflow-refine | 规范 spec | `docs/features/YYYYMMDD-<name>/01-spec.md` |
-| `/design` | design-workflow-design + artifact_type 对应 design 技能 | 创作设计定稿 | `docs/features/YYYYMMDD-<name>/02-design.md` |
+| `/design` | design-workflow-design + artifact_type 对应 design 技能 | 证据驱动的创作设计定稿 | `docs/features/YYYYMMDD-<name>/02-design.md` |
 | `/plan` | build-workflow-plan | 任务计划 | `docs/features/YYYYMMDD-<name>/03-plan.md` |
 | `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/YYYYMMDD-<name>/adr/` |
 | `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/YYYYMMDD-<name>/04-review.md` |
@@ -115,13 +116,15 @@ Unified Skills 有 3 个 hooks，在两个平台上行为有差异：
 
 spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `document` / `article` / `deck` / `visual`。后续阶段按该字段加载 design、软件、内容、版式、审查或导出技能。
 
-`/design` 只定交互、视觉、排版、剧本、导演等创作设计，不写实现步骤或任务分解。
+`/design` 只定交互、视觉、排版、剧本、导演等创作设计，不写实现步骤或任务分解。Design required 时必须执行 Design Best-Practice Scan，并在 `02-design.md` 中写明 Design References、Pattern Synthesis、Adopt / Reject 和 Evidence Quality；缺少证据不得批准。
 
 `/build` 会读取 `03-plan.md` 总控计划；大型/并行任务还会读取 `plans/*.md` 子计划，并只在 `Parallel Execution Matrix` 证明 `parallel_safe` 时并行分派。
 
 多产物扩展技能采用角色化方法论：先定义角色责任、长期原则和决策框架，再给出流程和验证证据；它们不是工具清单。
 
 `/refine` 使用 Unified 原生 External Scan：按 `artifact_type` 搜索已有方案、事实来源、设计/技术模式，并把结果分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject，再交给 Idea Scout Army 审查。
+
+`/refine` 的 External Scan 不替代 `/design` 的设计扫描。`/design` 使用 `references/design-best-practices.md` 的 4+1 来源模型：Enterprise Product Patterns、Official Systems / Platform Rules、Methods / Theory / Style Schools、Anti-patterns / Verification、Local Project Truth。
 
 ## 文档产出链
 

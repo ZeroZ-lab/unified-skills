@@ -35,53 +35,53 @@
       "skills": ["build-backend-service-patterns"]
     },
     "ui-engineering": {
-      "description": "前端 UI 工程、组件开发、交互实现",
+      "description": "前端 UI 工程、组件开发、交互实现；UI 任务先进入证据驱动 design gate",
       "detect": {
         "anyKeywords": ["ui", "frontend", "前端", "component", "组件", "交互实现", "页面开发"]
       },
       "skills": ["design-workflow-design", "build-frontend-ui-engineering"]
     },
     "design-workflow": {
-      "description": "创作设计阶段、design gate、设计定稿",
+      "description": "证据驱动创作设计阶段、best-practice scan、design gate、证据定稿",
       "detect": {
-        "anyKeywords": ["design", "设计阶段", "设计稿", "创作设计", "design gate"]
+        "anyKeywords": ["design", "设计阶段", "设计稿", "创作设计", "design gate", "best practice", "最佳实践", "设计证据"]
       },
       "skills": ["design-workflow-design"]
     },
     "interaction-design": {
-      "description": "交互设计、流程、状态、信息架构",
+      "description": "证据驱动交互设计、流程、状态、信息架构",
       "detect": {
         "anyKeywords": ["interaction", "交互设计", "用户路径", "状态设计", "information architecture", "流程设计"]
       },
-      "skills": ["design-experience-interaction"]
+      "skills": ["design-workflow-design", "design-experience-interaction"]
     },
     "visual-direction": {
-      "description": "视觉设计、风格、层级、色彩、组件视觉规则",
+      "description": "证据驱动视觉设计、风格、层级、色彩、组件视觉规则",
       "detect": {
         "anyKeywords": ["visual design", "视觉设计", "视觉方向", "风格", "色彩", "brand direction"]
       },
-      "skills": ["design-visual-direction"]
+      "skills": ["design-workflow-design", "design-visual-direction"]
     },
     "script-design": {
-      "description": "剧本设计、故事线、叙事节奏、消息线",
+      "description": "证据驱动剧本设计、故事线、叙事节奏、消息线",
       "detect": {
         "anyKeywords": ["script", "剧本", "故事线", "叙事", "message flow", "story arc"]
       },
-      "skills": ["design-content-script"]
+      "skills": ["design-workflow-design", "design-content-script"]
     },
     "direction-design": {
-      "description": "导演设计、页序推进、演示节奏、情绪推进",
+      "description": "证据驱动导演设计、页序推进、演示节奏、情绪推进",
       "detect": {
         "anyKeywords": ["direction", "导演", "页序", "演示节奏", "情绪推进", "reveal"]
       },
-      "skills": ["design-content-direction"]
+      "skills": ["design-workflow-design", "design-content-direction"]
     },
     "layout-design": {
-      "description": "排版设计、构图、版式系统、媒介适配",
+      "description": "证据驱动排版设计、构图、版式系统、媒介适配",
       "detect": {
         "anyKeywords": ["layout design", "排版设计", "构图", "版式系统", "grid", "媒介适配"]
       },
-      "skills": ["design-content-layout"]
+      "skills": ["design-workflow-design", "design-content-layout"]
     },
     "browser-testing": {
       "description": "浏览器测试、E2E、截图验证",
@@ -119,18 +119,18 @@
       "skills": ["build-cognitive-decision-record"]
     },
     "content-writing": {
-      "description": "内容写作、文章、PPT叙事、文档内容",
+      "description": "内容写作、文章、PPT叙事、文档内容；用户可见内容先进入证据驱动 design gate",
       "detect": {
         "anyKeywords": ["写文章", "article", "文档内容", "deck", "PPT", "presentation", "narrative", "叙事", "文案", "content writing"]
       },
-      "skills": ["build-content-writing"]
+      "skills": ["design-workflow-design", "build-content-writing"]
     },
     "content-layout": {
-      "description": "版式设计、排版、视觉层级、信息架构",
+      "description": "版式执行、排版、视觉层级、信息架构；用户可见版式先进入证据驱动 design gate",
       "detect": {
         "anyKeywords": ["版式", "layout", "排版", "视觉层级", "information hierarchy", "内容排版", "页面结构"]
       },
-      "skills": ["build-content-layout"]
+      "skills": ["design-workflow-design", "build-content-layout"]
     },
     "security": {
       "description": "安全审查、OWASP、漏洞检测",
@@ -366,7 +366,7 @@
   },
   "checkpoints": {
     "before-plan": {
-      "description": "进入计划前 — 若 design required，先加载设计总控技能",
+      "description": "进入计划前 — 若 design required，先加载证据驱动设计总控技能",
       "skills": ["design-workflow-design"]
     },
     "before-review": {
