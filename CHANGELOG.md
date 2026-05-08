@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.12.0] - 2026-05-08
+
+### Changed
+- 入口模型收敛：`AGENTS.md` 成为统一项目约束入口，`CLAUDE.md` 改为 Claude 侧指针文件
+- Codex 模型收敛：移除 repo 内薄包装命令目录依赖，`.codex-plugin/plugin.json` 直接指向真实 `skills/`
+- hooks: `session-start.sh` 与 `codex-wrapper.sh` 改为以 `AGENTS.md` + `skills/` 为运行入口
+- validate: 从旧的 `.agents/skills/` / `install-codex.sh` / 完整 `CLAUDE.md` 模型切换为 AGENTS 单入口模型校验
+
+### Fixed
+- 文档合同对齐：README、AGENTS、目录架构文档与当前删除后的真实仓库结构一致
+- skills-index 与 `maintain-workflow-using-unified` 描述同步，相关锁文件哈希更新
+- `.playwright-mcp/` 加入 `.gitignore`
+
 ## [2.11.0] - 2026-05-05
 
 ### Changed

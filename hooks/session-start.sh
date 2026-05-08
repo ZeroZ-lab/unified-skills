@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Unified Skills — SessionStart hook
-# Injects key CLAUDE.md sections into every new session context.
-# Detects Codex vs Claude Code and adjusts command syntax accordingly.
+# Injects key AGENTS.md sections into every new session context.
+# Detects Codex vs Claude Code and adjusts hints accordingly.
 set -u
 
 plugin_root="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 
-if [ ! -f "$plugin_root/CLAUDE.md" ]; then
+if [ ! -f "$plugin_root/AGENTS.md" ]; then
   exit 0
 fi
 
@@ -24,7 +24,7 @@ else
 fi
 
 # Extract the AI Agent section and command map
-content=$(sed -n '/^## 如果你是一个 AI Agent/,/^## 宪法/{ /^## 宪法/d; p }' "$plugin_root/CLAUDE.md")
+content=$(sed -n '/^## 如果你是一个 AI Agent/,/^## 宪法/{ /^## 宪法/d; p }' "$plugin_root/AGENTS.md")
 
 if [ -z "$content" ]; then
   # Fallback: emit safe default message
@@ -32,11 +32,11 @@ if [ -z "$content" ]; then
 fi
 
 # Extract command map
-cmd_map=$(sed -n '/^## 命令映射/,/^## 文档产出链/{ /^## 文档产出链/d; p }' "$plugin_root/CLAUDE.md")
+cmd_map=$(sed -n '/^## 命令映射/,/^## 文档产出链/{ /^## 文档产出链/d; p }' "$plugin_root/AGENTS.md")
 
 # Build command syntax hint based on platform
 if [ "$is_codex" -eq 1 ]; then
-  cmd_hint='使用 $refine、$plan、$build、$review、$ship 调用工作流。用 $save 和 $restore 理会话状态。用 $goal 管理目标。'
+  cmd_hint='Codex 直接读取 AGENTS.md 与 skills/ 中的真实技能；不再依赖 repo 内 $command 薄包装入口。'
 else
   cmd_hint="使用 /refine、/plan、/build、/review、/ship 调用工作流。用 /save 和 /restore 理会话状态。用 /goal 管理目标。"
 fi

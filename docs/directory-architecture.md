@@ -78,7 +78,7 @@ skills/                        ← 容器目录
 示例：`build-quality-tdd` = "构建阶段 → 质量角色 → TDD 技能"
 
 **为什么不用嵌套目录：**
-- 43 个技能无需嵌套，每个目录名已包含完整语义
+- 当前 47 个技能无需嵌套，每个目录名已包含完整语义
 - `/build` 命令可以 `skills/build-*` glob 加载整个阶段
 - `ls skills/` 按阶段自动分组排序（define-* → build-* → verify-* → ship-* → maintain-* → reflect-*）
 - 新增技能只需 `skills/<phase>-<role>-<skill>/SKILL.md`，不需要抉择放在哪个领域目录
@@ -402,5 +402,5 @@ unified/
 │
 ├── skills-lock.json             ← 技能完整性锁文件（SHA-256）
 
-核心资产: 3 根文件 + 47 技能（47 SKILL.md） + 11 命令 + 15 审查角色 + 6 模板 + 2 设计文档 + 1 参考文档 + 1 锁文件。平台包装入口（如 `.agents/skills/`）单独计数，避免安装目标变化导致统计漂移。
+核心资产: 3 根文件 + 47 技能（47 SKILL.md） + 11 命令 + 15 审查角色 + 6 模板 + 2 设计文档 + 1 参考文档 + 1 锁文件。当前不再维护 repo 内 Codex 薄包装目录，入口统一收敛到 `AGENTS.md` + `skills/`。
 ```

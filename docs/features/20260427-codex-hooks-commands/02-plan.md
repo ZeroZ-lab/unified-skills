@@ -9,10 +9,10 @@
 4 reviewers (CEO, Eng, Design, Security) completed. All Blocking issues resolved in spec. Key adjustments incorporated:
 - `CODEX_PLUGIN_ROOT` does not exist → use SCRIPT_DIR (spec already handles this)
 - Codex plugin.json has no `hooks` field → hooks via separate `.codex/hooks.json` (spec already handles this)
-- PreToolUse "ask" fail-open → accepted risk per user decision
+- 历史方案曾评估 PreToolUse `ask` 语义；当前收口为 `deny`
 - Keep `CLAUDE_PLUGIN_ROOT:-SCRIPT_DIR` fallback pattern (avoid Claude Code regression)
 - Replace "message" JSON key with "permissionDecisionReason" (Codex-expected, Claude Code accepts both)
-- Honest documentation of fail-open limitation
+- 统一记录为当前 `deny` 合同，并把旧 `ask` 方案标注为历史讨论
 
 ## Task Breakdown
 
@@ -60,12 +60,12 @@ Same change as T5, applied to the Python block in freeze.sh. Replace `"message"`
 
 ### T7: Update `AGENTS.md` — add Codex hooks section
 **Complexity:** Medium
-**Verification:** AGENTS.md has hooks section documenting: (a) 3 hooks and what they do, (b) `codex_hooks = true` requirement, (c) fail-open limitation for careful's "ask", (d) freeze "deny" works correctly
+**Verification:** AGENTS.md has hooks section documenting: (a) 3 hooks and what they do, (b) `codex_hooks = true` requirement, (c) Codex 上 careful 使用 `deny`, (d) freeze `deny` works correctly
 **Depends on:** None
 
 Add a section to AGENTS.md about hooks:
 - SessionStart: injects constitution + command map (works identically on both platforms)
-- PreToolUse/Bash (careful): intercepts destructive commands. **On Codex: `permissionDecision: "ask"` is parsed but fail-open — destructive commands will NOT be paused for user confirmation. This will improve when Codex makes "ask" fully functional.**
+- PreToolUse/Bash (careful): intercepts destructive commands. **当前 Codex 上使用 `permissionDecision: "deny"`，破坏性命令直接阻止。**
 - PreToolUse/apply_patch (freeze): blocks edits outside freeze boundary. **Works correctly on Codex — "deny" is fully enforced.**
 - Activation: requires `.codex/config.toml` with `[features] codex_hooks = true`
 
@@ -89,11 +89,11 @@ Update 4 files:
 - `package.json`: version 2.5.0 → 2.6.0
 - `.claude-plugin/plugin.json`: version 2.5.0 → 2.6.0, description updated
 - `.codex-plugin/plugin.json`: version 2.6.0 (already set in T1)
-- `.claude-plugin/marketplace.json`: description updated (currently stale — says "43 技能 + 8 命令 + 15 审查角色")
+- `.claude-plugin/marketplace.json`: description updated（历史旧统计已过期，需要与当前 47 技能 / 11 命令 / 22 角色保持一致）
 
 ### T10: Update `README.md` — Codex installation with hooks + feature matrix
 **Complexity:** Medium
-**Verification:** README has: (a) expanded Codex installation with hooks activation step, (b) cross-platform feature matrix table, (c) honest documentation of careful fail-open, (d) FAQ updated about Codex/Claude parity
+**Verification:** README has: (a) expanded Codex installation with hooks activation step, (b) cross-platform feature matrix table, (c) current `careful` `deny` contract, (d) FAQ updated about Codex/Claude parity
 **Depends on:** None
 
 Add to README:

@@ -89,7 +89,7 @@ else
 fi
 
 printf '\n== 检查占位符 ==\n'
-placeholder_output=$(sgrep_n 'STUB|PLACEHOLDER|待补充|尚未实现' skills commands .agents/skills agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
+placeholder_output=$(sgrep_n 'STUB|PLACEHOLDER|待补充|尚未实现' skills commands agents templates docs README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
 if [ -n "$placeholder_output" ]; then
   printf '%s\n' "$placeholder_output"
   fail '发现占位符标记'
@@ -108,7 +108,7 @@ if [ "$template_count" != "6" ]; then
   fail "模板数量应为 6，实际为 $template_count"
 fi
 
-for file in templates/feature/01-spec.md templates/feature/02-plan.md skills/define-workflow-spec/SKILL.md README.md CLAUDE.md AGENTS.md; do
+for file in templates/feature/01-spec.md templates/feature/02-plan.md skills/define-workflow-spec/SKILL.md README.md AGENTS.md; do
   sgrep 'artifact_type' "$file" || fail "缺少 artifact_type 说明: $file"
 done
 
@@ -130,7 +130,6 @@ for pattern in 'Plan Topology' 'Parallel Execution Matrix' 'parallel_safe' 'Writ
 done
 sgrep 'plans/\*\.md' README.md || fail "README 缺少 plans/*.md 文档产出链"
 sgrep 'plans/\*\.md' AGENTS.md || fail "AGENTS 缺少 plans/*.md 文档产出链"
-sgrep 'plans/\*\.md' CLAUDE.md || fail "CLAUDE 缺少 plans/*.md 文档产出链"
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查命令数量 ==\n'
@@ -139,7 +138,7 @@ _expected_cmd_count=11
 if [ "$_cmd_count" != "$_expected_cmd_count" ]; then
   fail "commands/ 目录应包含 $_expected_cmd_count 个命令，实际为 $_cmd_count"
 fi
-for file in AGENTS.md README.md CLAUDE.md package.json .claude-plugin/plugin.json docs/directory-architecture.md docs/architecture/command-agent-skill-architecture.md; do
+for file in AGENTS.md README.md package.json .claude-plugin/plugin.json docs/directory-architecture.md docs/architecture/command-agent-skill-architecture.md; do
   sgrep "${_expected_cmd_count} 命令" "$file" || fail "缺少 ${_expected_cmd_count} 命令说明: $file"
 done
 [ "$status" -eq 0 ] && printf '通过\n'
@@ -157,14 +156,9 @@ for file in agents/refine-ceo-scout.md agents/refine-eng-scout.md agents/refine-
   done
 done
 
-for file in .agents/skills/refine/SKILL.md; do
-  sgrep 'Phase 1\.4：External Scan' "$file" || fail "refine 入口缺少 Phase 1.4 External Scan: $file"
-  sgrep 'Phase 1\.6：Idea Scout Army' "$file" || fail "refine 入口缺少 Phase 1.6 Idea Scout Army: $file"
-  sgrep 'Fact / Pattern / Inference / Unknown / Adopt / Reject' "$file" || fail "refine 入口缺少 External Scan 分层说明: $file"
-done
 [ "$status" -eq 0 ] && printf '通过\n'
 
-for file in README.md CLAUDE.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do
+for file in README.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do
   sgrep "${EXPECTED_SKILL_COUNT} 技能|${EXPECTED_SKILL_COUNT} SKILL" "$file" || fail "缺少 ${EXPECTED_SKILL_COUNT} 技能说明: $file"
 done
 
@@ -208,14 +202,8 @@ while IFS= read -r file; do
 done < <(find skills -name 'SKILL.md' | sort)
 [ "$status" -eq 0 ] && printf '通过\n'
 
-printf '\n== 检查 Codex 命令包装技能 ==\n'
-while IFS= read -r file; do
-  sgrep '^name: ' "$file" || fail "缺少 name frontmatter: $file"
-  sgrep '^description: ' "$file" || fail "缺少 description frontmatter: $file"
-  sgrep '^# ' "$file" || fail "缺少标题: $file"
-  sgrep '^## 流程' "$file" || fail "缺少流程章节: $file"
-  sgrep '加载 `.*SKILL\.md`' "$file" || fail "未声明加载的核心技能: $file"
-done < <(find .agents/skills -name 'SKILL.md' | sort | grep -vE '/(define|build|verify|ship|maintain|reflect)-|/using-unified/')
+printf '\n== 检查 CLAUDE 指针文件 ==\n'
+sgrep 'AGENTS\.md' CLAUDE.md || fail "CLAUDE.md 必须指向 AGENTS.md"
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查 Agent 定义结构 ==\n'
@@ -242,7 +230,7 @@ done
 
 printf '\n== 检查过期内容 ==\n'
 if sgrep_n '第 9 条（Every Feature Leaves a Trace|CANON\.md 9 条|9 条不可变|宪法的 9 条|Use AskUserQuestion, Never Plain Text|禁止.*纯文本' \
-  CANON.md README.md CLAUDE.md AGENTS.md .agents/skills skills docs >/tmp/unified-validate-stale-canon.$$ 2>/dev/null; then
+  CANON.md README.md CLAUDE.md AGENTS.md docs/directory-architecture.md skills >/tmp/unified-validate-stale-canon.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-canon.$$
   rm -f /tmp/unified-validate-stale-canon.$$
   fail '发现过期宪法编号或不可移植提问规则'
@@ -250,8 +238,8 @@ else
   rm -f /tmp/unified-validate-stale-canon.$$
 fi
 
-if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|44 技能|44 SKILL|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令|7 模板' \
-  README.md CLAUDE.md AGENTS.md docs package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
+if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|43 技能|43 SKILL|44 技能|44 SKILL|46 技能|46 SKILL|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令|7 模板' \
+  README.md CLAUDE.md AGENTS.md docs/directory-architecture.md package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-count.$$
   rm -f /tmp/unified-validate-stale-count.$$
   fail '发现过期技能数量说明'
@@ -260,12 +248,21 @@ else
 fi
 
 if sgrep_n '7 模板|templates/feature/review\.md|templates/feature/ship\.md' \
-  README.md CLAUDE.md AGENTS.md docs >/tmp/unified-validate-stale-template.$$ 2>/dev/null; then
+  README.md CLAUDE.md AGENTS.md docs/directory-architecture.md >/tmp/unified-validate-stale-template.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-template.$$
   rm -f /tmp/unified-validate-stale-template.$$
   fail '发现过期模板说明'
 else
   rm -f /tmp/unified-validate-stale-template.$$
+fi
+
+if sgrep_n 'fail-open|permissionDecision: "ask".*Codex|Codex.*permissionDecision: "ask"|docs/features/.*/ship\.md|docs/features/<name>/ship\.md|docs/features/YYYYMMDD-<name>/ship\.md|verify-quality-code-review-standards|scripts/install-codex\.sh|\.agents/skills/' \
+  README.md CLAUDE.md AGENTS.md docs/directory-architecture.md skills >/tmp/unified-validate-stale-contract.$$ 2>/dev/null; then
+  cat /tmp/unified-validate-stale-contract.$$
+  rm -f /tmp/unified-validate-stale-contract.$$
+  fail '发现过期合同说明'
+else
+  rm -f /tmp/unified-validate-stale-contract.$$
 fi
 [ "$status" -eq 0 ] && printf '通过\n'
 
@@ -343,6 +340,70 @@ for group in ['taskTypes','checkpoints']:
   [ "$status" -eq 0 ] && printf '通过\n'
 fi
 
+printf '\n== 检查 skills-index.json ==\n'
+if [ ! -f "skills-index.json" ]; then
+  fail "缺少 skills-index.json"
+else
+  python3 - <<'PY' || fail "skills-index.json 与真实技能集不一致"
+import json
+from pathlib import Path
+
+index = json.load(open("skills-index.json"))
+root_skills = sorted(p.parent.name for p in Path("skills").glob("*/SKILL.md"))
+root_set = set(root_skills)
+
+phase_refs = set()
+for entry in index.get("by_phase", {}).values():
+    phase_refs.update(entry.get("skills", []))
+
+desc_refs = set(index.get("skill_descriptions", {}).keys())
+
+all_refs = set()
+for entry in index.get("by_phase", {}).values():
+    all_refs.update(entry.get("skills", []))
+for entry in index.get("by_artifact_type", {}).values():
+    for value in entry.values():
+        if isinstance(value, list):
+            all_refs.update(value)
+for group in index.get("by_trigger", {}).values():
+    for value in group.values():
+        if isinstance(value, list):
+            all_refs.update(value)
+for value in index.get("by_risk", {}).values():
+    if isinstance(value, list):
+        all_refs.update(value)
+
+errors = []
+if root_set != desc_refs:
+    missing = sorted(root_set - desc_refs)
+    extra = sorted(desc_refs - root_set)
+    if missing:
+        errors.append("skill_descriptions 缺少: " + ", ".join(missing))
+    if extra:
+        errors.append("skill_descriptions 多余: " + ", ".join(extra))
+if root_set != phase_refs:
+    missing = sorted(root_set - phase_refs)
+    extra = sorted(phase_refs - root_set)
+    if missing:
+        errors.append("by_phase 缺少: " + ", ".join(missing))
+    if extra:
+        errors.append("by_phase 多余: " + ", ".join(extra))
+missing_ref_desc = sorted(all_refs - desc_refs)
+if missing_ref_desc:
+    errors.append("skill_descriptions 未覆盖引用技能: " + ", ".join(missing_ref_desc))
+missing_ref_root = sorted(all_refs - root_set)
+if missing_ref_root:
+    errors.append("索引引用了不存在的技能: " + ", ".join(missing_ref_root))
+legacy_names = sorted(name for name in all_refs | desc_refs if name == "verify-quality-code-review-standards")
+if legacy_names:
+    errors.append("仍存在旧技能命名: " + ", ".join(legacy_names))
+
+if errors:
+    raise SystemExit("\n".join(errors))
+PY
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
 printf '\n== 检查 skills-lock.json 完整性 ==\n'
 if [ -f "skills-lock.json" ]; then
   lock_valid=0
@@ -417,6 +478,7 @@ else
     fi
     sgrep 'skills' .codex-plugin/plugin.json || fail ".codex-plugin/plugin.json 缺少 skills 字段"
     sgrep 'interface' .codex-plugin/plugin.json || fail ".codex-plugin/plugin.json 缺少 interface 字段"
+    sgrep '"skills": "\./skills/"' .codex-plugin/plugin.json || fail ".codex-plugin/plugin.json 必须指向 ./skills/"
   fi
   [ "$status" -eq 0 ] && printf '通过\n'
 fi
@@ -468,16 +530,7 @@ if [ ! -f "hooks/codex-wrapper.sh" ]; then
 else
   [ -x "hooks/codex-wrapper.sh" ] || fail "hooks/codex-wrapper.sh 不可执行"
   sgrep 'CLAUDE_PLUGIN_ROOT' hooks/codex-wrapper.sh || fail "hooks/codex-wrapper.sh 缺少 CLAUDE_PLUGIN_ROOT 导出"
-  sgrep 'CLAUDE.md' hooks/codex-wrapper.sh || fail "hooks/codex-wrapper.sh 缺少 CLAUDE.md 验证"
-  [ "$status" -eq 0 ] && printf '通过\n'
-fi
-
-printf '\n== 检查 Codex 安装脚本 ==\n'
-if [ ! -f "scripts/install-codex.sh" ]; then
-  fail "缺少 scripts/install-codex.sh"
-else
-  [ -x "scripts/install-codex.sh" ] || fail "scripts/install-codex.sh 不可执行"
-  sgrep 'codex_hooks' scripts/install-codex.sh || fail "scripts/install-codex.sh 缺少 codex_hooks 配置"
+  sgrep 'AGENTS.md' hooks/codex-wrapper.sh || fail "hooks/codex-wrapper.sh 缺少 AGENTS.md 验证"
   [ "$status" -eq 0 ] && printf '通过\n'
 fi
 

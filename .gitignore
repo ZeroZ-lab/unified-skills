@@ -32,6 +32,7 @@ node_modules/
 .vibe/
 .windsurf/
 .zencoder/
+.playwright-mcp/
 
 # Lock files (generated, not tracked)
 skills-lock.json

@@ -11,7 +11,7 @@ hook_script="$1"
 plugin_root="$(cd "$(dirname "$0")/.." && pwd)"
 
 # Validate we're in the right directory
-if [ ! -f "$plugin_root/CLAUDE.md" ] || [ ! -f "$plugin_root/CANON.md" ]; then
+if [ ! -f "$plugin_root/AGENTS.md" ] || [ ! -f "$plugin_root/CANON.md" ]; then
   # Safe no-op — invalid plugin root
   printf '{}\n'
   exit 0

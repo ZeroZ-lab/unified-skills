@@ -8,7 +8,7 @@ description: Session 启动引导 — 建立主动技能发现机制。每个 se
 </SUBAGENT-STOP>
 
 <EXTREMELY-IMPORTANT>
-你拥有 Unified Skills — 44 个技能覆盖 6 阶段工作流。
+你拥有 Unified Skills — 47 个技能覆盖 6 阶段工作流。
 
 在响应用户消息或采取任何行动之前，你必须执行技能发现流程。
 这不是可选的。这不是可协商的。你无法通过推理绕过这个规则。
@@ -163,7 +163,7 @@ Using [skill-name] to [purpose]
 - `verify-quality-integration-testing` — 集成测试
 - `verify-quality-performance` — 性能不达标或上线前审查
 - `verify-quality-security` — 涉及用户输入/认证/数据存储
-- `verify-quality-code-review-standards` — 代码审查标准
+- `verify-team-code-review-standards` — 代码审查标准
 - `verify-content-review` — 内容审查
 - `verify-visual-review` — 视觉审查
 - `verify-workflow-receiving-review` — 接收审查反馈
@@ -215,7 +215,7 @@ Using [skill-name] to [purpose]
 技能使用 Claude Code 的工具名和约定。在其他平台上的等效方式：
 
 - **Claude Code**：使用 `Skill` 工具调用技能。当技能被调用时，其内容会被加载并呈现——直接遵循。不要用 Read 工具读技能文件。
-- **Codex CLI**：技能通过 `.agents/skills/` 目录自动发现。`skill` 工具的工作方式与 Claude Code 的 `Skill` 工具相同。
+- **Codex CLI**：直接读取 `AGENTS.md` 与 `skills/` 中的真实技能。`skill` 工具的工作方式与 Claude Code 的 `Skill` 工具相同。
 
 ## Session 启动检查
 
