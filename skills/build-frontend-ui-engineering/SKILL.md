@@ -12,6 +12,12 @@ description: 前端 UI 工程——构建可生产、可访问、视觉精良的
 - **指向**: 前端变更完成 → `build-frontend-browser-testing` 进行浏览器验证
 - **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md`
 
+## 职责边界
+
+- 负责：把已批准的交互和视觉方向工程化为可运行 UI
+- 不负责：在 build 阶段重新决定主流程、视觉方向、信息架构
+- 如缺少已批准设计：STOP，回到 `design-workflow-design`
+
 ## 组件架构
 
 ### 文件结构

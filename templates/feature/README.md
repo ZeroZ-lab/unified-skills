@@ -3,7 +3,7 @@
 > 生成时间: YYYY-MM-DD
 
 ## 时间线
-YYYY-MM-DD: refine | plan | build(N 切片) | debug(N bug) | review | ship
+YYYY-MM-DD: refine | design | plan | build(N 切片) | debug(N bug) | review | ship
 
 ## 关键决策
 - [ADR 01](adr/01-xxx.md): <摘要>

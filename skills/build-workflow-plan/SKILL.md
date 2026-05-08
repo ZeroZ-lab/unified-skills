@@ -7,8 +7,8 @@ description: 把 spec 拆成可执行的任务。使用 cuando spec 已批准需
 
 
 ## 入口/出口
-- **入口**: 已批准 spec（`docs/features/YYYYMMDD-<name>/01-spec.md`）
-- **出口**: `docs/features/<name>/02-plan.md`；大型/并行任务额外产出 `docs/features/<name>/plans/*.md` + 用户批准
+- **入口**: 已批准 spec（`docs/features/YYYYMMDD-<name>/01-spec.md`）+ 已批准 design（如 required）
+- **出口**: `docs/features/<name>/03-plan.md`；大型/并行任务额外产出 `docs/features/<name>/plans/*.md` + 用户批准
 - **指向**: 用户批准 plan 后必须调用 `build-workflow-execute`
 - **假设已加载**: CANON.md
 
@@ -19,10 +19,10 @@ description: 把 spec 拆成可执行的任务。使用 cuando spec 已批准需
 ### Step 1：进入只读模式
 
 写 plan 期间不写代码。搜索、阅读、理解：
-- 读取 spec 和相关代码库
+- 读取 spec、design 和相关代码库
 - **单计划 vs 多计划决策门** — spec 是否涵盖多个独立子系统、多个产物切片或 3+ 个潜在并行任务？
-  - XS/S 任务：只写 `02-plan.md`
-  - M/L 任务或跨子系统任务：`02-plan.md` 作为总控计划，额外写 `plans/*.md`
+  - XS/S 任务：只写 `03-plan.md`
+  - M/L 任务或跨子系统任务：`03-plan.md` 作为总控计划，额外写 `plans/*.md`
   - 有共享契约但可拆分：先写 `plans/01-contracts.md`，再让后续子计划基于契约并行
 - 识别现有模式和约定
 - 映射组件间依赖关系
@@ -62,11 +62,11 @@ Database schema
 
 | Topology | 使用场景 | 产物 |
 |----------|----------|------|
-| `serial` | 任务有顺序依赖、共享文件或小任务无需拆分 | 只写 `02-plan.md` |
-| `parallel` | 2+ 子计划无共享文件、无顺序依赖、验证独立 | `02-plan.md` + 多个 `plans/*.md`，可标记 `parallel_safe` |
-| `gated-parallel` | 共享契约必须先定，后续任务可并行 | `02-plan.md` + `plans/01-contracts.md` + 后续子计划 |
+| `serial` | 任务有顺序依赖、共享文件或小任务无需拆分 | 只写 `03-plan.md` |
+| `parallel` | 2+ 子计划无共享文件、无顺序依赖、验证独立 | `03-plan.md` + 多个 `plans/*.md`，可标记 `parallel_safe` |
+| `gated-parallel` | 共享契约必须先定，后续任务可并行 | `03-plan.md` + `plans/01-contracts.md` + 后续子计划 |
 
-拆成多份 plan 不等于自动并行。只有 `02-plan.md` 的 `Parallel Execution Matrix` 明确标记 `parallel_safe: yes` 的子计划，后续 `/build` 才能使用 `build-cognitive-execution-engine` 模式 B fan-out。
+拆成多份 plan 不等于自动并行。只有 `03-plan.md` 的 `Parallel Execution Matrix` 明确标记 `parallel_safe: yes` 的子计划，后续 `/build` 才能使用 `build-cognitive-execution-engine` 模式 B fan-out。
 
 ### Step 3：确定文件结构
 
@@ -204,7 +204,7 @@ git commit -m "feat: add <功能描述>"
 [审查结论、截图、导出文件路径或人工确认]
 ```
 
-如果触发多计划模式，先写 `02-plan.md` 总控，再为每个可独立执行的任务包写 `plans/<NN>-<name>.md`。编号表达执行顺序；名称表达职责，不强制固定为 backend/frontend/content。
+如果触发多计划模式，先写 `03-plan.md` 总控，再为每个可独立执行的任务包写 `plans/<NN>-<name>.md`。编号表达执行顺序；名称表达职责，不强制固定为 backend/frontend/content。
 
 子计划必须包含：
 
@@ -276,7 +276,7 @@ Run: `npm test -- --grep "特定行为"` → PASS
 3. 每 2-3 个任务后设验证检查点
 4. 高风险任务放前面（快速失败）
 
-多计划模式下，`02-plan.md` 必须包含：
+多计划模式下，`03-plan.md` 必须包含：
 - **Subplans** — 每个 `plans/*.md` 的路径、职责、owner、状态
 - **Parallel Execution Matrix** — 哪些子计划可并行，理由是什么
 - **Integration Order** — 合并顺序、集成检查点、全量验证命令
@@ -300,7 +300,7 @@ Run: `npm test -- --grep "特定行为"` → PASS
 后面任务中的函数签名和属性名是否匹配前面定义的？
 
 #### 7.4 Subplans 完整性
-`02-plan.md` 中列出的每个 `plans/*.md` 都存在，并有完整的 Subplan Contract。
+`03-plan.md` 中列出的每个 `plans/*.md` 都存在，并有完整的 Subplan Contract。
 
 #### 7.5 并行安全性
 任意两个 `parallel_safe` 子计划没有重叠写入范围。

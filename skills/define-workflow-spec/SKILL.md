@@ -9,7 +9,7 @@ description: 从 refine 产出到结构化 spec。使用 cuando refine 完成后
 ## 入口/出口
 - **入口**: `define-workflow-refine` 完成，用户已批准方向
 - **出口**: `docs/features/YYYYMMDD-<name>/01-spec.md` + 用户批准
-- **指向**: 用户批准 spec 后必须调用 `build-workflow-plan`
+- **指向**: 用户批准 spec 后优先调用 `design-workflow-design`；纯后端/脚本/迁移可跳过到 `build-workflow-plan`
 - **假设已加载**: CANON.md（可选加载 `build-cognitive-decision-record/SKILL.md` — 有架构决策时再加载）
 
 ## 何时不使用
@@ -162,7 +162,7 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 - Goal Alignment 与 Success Criteria 冲突
 - "不做清单"没有明确 trade-off
 - 用户已批准的 spec 在实现过程中静默变更
-- 跳过用户审查直接进入 plan
+- 跳过用户审查直接进入 design / plan
 - Architecture decision 没有记录
 
 ## 验证清单

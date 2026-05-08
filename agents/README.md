@@ -1,6 +1,12 @@
 # Agents — 多角色并行体系
 
-23 个 agent 按职责分组：7 个核心工程角色 + 16 个审查角色。用于 define、build、review、refine 和 ship 的多角色并行发散模式。
+24 个 agent 按职责分组：7 个核心工程角色 + 17 个审查 / 侦察角色。用于 define、design、build、review、refine 和 ship 的多角色并行发散模式。
+
+## Design Review（设计阶段）
+
+| Agent | 职责 | 调用时机 |
+|-------|------|---------|
+| design-reviewer | 设计阶段审查：交互、视觉、排版、剧本、导演、设计边界 | /design 审查 |
 
 ## 核心工程角色（跨阶段复用）
 
@@ -30,7 +36,7 @@
 |-------|------|---------|
 | plan-ceo-reviewer | CEO视角：市场价值、投资回报、战略对齐 | /plan 审查 |
 | plan-eng-reviewer | 工程视角：可行性、技术复杂度、依赖风险 | /plan 审查 |
-| plan-design-reviewer | 设计视角：用户体验、信息架构、交互流程 | /plan 审查 |
+| plan-design-reviewer | 设计视角：plan 是否忠实消费已批准 design 约束 | /plan 审查 |
 | plan-security-reviewer | 安全视角：数据暴露、认证授权、合规 | /plan 审查 |
 
 ## Refine Scout Army（提炼阶段）

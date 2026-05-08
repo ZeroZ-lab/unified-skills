@@ -23,7 +23,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 
 **Agent:** 主 session
 **Skills:** verify-workflow-review（路由部分）
-**Input:** 产物文件 + 01-spec.md + 02-plan.md
+**Input:** 产物文件 + 01-spec.md + 02-design.md（如适用） + 03-plan.md
 **Process:**
 1. 读取 artifact_type
 2. 确定审查策略：software → 两阶段审查；document → 内容审查；visual → 视觉审查
@@ -65,7 +65,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 **Agent:** 主 session
 **Skills:** verify-workflow-review（合并部分）
 **Input:** Spec Compliance 结果 + Code Quality 反馈
-**Output:** docs/features/YYYYMMDD-<name>/03-review.md
+**Output:** docs/features/YYYYMMDD-<name>/04-review.md
 **Validation:**
 - [ ] 报告包含 Spec Compliance 审查结果
 - [ ] 报告包含 Code Quality 审查结果（五轴评分）
@@ -79,7 +79,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 - [ ] CANON.md 已加载
 
 ## Exit Conditions
-- [ ] 03-review.md 存在
+- [ ] 04-review.md 存在
 - [ ] 反馈已按 Blocking / Important / Suggestion 分级
 
 ## Next Steps

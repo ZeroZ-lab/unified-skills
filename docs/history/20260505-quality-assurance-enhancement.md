@@ -47,6 +47,10 @@
 
 ### 2. Plan 代码示例风格调整
 
+> **历史文档 — 本文反映引入 `03-plan.md` 之前的旧合同。**
+>
+> 当文中提到 `templates/feature/02-plan.md` 时，请按历史背景理解。当前真相以 `AGENTS.md`、`README.md`、现行模板和现行技能为准；当前计划模板已迁移到 `templates/feature/03-plan.md`。
+
 **修改技能:**
 - `build-workflow-plan` — Step 5 增加代码示例风格原则（424 行）
 

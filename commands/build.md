@@ -14,7 +14,7 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 
 **Agent:** task-planner
 **Skills:** build-cognitive-execution-engine
-**Input:** 02-plan.md（final）
+**Input:** 03-plan.md（final）
 **Process:**
 1. 读取总控计划
 2. 提取 `### Task N` task queue
@@ -35,7 +35,7 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 - content-writer: build-content-writing
 - visual-designer: build-content-layout
 - Common: build-workflow-execute, build-cognitive-execution-engine
-**Input:** 02-plan.md（final）+ 当前 Task N
+**Input:** 03-plan.md（final）+ 当前 Task N
 **Process:**
 1. implement this plan task-by-task：按 Task N 循环生成 → 验证 → 记录
 2. 当前 Task N 未通过自身验证前，不进入下一个 Task N
@@ -57,7 +57,8 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 ---
 
 ## Entry Conditions
-- [ ] 02-plan.md 存在且已批准
+- [ ] 03-plan.md 存在且已批准
+- [ ] 若 design required，则 02-design.md 存在且已批准
 - [ ] artifact_type 已声明
 - [ ] CANON.md 已加载
 

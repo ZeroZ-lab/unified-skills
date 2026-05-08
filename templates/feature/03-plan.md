@@ -5,6 +5,10 @@
 ## Artifact Type
 artifact_type: software
 
+## Inputs
+- `docs/features/YYYYMMDD-<name>/01-spec.md`
+- `docs/features/YYYYMMDD-<name>/02-design.md`（如果 design required）
+
 ## Task Execution Rules
 
 - `/plan` owns the task list; `/build` consumes it.
@@ -81,12 +85,12 @@ Run: `npm test -- --grep "描述预期行为"` → FAIL
 ```typescript
 function targetFunction(input: InputType): ReturnType {
   // 1. 验证输入（null/undefined/边界值）
-  // 2. 执行核心逻辑（参考 spec 第 X 节）
-  // 3. 返回符合 spec 的结果格式
+  // 2. 执行核心逻辑（参考 spec / design / plan）
+  // 3. 返回符合契约的结果格式
 }
 ```
 
-**说明:** 具体实现由执行 agent 根据 spec 和上下文推理。
+**说明:** 具体实现由执行 agent 根据 spec、design 和上下文推理。
 
 - [ ] **Step 4: 验证测试通过**
 
@@ -108,7 +112,7 @@ git commit -m "feat: add <功能描述>"
 - **Status:** serial / parallel_safe / gated
 - **Depends On:** none
 - **Write Scope:** `path/or/glob`
-- **Read Scope:** `docs/features/YYYYMMDD-<name>/01-spec.md`, `docs/features/YYYYMMDD-<name>/02-plan.md`
+- **Read Scope:** `docs/features/YYYYMMDD-<name>/01-spec.md`, `docs/features/YYYYMMDD-<name>/03-plan.md`
 - **Parallel Safety:** yes/no + 原因
 - **Verification Evidence:** 测试命令、审查方式、截图、导出预览或人工确认
 - **Merge Checkpoint:** 合并前必须满足的条件

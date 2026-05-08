@@ -8,7 +8,7 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 
 ## 入口/出口
 - **入口**: 已完成的功能代码、即将合并的 PR
-- **出口**: `docs/features/<name>/03-review.md` 审查报告
+- **出口**: `docs/features/<name>/04-review.md` 审查报告
 - **指向**: 通过 → `ship-workflow-ship`；有问题 → 退回 build 修复后重审
 - **假设已加载**: CANON.md
 
@@ -170,7 +170,7 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 ## 两种审查模式
 
 ### 标准模式（默认）
-当前会话中直接执行两阶段审查。产出审查报告到 `docs/features/<name>/03-review.md`。
+当前会话中直接执行两阶段审查。产出审查报告到 `docs/features/<name>/04-review.md`。
 
 **两阶段流程:**
 1. 先执行 Spec Compliance 审查（功能完整性）
@@ -324,7 +324,7 @@ DEAD CODE IDENTIFIED:
 - [ ] 测试通过
 - [ ] 构建成功
 - [ ] 验证故事已记录
-- [ ] 审查产出存到 `docs/features/<name>/03-review.md`
+- [ ] 审查产出存到 `docs/features/<name>/04-review.md`
 
 ## 审查反馈后处理
 

@@ -1,6 +1,6 @@
 # Unified Skills
 
-> 宪法 + 47 技能 + 11 命令 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
+> 宪法 + 53 技能 + 12 命令 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 如果你是一个 AI Agent
 
@@ -32,16 +32,17 @@ unified/
 ├── AGENTS.md                入口配置（本文件）
 ├── CLAUDE.md                Claude 侧指针文件（指向 AGENTS.md）
 │
-├── skills/                  47 技能 / 6 阶段
+├── skills/                  53 技能 / 7 阶段
 │   ├── define/              定义（3）
+│   ├── design/              设计（6）
 │   ├── build/               构建（15）
 │   ├── verify/              验证（13）
 │   ├── ship/                发布（7）
 │   ├── maintain/            维护（7）
 │   └── reflect/             复盘（2）
 │
-├── commands/                11 命令入口（Claude Code 斜杠命令）
-├── agents/                  16 审查角色（5 review + 4 plan + 3 refine + 4 ship）
+├── commands/                12 命令入口（Claude Code 斜杠命令）
+├── agents/                  24 角色（7 核心工程 + 17 审查 / 侦察）
 ├── templates/               2 模板类别（bug + feature）
 └── docs/                    设计文档
 ```
@@ -50,6 +51,8 @@ unified/
 
 ```
 define/    → refine（提炼）、spec（规格）、brainstorm（头脑风暴）
+design/    → design（设计总控）、interaction（交互设计）、visual-direction（视觉设计）、
+             script（剧本设计）、direction（导演设计）、layout（排版设计）
 build/     → plan（计划）、execute（执行）、tdd（测试驱动）、context（上下文）、
              source-driven（文档驱动）、execution-engine（执行引擎）、
              decision-record（决策记录）、git（版本控制）、
@@ -74,10 +77,11 @@ reflect/   → retro（回顾）、documentation（文档）
 | 命令 | 加载的技能 | 产出 | 文档路径 |
 |------|-----------|------|----------|
 | `/refine` | define-workflow-refine | 规范 spec | `docs/features/YYYYMMDD-<name>/01-spec.md` |
-| `/plan` | build-workflow-plan | 任务计划 | `docs/features/YYYYMMDD-<name>/02-plan.md` |
+| `/design` | design-workflow-design + artifact_type 对应 design 技能 | 创作设计定稿 | `docs/features/YYYYMMDD-<name>/02-design.md` |
+| `/plan` | build-workflow-plan | 任务计划 | `docs/features/YYYYMMDD-<name>/03-plan.md` |
 | `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/YYYYMMDD-<name>/adr/` |
-| `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/YYYYMMDD-<name>/03-review.md` |
-| `/ship` | ship-workflow-ship + artifact-export（非 software） | 发布/导出记录+README | `docs/features/YYYYMMDD-<name>/04-ship.md` |
+| `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/YYYYMMDD-<name>/04-review.md` |
+| `/ship` | ship-workflow-ship + artifact-export（非 software） | 发布/导出记录+README | `docs/features/YYYYMMDD-<name>/05-ship.md` |
 | `/save` | maintain-workflow-context-save | 工作上下文 checkpoint | `.claude/checkpoints/YYYYMMDD-HHMMSS-{title}.md` |
 | `/restore` | maintain-workflow-context-restore | 恢复上下文 | — |
 | `/learn` | maintain-workflow-learn | 学习记录管理 | `.claude/learnings.jsonl` |
@@ -109,9 +113,11 @@ Unified Skills 有 3 个 hooks，在两个平台上行为有差异：
 
 **重要差异：** careful hook 在 Codex 上使用 fail-closed 模式（阻止破坏性命令而非提示确认），因为确认型交互语义在 Codex 上并不稳定。
 
-spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `document` / `article` / `deck` / `visual`。后续阶段按该字段加载软件、内容、版式、审查或导出技能。
+spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `document` / `article` / `deck` / `visual`。后续阶段按该字段加载 design、软件、内容、版式、审查或导出技能。
 
-`/build` 会读取 `02-plan.md` 总控计划；大型/并行任务还会读取 `plans/*.md` 子计划，并只在 `Parallel Execution Matrix` 证明 `parallel_safe` 时并行分派。
+`/design` 只定交互、视觉、排版、剧本、导演等创作设计，不写实现步骤或任务分解。
+
+`/build` 会读取 `03-plan.md` 总控计划；大型/并行任务还会读取 `plans/*.md` 子计划，并只在 `Parallel Execution Matrix` 证明 `parallel_safe` 时并行分派。
 
 多产物扩展技能采用角色化方法论：先定义角色责任、长期原则和决策框架，再给出流程和验证证据；它们不是工具清单。
 
@@ -123,13 +129,14 @@ spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `doc
 docs/features/YYYYMMDD-<name>/
 ├── 00-brainstorm.md        ← /brainstorm
 ├── 01-spec.md              ← /refine
-├── 02-plan.md              ← /plan
+├── 02-design.md            ← /design
+├── 03-plan.md              ← /plan
 ├── plans/*.md              ← /plan（大型/并行任务的子计划）
 ├── adr/<num>.md            ← /build（决策时）
-├── 03-review.md            ← /review
-├── 04-ship.md              ← /ship
-├── 05-canary-report.md     ← ship-workflow-canary
-├── 06-deploy-report.md     ← ship-workflow-land
+├── 04-review.md            ← /review
+├── 05-ship.md              ← /ship
+├── 06-canary-report.md     ← ship-workflow-canary
+├── 07-deploy-report.md     ← ship-workflow-land
 └── README.md               ← /ship 后聚合
 
 docs/bugs/<name>/
@@ -141,8 +148,8 @@ docs/bugs/<name>/
 
 ### 命名规范
 - 技能目录：`<阶段>-<角色>-<技能名>/` —— 每个目录下恰好一个 `SKILL.md`
-- 阶段：`define` / `build` / `verify` / `ship` / `maintain` / `reflect`
-- 角色：`workflow` / `frontend` / `backend` / `quality` / `cognitive` / `infrastructure` / `team` / `content` / `visual` / `artifact`
+- 阶段：`define` / `design` / `build` / `verify` / `ship` / `maintain` / `reflect`
+- 角色：`workflow` / `experience` / `frontend` / `backend` / `quality` / `cognitive` / `infrastructure` / `team` / `content` / `visual` / `artifact`
 - 技能名：kebab-case，描述动作（如 `tdd`、`debug`、`api-design`）
 
 ### SKILL.md 格式
@@ -187,7 +194,7 @@ docs/bugs/<name>/
 
 - `./validate` 通过不代表合同一致。改动技能、包装、根文档、hooks 行为或产物链时，必须额外检查：
   - `skills-index.json` 是否仍与 `skills/` 中的真实技能集一致
-  - 根文档与包装层是否仍引用同一产物路径（如 `04-ship.md`）
+  - 根文档与包装层是否仍引用同一产物路径（如 `05-ship.md`）
   - 安全相关行为说明是否仍与真实 hook 实现一致
 - `skills-index.json` 不是说明性文件，而是默认技能发现路径的一部分。新增、重命名、删除技能后，必须同步更新：
   - `by_phase`

@@ -98,17 +98,17 @@ else
 fi
 
 printf '\n== 检查多产物扩展 ==\n'
-skill_count=$(ls -d skills/*/ 2>/dev/null | while IFS= read -r d; do basename "$d"; done | grep -cE '^(define|build|verify|ship|maintain|reflect)-')
+skill_count=$(ls -d skills/*/ 2>/dev/null | while IFS= read -r d; do basename "$d"; done | grep -cE '^(define|design|build|verify|ship|maintain|reflect)-')
 if [ "$skill_count" != "$EXPECTED_SKILL_COUNT" ]; then
   fail "技能数量应为 $EXPECTED_SKILL_COUNT，实际为 $skill_count"
 fi
 
 template_count=$(find templates -type f | wc -l | tr -d ' ')
-if [ "$template_count" != "6" ]; then
-  fail "模板数量应为 6，实际为 $template_count"
+if [ "$template_count" != "7" ]; then
+  fail "模板数量应为 7，实际为 $template_count"
 fi
 
-for file in templates/feature/01-spec.md templates/feature/02-plan.md skills/define-workflow-spec/SKILL.md README.md AGENTS.md; do
+for file in templates/feature/01-spec.md templates/feature/02-design.md templates/feature/03-plan.md skills/define-workflow-spec/SKILL.md README.md AGENTS.md; do
   sgrep 'artifact_type' "$file" || fail "缺少 artifact_type 说明: $file"
 done
 
@@ -122,7 +122,7 @@ for pattern in 'Plan Topology' 'Subplans' 'Parallel Safety'; do
   sgrep "$pattern" skills/build-workflow-plan/SKILL.md || fail "plan 技能缺少 $pattern"
 done
 for pattern in 'plans/' 'Parallel Execution Matrix' 'Write Scope'; do
-  sgrep "$pattern" templates/feature/02-plan.md || fail "plan 模板缺少 $pattern"
+  sgrep "$pattern" templates/feature/03-plan.md || fail "plan 模板缺少 $pattern"
 done
 for pattern in 'Plan Topology' 'Parallel Execution Matrix' 'parallel_safe' 'Write Scope'; do
   sgrep "$pattern" skills/build-workflow-execute/SKILL.md || fail "execute 技能缺少 $pattern"
@@ -137,17 +137,17 @@ for file in \
   skills/build-workflow-execute/SKILL.md \
   skills/build-cognitive-execution-engine/SKILL.md \
   commands/build.md \
-  templates/feature/02-plan.md
+  templates/feature/03-plan.md
 do
   sgrep 'task-by-task' "$file" || fail "缺少 task-by-task 合同: $file"
 done
 sgrep 'Task N' skills/build-workflow-execute/SKILL.md || fail "execute 技能缺少 Task N 执行单元"
-sgrep 'Task N' templates/feature/02-plan.md || fail "plan 模板缺少 Task N 执行单元"
+sgrep 'Task N' templates/feature/03-plan.md || fail "plan 模板缺少 Task N 执行单元"
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查命令数量 ==\n'
 _cmd_count=$(ls commands/*.md 2>/dev/null | wc -l | tr -d ' ')
-_expected_cmd_count=11
+_expected_cmd_count=12
 if [ "$_cmd_count" != "$_expected_cmd_count" ]; then
   fail "commands/ 目录应包含 $_expected_cmd_count 个命令，实际为 $_cmd_count"
 fi
@@ -197,7 +197,7 @@ printf '\n== 检查技能命名 ==\n'
 while IFS= read -r file; do
   dir=$(basename "$(dirname "$file")")
   case "$dir" in
-    define-*|build-*|verify-*|ship-*|maintain-*|reflect-*) ;;
+    define-*|design-*|build-*|verify-*|ship-*|maintain-*|reflect-*) ;;
     *) fail "命名违规: $dir" ;;
   esac
 done < <(find skills -name 'SKILL.md' | sort)
@@ -251,7 +251,7 @@ else
   rm -f /tmp/unified-validate-stale-canon.$$
 fi
 
-if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|43 技能|43 SKILL|44 技能|44 SKILL|46 技能|46 SKILL|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令|7 模板' \
+if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|43 技能|43 SKILL|44 技能|44 SKILL|46 技能|46 SKILL|47 技能|47 SKILL|11 命令|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令|7 模板' \
   README.md CLAUDE.md AGENTS.md docs/directory-architecture.md package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-count.$$
   rm -f /tmp/unified-validate-stale-count.$$
@@ -260,7 +260,7 @@ else
   rm -f /tmp/unified-validate-stale-count.$$
 fi
 
-if sgrep_n '7 模板|templates/feature/review\.md|templates/feature/ship\.md' \
+if sgrep_n '6 模板|templates/feature/review\.md|templates/feature/ship\.md' \
   README.md CLAUDE.md AGENTS.md docs/directory-architecture.md >/tmp/unified-validate-stale-template.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-template.$$
   rm -f /tmp/unified-validate-stale-template.$$
@@ -449,7 +449,7 @@ print(entry.get('computedHash',''))
       fi
       lock_valid=$((lock_valid + 1))
     fi
-  done < <(ls -d skills/*/ 2>/dev/null | while IFS= read -r d; do basename "$d"; done | grep -E '^(define|build|verify|ship|maintain|reflect)-')
+  done < <(ls -d skills/*/ 2>/dev/null | while IFS= read -r d; do basename "$d"; done | grep -E '^(define|design|build|verify|ship|maintain|reflect)-')
   if [ "$lock_valid" -eq 0 ]; then
     fail "skills-lock.json 中没有有效的技能哈希"
   fi

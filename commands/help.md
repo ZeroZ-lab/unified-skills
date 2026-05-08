@@ -28,13 +28,15 @@ Show what Unified Skills can do: available commands, artifact types, workflow st
 |------|------|--------|------|
 | /brainstorm | Define | 模糊想法 → 2-3 方案 + 推荐 | 00-brainstorm.md |
 | /refine | Define | 模糊想法 → 明确 spec | 01-spec.md |
-| /plan | Build | spec → 可执行任务计划 | 02-plan.md |
+| /design | Design | spec → 创作设计定稿 | 02-design.md |
+| /plan | Build | spec + design → 可执行任务计划 | 03-plan.md |
 | /build | Build | 按计划增量生成产物 | 软件/内容/视觉 + ADR |
-| /review | Verify | 按制品类型质量审查 | 03-review.md |
-| /ship | Ship | 发布/导出检查 + Go/No-Go | 04-ship.md |
+| /review | Verify | 按制品类型质量审查 | 04-review.md |
+| /ship | Ship | 发布/导出检查 + Go/No-Go | 05-ship.md |
 | /save | Maintain | 保存工作上下文 | checkpoint 文件 |
 | /restore | Maintain | 恢复之前的工作上下文 | — |
 | /learn | Maintain | 跨 session 学习记录 | learnings.jsonl |
+| /goal | Maintain | 目标生命周期管理 | Codex goal API |
 | /help | — | 显示本概览 | — |
 
 ### 制品类型（artifact_type）
@@ -49,7 +51,7 @@ Show what Unified Skills can do: available commands, artifact types, workflow st
 
 ### 典型工作流
 
-想法模糊 → /brainstorm → /refine → /plan → /build → /review → /ship
+想法模糊 → /brainstorm → /refine → /design → /plan → /build → /review → /ship
 
 ### 宪法（CANON.md）
 

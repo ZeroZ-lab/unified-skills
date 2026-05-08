@@ -39,7 +39,49 @@
       "detect": {
         "anyKeywords": ["ui", "frontend", "前端", "component", "组件", "交互实现", "页面开发"]
       },
-      "skills": ["build-frontend-ui-engineering"]
+      "skills": ["design-workflow-design", "build-frontend-ui-engineering"]
+    },
+    "design-workflow": {
+      "description": "创作设计阶段、design gate、设计定稿",
+      "detect": {
+        "anyKeywords": ["design", "设计阶段", "设计稿", "创作设计", "design gate"]
+      },
+      "skills": ["design-workflow-design"]
+    },
+    "interaction-design": {
+      "description": "交互设计、流程、状态、信息架构",
+      "detect": {
+        "anyKeywords": ["interaction", "交互设计", "用户路径", "状态设计", "information architecture", "流程设计"]
+      },
+      "skills": ["design-experience-interaction"]
+    },
+    "visual-direction": {
+      "description": "视觉设计、风格、层级、色彩、组件视觉规则",
+      "detect": {
+        "anyKeywords": ["visual design", "视觉设计", "视觉方向", "风格", "色彩", "brand direction"]
+      },
+      "skills": ["design-visual-direction"]
+    },
+    "script-design": {
+      "description": "剧本设计、故事线、叙事节奏、消息线",
+      "detect": {
+        "anyKeywords": ["script", "剧本", "故事线", "叙事", "message flow", "story arc"]
+      },
+      "skills": ["design-content-script"]
+    },
+    "direction-design": {
+      "description": "导演设计、页序推进、演示节奏、情绪推进",
+      "detect": {
+        "anyKeywords": ["direction", "导演", "页序", "演示节奏", "情绪推进", "reveal"]
+      },
+      "skills": ["design-content-direction"]
+    },
+    "layout-design": {
+      "description": "排版设计、构图、版式系统、媒介适配",
+      "detect": {
+        "anyKeywords": ["layout design", "排版设计", "构图", "版式系统", "grid", "媒介适配"]
+      },
+      "skills": ["design-content-layout"]
     },
     "browser-testing": {
       "description": "浏览器测试、E2E、截图验证",
@@ -323,6 +365,10 @@
     }
   },
   "checkpoints": {
+    "before-plan": {
+      "description": "进入计划前 — 若 design required，先加载设计总控技能",
+      "skills": ["design-workflow-design"]
+    },
     "before-review": {
       "description": "进入审查前 — 加载审查技能 + artifact_type 对应审查",
       "skills": ["verify-workflow-review"]

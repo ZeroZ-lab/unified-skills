@@ -1,12 +1,12 @@
 ---
-description: 从 spec 到详细任务分解 + 多角色计划审查
+description: 从已批准 spec + design 到详细任务分解 + 多角色计划审查
 ---
 
 # Command: /plan
 
 ## Goal
 
-Transform spec into actionable task plan with multi-perspective review.
+Transform approved spec and design into actionable task plan with multi-perspective review.
 
 ## Phases
 
@@ -16,14 +16,14 @@ Transform spec into actionable task plan with multi-perspective review.
 **Skills:**
 - build-workflow-plan
 - build-cognitive-execution-engine（mode selection）
-**Input:** docs/features/YYYYMMDD-<name>/01-spec.md
+**Input:** docs/features/YYYYMMDD-<name>/01-spec.md + docs/features/YYYYMMDD-<name>/02-design.md（如果 design required）
 **Process:**
-1. 读取 spec，提取 artifact_type
+1. 读取 spec 和 design，提取 artifact_type 与已锁定的设计约束
 2. 根据 artifact_type 选择依赖图策略
 3. 分解为带验收标准的任务
 4. 标注依赖关系和并行安全性
 5. 估算复杂度
-**Output:** docs/features/YYYYMMDD-<name>/02-plan.md（draft）
+**Output:** docs/features/YYYYMMDD-<name>/03-plan.md（draft）
 **Validation:**
 - [ ] 所有任务有验收标准
 - [ ] 依赖关系已声明
@@ -35,10 +35,10 @@ Transform spec into actionable task plan with multi-perspective review.
 **Agents (parallel dispatch):**
 - plan-ceo-reviewer（市场价值、投资回报、优先级）
 - plan-eng-reviewer（可行性、技术复杂度、依赖风险）
-- plan-design-reviewer（用户体验、信息架构、交互流程）
+- plan-design-reviewer（设计约束覆盖、体验任务映射、错误下沉检查）
 - plan-security-reviewer（数据暴露、认证授权、合规）
 **Skills:** verify-workflow-review（plan mode）
-**Input:** 02-plan.md（draft）
+**Input:** 03-plan.md（draft）
 **Output:** plan-review-comments.md
 **Validation:**
 - [ ] 4 个 Reviewers 全部完成
@@ -48,12 +48,12 @@ Transform spec into actionable task plan with multi-perspective review.
 
 **Agent:** task-planner
 **Skills:** build-workflow-plan（refinement mode）
-**Input:** 02-plan.md（draft）+ plan-review-comments.md
+**Input:** 03-plan.md（draft）+ plan-review-comments.md
 **Process:**
 1. 向用户展示 draft plan + 分级审查反馈（Blocking / Important / Suggestion）
 2. 等待用户反馈或确认
 3. 根据用户意见修改 plan
-**Output:** docs/features/YYYYMMDD-<name>/02-plan.md（final）
+**Output:** docs/features/YYYYMMDD-<name>/03-plan.md（final）
 **Validation:**
 - [ ] 所有 Blocking issues 已解决
 - [ ] Plan 通过 Phase 1 的所有验证标准
@@ -62,11 +62,12 @@ Transform spec into actionable task plan with multi-perspective review.
 
 ## Entry Conditions
 - [ ] 01-spec.md 存在且已批准
+- [ ] 若 design required，则 02-design.md 存在且已批准
 - [ ] artifact_type 已声明
 - [ ] CANON.md 已加载
 
 ## Exit Conditions
-- [ ] 02-plan.md 存在
+- [ ] 03-plan.md 存在
 - [ ] 经 4 个视角审查
 - [ ] 所有 Blocking issues 已解决
 

@@ -188,10 +188,11 @@ skills/
 技能完成                       → docs/features/YYYYMMDD-<name>/
 ────────────────────────────────────────────
 define-workflow-refine        → 01-spec.md
-build-workflow-plan           → 02-plan.md
+design-workflow-design        → 02-design.md
+build-workflow-plan           → 03-plan.md
 build-workflow-execute        → adr/<num>-<title>.md（有决策时）
-verify-workflow-review        → 03-review.md（可选）
-ship-workflow-ship            → 04-ship.md + README.md（事后总结）
+verify-workflow-review        → 04-review.md（可选）
+ship-workflow-ship            → 05-ship.md + README.md（事后总结）
 ```
 
 ### 3.3 技能到模板的映射
@@ -200,11 +201,12 @@ ship-workflow-ship            → 04-ship.md + README.md（事后总结）
 技能                               → 使用的模板
 ─────────────────────────────────────────────
 define-workflow-refine/SKILL.md   → templates/feature/01-spec.md
-build-workflow-plan/SKILL.md      → templates/feature/02-plan.md
-verify-workflow-debug/SKILL.md  → templates/bug/*
-verify-workflow-review/SKILL.md   → 直接产出 docs/features/YYYYMMDD-<name>/03-review.md
+design-workflow-design/SKILL.md   → templates/feature/02-design.md
+build-workflow-plan/SKILL.md      → templates/feature/03-plan.md
+verify-workflow-debug/SKILL.md    → templates/bug/*
+verify-workflow-review/SKILL.md   → 直接产出 docs/features/YYYYMMDD-<name>/04-review.md
 ship-workflow-ship/SKILL.md       → templates/feature/README.md
-                                  + 直接产出 docs/features/YYYYMMDD-<name>/04-ship.md
+                                  + 直接产出 docs/features/YYYYMMDD-<name>/05-ship.md
 任意 build 中决策                 → templates/feature/adr/template.md
 ```
 
@@ -244,11 +246,11 @@ ship-workflow-ship/SKILL.md       → templates/feature/README.md
 | 入口 | 根目录，单文件 | `CLAUDE.md` |
 | 技能目录 | `<phase>-<role>-<skill>` | `build-quality-tdd/` |
 | 技能文件 | 固定文件名 | `SKILL.md` |
-| 阶段值 | kebab-case | `define`, `build`, `verify`, `ship`, `maintain`, `reflect` |
-| 角色值 | kebab-case | `workflow`, `frontend`, `backend`, `quality`, `cognitive`, `infrastructure`, `team`, `content`, `visual`, `artifact` |
+| 阶段值 | kebab-case | `define`, `design`, `build`, `verify`, `ship`, `maintain`, `reflect` |
+| 角色值 | kebab-case | `workflow`, `experience`, `frontend`, `backend`, `quality`, `cognitive`, `infrastructure`, `team`, `content`, `visual`, `artifact` |
 | 命令 | kebab-case | `review.md` |
 | Agent | kebab-case | `review-code-quality-auditor.md` |
-| 模板 | 数字前缀 + kebab-case | `01-spec.md`, `02-plan.md` |
+| 模板 | 数字前缀 + kebab-case | `01-spec.md`, `02-design.md`, `03-plan.md` |
 | 产出文档 | 数字前缀 + kebab-case | `01-spec.md`, `01-root-cause.md` |
 
 ---
@@ -373,6 +375,7 @@ unified/
 │   ├── review-test-engineer.md
 │   ├── plan-ceo-reviewer.md
 │   ├── plan-eng-reviewer.md
+│   ├── design-reviewer.md
 │   ├── plan-design-reviewer.md
 │   ├── plan-security-reviewer.md
 │   ├── refine-ceo-scout.md
@@ -387,7 +390,8 @@ unified/
 ├── templates/
 │   ├── feature/
 │   │   ├── 01-spec.md
-│   │   ├── 02-plan.md
+│   │   ├── 02-design.md
+│   │   ├── 03-plan.md
 │   │   ├── adr/
 │   │   │   └── template.md
 │   │   └── README.md
@@ -404,5 +408,5 @@ unified/
 │
 ├── skills-lock.json             ← 技能完整性锁文件（SHA-256）
 
-核心资产: 3 根文件 + 47 技能（47 SKILL.md） + 11 命令 + 15 审查角色 + 6 模板 + 2 设计文档 + 1 参考文档 + 1 锁文件。当前不再维护 repo 内 Codex 薄包装目录，入口统一收敛到 `AGENTS.md` + `skills/`。
+核心资产: 3 根文件 + 53 技能（53 SKILL.md） + 12 命令 + 24 角色（7 核心工程 + 17 审查 / 侦察） + 7 模板 + 2 设计文档 + 1 参考文档 + 1 锁文件。当前不再维护 repo 内 Codex 薄包装目录，入口统一收敛到 `AGENTS.md` + `skills/`。
 ```

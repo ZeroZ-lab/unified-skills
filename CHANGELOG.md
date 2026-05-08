@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.12.5] - 2026-05-08
+
+### Added
+- design phase: add `/design`, 6 design skills, `design-reviewer`, and the `02-design.md` artifact between spec and plan.
+- docs: add `docs/README.md` plus `architecture/`, `features/`, and `history/` index files to separate active references from historical material.
+
+### Changed
+- commands, agents, templates, and architecture docs: shift the feature artifact chain to `01-spec.md` → `02-design.md` → `03-plan.md` → `04-review.md` → `05-ship.md`.
+- load-manifest and skill contracts: route design-oriented requests through the new design stage and reviewer surfaces.
+- release metadata: sync package, Claude plugin, Codex plugin, and marketplace descriptions to the current 53-skill / 12-command / 24-role model.
+
+### Fixed
+- docs: move completed optimization summaries out of top-level `docs/` into `docs/history/` so historical writeups no longer read like active contract docs.
+
 ## [2.12.4] - 2026-05-08
 
 ### Changed

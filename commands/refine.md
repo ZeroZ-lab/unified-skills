@@ -78,7 +78,7 @@ Transform vague idea into structured spec with multi-perspective validation.
 - [ ] 经 3 个视角审查
 
 ## Next Steps
-- If approved → /plan
+- If approved → /design
 - If major issues → 迭代 Phase 1-4
 
 ## Constitutional Rules

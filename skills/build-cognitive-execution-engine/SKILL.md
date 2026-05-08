@@ -81,13 +81,13 @@ Agent 3: 实现 Task Z（只改 src/moduleC/）
 ```
 Agent 1: 执行 docs/features/<name>/plans/02-backend.md
 Write Scope: src/server/**, tests/server/**
-Read Scope: 01-spec.md, 02-plan.md, plans/01-contracts.md
+Read Scope: 01-spec.md, 02-design.md（如适用）, 03-plan.md, plans/01-contracts.md
 Verification Evidence: npm test -- server
 Merge Checkpoint: changed_files 必须全部落在 Write Scope 内
 
 Agent 2: 执行 docs/features/<name>/plans/03-frontend.md
 Write Scope: src/ui/**, tests/ui/**
-Read Scope: 01-spec.md, 02-plan.md, plans/01-contracts.md
+Read Scope: 01-spec.md, 02-design.md（如适用）, 03-plan.md, plans/01-contracts.md
 Verification Evidence: npm test -- ui
 Merge Checkpoint: changed_files 必须全部落在 Write Scope 内
 

@@ -8,7 +8,7 @@ description: Session 启动引导 — 建立主动技能发现机制。每个 se
 </SUBAGENT-STOP>
 
 <EXTREMELY-IMPORTANT>
-你拥有 Unified Skills — 47 个技能覆盖 6 阶段工作流。
+你拥有 Unified Skills — 53 个技能覆盖 7 阶段工作流。
 
 在响应用户消息或采取任何行动之前，你必须执行技能发现流程。
 这不是可选的。这不是可协商的。你无法通过推理绕过这个规则。
@@ -41,7 +41,7 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 
 识别以下 5 个维度：
 
-- **阶段** — 这是 define/build/verify/ship/maintain/reflect 哪个阶段？
+- **阶段** — 这是 define/design/build/verify/ship/maintain/reflect 哪个阶段？
 - **产物类型** — artifact_type 是什么？（software/document/article/deck/visual）
 - **触发词** — 用户消息包含哪些关键词？
 - **上下文信号** — 当前状态是什么？（有 spec 无 plan？有 code 无 review？）
@@ -55,6 +55,7 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 相关技能 = 
   by_phase[当前阶段] 
   + by_artifact_type[产物类型].required
+  + by_artifact_type.software.design（仅当 software 且存在 UI / 用户可见产物信号）
   + by_trigger.user_says[匹配的关键词]
   + by_trigger.context_signals[匹配的上下文]
   + by_risk[匹配的风险因素]
@@ -65,6 +66,7 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 对查询结果中的每个技能：
 
 - **required 标记的** → 必须加载
+- **software + UI 规则** → 如果 `artifact_type: software` 且触发词 / 风险 / 上下文表明涉及页面、组件、交互或视觉呈现，必须追加 `by_artifact_type.software.design`
 - **sequence 标记的** → 按顺序加载
 - **其他** → 如果有 1% 可能相关，加载
 
@@ -159,6 +161,15 @@ Using [skill-name] to [purpose]
 - `define-workflow-refine` — 模糊想法收敛到 spec
 - `define-workflow-spec` — 规格化文档
 
+### Design 阶段（创作设计定稿）
+
+- `design-workflow-design` — 设计阶段总控和 gate
+- `design-experience-interaction` — 交互设计、流程和状态
+- `design-visual-direction` — 视觉方向和风格系统
+- `design-content-script` — 剧本设计、故事线、消息线
+- `design-content-direction` — 导演设计、页序推进、节奏
+- `design-content-layout` — 排版设计、构图、媒介适配
+
 ### Build 阶段（拆分任务、增量生成产物）
 
 - `build-workflow-plan` — 拆分任务
@@ -175,7 +186,7 @@ Using [skill-name] to [purpose]
 - `build-backend-database` — 设计 schema/写迁移/优化查询
 - `build-backend-service-patterns` — 服务模式和架构
 - `build-content-writing` — 文档/文章/PPT 内容
-- `build-content-layout` — 版式设计/信息层级
+- `build-content-layout` — 版式执行落地/信息层级
 
 ### Verify 阶段（质量把关、Bug 调查、审查）
 
