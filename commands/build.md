@@ -67,9 +67,9 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 - → /review
 
 ## Constitutional Rules
-- CANON.md Clause 4: 不跳过测试（TDD Iron Law）
-- CANON.md Clause 5: 每个切片都要可验证
+- CANON.md Clause 4: TDD Iron Law — 没有测试先失败的代码 = 不存在的代码
+- CANON.md Clause 5: Verify Don't Assume — 没有刚运行的验证证据不能声称完成
 
 ## 实现
 
-加载 CANON.md → 调用 .agents/skills/build/SKILL.md。
+加载 CANON.md → 调用 skills/build-workflow-execute/SKILL.md。

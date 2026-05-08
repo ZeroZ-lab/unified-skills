@@ -87,9 +87,9 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 - If has Blocking → /build（修复后重新 /review）
 
 ## Constitutional Rules
-- CANON.md Clause 6: 审查不是走过场
-- CANON.md Clause 7: Blocking issues 必须修复
+- CANON.md Clause 5: Verify Don't Assume — 没有验证证据不能声称完成
+- CANON.md Clause 7: Push Back — 有具体问题直说，量化影响，不做 yes-machine
 
 ## 实现
 
-调用 .agents/skills/review/SKILL.md。
+调用 skills/verify-workflow-review/SKILL.md。

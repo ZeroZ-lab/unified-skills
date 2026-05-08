@@ -60,8 +60,9 @@ Pre-release audit and artifact export/publishing.
 - If exported → 交付产物
 
 ## Constitutional Rules
-- CANON.md Clause 8: 不发布未经审计的产物
+- CANON.md Clause 5: Verify Don't Assume — 发布前必须有验证证据
+- CANON.md Clause 10: Every Feature Leaves a Trace — spec + plan + ADR + review + ship + 事后总结
 
 ## 实现
 
-调用 .agents/skills/ship/SKILL.md。
+调用 skills/ship-workflow-ship/SKILL.md。

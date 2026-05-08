@@ -43,6 +43,6 @@ Manage persistent goals across sessions with create, pause, resume, complete, an
 
 ## 实现
 
-加载 CANON.md → 调用 .agents/skills/goal/SKILL.md。
+加载 CANON.md → 调用 skills/maintain-workflow-goal/SKILL.md。
 
 用法：`/goal [create|list|pause|resume|complete|clear|status] [参数]`

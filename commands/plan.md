@@ -75,10 +75,10 @@ Transform spec into actionable task plan with multi-perspective review.
 - If major changes → /refine（迭代 spec）
 
 ## Constitutional Rules
-- CANON.md Clause 2: 一次只问一个问题
-- CANON.md Clause 3: 不做未经批准的架构决策
-- CANON.md Clause 4: 不跳过测试
+- CANON.md Clause 2: Simple First — 最简单的计划覆盖需求
+- CANON.md Clause 3: Scope Discipline — 计划不超出 spec 范围
+- CANON.md Clause 4: TDD Iron Law — 每个实现任务必须包含测试任务
 
 ## 实现
 
-加载 CANON.md → 调用 .agents/skills/plan/SKILL.md。
+加载 CANON.md → 调用 skills/build-workflow-plan/SKILL.md。

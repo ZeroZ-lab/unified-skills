@@ -82,9 +82,9 @@ Transform vague idea into structured spec with multi-perspective validation.
 - If major issues → 迭代 Phase 1-4
 
 ## Constitutional Rules
-- CANON.md Clause 2: 一次只问一个问题
-- CANON.md Clause 3: 不做未经批准的架构决策
+- CANON.md Clause 1: Surface Assumptions — 实现非平凡任务前陈述假设
+- CANON.md Clause 9: Structured Questions — 一次只问一个问题，推荐项标注 (Recommended)
 
 ## 实现
 
-加载 CANON.md → 调用 .agents/skills/refine/SKILL.md。
+加载 CANON.md → 调用 skills/define-workflow-refine/SKILL.md。

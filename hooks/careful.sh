@@ -54,6 +54,14 @@ destructive_patterns=(
   'halt'
   'terraform destroy'
   'aws s3 rm'
+  'rm -fr'
+  'rm -Rf'
+  'rm -r -f'
+  'rm --recursive'
+  'rm --force'
+  'drop table'
+  'truncate table'
+  'delete from'
 )
 
 # Safe generated directories that may be removed without confirmation when used

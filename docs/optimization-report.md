@@ -1,5 +1,7 @@
 # Unified Skills 优化报告
 
+> **⚠ 历史文档 — 本文件记录 v2.0→2.12 升级期间的优化操作，已完成。当前状态以 `AGENTS.md`、`skills/`、`./validate` 为准。文件中提到的 `.agents/skills/` 路径已废弃。**
+
 ## 执行时间
 2025-01-XX
 

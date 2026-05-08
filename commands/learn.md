@@ -35,6 +35,6 @@ Manage cross-session learning records for continuous improvement.
 
 ## 实现
 
-加载 CANON.md → 调用 .agents/skills/learn/SKILL.md。
+加载 CANON.md → 调用 skills/maintain-workflow-learn/SKILL.md。
 
 用法：`/learn [search <关键词> | add <洞察> | prune | export]`

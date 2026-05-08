@@ -36,6 +36,6 @@ Restore work context from a previously saved checkpoint.
 
 ## 实现
 
-加载 CANON.md → 调用 .agents/skills/restore/SKILL.md。
+加载 CANON.md → 调用 skills/maintain-workflow-context-restore/SKILL.md。
 
 用法：`/restore [关键词]`

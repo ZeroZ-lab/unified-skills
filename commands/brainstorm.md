@@ -74,4 +74,4 @@ Transform open-ended question or vague idea into 2-3 structured proposals with c
 
 ## 实现
 
-加载 CANON.md → 调用 define-workflow-brainstorm/SKILL.md。
+加载 CANON.md → 调用 skills/define-cognitive-brainstorm/SKILL.md。

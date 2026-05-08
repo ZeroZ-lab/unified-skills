@@ -36,6 +36,6 @@ Capture current work context as a restorable checkpoint.
 
 ## 实现
 
-加载 CANON.md → 调用 .agents/skills/save/SKILL.md。
+加载 CANON.md → 调用 skills/maintain-workflow-context-save/SKILL.md。
 
 用法：`/save [描述]`

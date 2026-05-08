@@ -1,6 +1,6 @@
 # Agents — 多角色并行体系
 
-22 个 agent 按职责分组：7 个核心工程角色 + 15 个审查角色。用于 define、build、review、refine 和 ship 的多角色并行发散模式。
+23 个 agent 按职责分组：7 个核心工程角色 + 16 个审查角色。用于 define、build、review、refine 和 ship 的多角色并行发散模式。
 
 ## 核心工程角色（跨阶段复用）
 
