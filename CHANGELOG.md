@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.3] - 2026-05-08
+
+### Fixed
+- README: 角色数从 22 修正为 23（与实际 agent 文件数一致）
+- AGENTS.md: 模板数从 "6 文档模板" 修正为 "2 模板类别（bug + feature）"
+- .gitignore: 移除 `skills-lock.json` 排除规则（该文件需被 git 追踪以暴露哈希漂移）
+
 ## [2.12.1] - 2026-05-08
 
 ### Fixed

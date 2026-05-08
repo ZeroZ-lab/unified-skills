@@ -42,7 +42,7 @@ unified/
 │
 ├── commands/                11 命令入口（Claude Code 斜杠命令）
 ├── agents/                  16 审查角色（5 review + 4 plan + 3 refine + 4 ship）
-├── templates/               6 文档模板
+├── templates/               2 模板类别（bug + feature）
 └── docs/                    设计文档
 ```
 

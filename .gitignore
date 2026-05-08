@@ -34,5 +34,3 @@ node_modules/
 .zencoder/
 .playwright-mcp/
 
-# Lock files (generated, not tracked)
-skills-lock.json

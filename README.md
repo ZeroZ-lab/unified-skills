@@ -1,6 +1,6 @@
 # Unified Skills
 
-宪法 + 47 技能 + 11 命令 + 22 角色 = 按阶段加载的多产物 AI 开发技能套件。支持 Claude Code 和 Codex CLI。
+宪法 + 47 技能 + 11 命令 + 23 角色 = 按阶段加载的多产物 AI 开发技能套件。支持 Claude Code 和 Codex CLI。
 
 ## 10 秒上手
 
