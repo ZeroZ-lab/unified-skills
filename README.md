@@ -183,7 +183,8 @@ npx skills remove unified-skills
 ```
 unified/
 ├── CANON.md              宪法（最高优先级）
-├── CLAUDE.md             AI agent 入口配置
+├── AGENTS.md             统一项目约束入口
+├── CLAUDE.md             Claude 侧指针文件
 ├── README.md             本文件
 │
 ├── skills/               47 技能 / 6 阶段

@@ -114,7 +114,7 @@ async function createTask(input: CreateTaskInput): Promise<Task> { ... }
 
 ```
 AI 需要的文档:
-├── CLAUDE.md / AGENTS.md → 项目命令、测试方法、架构概览
+├── AGENTS.md / CLAUDE.md → 项目命令、测试方法、架构概览
 ├── Spec → 需求 + 验收条件
 ├── ADR → 架构决策 + 为什么
 └── 代码注释 → WHY、GOTCHA、INTENT（不重复代码）
@@ -125,7 +125,7 @@ AI 不需要的:
 ├── 重复 JSDoc 类型的注释
 ```
 
-**项目约定的新发现 → 写入 CLAUDE.md。** 这是 AI agent 每次会话都会先加载的文件。
+**项目约定的新发现 → 写入 AGENTS.md。** `CLAUDE.md` 仅保留 Claude 侧指针或补充提示，不再承载完整项目合同。
 
 ## Changelog 维护
 

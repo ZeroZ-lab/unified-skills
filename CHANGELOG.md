@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.12.1] - 2026-05-08
+
+### Fixed
+- cognitive/documentation skills: stop treating `CLAUDE.md` as the durable project-contract target; write project conventions back to `AGENTS.md`
+- brainstorm/context flow: prefer `AGENTS.md` over `CLAUDE.md` when loading project-level constraints
+- docs: align README and architecture docs with the AGENTS single-entry model and remove stale `.agents/skills/` path guidance
+- validate: catch regressions that would reintroduce old `CLAUDE.md` writeback guidance or deleted wrapper-path references
+
 ## [2.12.0] - 2026-05-08
 
 ### Changed

@@ -264,6 +264,18 @@ if sgrep_n 'fail-open|permissionDecision: "ask".*Codex|Codex.*permissionDecision
 else
   rm -f /tmp/unified-validate-stale-contract.$$
 fi
+
+if sgrep_n '写入 CLAUDE\.md|CLAUDE\.md/spec|CLAUDE\.md / spec|CLAUDE\.md / AGENTS\.md|调用 \.agents/skills/' \
+  skills/build-cognitive-context/SKILL.md \
+  skills/reflect-team-documentation/SKILL.md \
+  skills/define-cognitive-brainstorm/SKILL.md \
+  docs/architecture/command-agent-skill-architecture.md >/tmp/unified-validate-stale-entry.$$ 2>/dev/null; then
+  cat /tmp/unified-validate-stale-entry.$$
+  rm -f /tmp/unified-validate-stale-entry.$$
+  fail '发现旧入口模型残留'
+else
+  rm -f /tmp/unified-validate-stale-entry.$$
+fi
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查强纪律技能 Iron Law ==\n'

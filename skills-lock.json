@@ -24,7 +24,7 @@
     "build-cognitive-context": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "503c0c8ca7e3dcaedb6d16ffca5a6653614fb1c0fff0edcafe311f00bb97c817"
+      "computedHash": "78effa97e5161b7cc5b83a3b43ea67dae2f6152d3e75c84c72fd5bd6a93583d8"
     },
     "build-cognitive-decision-record": {
       "source": "ZeroZ-lab/unified-skills",
@@ -84,7 +84,7 @@
     "define-cognitive-brainstorm": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "6c6c1f57dd4afbbdb1449765e90e4ff2df899a50c394cb4be1c40736a20f31da"
+      "computedHash": "858ab82042d1c9a8a7fa03fba3999d665424a5076bce0e2dfa2219896c9fbca7"
     },
     "define-workflow-refine": {
       "source": "ZeroZ-lab/unified-skills",
@@ -144,7 +144,7 @@
     "reflect-team-documentation": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "a337d05dbb1032894c0cb62635faf72b9de3a8e51703173b5257a7eaf05f0fe7"
+      "computedHash": "6e05beefd2f620803e1cb9b3dbe8bbf9ac20ec4e8e88c086a0eb81c5a7a825b5"
     },
     "reflect-team-retro": {
       "source": "ZeroZ-lab/unified-skills",
