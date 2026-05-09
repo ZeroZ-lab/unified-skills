@@ -1,197 +1,220 @@
 # Unified Skills
 
-> 宪法 + 53 技能 + 12 命令 + 24 角色：一套面向 AI Agent 的阶段化、多产物开发技能系统。
+> Unified Skills 是一套面向 AI Agent 的**工作制度架构**：用 `CANON.md` 定义共同宪法，用 Command 切分阶段，用 Agent 承担角色责任，用 Skill 注入可复用方法论。
 
-Unified Skills 把需求提炼、设计、计划、构建、验证、发布和维护收束到同一套纪律中。它同时支持 Claude Code 与 Codex CLI：Claude Code 通过斜杠命令进入工作流，Codex CLI 直接读取 `AGENTS.md` 与 `skills/` 中的真实技能。
+它不是某一个技能的说明书，而是一个跨 Claude Code 与 Codex CLI 的整体架构：**宪法 + 12 命令 + 24 角色 + 53 技能 + Hooks 护栏 + 文档产物链**共同组成一套可验证、可扩展、可迁移的多产物开发系统。
 
-## 核心价值
+## 架构总览
 
-- **一致的行为约束**：所有技能继承 `CANON.md` 的 10 条宪法，避免不同阶段、不同工具各说各话。
-- **阶段化加载**：按当前任务只加载需要的技能，减少上下文噪声，同时保留完整产物链路。
-- **多产物支持**：同一工作流覆盖 `software`、`document`、`article`、`deck`、`visual` 五类产物。
-- **证据驱动设计**：`/design` 要求 Design Best-Practice Scan，明确 Adopt / Reject 与证据质量。
-- **验证优先**：从 TDD、审查、调试到发布审计，每一步都要求可复核证据，而不是“应该可以”。
-- **跨平台入口清晰**：Claude Code 使用 `commands/`；Codex CLI 使用 `AGENTS.md` + `skills/`，不依赖 repo 内薄包装命令。
+```text
+                 ┌──────────────────────────────────────┐
+                 │ CANON.md                              │
+                 │ 10 条不可变行为宪法；所有层都必须继承 │
+                 └──────────────────┬───────────────────┘
+                                    │
+┌───────────────────────────────────▼───────────────────────────────────┐
+│ 入口层 Entry                                                           │
+│ - Claude Code: commands/ + CLAUDE.md 指针                              │
+│ - Codex CLI: AGENTS.md + skills/ 真实技能目录                           │
+└───────────────────────────────────┬───────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼───────────────────────────────────┐
+│ Command 层：阶段协议 / Workflow Controller                              │
+│ /refine /design /plan /build /review /ship /save /restore /learn /goal │
+│ /brainstorm /help                                                       │
+└───────────────────────────────────┬───────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼───────────────────────────────────┐
+│ Agent 层：专业责任边界 / Role Protocol                                  │
+│ 24 个角色负责需求、计划、工程、审查、侦察、发布等不同视角               │
+└───────────────────────────────────┬───────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼───────────────────────────────────┐
+│ Skill 层：能力注入 / Capability Protocol                                │
+│ 53 个 SKILL.md 提供入口/出口、流程、红旗、常见说辞和验证清单             │
+└───────────────────────────────────┬───────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼───────────────────────────────────┐
+│ Artifact 层：可追踪产物链                                               │
+│ docs/features/*、docs/bugs/*、ADR、review、ship、README 聚合             │
+└───────────────────────────────────────────────────────────────────────┘
+```
+
+核心原则：**Command 负责阶段切分，Agent 负责角色分工，Skill 负责能力注入，CANON 负责全局纪律。**
 
 ## 目录
 
-- [10 秒上手](#10-秒上手)
-- [什么时候用哪个命令](#什么时候用哪个命令)
-- [工作流](#工作流)
-- [技能版图](#技能版图)
-- [安装](#安装)
-- [平台差异](#平台差异)
-- [项目结构](#项目结构)
-- [文档产出链](#文档产出链)
-- [贡献与验证](#贡献与验证)
+- [架构总览](#架构总览)
+- [四层职责](#四层职责)
+- [工作流状态机](#工作流状态机)
+- [产物类型路由](#产物类型路由)
+- [平台适配架构](#平台适配架构)
+- [安全护栏](#安全护栏)
+- [仓库结构](#仓库结构)
+- [安装与接入](#安装与接入)
+- [扩展与贡献](#扩展与贡献)
 - [FAQ](#faq)
 
-## 10 秒上手
+## 四层职责
 
-### Claude Code
+### 1. CANON：全局宪法层
 
-```bash
-claude plugin add https://github.com/ZeroZ-lab/unified-skills
-# 重启 session 后使用：/refine → /design → /plan → /build → /review → /ship
-```
-
-也可以使用 skills CLI：
-
-```bash
-npx skills add ZeroZ-lab/unified-skills
-```
-
-### Codex CLI
-
-```bash
-git clone https://github.com/ZeroZ-lab/unified-skills.git
-cd unified-skills
-```
-
-Codex 侧的入口是：
-
-- 项目约束：`AGENTS.md`
-- 真实技能目录：`skills/`
-- Hooks 配置：在 `.codex/config.toml` 中启用 `codex_hooks = true`
-
-## 什么时候用哪个命令
-
-| 目标 | Claude Code 命令 | 输出 / 结果 |
-|------|------------------|-------------|
-| 模糊想法需要发散方案 | `/brainstorm` | 2–3 个方案、推荐方案、不做清单 |
-| 模糊想法需要收敛规格 | `/refine` | `01-spec.md`，含 `artifact_type` |
-| 规格已批准，需要定创作设计 | `/design` | `02-design.md`，含设计证据、采纳与拒绝理由 |
-| 规格 / 设计已明确，需要拆任务 | `/plan` | `03-plan.md` 与可选 `plans/*.md` |
-| 计划已批准，需要实现产物 | `/build` | 软件 / 内容产物、验证证据、必要 ADR |
-| 产物完成，需要质量把关 | `/review` | `04-review.md`，含 blocking / non-blocking 审查结论 |
-| 审查通过，需要发布或导出 | `/ship` | `05-ship.md`、发布 / 导出记录、README 聚合 |
-| 临时中断，需要保存上下文 | `/save` | `.claude/checkpoints/*.md` |
-| 新 session 继续工作 | `/restore` | 恢复最近或指定 checkpoint |
-| 记录跨 session 经验 | `/learn` | `.claude/learnings.jsonl` |
-| 管理当前目标进度 | `/goal` | 目标生命周期记录 |
-| 查看能力概览 | `/help` | 命令与工作流提示 |
-
-> Codex CLI 不维护 repo 内 `$command` 薄包装入口；请直接根据 `AGENTS.md` 的工作流说明读取对应技能。
-
-## 工作流
+`CANON.md` 是最高优先级的行为合同。它不描述某个具体技能怎么做，而是规定所有 Agent 在所有阶段都必须遵守的纪律，例如：先陈述假设、范围收敛、验证优先、调试先找根因、不做 yes-machine、每个 feature 留痕。
 
 ```text
-想法 / 问题
-  ├─ /brainstorm       发散并比较方案（可选）
-  └─ /refine           收敛为 spec，声明 artifact_type
-        ↓
-/design                证据驱动设计；纯后端或无创作设计时可按规则跳过
-        ↓
-/plan                  拆分任务；大型任务产出 plans/*.md 与并行矩阵
-        ↓
-/build                 增量构建；必要时写 ADR；遇到缺陷进入 verify-debug
-        ↓
-/review                多角色审查；blocking 问题回到 /build
-        ↓
-/ship                  发布 / 导出 / 文档同步 / canary / land
+CANON.md
+  ├─ 约束 Command：阶段不能跳过必要门控
+  ├─ 约束 Agent：角色不能越权自证通过
+  ├─ 约束 Skill：技能只能增加纪律，不能放松宪法
+  └─ 约束 Artifact：产物必须留下可审计证据
 ```
 
-关键约束：
+### 2. Command：阶段协议层
 
-- `/refine` 使用 Unified 原生 External Scan，把信息分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject。
-- `/design` 不写实现步骤或任务分解；它只负责交互、视觉、排版、剧本、导演等创作设计定稿。
-- `/build` 读取 `03-plan.md`；大型或并行任务还会读取 `plans/*.md`，并只在 `Parallel Execution Matrix` 标记 `parallel_safe` 时并行。
-- Debug 不是顶层命令；它作为 `verify-workflow-debug` 被 `/build` 或 `/review` 在验证失败时加载。
+`commands/` 下的 12 命令是 Claude Code 的斜杠入口，也是整体流程的阶段协议。Command 不应该复制技能内容，而是声明：当前阶段读什么、调用谁、产出什么、何时通过。
 
-## 技能版图
+| 命令 | 架构角色 | 主要产物 |
+|------|----------|----------|
+| `/brainstorm` | 发散与方案比较入口 | `00-brainstorm.md` |
+| `/refine` | 需求收敛与事实扫描入口 | `01-spec.md` |
+| `/design` | 证据驱动的创作设计门 | `02-design.md` |
+| `/plan` | 任务拓扑与执行计划门 | `03-plan.md`、`plans/*.md` |
+| `/build` | 增量实现与决策记录入口 | 软件 / 内容产物、ADR |
+| `/review` | 多角色质量审查门 | `04-review.md` |
+| `/ship` | 发布、导出与文档同步门 | `05-ship.md` |
+| `/save` / `/restore` | 上下文持久化入口 | checkpoint |
+| `/learn` | 跨 session 学习入口 | learnings 记录 |
+| `/goal` | 目标生命周期入口 | goal 状态 |
+| `/help` | 能力发现入口 | 命令概览 |
 
-| 阶段 | 技能数 | 核心能力 |
+### 3. Agent：角色责任层
+
+`agents/` 定义 24 个角色。Agent 的价值不是“多一个提示词”，而是建立责任边界：需求、计划、实现、审查、发布、侦察不能全部由同一个视角自证完成。
+
+```text
+Agent 负责：
+  - 从一个专业视角判断问题
+  - 明确自己负责什么、不负责什么
+  - 调用对应 Skill 形成输出
+  - 用 Blocking / Important / Suggestion 等分级表达风险
+
+Agent 不负责：
+  - 定义整个工作流状态机（这是 Command 的职责）
+  - 修改 CANON 纪律（CANON 是上层合同）
+  - 把方法论复制到自己内部（方法论应在 Skill）
+```
+
+### 4. Skill：能力注入层
+
+`skills/` 是真实能力目录。每个技能以 `<phase>-<role>-<skill>/SKILL.md` 命名，提供可操作流程、入口/出口条件、常见说辞表、红旗清单和验证清单。强纪律技能还包含 Iron Law。
+
+| 阶段 | 技能数 | 架构职责 |
 |------|--------|----------|
-| define 定义 | 3 | refine（想法收敛）、spec（规格编写）、brainstorm（发散 / 收敛探索） |
-| design 设计 | 6 | design（设计总控）、interaction（交互）、visual-direction（视觉）、script（剧本）、direction（导演）、layout（排版） |
-| build 构建 | 15 | plan、execute、tdd、context、source-driven、execution-engine、decision-record、git、ui-engineering、browser-testing、api-design、database、service-patterns、content-writing、content-layout |
-| verify 验证 | 13 | review、spec-compliance、code-quality、debug、accessibility、integration-testing、performance、security、code-review-standards、content-review、visual-review、receiving-review、simplify |
-| ship 发布 | 7 | ship、ci-cd、deploy、artifact-export、canary、land、doc-sync |
-| maintain 维护 | 7 | observability、deprecation-migration、using-unified、context-save、context-restore、learn、goal |
-| reflect 复盘 | 2 | retro、documentation |
+| define | 3 | 把模糊想法变成可验证规格 |
+| design | 6 | 用外部证据和本地事实定交互、视觉、排版、剧本、导演方案 |
+| build | 15 | 计划、增量实现、TDD、上下文、源文档、工程模式和内容构建 |
+| verify | 13 | 规格符合性、代码质量、调试、安全、性能、内容、视觉和审查反馈 |
+| ship | 7 | 发布、CI/CD、部署、导出、金丝雀、落地和文档同步 |
+| maintain | 7 | 可观测性、迁移、上下文、学习、目标和使用引导 |
+| reflect | 2 | 回顾与知识沉淀 |
 
-`artifact_type` 在 spec 中声明，默认 `software`。可选值如下：
+## 工作流状态机
 
-| artifact_type | 典型产物 | 重点技能 / 纪律 |
-|---------------|----------|------------------|
-| `software` | 应用、服务、脚本、库 | TDD、代码审查、集成测试、CI/CD、部署 |
-| `document` | 说明文档、方案、规范 | 读者任务、事实核查、结构化表达、文档同步 |
-| `article` | 文章、长文、叙述性内容 | 内容写作、逻辑链、风格一致性、内容审查 |
-| `deck` | 演示文稿、汇报材料 | 信息层级、版式、叙事节奏、导出检查 |
-| `visual` | 视觉稿、图像、设计产物 | 视觉方向、构图、可访问性、视觉审查 |
+Unified 的主路径是一条带回路的状态机，而不是线性清单：
 
-## 安装
-
-### Claude Code Plugin（推荐）
-
-```bash
-claude plugin add https://github.com/ZeroZ-lab/unified-skills
+```text
+/brainstorm（可选）
+        │
+        ▼
+/refine ── 产出 01-spec.md，声明 artifact_type
+        │
+        ▼
+/design ── 产出 02-design.md；纯后端或无创作设计时可按规则跳过
+        │
+        ▼
+/plan ──── 产出 03-plan.md；大型/并行任务产出 plans/*.md
+        │
+        ▼
+/build ─── 增量实现；需要决策时写 ADR；失败时进入 debug 回路
+        │
+        ▼
+/review ── blocking 回 /build；批准后进入发布
+        │
+        ▼
+/ship ──── 发布 / 导出 / canary / land / doc-sync
 ```
 
-安装后重启 Claude Code session，即可使用 `commands/` 下的 12 个斜杠命令。
+关键门控：
 
-### skills CLI
+- `/refine` 使用 External Scan，把信息分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject。
+- `/design` 使用 Design Best-Practice Scan；`02-design.md` 必须写明 Design References、Pattern Synthesis、Adopt / Reject 和 Evidence Quality。
+- `/plan` 负责任务拓扑；只有 `Parallel Execution Matrix` 证明 `parallel_safe` 时才允许并行。
+- `/build` 消费已批准的 `03-plan.md`；大型任务还会读取 `plans/*.md`。
+- `/review` 负责阻断质量问题；blocking 不能靠口头承诺跳过。
+- `/ship` 负责发布 / 导出审计、回滚或恢复路径、文档同步。
 
-```bash
-npx skills add ZeroZ-lab/unified-skills
-```
+## 产物类型路由
 
-### 本地开发 / 手动挂载
+`artifact_type` 是 Unified 的多产物路由字段，写在 spec 中，默认值为 `software`。
 
-```bash
-git clone https://github.com/ZeroZ-lab/unified-skills.git
-cd unified-skills
-mkdir -p ~/.claude/skills ~/.claude/commands
-ln -s "$(pwd)/skills/"* ~/.claude/skills/
-ln -s "$(pwd)/commands/"* ~/.claude/commands/
-```
+| artifact_type | 路由含义 | 典型加载方向 |
+|---------------|----------|--------------|
+| `software` | 软件、服务、脚本、库 | TDD、API、数据库、UI、浏览器测试、代码审查、CI/CD、部署 |
+| `document` | 说明文档、方案、规范 | 内容结构、事实核查、文档审查、导出和 doc-sync |
+| `article` | 长文、叙事性内容 | 内容写作、逻辑链、风格一致性、内容审查 |
+| `deck` | 演示文稿、汇报材料 | 信息层级、版式、节奏、导出审计 |
+| `visual` | 视觉稿、海报、版式产物 | 视觉方向、构图、可访问性、视觉审查 |
 
-### Codex CLI Hooks
+这让同一套阶段协议能够服务不同产物：Command 不需要为每种产物复制一套流程，Skill 和 Agent 根据 `artifact_type` 选择具体方法论。
 
-```bash
-git clone https://github.com/ZeroZ-lab/unified-skills.git
-cd unified-skills
-mkdir -p ~/.codex
-cat > ~/.codex/config.toml <<'CODEX_CONFIG'
-[features]
-codex_hooks = true
-CODEX_CONFIG
-```
+## 平台适配架构
 
-## 平台差异
+Unified 在两个宿主中的入口不同，但共享同一套核心合同：
 
-| 能力 | Claude Code | Codex CLI |
-|------|-------------|-----------|
-| 项目入口 | `CLAUDE.md` 指向 `AGENTS.md`，命令在 `commands/` | `AGENTS.md` + `skills/` |
-| 命令形态 | `/refine`、`/design`、`/plan` 等斜杠命令 | 按 `AGENTS.md` 工作流直接读取技能 |
-| SessionStart 上下文注入 | 自动 | 自动（需 `codex_hooks = true`） |
-| careful 破坏性命令拦截 | `permissionDecision: "ask"`，提示确认 | `permissionDecision: "deny"`，fail-closed |
-| freeze 编辑范围冻结 | `permissionDecision: "deny"` | `permissionDecision: "deny"` |
+| 层 | Claude Code | Codex CLI |
+|----|-------------|-----------|
+| 项目约束入口 | `CLAUDE.md` 指向 `AGENTS.md` | `AGENTS.md` |
+| 阶段入口 | `commands/` 中的斜杠命令 | 按 `AGENTS.md` 的工作流说明直接读取 `skills/` |
+| 能力来源 | `skills/` | `skills/` |
+| 角色来源 | `agents/` | `agents/` |
+| Hooks 配置 | `hooks/` / plugin 配置 | `.codex/hooks.json` + `.codex/config.toml` |
 
-Codex 使用 `deny` 而不是 `ask`，是为了避免确认型交互语义不稳定时把破坏性命令交给不确定的运行环境。
+Codex 不再维护 repo 内 `$command` 薄包装入口；这是一项架构收口：**真实技能只保留一份，入口文档只保留一个项目约束源。**
 
-## 项目结构
+## 安全护栏
+
+Hooks 是架构的运行时安全层，用于把纪律从“文档建议”变成“执行前检查”。
+
+| Hook | Claude Code | Codex CLI | 架构目的 |
+|------|-------------|-----------|----------|
+| SessionStart | 自动注入宪法 + 命令上下文 | 自动注入宪法 + 命令上下文（需 `codex_hooks = true`） | 启动时建立共同上下文 |
+| careful | 提示确认（`ask`） | 直接阻止（`deny`，fail-closed） | 拦截破坏性命令 |
+| freeze | 直接阻止（`deny`） | 直接阻止（`deny`） | 阻止编辑冻结范围外文件 |
+
+Codex 的 careful 使用 `deny` 而不是 `ask`，因为确认型交互在 Codex 里不够稳定；破坏性操作必须默认失败，而不是默认继续。
+
+## 仓库结构
 
 ```text
 unified/
-├── CANON.md                 10 条宪法；所有技能的最高纪律
+├── CANON.md                 全局宪法；所有技能的最高纪律
 ├── AGENTS.md                统一项目约束入口
-├── CLAUDE.md                Claude 侧指针文件
-├── README.md                项目说明
-├── skills/                  53 个真实技能，按阶段命名
-├── commands/                12 个 Claude Code 斜杠命令入口
-├── agents/                  24 个角色定义
-├── templates/               bug / feature 文档模板
-├── references/              编排模式与设计最佳实践来源合同
-├── docs/                    架构、历史与 feature 档案
+├── CLAUDE.md                Claude 侧指针文件；不复制完整合同
+├── README.md                整体架构介绍
+│
+├── commands/                12 命令；Command 阶段协议层
+├── agents/                  24 角色；Agent 责任边界层
+├── skills/                  53 技能；Skill 能力注入层
 ├── hooks/                   SessionStart / careful / freeze 护栏
-├── skills-index.json        技能发现索引
+│
+├── templates/               feature / bug 产物模板
+├── references/              编排模式与设计最佳实践来源合同
+├── docs/                    架构、历史、feature 与 bug 档案
+├── skills-index.json        默认技能发现索引
 └── skills-lock.json         技能完整性锁文件（SHA-256）
 ```
 
-命名规范：`<phase>-<role>-<skill>/SKILL.md`，例如 `build-quality-tdd`、`design-content-script`、`verify-workflow-review`。
-
-## 文档产出链
+### 文档产物链
 
 ```text
 docs/features/YYYYMMDD-<name>/
@@ -212,43 +235,90 @@ docs/bugs/<name>/
 └── 02-fix-plan.md          ← verify-workflow-debug Phase 4
 ```
 
-## 贡献与验证
+## 安装与接入
 
-修改技能前必须先理解它的行为塑造目的：
+### Claude Code Plugin
 
-1. 通读目标 `SKILL.md`，不要只改片段。
-2. 阅读 `CANON.md`，确认技能没有放松宪法条款。
-3. 新增技能时从 `templates/feature/` 起步，并遵循 `<phase>-<role>-<skill>/SKILL.md` 命名。
-4. 不复制其他技能内容；跨技能复用请引用技能名。
-5. 修改技能、入口文档、hooks 或产物链后，同步检查 `skills-index.json` 与 `skills-lock.json`。
-6. 提交前运行：
+```bash
+claude plugin add https://github.com/ZeroZ-lab/unified-skills
+```
+
+重启 session 后，使用 `/refine → /design → /plan → /build → /review → /ship` 进入主工作流。
+
+也可以使用 skills CLI：
+
+```bash
+npx skills add ZeroZ-lab/unified-skills
+```
+
+### 本地开发挂载
+
+```bash
+git clone https://github.com/ZeroZ-lab/unified-skills.git
+cd unified-skills
+mkdir -p ~/.claude/skills ~/.claude/commands
+ln -s "$(pwd)/skills/"* ~/.claude/skills/
+ln -s "$(pwd)/commands/"* ~/.claude/commands/
+```
+
+### Codex CLI
+
+```bash
+git clone https://github.com/ZeroZ-lab/unified-skills.git
+cd unified-skills
+mkdir -p ~/.codex
+cat > ~/.codex/config.toml <<'CODEX_CONFIG'
+[features]
+codex_hooks = true
+CODEX_CONFIG
+```
+
+Codex 侧从 `AGENTS.md` 开始读取项目约束，再按任务阶段进入 `skills/`。
+
+## 扩展与贡献
+
+扩展 Unified 时，要把修改放在正确架构层：
+
+| 你要改变什么 | 应该改哪里 | 不应该改哪里 |
+|--------------|------------|--------------|
+| 全局行为纪律 | `CANON.md` | 单个 `SKILL.md` 偷偷放松纪律 |
+| 阶段顺序或产物门控 | `commands/`、`AGENTS.md` | Agent 内部私自改状态机 |
+| 专业角色责任 | `agents/` | Skill 里混入角色身份 |
+| 可复用执行方法 | `skills/<phase>-<role>-<skill>/SKILL.md` | Command 里复制大段方法论 |
+| 产物格式 | `templates/`、`docs/` | README 里维护第二套格式 |
+| 技能发现 / 哈希 | `skills-index.json`、`skills-lock.json` | 只改文件不更新索引和锁 |
+
+提交前必须运行：
 
 ```bash
 ./validate
 ```
 
-禁止事项：
+新增或修改技能时还必须遵守：
 
-- 添加没有可操作流程的空泛建议。
-- 添加只服务特定项目、团队或领域的技能；这类能力应做成独立插件。
-- 在技能间重复大段内容。
-- 放松 `CANON.md` 的任何条款。
-- 随意替换 `human partner` 等有行为含义的措辞。
-- 引入第三方依赖；Unified 设计为零依赖。
+- 新技能命名为 `<phase>-<role>-<skill>/SKILL.md`。
+- 新技能必须有入口/出口条件、可操作流程、常见说辞表、红旗清单、验证清单。
+- 强纪律技能必须额外包含 Iron Law。
+- 技能只能增加 `CANON.md` 的纪律，不能减少或绕开。
+- 不引入第三方依赖；Unified 保持零依赖。
 
 ## FAQ
 
-**Q: 为什么 debug 在 verify 阶段，而不是 maintain？**
-A: Debug 是验证失败后的自然下一步。当 review 发现 blocking 问题、测试失败或行为偏离 spec 时，debug 会进入“根因在前，修复在后”的验证循环。Maintain 保留给持续运维、迁移、上下文与学习记录。
+**Q: README 为什么强调架构，而不是逐个解释技能？**
 
-**Q: 为什么技能目录不用多层嵌套？**
-A: 53 个技能通过扁平命名已经包含阶段、角色和动作，例如 `build-quality-tdd`、`design-content-script`、`build-content-writing`。这比深层目录更容易被 Agent 精确发现和引用。
+A: 单个技能的细节在对应 `SKILL.md` 里。README 的职责是解释系统怎么分层、怎么路由、怎么产生产物、怎么跨平台接入，以及扩展时应该改哪一层。
 
-**Q: Unified 和其他技能集是什么关系？**
-A: Unified 吸收工程、设计、审查、发布等实践，统一为同一套宪法、命名、入口/出口条件和验证纪律；它不依赖外部技能集。
+**Q: Command、Agent、Skill 的边界是什么？**
 
-**Q: Claude Code 和 Codex CLI 的体验一致吗？**
-A: 工作流语义一致，入口形态不同。Claude Code 使用 `commands/` 的斜杠命令；Codex CLI 直接读取 `AGENTS.md` 和 `skills/`。Hooks 侧，Codex 的 careful 使用 `deny`（fail-closed），freeze 在两平台都使用 `deny`。
+A: Command 管阶段和门控，Agent 管角色责任，Skill 管可复用执行方法。混在一起会导致流程不可审计、角色自证通过、方法论复制漂移。
+
+**Q: 为什么 Codex 不使用 repo 内 `$command` 薄包装？**
+
+A: 为了减少入口漂移。Codex 直接读取 `AGENTS.md` 和 `skills/`；Claude Code 的斜杠命令仍保留在 `commands/`，但真实技能只有一份。
+
+**Q: 为什么要有 `artifact_type`？**
+
+A: 它让同一套状态机服务软件、文档、文章、演示和视觉产物。阶段不变，加载的 Agent / Skill 和验证重点随产物类型变化。
 
 ## License
 
