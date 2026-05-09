@@ -110,7 +110,7 @@ Unified Skills 有 3 个 hooks，在两个平台上行为有差异：
 | careful（破坏性命令拦截） | `permissionDecision: "ask"` — 提示用户确认 | `permissionDecision: "deny"` — 直接阻止（fail-closed） |
 | freeze（编辑范围冻结） | `permissionDecision: "deny"` — 阻止范围外编辑 | `permissionDecision: "deny"` — 阻止范围外编辑 |
 
-**Codex hooks 激活：** 需在 `.codex/config.toml` 中设置 `[features] codex_hooks = true`。
+**Codex hooks 激活：** 需在 `.codex/config.toml` 的 `[features]` 表中设置 `hooks = true`，或通过 CLI 参数 `--enable hooks` 临时启用。
 
 **重要差异：** careful hook 在 Codex 上使用 fail-closed 模式（阻止破坏性命令而非提示确认），因为确认型交互语义在 Codex 上并不稳定。
 

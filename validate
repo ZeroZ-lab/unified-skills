@@ -346,6 +346,15 @@ else
   rm -f /tmp/unified-validate-stale-contract.$$
 fi
 
+if sgrep_n '\bcodex_hooks\b|\[features\]\.codex_hooks' \
+  README.md CLAUDE.md AGENTS.md .codex/config.toml .codex/hooks.json .codex-plugin .claude-plugin docs commands agents skills templates references >/tmp/unified-validate-stale-codex-hooks.$$ 2>/dev/null; then
+  cat /tmp/unified-validate-stale-codex-hooks.$$
+  rm -f /tmp/unified-validate-stale-codex-hooks.$$
+  fail '发现已废弃 Codex hooks feature flag'
+else
+  rm -f /tmp/unified-validate-stale-codex-hooks.$$
+fi
+
 if sgrep_n '写入 CLAUDE\.md|CLAUDE\.md/spec|CLAUDE\.md / spec|CLAUDE\.md / AGENTS\.md|调用 \.agents/skills/' \
   skills/build-cognitive-context/SKILL.md \
   skills/reflect-team-documentation/SKILL.md \
@@ -613,7 +622,34 @@ printf '\n== 检查 Codex config.toml ==\n'
 if [ ! -f ".codex/config.toml" ]; then
   fail "缺少 .codex/config.toml"
 else
-  sgrep 'codex_hooks.*=.*true' .codex/config.toml || fail ".codex/config.toml 缺少 codex_hooks = true"
+  python3 - <<'PY' || fail ".codex/config.toml 必须在 [features] 中设置 hooks = true，且不能使用已废弃的 codex_hooks"
+import re
+
+section = None
+hooks_true = False
+deprecated_lines = []
+
+for lineno, raw in enumerate(open(".codex/config.toml", encoding="utf-8"), 1):
+    line = raw.split("#", 1)[0].strip()
+    if not line:
+        continue
+    if line.startswith("[") and line.endswith("]"):
+        section = line.strip("[]").strip()
+        continue
+    if section != "features" or "=" not in line:
+        continue
+    key, value = [part.strip() for part in line.split("=", 1)]
+    if key == "codex_hooks":
+        deprecated_lines.append(lineno)
+    if key == "hooks" and value.lower() == "true":
+        hooks_true = True
+
+if deprecated_lines:
+    lines = ", ".join(str(line) for line in deprecated_lines)
+    raise SystemExit(f"deprecated codex_hooks flag at line(s): {lines}")
+if not hooks_true:
+    raise SystemExit("missing [features] hooks = true")
+PY
   [ "$status" -eq 0 ] && printf '通过\n'
 fi
 

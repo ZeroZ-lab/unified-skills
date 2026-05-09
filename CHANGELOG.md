@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.3] - 2026-05-09
+
+### Fixed
+- Codex hooks: replace deprecated `[features].codex_hooks` usage with `[features].hooks` in repo config, setup docs, and validation.
+- validate: reject the deprecated Codex hooks flag in config and active contract surfaces so future releases cannot reintroduce the warning.
+- historical docs: mark the 2026-04-27 Codex hooks plan/spec as historical and point their activation examples at the current `hooks = true` flag.
+
 ## [2.13.2] - 2026-05-09
 
 ### Changed

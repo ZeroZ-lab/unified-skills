@@ -1,5 +1,7 @@
 # Spec: Codex CLI Hooks & Commands Compatibility
 
+> 历史文档说明：这是 2026-04-27 的早期兼容方案记录，不是当前实现合同。当前 Codex hooks 激活字段是 `[features] hooks = true`，也可用 `--enable hooks`；早期字段名已废弃。
+
 **artifact_type:** software
 **version:** 2.5.0 → 2.6.0
 
@@ -31,7 +33,7 @@ Make Unified Skills' 3 hooks (SessionStart, careful, freeze) and 10 commands ful
 
 1. Create `.codex-plugin/plugin.json` — Codex plugin manifest pointing to `.agents/skills/`
 2. Create `.codex/hooks.json` — Codex hooks config (SessionStart, PreToolUse/Bash via careful, PreToolUse/apply_patch via freeze)
-3. Create `.codex/config.toml` — feature flag `[features] codex_hooks = true`
+3. Create `.codex/config.toml` — feature flag `[features] hooks = true`
 4. Modify 3 hook scripts to use `SCRIPT_DIR` path resolution (replacing `CLAUDE_PLUGIN_ROOT`)
 5. Add `permissionDecisionReason` field to hook output (Codex-compatible, also accepted by Claude Code)
 6. Update `validate` to check dual manifest version sync
@@ -130,7 +132,7 @@ Key differences from Claude Code `hooks/hooks.json`:
 
 ```toml
 [features]
-codex_hooks = true
+hooks = true
 ```
 
 Required to activate Codex hooks system.
@@ -191,7 +193,7 @@ Create alongside `CLAUDE.md` with Codex-specific instructions:
 - Reference `CANON.md` (宪法)
 - Reference `$command` syntax instead of `/command`
 - Reference `.agents/skills/` for skill discovery
-- Note that hooks require `codex_hooks = true` feature flag in `.codex/config.toml`
+- Note that hooks require `hooks = true` feature flag in `.codex/config.toml`
 
 Content structure mirrors `CLAUDE.md` but adapted for Codex conventions.
 
@@ -204,7 +206,7 @@ Add a check that `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` ha
 Add Codex installation section:
 - Step 1: Clone repo
 - Step 2: Symlink `.agents/skills/` entries to `~/.agents/skills/` (existing)
-- Step 3: Create `.codex/config.toml` with `codex_hooks = true` (new)
+- Step 3: Create `.codex/config.toml` with `hooks = true` (new)
 - Step 4: Verify hooks with `$refine` test invocation (new)
 - Note: 本文中关于 Codex `ask` 语义的段落属于历史讨论；当前实现与对外合同都以 `deny` 为准
 
@@ -244,7 +246,7 @@ Update version in 3 files:
 
 - [ ] `.codex-plugin/plugin.json` exists with correct fields and version
 - [ ] `.codex/hooks.json` exists with SessionStart + PreToolUse/Bash + PreToolUse/apply_patch
-- [ ] `.codex/config.toml` exists with `codex_hooks = true`
+- [ ] `.codex/config.toml` exists with `hooks = true`
 - [ ] `AGENTS.md` exists with Codex-adapted instructions
 - [ ] All 3 hook scripts use SCRIPT_DIR path resolution (no CLAUDE_PLUGIN_ROOT dependency)
 - [ ] All 3 hook scripts output `permissionDecisionReason` field

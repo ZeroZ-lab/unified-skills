@@ -1,5 +1,7 @@
 # Plan: Codex CLI Hooks & Commands Compatibility
 
+> 历史文档说明：这是 2026-04-27 的早期计划记录，不是当前实现合同。当前 Codex hooks 激活字段是 `[features] hooks = true`，也可用 `--enable hooks`；早期字段名已废弃。
+
 **artifact_type:** software
 **version:** 2.5.0 → 2.6.0
 **plan topology:** sequential (dependency chain)
@@ -32,7 +34,7 @@ Create Codex hooks config per spec §5.2. Uses `$(git rev-parse --show-toplevel)
 
 ### T3: Create `.codex/config.toml`
 **Complexity:** Low
-**Verification:** File exists with `[features] codex_hooks = true`
+**Verification:** File exists with `[features] hooks = true`
 **Depends on:** None
 
 Feature flag required for Codex hooks system activation.
@@ -60,24 +62,24 @@ Same change as T5, applied to the Python block in freeze.sh. Replace `"message"`
 
 ### T7: Update `AGENTS.md` — add Codex hooks section
 **Complexity:** Medium
-**Verification:** AGENTS.md has hooks section documenting: (a) 3 hooks and what they do, (b) `codex_hooks = true` requirement, (c) Codex 上 careful 使用 `deny`, (d) freeze `deny` works correctly
+**Verification:** AGENTS.md has hooks section documenting: (a) 3 hooks and what they do, (b) `hooks = true` requirement, (c) Codex 上 careful 使用 `deny`, (d) freeze `deny` works correctly
 **Depends on:** None
 
 Add a section to AGENTS.md about hooks:
 - SessionStart: injects constitution + command map (works identically on both platforms)
 - PreToolUse/Bash (careful): intercepts destructive commands. **当前 Codex 上使用 `permissionDecision: "deny"`，破坏性命令直接阻止。**
 - PreToolUse/apply_patch (freeze): blocks edits outside freeze boundary. **Works correctly on Codex — "deny" is fully enforced.**
-- Activation: requires `.codex/config.toml` with `[features] codex_hooks = true`
+- Activation: requires `.codex/config.toml` with `[features] hooks = true`
 
 ### T8: Update `validate` — add Codex manifest + hooks checks
 **Complexity:** Medium
-**Verification:** ./validate exits 0 with new checks: (a) .codex-plugin/plugin.json version matches .claude-plugin/plugin.json version, (b) .codex/hooks.json schema valid (SessionStart + PreToolUse entries), (c) .codex/config.toml has codex_hooks = true, (d) hook scripts output permissionDecisionReason not message
+**Verification:** ./validate exits 0 with new checks: (a) .codex-plugin/plugin.json version matches .claude-plugin/plugin.json version, (b) .codex/hooks.json schema valid (SessionStart + PreToolUse entries), (c) .codex/config.toml has hooks = true, (d) hook scripts output permissionDecisionReason not message
 **Depends on:** T1, T2, T3, T5, T6
 
 Add 3 new check sections:
 1. `== 检查 Codex manifest 版本同步 ==` — compare .claude-plugin/plugin.json version with .codex-plugin/plugin.json version
 2. `== 检查 Codex hooks.json ==` — validate schema (SessionStart, PreToolUse/Bash, PreToolUse/apply_patch, command type, no async field)
-3. `== 检查 Codex config.toml ==` — verify `codex_hooks = true` exists
+3. `== 检查 Codex config.toml ==` — verify `hooks = true` exists
 4. `== 检查 hook 输出字段 ==` — grep hook scripts for "permissionDecisionReason", fail if "message" key found in permissionDecision contexts
 
 ### T9: Version bump + manifest sync
@@ -97,13 +99,13 @@ Update 4 files:
 **Depends on:** None
 
 Add to README:
-- Expand Codex installation section with Step 3: Create `.codex/config.toml` with `codex_hooks = true`
+- Expand Codex installation section with Step 3: Create `.codex/config.toml` with `hooks = true`
 - Add cross-platform feature matrix:
 
 | Feature | Claude Code | Codex CLI |
 |---------|------------|-----------|
 | Skills (44) | `/command` | `$command` |
-| SessionStart injection | Automatic | Automatic (with codex_hooks) |
+| SessionStart injection | Automatic | Automatic (with hooks) |
 | Destructive command guard (careful) | Ask → user confirms | Fail-open* (parsed but not enforced yet) |
 | Freeze boundary (freeze) | Deny → blocks edit | Deny → blocks edit |
 | Context save/restore | `/save` `/restore` | `$save` `$restore` |
@@ -111,7 +113,7 @@ Add to README:
 *Will improve when Codex makes permissionDecision "ask" fully functional.
 
 - Update FAQ: "Codex CLI 和 Claude Code 体验一致吗？" → honest answer about hooks parity difference
-- Note: Codex hooks require `codex_hooks = true` in `.codex/config.toml` or `~/.codex/config.toml`
+- Note: Codex hooks require `hooks = true` in `.codex/config.toml` or `~/.codex/config.toml`
 
 ### T11: Smoke test — `./validate` passes
 **Complexity:** Low
