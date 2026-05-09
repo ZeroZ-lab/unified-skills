@@ -1,6 +1,6 @@
 # Unified Skills
 
-> Unified Skills 是一套面向 AI Agent 的**工作制度架构**：用 `CANON.md` 定义共同宪法，用 Command 切分阶段，用 Agent 承担角色责任，用 Skill 注入可复用方法论。
+> Unified Skills 是一套面向 AI Agent 的**工作制度架构**：用 [CANON.md](CANON.md) 定义共同宪法，用 Command 切分阶段，用 Agent 承担角色责任，用 Skill 注入可复用方法论。
 
 它不是某一个技能的说明书，而是一个跨 Claude Code 与 Codex CLI 的整体架构：**宪法 + 12 命令 + 24 角色 + 53 技能 + Hooks 护栏 + 文档产物链**共同组成一套可验证、可扩展、可迁移的多产物开发系统。
 
@@ -59,7 +59,7 @@
 
 ### 1. CANON：全局宪法层
 
-`CANON.md` 是最高优先级的行为合同。它不描述某个具体技能怎么做，而是规定所有 Agent 在所有阶段都必须遵守的纪律，例如：先陈述假设、范围收敛、验证优先、调试先找根因、不做 yes-machine、每个 feature 留痕。
+[CANON.md](CANON.md) 是最高优先级的行为合同。它不描述某个具体技能怎么做，而是规定所有 Agent 在所有阶段都必须遵守的纪律，例如：先陈述假设、范围收敛、验证优先、调试先找根因、不做 yes-machine、每个 feature 留痕。
 
 ```text
 CANON.md
@@ -177,7 +177,7 @@ Unified 在两个宿主中的入口不同，但共享同一套核心合同：
 | 阶段入口 | `commands/` 中的斜杠命令 | 按 `AGENTS.md` 的工作流说明直接读取 `skills/` |
 | 能力来源 | `skills/` | `skills/` |
 | 角色来源 | `agents/` | `agents/` |
-| Hooks 配置 | `hooks/` / plugin 配置 | `.codex/hooks.json` + `.codex/config.toml` |
+| Hooks 配置 | `hooks/` / plugin 配置 | [`.codex/hooks.json`](.codex/hooks.json) + [`.codex/config.toml`](.codex/config.toml) |
 
 Codex 不再维护 repo 内 `$command` 薄包装入口；这是一项架构收口：**真实技能只保留一份，入口文档只保留一个项目约束源。**
 
@@ -213,6 +213,13 @@ unified/
 ├── skills-index.json        默认技能发现索引
 └── skills-lock.json         技能完整性锁文件（SHA-256）
 ```
+
+关键合同文件：
+[AGENTS.md](AGENTS.md) 是统一项目约束入口；
+[CLAUDE.md](CLAUDE.md) 只保留 Claude 侧指针；
+[.codex-plugin/plugin.json](.codex-plugin/plugin.json) 指向真实 `skills/`；
+[skills-index.json](skills-index.json) 是默认技能发现索引；
+[skills-lock.json](skills-lock.json) 锁定每个 `SKILL.md` 的 SHA-256。
 
 ### 文档产物链
 
@@ -263,17 +270,22 @@ ln -s "$(pwd)/commands/"* ~/.claude/commands/
 
 ### Codex CLI
 
+Codex 侧不使用 repo 内 `$command` 薄包装。进入这个 repo 后，Codex 从 [AGENTS.md](AGENTS.md) 开始读取项目约束，并通过 [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) 暴露真实 `skills/` 目录。
+
 ```bash
 git clone https://github.com/ZeroZ-lab/unified-skills.git
 cd unified-skills
 mkdir -p ~/.codex
-cat > ~/.codex/config.toml <<'CODEX_CONFIG'
-[features]
-codex_hooks = true
-CODEX_CONFIG
 ```
 
-Codex 侧从 `AGENTS.md` 开始读取项目约束，再按任务阶段进入 `skills/`。
+启用 repo-local hooks 时，确保 `~/.codex/config.toml` 中包含以下配置。不要用覆盖式重写命令替换已有配置；如果文件里已经有其他 Codex 设置，请合并这一段。
+
+```toml
+[features]
+codex_hooks = true
+```
+
+这只启用 Codex hooks。是否把 Unified 作为插件安装或让当前项目消费它，取决于你的 Codex 插件加载方式；本仓库提供的 Codex 插件入口是 [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)。
 
 ## 扩展与贡献
 
@@ -281,12 +293,12 @@ Codex 侧从 `AGENTS.md` 开始读取项目约束，再按任务阶段进入 `sk
 
 | 你要改变什么 | 应该改哪里 | 不应该改哪里 |
 |--------------|------------|--------------|
-| 全局行为纪律 | `CANON.md` | 单个 `SKILL.md` 偷偷放松纪律 |
-| 阶段顺序或产物门控 | `commands/`、`AGENTS.md` | Agent 内部私自改状态机 |
+| 全局行为纪律 | [CANON.md](CANON.md) | 单个 `SKILL.md` 偷偷放松纪律 |
+| 阶段顺序或产物门控 | `commands/`、[AGENTS.md](AGENTS.md) | Agent 内部私自改状态机 |
 | 专业角色责任 | `agents/` | Skill 里混入角色身份 |
 | 可复用执行方法 | `skills/<phase>-<role>-<skill>/SKILL.md` | Command 里复制大段方法论 |
 | 产物格式 | `templates/`、`docs/` | README 里维护第二套格式 |
-| 技能发现 / 哈希 | `skills-index.json`、`skills-lock.json` | 只改文件不更新索引和锁 |
+| 技能发现 / 哈希 | [skills-index.json](skills-index.json)、[skills-lock.json](skills-lock.json) | 只改文件不更新索引和锁 |
 
 提交前必须运行：
 

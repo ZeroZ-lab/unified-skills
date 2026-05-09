@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.1] - 2026-05-09
+
+### Fixed
+- README: clarify Codex setup so enabling hooks does not overwrite existing `~/.codex/config.toml`.
+- README: distinguish Codex hook activation from plugin/project consumption.
+- README: add direct links to the key contract files used for AGENTS single-entry maintenance.
+
 ## [2.13.0] - 2026-05-08
 
 ### Added
