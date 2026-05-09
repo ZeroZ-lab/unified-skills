@@ -1,8 +1,51 @@
 # Unified Skills
 
+<p align="center">
+  <img src="docs/assets/unified-skills-icon.png" alt="Unified Skills icon" width="160">
+</p>
+
 > Unified Skills 是一套面向 AI Agent 的**工作制度架构**：用 [CANON.md](CANON.md) 定义共同宪法，用 Command 切分阶段，用 Agent 承担角色责任，用 Skill 注入可复用方法论。
 
 它不是某一个技能的说明书，而是一个跨 Claude Code 与 Codex CLI 的整体架构：**宪法 + 12 命令 + 24 角色 + 53 技能 + Hooks 护栏 + 文档产物链**共同组成一套可验证、可扩展、可迁移的多产物开发系统。
+
+## 安装与接入
+
+### Claude Code Plugin
+
+```bash
+claude plugin add https://github.com/ZeroZ-lab/unified-skills
+```
+
+重启 session 后，使用 `/refine → /design → /plan → /build → /review → /ship` 进入主工作流。
+
+### 本地开发挂载
+
+```bash
+git clone https://github.com/ZeroZ-lab/unified-skills.git
+cd unified-skills
+mkdir -p ~/.claude/skills ~/.claude/commands
+ln -s "$(pwd)/skills/"* ~/.claude/skills/
+ln -s "$(pwd)/commands/"* ~/.claude/commands/
+```
+
+### Codex CLI
+
+Codex 侧不使用 repo 内 `$command` 薄包装。进入这个 repo 后，Codex 从 [AGENTS.md](AGENTS.md) 开始读取项目约束，并通过 [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) 暴露真实 `skills/` 目录。
+
+```bash
+git clone https://github.com/ZeroZ-lab/unified-skills.git
+cd unified-skills
+mkdir -p ~/.codex
+```
+
+启用 repo-local hooks 时，确保 `~/.codex/config.toml` 中包含以下配置。不要用覆盖式重写命令替换已有配置；如果文件里已经有其他 Codex 设置，请合并这一段。
+
+```toml
+[features]
+codex_hooks = true
+```
+
+这只启用 Codex hooks。是否把 Unified 作为插件安装或让当前项目消费它，取决于你的 Codex 插件加载方式；本仓库提供的 Codex 插件入口是 [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)。
 
 ## 架构总览
 
@@ -44,6 +87,7 @@
 
 ## 目录
 
+- [安装与接入](#安装与接入)
 - [架构总览](#架构总览)
 - [四层职责](#四层职责)
 - [工作流状态机](#工作流状态机)
@@ -51,9 +95,7 @@
 - [平台适配架构](#平台适配架构)
 - [安全护栏](#安全护栏)
 - [仓库结构](#仓库结构)
-- [安装与接入](#安装与接入)
 - [扩展与贡献](#扩展与贡献)
-- [FAQ](#faq)
 
 ## 四层职责
 
@@ -242,51 +284,6 @@ docs/bugs/<name>/
 └── 02-fix-plan.md          ← verify-workflow-debug Phase 4
 ```
 
-## 安装与接入
-
-### Claude Code Plugin
-
-```bash
-claude plugin add https://github.com/ZeroZ-lab/unified-skills
-```
-
-重启 session 后，使用 `/refine → /design → /plan → /build → /review → /ship` 进入主工作流。
-
-也可以使用 skills CLI：
-
-```bash
-npx skills add ZeroZ-lab/unified-skills
-```
-
-### 本地开发挂载
-
-```bash
-git clone https://github.com/ZeroZ-lab/unified-skills.git
-cd unified-skills
-mkdir -p ~/.claude/skills ~/.claude/commands
-ln -s "$(pwd)/skills/"* ~/.claude/skills/
-ln -s "$(pwd)/commands/"* ~/.claude/commands/
-```
-
-### Codex CLI
-
-Codex 侧不使用 repo 内 `$command` 薄包装。进入这个 repo 后，Codex 从 [AGENTS.md](AGENTS.md) 开始读取项目约束，并通过 [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) 暴露真实 `skills/` 目录。
-
-```bash
-git clone https://github.com/ZeroZ-lab/unified-skills.git
-cd unified-skills
-mkdir -p ~/.codex
-```
-
-启用 repo-local hooks 时，确保 `~/.codex/config.toml` 中包含以下配置。不要用覆盖式重写命令替换已有配置；如果文件里已经有其他 Codex 设置，请合并这一段。
-
-```toml
-[features]
-codex_hooks = true
-```
-
-这只启用 Codex hooks。是否把 Unified 作为插件安装或让当前项目消费它，取决于你的 Codex 插件加载方式；本仓库提供的 Codex 插件入口是 [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)。
-
 ## 扩展与贡献
 
 扩展 Unified 时，要把修改放在正确架构层：
@@ -313,24 +310,6 @@ codex_hooks = true
 - 强纪律技能必须额外包含 Iron Law。
 - 技能只能增加 `CANON.md` 的纪律，不能减少或绕开。
 - 不引入第三方依赖；Unified 保持零依赖。
-
-## FAQ
-
-**Q: README 为什么强调架构，而不是逐个解释技能？**
-
-A: 单个技能的细节在对应 `SKILL.md` 里。README 的职责是解释系统怎么分层、怎么路由、怎么产生产物、怎么跨平台接入，以及扩展时应该改哪一层。
-
-**Q: Command、Agent、Skill 的边界是什么？**
-
-A: Command 管阶段和门控，Agent 管角色责任，Skill 管可复用执行方法。混在一起会导致流程不可审计、角色自证通过、方法论复制漂移。
-
-**Q: 为什么 Codex 不使用 repo 内 `$command` 薄包装？**
-
-A: 为了减少入口漂移。Codex 直接读取 `AGENTS.md` 和 `skills/`；Claude Code 的斜杠命令仍保留在 `commands/`，但真实技能只有一份。
-
-**Q: 为什么要有 `artifact_type`？**
-
-A: 它让同一套状态机服务软件、文档、文章、演示和视觉产物。阶段不变，加载的 Agent / Skill 和验证重点随产物类型变化。
 
 ## License
 

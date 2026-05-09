@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.2] - 2026-05-09
+
+### Changed
+- README: move installation instructions before the architecture overview so new users can start immediately.
+- README: add the Unified Skills icon asset and remove the FAQ section.
+- README: remove the alternate skills CLI install path from the quick setup flow.
+
 ## [2.13.1] - 2026-05-09
 
 ### Fixed
