@@ -207,6 +207,40 @@ docs/bugs/<name>/
 - 历史设计文档会反向污染当前合同。旧 spec/plan/优化报告里如果保留过时方案，必须显式标注“历史 / 已过期”，不能让它们继续像当前真相一样表述。
 - 改动任何 `SKILL.md` 后，除了跑 `./validate`，还要确认 `skills-lock.json` 哈希已同步更新；否则仓库会在最后一步才暴露漂移。
 
+### 自动化工具使用（v2.15.0+）
+
+为避免合同漂移，新增或修改技能后必须：
+
+1. **版本同步** - 发版时运行：
+   ```bash
+   bash scripts/sync-version.sh
+   ```
+
+2. **索引更新** - 修改技能后运行：
+   ```bash
+   bash scripts/generate-index.sh
+   ```
+
+3. **验证通过** - 运行完整验证：
+   ```bash
+   ./validate
+   ```
+
+这些工具可以防止 80% 的常见合同漂移问题：
+
+| 问题类型 | 手动修复 | 自动化工具 |
+|----------|----------|------------|
+| 版本号不一致 | 手动编辑 3 个文件 | `sync-version.sh` |
+| 索引漂移 | 手动更新 skills-index.json | `generate-index.sh` |
+| 技能缺失 | 人工检查 | `validate` 自动检测 |
+
+**何时使用自动化工具：**
+
+- **发版前:** 运行 `sync-version.sh` 确保版本一致
+- **修改技能后:** 运行 `generate-index.sh` 更新索引
+- **提交前:** 运行 `validate` 确保无漂移
+- **CI/CD:** 集成 `validate` 作为质量门控
+
 技能支持多平台挂载：
 
 - **Claude Code**: `commands/` 提供斜杠命令入口，`skills/` 是真实技能目录

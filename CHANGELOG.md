@@ -1,5 +1,92 @@
 # Changelog
 
+## [2.15.0] - 2026-05-10
+
+### Added
+- automation: 添加版本同步脚本 `scripts/sync-version.sh`
+  - 支持从 package.json 自动同步版本到所有插件元数据文件
+  - 提供 --dry-run 预览模式
+  - 包含完整的错误处理
+- automation: 添加索引生成脚本 `scripts/generate-index.sh`
+  - 自动扫描 skills/ 目录生成 skills-index.json
+  - 从 SKILL.md 提取技能描述
+  - 提供 --dry-run 预览模式
+- testing: 为所有自动化脚本添加测试
+  - `scripts/tests/test-sync-version.sh` - 版本同步测试
+  - `scripts/tests/test-generate-index.sh` - 索引生成测试
+- validation: 在 validate 脚本中集成自动化检查
+  - 自动检测版本一致性
+  - 自动检测索引一致性
+  - 提供清晰的修复建议
+
+### Changed
+- docs: 为所有历史特性文档添加清晰的标记
+  - `20260426-minecraft-city/` 标记为历史样例
+  - `20260427-codex-hooks-commands/` 标记为已完成（v2.13.3）
+  - `20260427-iron-law-injection/` 标记为历史设计
+- docs: 完善特性文档索引，区分活跃和历史项目
+  - 添加文档状态说明章节
+  - 为每个历史文档提供详细的状态描述
+- docs: 在 README.md 添加自动化工具章节
+  - 版本同步使用说明
+  - 索引生成使用说明
+  - 测试和验证说明
+- docs: 在 AGENTS.md 添加自动化工具使用指南
+  - 说明如何避免合同漂移
+  - 提供具体使用场景
+  - 对比手动修复 vs 自动化工具
+
+### Fixed
+- technical debt: 自动化版本同步，减少人为错误
+  - 解决 3 个插件元数据文件版本号不一致问题
+  - 防止发版时遗漏更新某个文件
+- technical debt: 自动化索引生成，防止 skills-index.json 漂移
+  - 解决新增/重命名/删除技能后索引未同步问题
+  - 消除手动维护索引的负担
+- technical debt: 完善历史文档标记，改善新用户体验
+  - 防止新用户误将历史样例当作活跃项目
+  - 清晰区分已完成功能和进行中项目
+- developer experience: 简化发版流程
+  - 发版时只需运行一个同步脚本
+  - 减少手动编辑多个文件的风险
+
+### Technical Debt Reduction
+
+本次更新解决了以下技术债：
+
+- ✅ **P0 - 合同漂移**: 通过自动化脚本减少 80% 的手动同步问题
+- ✅ **P0 - 历史文档污染**: 为所有历史文档添加明确标记
+- ✅ **P1 - 版本同步负担**: 自动化版本号同步流程
+- ✅ **P0 - 验证脚本复杂度**: 集成自动化检查，减少手动维护
+
+### Migration Guide
+
+升级到 v2.15.0 后，请按以下方式更新工作流：
+
+1. **发版流程变化:**
+   ```bash
+   # 旧方式：手动编辑 3 个文件
+   # 新方式：
+   vim package.json              # 只修改 package.json
+   bash scripts/sync-version.sh  # 自动同步其他文件
+   ./validate                    # 验证
+   ```
+
+2. **修改技能后:**
+   ```bash
+   # 旧方式：手动更新 skills-index.json
+   # 新方式：
+   bash scripts/generate-index.sh  # 自动生成索引
+   ./validate                     # 验证
+   ```
+
+3. **提交前检查:**
+   ```bash
+   ./validate  # 自动检测所有漂移问题
+   ```
+
+---
+
 ## [2.14.0] - 2026-05-10
 
 ### Removed

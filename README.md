@@ -296,6 +296,77 @@ docs/bugs/<name>/
 └── 02-fix-plan.md          ← verify-workflow-debug Phase 4
 ```
 
+## 自动化工具
+
+Unified 提供以下自动化工具减少手动同步负担：
+
+### 版本同步
+
+发版时使用版本同步脚本自动更新所有版本号：
+
+```bash
+# 1. 更新 package.json 版本号
+vim package.json  # 修改为 2.15.0
+
+# 2. 运行同步脚本
+bash scripts/sync-version.sh
+
+# 3. 验证同步成功
+./validate
+```
+
+**预览模式:**
+
+```bash
+# 预览将要修改的文件（不实际写入）
+bash scripts/sync-version.sh --dry-run
+```
+
+### 索引生成
+
+修改技能（新增、重命名、删除）后重新生成索引：
+
+```bash
+# 生成 skills-index.json
+bash scripts/generate-index.sh
+
+# 验证生成成功
+./validate
+```
+
+**预览模式:**
+
+```bash
+# 显示将要生成的索引（不实际写入）
+bash scripts/generate-index.sh --dry-run
+```
+
+### 测试
+
+所有自动化脚本都有对应的测试：
+
+```bash
+# 测试版本同步
+bash scripts/tests/test-sync-version.sh
+
+# 测试索引生成
+bash scripts/tests/test-generate-index.sh
+```
+
+### 验证脚本
+
+运行完整验证确保项目健康：
+
+```bash
+./validate
+```
+
+验证脚本会自动检查：
+- 版本号一致性
+- 索引与技能目录一致性
+- 自动化脚本存在性
+- 其他项目健康检查
+
 ## 扩展与贡献
 
 扩展 Unified 时，要把修改放在正确架构层：
