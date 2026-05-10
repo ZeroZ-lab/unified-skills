@@ -49,6 +49,10 @@
 - developer experience: 简化发版流程
   - 发版时只需运行一个同步脚本
   - 减少手动编辑多个文件的风险
+- bug: 修复 JSON 文件 Unicode 编码问题
+  - 解决 package.json 和 .claude-plugin/plugin.json 中的中文文本搜索失败问题
+  - 统一使用 UTF-8 编码而非 Unicode 转义序列
+  - 修复验证脚本的命令和技能说明检查
 
 ### Technical Debt Reduction
 

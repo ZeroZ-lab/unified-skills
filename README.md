@@ -95,6 +95,7 @@ hooks = true
 - [平台适配架构](#平台适配架构)
 - [安全护栏](#安全护栏)
 - [仓库结构](#仓库结构)
+- [自动化工具](#自动化工具)
 - [扩展与贡献](#扩展与贡献)
 
 ## 四层职责
@@ -366,6 +367,65 @@ bash scripts/tests/test-generate-index.sh
 - 索引与技能目录一致性
 - 自动化脚本存在性
 - 其他项目健康检查
+
+## 自动化工具
+
+Unified 提供以下自动化工具减少手动同步负担：
+
+### 版本同步
+
+发版时使用版本同步脚本自动更新所有版本号：
+
+```bash
+# 1. 更新 package.json 版本号
+# 2. 运行同步脚本
+bash scripts/sync-version.sh
+
+# 3. 验证同步成功
+./validate
+```
+
+**支持的选项：**
+- `--dry-run` - 预览模式，不实际修改文件
+- `--help` - 显示帮助信息
+
+### 索引生成
+
+修改技能后重新生成索引：
+
+```bash
+# 生成 skills-index.json
+bash scripts/generate-index.sh
+
+# 验证生成成功
+./validate
+```
+
+**支持的选项：**
+- `--dry-run` - 预览模式，不实际写入文件
+- `--verbose` - 显示详细信息
+- `--help` - 显示帮助信息
+
+### 测试
+
+所有自动化脚本都有对应的测试：
+
+```bash
+# 测试版本同步
+bash scripts/tests/test-sync-version.sh
+
+# 测试索引生成
+bash scripts/tests/test-generate-index.sh
+```
+
+### 使用场景
+
+| 场景 | 使用的工具 | 频率 |
+|------|-----------|------|
+| 发版前 | `scripts/sync-version.sh` | 每次发版 |
+| 修改技能后 | `scripts/generate-index.sh` | 修改技能时 |
+| 提交前 | `./validate` | 每次提交 |
+| 新增脚本测试 | `scripts/tests/test-*` | 开发时 |
 
 ## 扩展与贡献
 
