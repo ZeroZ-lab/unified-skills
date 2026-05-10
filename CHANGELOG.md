@@ -15,6 +15,7 @@
 ### Fixed
 - technical debt: 清理 v1.6.0 引入但从未实现的 load-manifest.json 自动加载机制
 - documentation: 修复架构文档中对已删除文件的引用，添加清晰的废弃标记
+- plugin metadata: 修复 v2.14.0 发布时遗漏的版本描述更新（3 个插件元数据文件的 description 前缀仍停留在 v2.13.3）
 
 ## [2.13.3] - 2026-05-09
 
