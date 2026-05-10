@@ -351,6 +351,38 @@ else
 fi
 [ "$status" -eq 0 ] && printf '通过\n'
 
+printf '\n== 检查自动化脚本 ==\n'
+
+# 检查版本同步脚本
+if [ ! -f "scripts/sync-version.sh" ]; then
+  fail "缺少版本同步脚本: scripts/sync-version.sh"
+else
+  [ -x "scripts/sync-version.sh" ] || fail "版本同步脚本不可执行: chmod +x scripts/sync-version.sh"
+fi
+
+# 检查索引生成脚本
+if [ ! -f "scripts/generate-index.sh" ]; then
+  fail "缺少索引生成脚本: scripts/generate-index.sh"
+else
+  [ -x "scripts/generate-index.sh" ] || fail "索引生成脚本不可执行: chmod +x scripts/generate-index.sh"
+fi
+
+# 检查测试目录
+if [ ! -d "scripts/tests" ]; then
+  fail "缺少脚本测试目录: scripts/tests"
+fi
+
+# 检查测试文件
+if [ ! -f "scripts/tests/test-sync-version.sh" ]; then
+  fail "缺少版本同步测试: scripts/tests/test-sync-version.sh"
+fi
+
+if [ ! -f "scripts/tests/test-generate-index.sh" ]; then
+  fail "缺少索引生成测试: scripts/tests/test-generate-index.sh"
+fi
+
+[ "$status" -eq 0 ] && printf '通过\n'
+
 printf '\n== 检查强纪律技能 Iron Law ==\n'
 for file in \
   skills/build-quality-tdd/SKILL.md \
