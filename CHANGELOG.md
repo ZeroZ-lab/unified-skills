@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.14.0] - 2026-05-10
+
+### Removed
+- load-manifest.json — 未实现的自动加载配置文件，统一使用 skills-index.json
+
+### Changed
+- validate: 改用 skills-index.json 计算技能数量和验证设计触发器，移除对 load-manifest.json 的依赖
+- docs: 改进文档清晰度，明确区分"当前合同"与"历史文档"
+  - command-agent-skill-architecture.md: 添加历史文档标记和废弃章节说明
+  - features/: 标记历史样例目录，避免误导新用户
+  - README.md: 添加 hooks 配置差异说明
+
+### Fixed
+- technical debt: 清理 v1.6.0 引入但从未实现的 load-manifest.json 自动加载机制
+- documentation: 修复架构文档中对已删除文件的引用，添加清晰的废弃标记
+
 ## [2.13.3] - 2026-05-09
 
 ### Fixed

@@ -4,17 +4,14 @@ set -u
 status=0
 _count_output=$(python3 -c "
 import json
-m = json.load(open('load-manifest.json'))
+idx = json.load(open('skills-index.json'))
 skills = set()
-for group in ['defaults','taskTypes','checkpoints']:
-  for entry in m.get(group,{}).values():
-    for s in entry.get('skills',[]):
-      if s != 'CANON.md':
-        skills.add(s)
+for phase_skills in idx['by_phase'].values():
+    skills.update(phase_skills['skills'])
 print(len(skills))
 " 2>/dev/null) || true
 if [ -z "$_count_output" ]; then
-  fail "无法从 load-manifest.json 计算技能数量"
+  fail "无法从 skills-index.json 计算技能数量"
   EXPECTED_SKILL_COUNT=0
 else
   EXPECTED_SKILL_COUNT=$_count_output
@@ -213,20 +210,6 @@ for trigger in ("document|文档|article|文章", "deck|PPT|演示|slides", "vis
     skills = idx["by_trigger"]["user_says"][trigger]
     if not skills or skills[0] != "design-workflow-design":
         raise SystemExit(f"{trigger} does not start with design-workflow-design")
-manifest = json.load(open("load-manifest.json"))
-for task_type in (
-    "ui-engineering",
-    "interaction-design",
-    "visual-direction",
-    "content-writing",
-    "content-layout",
-    "script-design",
-    "direction-design",
-    "layout-design",
-):
-    skills = manifest["taskTypes"][task_type]["skills"]
-    if not skills or skills[0] != "design-workflow-design":
-        raise SystemExit(f"{task_type} does not start with design-workflow-design")
 PY
 
 for file in skills/design-*/SKILL.md; do
@@ -319,7 +302,7 @@ else
   rm -f /tmp/unified-validate-stale-canon.$$
 fi
 
-if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|43 技能|43 SKILL|44 技能|44 SKILL|46 技能|46 SKILL|47 技能|47 SKILL|11 命令|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令|7 模板' \
+if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|43 技能|43 SKILL|44 技能|44 SKILL|46 技能|46 SKILL|47 技能|47 SKILL|11 命令|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令' \
   README.md CLAUDE.md AGENTS.md docs/directory-architecture.md package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-count.$$
   rm -f /tmp/unified-validate-stale-count.$$
@@ -420,27 +403,6 @@ do
   sgrep '<HARD-GATE>' "$file" || fail "缺少 HARD-GATE: $file"
 done
 [ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 load-manifest.json ==\n'
-if [ ! -f "load-manifest.json" ]; then
-  fail "缺少 load-manifest.json"
-else
-  python3 -c "import json; json.load(open('load-manifest.json'))" 2>/dev/null || fail "load-manifest.json 不是有效 JSON"
-  # Check that every skill reference in taskTypes exists
-  while IFS= read -r skill_dir; do
-    if [ "$skill_dir" != "CANON.md" ] && [ ! -d "skills/$skill_dir" ]; then
-      fail "load-manifest.json 引用了不存在的技能目录: $skill_dir"
-    fi
-  done < <(python3 -c "
-import json
-m = json.load(open('load-manifest.json'))
-for group in ['taskTypes','checkpoints']:
-  for entry in m.get(group,{}).values():
-    for s in entry.get('skills',[]):
-      print(s)
-" 2>/dev/null)
-  [ "$status" -eq 0 ] && printf '通过\n'
-fi
 
 printf '\n== 检查 skills-index.json ==\n'
 if [ ! -f "skills-index.json" ]; then

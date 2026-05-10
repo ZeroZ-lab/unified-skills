@@ -7,6 +7,21 @@
 
 ---
 
+> **⚠️ 历史设计文档（2026-05-10 标记）**  
+> 本文档记录 v2.12 期间的三层架构重构讨论。部分内容（如第 4.6 节提到的 `load-manifest.json`）已被后续版本废弃。  
+> 
+> **当前实现状态：**
+> - `load-manifest.json` 已在 v2.14.0 删除，统一使用 `skills-index.json` 作为技能索引
+> - 请以 `AGENTS.md`、`skills/`、`./validate` 为当前实现合同
+> - 本文档保留作为架构背景和设计讨论记录
+> 
+> **如需了解当前架构，请先阅读：**
+> - `AGENTS.md` — 统一项目约束入口
+> - `README.md` — 整体架构介绍
+> - `docs/architecture/README.md` — 架构文档导航
+
+---
+
 ## 文档摘要
 
 本文档定义了 Unified Skills 项目从"提示词组织系统"升级为"Agent 工作制度"的完整架构方案。核心理念是：
@@ -2715,23 +2730,21 @@ skills/
 
 ## 4.6 Phase 5：更新 load-manifest.json
 
-### 目标
+> **⚠️ 已废弃（v2.14.0）**  
+> 本章节描述的 `load-manifest.json` 已被删除。相关功能已统一使用 `skills-index.json` 实现。  
+> 参见：`docs/history/20260510-cleanup-load-manifest.md`
+
+### 原始目标（已废弃）
 确保 `load-manifest.json` 中的 Agent 引用使用新名称。
 
-### 操作步骤
-
+### 原始操作步骤（已废弃）
 1. 搜索 `load-manifest.json` 中的旧 Agent 名称
 2. 替换为新的 Agent 名称
 3. 添加新 Agent 的加载规则（如需要）
 
-### 验证
-
+### 原始验证（已废弃）
 - [ ] `load-manifest.json` 中的 Agent 引用已更新
 - [ ] 新 Agent 的加载规则已添加（如需要）
-
-### 回滚
-
-使用 git 恢复 `load-manifest.json`。
 
 ---
 

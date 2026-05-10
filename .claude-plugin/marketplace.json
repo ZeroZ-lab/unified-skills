@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "unified",
-      "description": "v2.13.3 — 统一开发技能套件 — 宪法 + 53 技能 + 12 命令 + 24 角色（17 审查 / 侦察 + 7 核心工程），按阶段加载。证据驱动设计阶段 + 两阶段审查门控 + AGENTS 单入口",
+      "description": "v2.14.0 — 统一开发技能套件 — 宪法 + 53 技能 + 12 命令 + 24 角色（17 审查 / 侦察 + 7 核心工程），按阶段加载。证据驱动设计阶段 + 两阶段审查门控 + AGENTS 单入口",
       "homepage": "https://github.com/ZeroZ-lab/unified-skills",
       "source": {
         "source": "url",
