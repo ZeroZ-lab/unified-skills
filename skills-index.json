@@ -211,13 +211,22 @@
         "design-content-script",
         "design-content-direction",
         "design-content-layout",
+        "design-interactive-preview",
         "build-content-writing",
         "build-content-layout"
       ],
-      "note": "必须先通过 design-workflow-design 完成证据驱动设计定稿，再 writing，最后 layout，不可并行"
+      "note": "必须先通过 design-workflow-design 完成证据驱动设计定稿，再完成交互式方向对比，然后 writing，最后 layout，不可并行"
     },
     "visual": {
       "required": [
+        "design-workflow-design",
+        "design-visual-direction",
+        "design-content-layout",
+        "design-interactive-preview",
+        "build-content-layout",
+        "verify-visual-review"
+      ],
+      "sequence": [
         "design-workflow-design",
         "design-visual-direction",
         "design-content-layout",
@@ -290,6 +299,10 @@
         "design-visual-direction",
         "design-content-layout",
         "build-content-layout"
+      ],
+      "preview|预览|mockup|设计方向|对比|interactive": [
+        "design-workflow-design",
+        "design-interactive-preview"
       ],
       "git|版本控制|commit|branch": [
         "build-infrastructure-git"

@@ -16,7 +16,7 @@ Transform open-ended question or vague idea into 2-3 structured proposals with c
 **Skills:** define-cognitive-brainstorm（Phase 1）
 **Input:** 用户的开放性问题或模糊想法
 **Process:**
-1. 阅读项目的 CLAUDE.md / spec / plan 了解现状
+1. 阅读项目的 AGENTS.md / spec / plan 了解现状
 2. 阅读相关代码——避免脱离代码库的空想
 3. 明确约束
 **Output:** 上下文摘要 + 约束清单

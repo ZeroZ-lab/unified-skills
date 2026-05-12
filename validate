@@ -2,6 +2,12 @@
 set -u
 
 status=0
+
+fail() {
+  printf 'FAIL: %s\n' "$1"
+  status=1
+}
+
 _count_output=$(python3 -c "
 import json
 idx = json.load(open('skills-index.json'))
@@ -16,11 +22,6 @@ if [ -z "$_count_output" ]; then
 else
   EXPECTED_SKILL_COUNT=$_count_output
 fi
-
-fail() {
-  printf 'FAIL: %s\n' "$1"
-  status=1
-}
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || fail "缺少命令: $1"
@@ -83,6 +84,64 @@ else
   else
     printf '无已有 tag，首次发版: 通过\n'
   fi
+fi
+
+printf '\n== 检查插件元数据描述 ==\n'
+python3 - "$pkg_ver" "$EXPECTED_SKILL_COUNT" <<'PY' || fail "插件元数据描述与版本/技能数量不一致"
+import json
+import sys
+from pathlib import Path
+
+version = sys.argv[1]
+skill_count = sys.argv[2]
+
+metadata_fields = [
+    (".claude-plugin/plugin.json", ("description",)),
+    (".codex-plugin/plugin.json", ("description",)),
+    (".codex-plugin/plugin.json", ("interface", "shortDescription")),
+    (".claude-plugin/marketplace.json", ("description",)),
+    (".claude-plugin/marketplace.json", ("plugins", 0, "description")),
+]
+
+errors = []
+
+def get_field(data, path):
+    current = data
+    for key in path:
+        current = current[key]
+    return current
+
+for file, path in metadata_fields:
+    p = Path(file)
+    if not p.exists():
+        errors.append(f"missing metadata file: {file}")
+        continue
+    data = json.loads(p.read_text(encoding="utf-8"))
+    try:
+        value = get_field(data, path)
+    except Exception as exc:
+        errors.append(f"{file} missing field {'.'.join(map(str, path))}: {exc}")
+        continue
+    if not isinstance(value, str):
+        errors.append(f"{file} field {'.'.join(map(str, path))} is not a string")
+        continue
+    if f"{skill_count} 技能" not in value:
+        errors.append(f"{file} field {'.'.join(map(str, path))} missing {skill_count} 技能")
+    if "53 技能" in value or "v2.14.0" in value:
+        errors.append(f"{file} field {'.'.join(map(str, path))} contains stale metadata")
+    if path[-1] == "description" and not value.startswith(f"v{version}"):
+        errors.append(f"{file} field {'.'.join(map(str, path))} must start with v{version}")
+
+if errors:
+    raise SystemExit("\n".join(errors))
+PY
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查 Codex 插件 cache ==\n'
+if [ "${CHECK_CODEX_CACHE:-0}" = "1" ]; then
+  bash scripts/check-codex-plugin-cache.sh || fail "Codex 插件 cache 与当前仓库不一致"
+else
+  printf '跳过（设置 CHECK_CODEX_CACHE=1 启用本机宿主 cache 严格检查）\n'
 fi
 
 printf '\n== 检查占位符 ==\n'
@@ -401,6 +460,10 @@ if [ ! -f "scripts/tests/test-generate-index.sh" ]; then
   fail "缺少索引生成测试: scripts/tests/test-generate-index.sh"
 fi
 
+if [ ! -f "scripts/tests/test-hooks.sh" ]; then
+  fail "缺少 hook 行为测试: scripts/tests/test-hooks.sh"
+fi
+
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查强纪律技能 Iron Law ==\n'
@@ -517,8 +580,89 @@ if legacy_names:
 if errors:
     raise SystemExit("\n".join(errors))
 PY
-  [ "$status" -eq 0 ] && printf '通过\n'
+	  [ "$status" -eq 0 ] && printf '通过\n'
 fi
+
+printf '\n== 检查技能加载合同 ==\n'
+python3 - "$EXPECTED_SKILL_COUNT" <<'PY' || fail "技能加载合同不一致"
+import json
+import sys
+from pathlib import Path
+
+expected_count = sys.argv[1]
+index = json.load(open("skills-index.json"))
+guide_path = Path("skills/maintain-workflow-using-unified/SKILL.md")
+guide = guide_path.read_text(encoding="utf-8")
+
+phase_skills = []
+for entry in index.get("by_phase", {}).values():
+    phase_skills.extend(entry.get("skills", []))
+
+errors = []
+
+if f"{expected_count} 个技能" not in guide:
+    errors.append(f"{guide_path} missing current skill count: {expected_count} 个技能")
+if "53 个技能" in guide or "53 技能" in guide:
+    errors.append(f"{guide_path} contains stale 53-skill wording")
+if "`AGENTS.md`" not in guide:
+    errors.append(f"{guide_path} missing AGENTS.md single-entry wording")
+if "CLAUDE.md、直接请求" in guide or "CLAUDE.md / spec" in guide:
+    errors.append(f"{guide_path} contains stale CLAUDE.md entry wording")
+
+for skill in sorted(set(phase_skills)):
+    if f"`{skill}`" not in guide:
+        errors.append(f"{guide_path} quick reference missing {skill}")
+
+triggers = index.get("by_trigger", {}).get("user_says", {})
+preview_routes = [
+    skills for pattern, skills in triggers.items()
+    if any(token in pattern for token in ("preview", "预览", "mockup", "设计方向", "对比", "interactive"))
+]
+if not any(skills[:2] == ["design-workflow-design", "design-interactive-preview"] for skills in preview_routes):
+    errors.append("skills-index.json missing preview route to design-workflow-design + design-interactive-preview")
+
+expected_deck_sequence = [
+    "design-workflow-design",
+    "design-content-script",
+    "design-content-direction",
+    "design-content-layout",
+    "design-interactive-preview",
+    "build-content-writing",
+    "build-content-layout",
+]
+deck_sequence = index.get("by_artifact_type", {}).get("deck", {}).get("sequence")
+if deck_sequence != expected_deck_sequence:
+    errors.append("deck.sequence does not match required interactive-preview order")
+
+expected_visual_sequence = [
+    "design-workflow-design",
+    "design-visual-direction",
+    "design-content-layout",
+    "design-interactive-preview",
+    "build-content-layout",
+    "verify-visual-review",
+]
+visual_sequence = index.get("by_artifact_type", {}).get("visual", {}).get("sequence")
+if visual_sequence != expected_visual_sequence:
+    errors.append("visual.sequence does not match required interactive-preview order")
+
+brainstorm = Path("commands/brainstorm.md").read_text(encoding="utf-8")
+if "CLAUDE.md / spec" in brainstorm:
+    errors.append("commands/brainstorm.md still references CLAUDE.md / spec")
+
+build = Path("commands/build.md").read_text(encoding="utf-8")
+if "build-infrastructure-git" not in build:
+    errors.append("commands/build.md missing software required build-infrastructure-git")
+
+review = Path("commands/review.md").read_text(encoding="utf-8")
+for required in ("document / article", "deck", "verify-content-review", "verify-visual-review"):
+    if required not in review:
+        errors.append(f"commands/review.md missing artifact review route: {required}")
+
+if errors:
+    raise SystemExit("\n".join(errors))
+PY
+[ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查 skills-lock.json 完整性 ==\n'
 if [ -f "skills-lock.json" ]; then
@@ -676,6 +820,12 @@ else
   sgrep 'AGENTS.md' hooks/codex-wrapper.sh || fail "hooks/codex-wrapper.sh 缺少 AGENTS.md 验证"
   [ "$status" -eq 0 ] && printf '通过\n'
 fi
+
+printf '\n== 检查 hook 行为 ==\n'
+if [ -f "scripts/tests/test-hooks.sh" ]; then
+  bash scripts/tests/test-hooks.sh || fail "hook 行为测试失败"
+fi
+[ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 技能行数统计 ==\n'
 find skills -name 'SKILL.md' -exec wc -l {} + | sort -n

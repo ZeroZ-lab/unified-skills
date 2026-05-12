@@ -31,9 +31,9 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 - deck → content-writer + visual-designer
 - visual → visual-designer
 **Skills (loaded by Agent):**
-- software-engineer: build-quality-tdd, build-backend-*, build-frontend-*
-- content-writer: build-content-writing
-- visual-designer: build-content-layout
+- software-engineer: build-quality-tdd, build-infrastructure-git, build-backend-*, build-frontend-*（按 artifact_type / 风险 / UI 信号追加）
+- content-writer: build-content-writing（document / article / deck）
+- visual-designer: build-content-layout（document / deck / visual）
 - Common: build-workflow-execute, build-cognitive-execution-engine
 **Input:** 03-plan.md（final）+ 当前 Task N
 **Process:**

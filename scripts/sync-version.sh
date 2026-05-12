@@ -12,6 +12,7 @@ show_help() {
   echo "此脚本从 package.json 读取版本号，并同步到："
   echo "  - .claude-plugin/plugin.json"
   echo "  - .codex-plugin/plugin.json"
+  echo "  - .claude-plugin/marketplace.json"
 }
 
 DRY_RUN=false
@@ -51,48 +52,73 @@ fi
 
 echo "Syncing version to $VERSION..."
 
+SKILL_COUNT=$(python3 -c "
+import json
+idx = json.load(open('skills-index.json'))
+skills = set()
+for phase in idx['by_phase'].values():
+    skills.update(phase['skills'])
+print(len(skills))
+" 2>/dev/null || true)
+
+if [ -z "$SKILL_COUNT" ]; then
+  echo "Error: Failed to read skill count from skills-index.json"
+  exit 1
+fi
+
 if [ "$DRY_RUN" = true ]; then
   echo "[DRY-RUN] Would update .claude-plugin/plugin.json"
   echo "[DRY-RUN] Would update .codex-plugin/plugin.json"
+  echo "[DRY-RUN] Would update .claude-plugin/marketplace.json"
   exit 0
 fi
 
-# 更新 .claude-plugin/plugin.json
-if [ -f ".claude-plugin/plugin.json" ]; then
-  python3 -c "
+# 更新插件元数据
+VERSION="$VERSION" SKILL_COUNT="$SKILL_COUNT" python3 <<'PY'
 import json
-try:
-    with open('.claude-plugin/plugin.json', 'r') as f:
-        data = json.load(f)
-    data['version'] = '$VERSION'
-    with open('.claude-plugin/plugin.json', 'w') as f:
-        json.dump(data, f, indent=2)
-    print('Updated .claude-plugin/plugin.json')
-except Exception as e:
-    print(f'Error updating .claude-plugin/plugin.json: {e}')
-    exit(1)
-"
-else
-  echo "Warning: .claude-plugin/plugin.json not found, skipping"
-fi
+import os
+import re
+from pathlib import Path
 
-# 更新 .codex-plugin/plugin.json
-if [ -f ".codex-plugin/plugin.json" ]; then
-  python3 -c "
-import json
-try:
-    with open('.codex-plugin/plugin.json', 'r') as f:
-        data = json.load(f)
-    data['version'] = '$VERSION'
-    with open('.codex-plugin/plugin.json', 'w') as f:
-        json.dump(data, f, indent=2)
-    print('Updated .codex-plugin/plugin.json')
-except Exception as e:
-    print(f'Error updating .codex-plugin/plugin.json: {e}')
-    exit(1)
-"
-else
-  echo "Warning: .codex-plugin/plugin.json not found, skipping"
-fi
+version = os.environ["VERSION"]
+skill_count = os.environ["SKILL_COUNT"]
+
+def sync_text(text):
+    text = re.sub(r"v\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?", f"v{version}", text)
+    text = re.sub(r"\d+\s*技能", f"{skill_count} 技能", text)
+    return text
+
+def update_json(path, updater):
+    file = Path(path)
+    if not file.exists():
+        print(f"Warning: {path} not found, skipping")
+        return
+    try:
+        data = json.loads(file.read_text(encoding="utf-8"))
+        updater(data)
+        file.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"Updated {path}")
+    except Exception as exc:
+        raise SystemExit(f"Error updating {path}: {exc}")
+
+def update_plugin(data):
+    data["version"] = version
+    if isinstance(data.get("description"), str):
+        data["description"] = sync_text(data["description"])
+    interface = data.get("interface")
+    if isinstance(interface, dict) and isinstance(interface.get("shortDescription"), str):
+        interface["shortDescription"] = sync_text(interface["shortDescription"])
+
+def update_marketplace(data):
+    if isinstance(data.get("description"), str):
+        data["description"] = sync_text(data["description"])
+    for plugin in data.get("plugins", []):
+        if isinstance(plugin, dict) and isinstance(plugin.get("description"), str):
+            plugin["description"] = sync_text(plugin["description"])
+
+update_json(".claude-plugin/plugin.json", update_plugin)
+update_json(".codex-plugin/plugin.json", update_plugin)
+update_json(".claude-plugin/marketplace.json", update_marketplace)
+PY
 
 echo "Version synced to $VERSION"

@@ -79,16 +79,26 @@ if boundary_real == "/" or boundary_real == os.sep:
     sys.exit(0)
 
 # Reject boundary outside project root (cwd)
-if cwd and not boundary_real.startswith(os.path.realpath(cwd)):
+if cwd:
+    cwd_real = os.path.realpath(cwd)
+    try:
+        boundary_inside_project = os.path.commonpath([boundary_real, cwd_real]) == cwd_real
+    except ValueError:
+        boundary_inside_project = False
+else:
+    cwd_real = ""
+    boundary_inside_project = True
+
+if not boundary_inside_project:
     print(json.dumps({
         "permissionDecision": "deny",
-        "permissionDecisionReason": f"[freeze] 边界路径 {boundary_real} 不在项目目录 {os.path.realpath(cwd)} 内。"
+        "permissionDecisionReason": f"[freeze] 边界路径 {boundary_real} 不在项目目录 {cwd_real} 内。"
     }, ensure_ascii=False))
     sys.exit(0)
 
 # Check if file is inside freeze boundary
 try:
-    inside = os.path.commonpath([resolved_file, resolved_boundary]) == resolved_boundary
+    inside = os.path.commonpath([str(resolved_file), boundary_real]) == boundary_real
 except ValueError:
     inside = False
 

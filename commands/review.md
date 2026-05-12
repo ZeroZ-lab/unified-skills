@@ -26,7 +26,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 **Input:** 产物文件 + 01-spec.md + 02-design.md（如适用） + 03-plan.md
 **Process:**
 1. 读取 artifact_type
-2. 确定审查策略：software → 两阶段审查；document → 内容审查；visual → 视觉审查
+2. 确定审查策略：software → 两阶段审查；document / article → 内容审查；deck → 内容 + 视觉审查；visual → 视觉审查
 **Output:** 审查策略决策
 
 ### Phase 2: Spec Compliance Review (Stage 1)
@@ -56,6 +56,8 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 - verify-quality-code-quality（code-quality-auditor）
 - verify-quality-security（security-auditor）
 - verify-frontend-accessibility（accessibility-auditor）
+- verify-content-review（document / article / deck）
+- verify-visual-review（deck / visual）
 
 **Input:** 产物文件
 **Output:** 各 Reviewer 独立反馈（五轴评分 + Blocking/Important/Suggestion 分级）

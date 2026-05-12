@@ -36,7 +36,7 @@
 ## [2.13.3] - 2026-05-09
 
 ### Fixed
-- Codex hooks: replace deprecated `[features].codex_hooks` usage with `[features].hooks`
+- Codex hooks: replace the old Codex hooks feature flag with `[features].hooks`
 - validate: reject the deprecated Codex hooks flag in config
 - historical docs: mark the 2026-04-27 Codex hooks plan/spec as historical
 ```

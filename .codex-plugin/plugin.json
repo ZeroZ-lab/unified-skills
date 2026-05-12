@@ -1,7 +1,7 @@
 {
   "name": "unified",
-  "version": "2.16.0",
-  "description": "v2.14.0 \u2014 \u7edf\u4e00\u5f00\u53d1\u6280\u80fd\u5957\u4ef6 \u2014 \u5baa\u6cd5 + 53 \u6280\u80fd\uff0cAGENTS \u5355\u5165\u53e3\uff0c\u771f\u5b9e skills \u76f4\u51fa\u3002\u8bc1\u636e\u9a71\u52a8\u8bbe\u8ba1\u9636\u6bb5 + \u4e24\u9636\u6bb5\u5ba1\u67e5\u95e8\u63a7",
+  "version": "2.16.1",
+  "description": "v2.16.1 — 统一开发技能套件 — 宪法 + 54 技能，AGENTS 单入口，真实 skills 直出。证据驱动设计阶段 + 两阶段审查门控",
   "author": {
     "name": "ZeroZ-lab",
     "url": "https://github.com/ZeroZ-lab/unified-skills"
@@ -18,6 +18,6 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Unified Skills",
-    "shortDescription": "\u5baa\u6cd5 + 53 \u6280\u80fd\uff0cAGENTS \u5355\u5165\u53e3\u3002\u8bc1\u636e\u9a71\u52a8\u8bbe\u8ba1\u9636\u6bb5 + \u4e24\u9636\u6bb5\u5ba1\u67e5\u95e8\u63a7"
+    "shortDescription": "宪法 + 54 技能，AGENTS 单入口。证据驱动设计阶段 + 两阶段审查门控"
   }
 }

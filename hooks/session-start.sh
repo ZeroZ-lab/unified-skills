@@ -23,8 +23,34 @@ else
   fi
 fi
 
-# Extract the AI Agent section and command map
-content=$(sed -n '/^## 如果你是一个 AI Agent/,/^## 宪法/{ /^## 宪法/d; p }' "$plugin_root/AGENTS.md")
+extract_section() {
+  python3 - "$plugin_root/AGENTS.md" "$1" "$2" <<'PY'
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+start_marker = sys.argv[2]
+end_marker = sys.argv[3]
+
+lines = path.read_text(encoding="utf-8").splitlines()
+capturing = False
+section = []
+
+for line in lines:
+    if line == start_marker:
+        capturing = True
+    if capturing:
+        if line == end_marker:
+            break
+        section.append(line)
+
+print("\n".join(section))
+PY
+}
+
+# Extract the AI Agent section and command map. Use Python instead of sed so the
+# hook behaves the same on BSD/macOS and GNU environments.
+content=$(extract_section "## 如果你是一个 AI Agent" "## 宪法")
 
 if [ -z "$content" ]; then
   # Fallback: emit safe default message
@@ -32,7 +58,7 @@ if [ -z "$content" ]; then
 fi
 
 # Extract command map
-cmd_map=$(sed -n '/^## 命令映射/,/^## 文档产出链/{ /^## 文档产出链/d; p }' "$plugin_root/AGENTS.md")
+cmd_map=$(extract_section "## 命令映射" "## 文档产出链")
 
 # Build command syntax hint based on platform
 if [ "$is_codex" -eq 1 ]; then

@@ -53,7 +53,8 @@ unified/
 ```
 define/    → refine（提炼）、spec（规格）、brainstorm（头脑风暴）
 design/    → design（设计总控）、interaction（交互设计）、visual-direction（视觉设计）、
-             script（剧本设计）、direction（导演设计）、layout（排版设计）
+             script（剧本设计）、direction（导演设计）、layout（排版设计）、
+             interactive-preview（交互式视觉对比）
 build/     → plan（计划）、execute（执行）、tdd（测试驱动）、context（上下文）、
              source-driven（文档驱动）、execution-engine（执行引擎）、
              decision-record（决策记录）、git（版本控制）、

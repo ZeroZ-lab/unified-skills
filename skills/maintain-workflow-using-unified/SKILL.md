@@ -8,7 +8,7 @@ description: Session 启动引导 — 建立主动技能发现机制。每个 se
 </SUBAGENT-STOP>
 
 <EXTREMELY-IMPORTANT>
-你拥有 Unified Skills — 53 个技能覆盖 7 阶段工作流。
+你拥有 Unified Skills — 54 个技能覆盖 7 阶段工作流。
 
 在响应用户消息或采取任何行动之前，你必须执行技能发现流程。
 这不是可选的。这不是可协商的。你无法通过推理绕过这个规则。
@@ -23,7 +23,7 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 
 ## 指令优先级
 
-1. **用户显式指令**（CLAUDE.md、直接请求）— 最高优先级
+1. **用户显式指令**（直接请求）和项目入口 `AGENTS.md` — 最高优先级
 2. **Unified Skills** — 覆盖默认系统行为
 3. **默认系统提示词** — 最低优先级
 
@@ -78,7 +78,7 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 Using [skill-name] to [purpose]
 ```
 
-然后调用 Skill 工具加载技能。
+然后在当前平台加载技能：Claude Code 调用 Skill 工具；Codex 读取对应 `skills/<name>/SKILL.md` 或使用宿主暴露的技能入口。
 
 <HARD-GATE>
 没有输出 "Using [skill-name] to [purpose]" 不得开始任何实现操作。
@@ -170,6 +170,7 @@ Using [skill-name] to [purpose]
 - `design-content-script` — 基于证据的剧本设计、故事线、消息线
 - `design-content-direction` — 基于证据的导演设计、页序推进、节奏
 - `design-content-layout` — 基于证据的排版设计、构图、媒介适配
+- `design-interactive-preview` — 交互式视觉对比、本地预览、方向选择
 
 ### Build 阶段（拆分任务、增量生成产物）
 
@@ -192,6 +193,8 @@ Using [skill-name] to [purpose]
 ### Verify 阶段（质量把关、Bug 调查、审查）
 
 - `verify-workflow-review` — 产物完成后质量把关
+- `verify-workflow-spec-compliance` — 功能完整性审查
+- `verify-quality-code-quality` — 代码质量审查
 - `verify-workflow-debug` — 遇到 bug/测试失败/意外行为（MUST）
 - `verify-frontend-accessibility` — 构建 UI 组件/表单/导航
 - `verify-quality-integration-testing` — 集成测试
@@ -219,7 +222,9 @@ Using [skill-name] to [purpose]
 - `maintain-team-deprecation-migration` — 废弃迁移
 - `maintain-workflow-context-save` — 保存工作上下文供后续恢复
 - `maintain-workflow-context-restore` — 新 session 继续之前的工作
+- `maintain-workflow-goal` — 目标生命周期管理
 - `maintain-workflow-learn` — 发现项目模式/踩坑/偏好需要持久化
+- `maintain-workflow-using-unified` — Session 启动引导和主动技能发现
 
 ### Reflect 阶段（事后回顾、文档工程）
 
@@ -249,7 +254,7 @@ Using [skill-name] to [purpose]
 技能使用 Claude Code 的工具名和约定。在其他平台上的等效方式：
 
 - **Claude Code**：使用 `Skill` 工具调用技能。当技能被调用时，其内容会被加载并呈现——直接遵循。不要用 Read 工具读技能文件。
-- **Codex CLI**：直接读取 `AGENTS.md` 与 `skills/` 中的真实技能。`skill` 工具的工作方式与 Claude Code 的 `Skill` 工具相同。
+- **Codex CLI**：直接读取 `AGENTS.md` 与 `skills/` 中的真实技能；如果宿主暴露技能入口，优先使用宿主入口，否则读取对应 `skills/<name>/SKILL.md`。Codex 不依赖 repo 内旧的命令薄包装或 wrapper skill 目录。
 
 ## Session 启动检查
 

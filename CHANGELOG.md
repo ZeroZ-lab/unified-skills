@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.16.1] - 2026-05-13
+
+### Added
+- validation: add optional Codex plugin cache verification via `scripts/check-codex-plugin-cache.sh` and `CHECK_CODEX_CACHE=1 ./validate`.
+- validation: enforce the active skill-loading contract so `maintain-workflow-using-unified` must match the current `skills-index.json` inventory.
+
+### Changed
+- skill loading: update `maintain-workflow-using-unified` to the 54-skill AGENTS single-entry model and complete its phase quick reference.
+- routing: add preview/mockup/design-direction triggers for `design-interactive-preview` and make deck/visual sequence order explicit.
+- commands: align `/brainstorm`, `/build`, and `/review` with the current AGENTS entry and artifact routing model.
+
+### Fixed
+- hooks: keep SessionStart and freeze behavior portable and covered by behavior tests.
+- metadata: keep plugin descriptions, marketplace metadata, root docs, and validation checks aligned with the real 54-skill inventory.
+
 ## [2.16.0] - 2026-05-12
 
 ### Added

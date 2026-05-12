@@ -32,7 +32,7 @@ v2.16.0 对 `/design` 阶段做了三项系统性增强：
 
 | 级别 | 数量 | 处理 |
 |------|------|------|
-| Blocking | 2 | 预存问题（design-preview.mjs CORS `*` + validate bash→Python 插值），非本次变更引入，记录为已知技术债 |
+| Blocking | 0 | 2026-05-12 follow-up 已修复 hook 行为、metadata 漂移和 validate gate 覆盖问题；剩余 preview-server CORS 记录为 Known Debt |
 | Important | 4 | I-4 测试数据（淘宝 token）已处理：排除 `20260512-codex-design-test/` 不随发布分发 |
 | Suggestion | 6 | S-1 plugin.json description 版本一致性（已修复）、其余为低风险建议，后续迭代处理 |
 
@@ -48,8 +48,12 @@ v2.16.0 对 `/design` 阶段做了三项系统性增强：
 
 - [x] 安全审计：无本次变更引入的 Blocking
 - [x] 文档审计：所有 Blocking 已修复
-- [x] validate 全通过
+- [x] validate 全通过（2026-05-12 follow-up 重新运行）
 - [x] 测试数据已排除（不随发布分发）
+
+## Known Debt
+
+- `scripts/design-preview.mjs` 仍使用本地预览服务的 `Access-Control-Allow-Origin: *`。当前仅作为 localhost 设计对比工具使用，不阻塞本次合同修复；后续若扩展为共享服务，需要限制 origin、请求体大小和选择 JSON schema。
 
 ## 版本
 

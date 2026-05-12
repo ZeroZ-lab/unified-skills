@@ -395,18 +395,26 @@ unified/
 │   │   ├── adr/
 │   │   │   └── template.md
 │   │   └── README.md
-│   └── bug/
+│   ├── bug/
 │       ├── 01-root-cause.md
 │       └── 02-fix-plan.md
+│   └── root/
+│       └── DESIGN.md
 │
 └── docs/
-    ├── design-document.md
+    ├── architecture/
+    ├── features/
+    ├── history/
+    ├── README.md
     └── directory-architecture.md
 
 ├── references/
+│   ├── design-best-practices.md
+│   ├── design-inspiration-catalog.md
+│   ├── design-pattern-extract.md
 │   └── orchestration-patterns.md
 │
 ├── skills-lock.json             ← 技能完整性锁文件（SHA-256）
 
-核心资产: 3 根文件 + 54 技能（54 SKILL.md） + 12 命令 + 24 角色（7 核心工程 + 17 审查 / 侦察） + 7 模板 + 2 设计文档 + 1 参考文档 + 1 锁文件。当前不再维护 repo 内 Codex 薄包装目录，入口统一收敛到 `AGENTS.md` + `skills/`。
+核心资产: 3 根文件 + 54 技能（54 SKILL.md） + 12 命令 + 24 角色（7 核心工程 + 17 审查 / 侦察） + 8 模板（含 `templates/root/DESIGN.md`）+ 4 参考文档 + 1 锁文件。当前不再维护 repo 内 Codex 薄包装目录，入口统一收敛到 `AGENTS.md` + `skills/`。
 ```
