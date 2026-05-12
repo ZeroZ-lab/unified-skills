@@ -125,7 +125,16 @@ for skill in skills:
     else:
         skill_descriptions[skill] = ""
 
-# 生成索引
+# 生成索引——保留手动维护的区段
+existing_index = {}
+existing_path = Path("skills-index.json")
+if existing_path.exists():
+    try:
+        with open(existing_path, 'r', encoding='utf-8') as f:
+            existing_index = json.load(f)
+    except Exception:
+        pass
+
 index = {
     "by_phase": {},
     "skill_descriptions": skill_descriptions
@@ -135,6 +144,11 @@ index = {
 for phase in phase_order:
     if phase in by_phase:
         index["by_phase"][phase] = by_phase[phase]
+
+# 保留手动维护的区段（不被覆盖）
+for key in ["by_artifact_type", "by_trigger", "by_risk"]:
+    if key in existing_index:
+        index[key] = existing_index[key]
 
 # 输出结果
 output = json.dumps(index, indent=2, ensure_ascii=False)

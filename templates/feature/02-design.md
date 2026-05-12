@@ -43,6 +43,37 @@ artifact_type: software
 - [ ] Search unavailable or evidence gaps are recorded
 - [ ] No external pattern is copied blindly
 
+## Design Alternatives (conditional — 当 artifact_type 适用视觉对比时)
+
+> 仅当 `artifact_type` 为 `software`(有 UI)、`visual` 或 `deck` 时填写。
+> 其他类型删除此区段。
+
+### Alternative A: [Name]
+- Key difference: <一句话说明与其他方案的核心差异>
+- Approach: <设计要点>
+- Pros:
+- Cons:
+
+### Alternative B: [Name]
+- Key difference: <一句话说明与其他方案的核心差异>
+- Approach: <设计要点>
+- Pros:
+- Cons:
+
+### Alternative C: [Name] (可选)
+- Key difference:
+- Approach:
+- Pros:
+- Cons:
+
+### Selection Record
+- Round 1 ([Direction]): Selected [A/B/C] — Reason: [...]
+- Round 2 ([Dimension]): Selected [X/Y] — Reason: [...]
+- Preview mode: full / degraded / CLI text
+
+### Alternatives Considered
+- [Name] — Not selected: [reason]
+
 ## 设计目标
 - 用户/读者/观众要更快完成什么？
 - 这份设计要减少什么理解成本或操作摩擦？

@@ -1,217 +1,378 @@
 {
   "by_phase": {
     "define": {
-      "skills": ["define-cognitive-brainstorm", "define-workflow-refine", "define-workflow-spec"],
+      "skills": [
+        "define-cognitive-brainstorm",
+        "define-workflow-refine",
+        "define-workflow-spec"
+      ],
       "description": "想法模糊、需要方案对比、收敛到规格"
     },
     "design": {
       "skills": [
-        "design-workflow-design",
-        "design-experience-interaction",
-        "design-visual-direction",
-        "design-content-script",
         "design-content-direction",
-        "design-content-layout"
+        "design-content-layout",
+        "design-content-script",
+        "design-experience-interaction",
+        "design-interactive-preview",
+        "design-visual-direction",
+        "design-workflow-design"
       ],
       "description": "证据驱动的创作设计定稿：交互、视觉、排版、剧本、导演"
     },
     "build": {
       "skills": [
-        "build-workflow-plan",
-        "build-workflow-execute",
-        "build-quality-tdd",
-        "build-cognitive-context",
-        "build-cognitive-source-driven",
-        "build-cognitive-execution-engine",
-        "build-cognitive-decision-record",
-        "build-infrastructure-git",
-        "build-frontend-ui-engineering",
-        "build-frontend-browser-testing",
         "build-backend-api-design",
         "build-backend-database",
         "build-backend-service-patterns",
+        "build-cognitive-context",
+        "build-cognitive-decision-record",
+        "build-cognitive-execution-engine",
+        "build-cognitive-source-driven",
+        "build-content-layout",
         "build-content-writing",
-        "build-content-layout"
+        "build-frontend-browser-testing",
+        "build-frontend-ui-engineering",
+        "build-infrastructure-git",
+        "build-quality-tdd",
+        "build-workflow-execute",
+        "build-workflow-plan"
       ],
-      "description": "拆分任务、增量生成产物"
+      "description": "计划、增量实现、TDD、上下文、源文档、工程模式和内容构建"
     },
     "verify": {
       "skills": [
-        "verify-workflow-review",
-        "verify-workflow-spec-compliance",
-        "verify-quality-code-quality",
-        "verify-workflow-debug",
+        "verify-content-review",
         "verify-frontend-accessibility",
+        "verify-quality-code-quality",
         "verify-quality-integration-testing",
         "verify-quality-performance",
         "verify-quality-security",
+        "verify-quality-simplify",
         "verify-team-code-review-standards",
-        "verify-content-review",
         "verify-visual-review",
+        "verify-workflow-debug",
         "verify-workflow-receiving-review",
-        "verify-quality-simplify"
+        "verify-workflow-review",
+        "verify-workflow-spec-compliance"
       ],
-      "description": "质量把关、Bug 调查、审查"
+      "description": "规格符合性、代码质量、调试、安全、性能、内容、视觉和审查反馈"
     },
     "ship": {
       "skills": [
-        "ship-workflow-ship",
+        "ship-artifact-export",
         "ship-infrastructure-ci-cd",
         "ship-infrastructure-deploy",
-        "ship-artifact-export",
         "ship-workflow-canary",
+        "ship-workflow-doc-sync",
         "ship-workflow-land",
-        "ship-workflow-doc-sync"
+        "ship-workflow-ship"
       ],
-      "description": "发布检查、部署、监控"
+      "description": "发布、CI/CD、部署、导出、金丝雀、落地和文档同步"
     },
     "maintain": {
       "skills": [
         "maintain-infrastructure-observability",
         "maintain-team-deprecation-migration",
-        "maintain-workflow-using-unified",
-        "maintain-workflow-context-save",
         "maintain-workflow-context-restore",
+        "maintain-workflow-context-save",
+        "maintain-workflow-goal",
         "maintain-workflow-learn",
-        "maintain-workflow-goal"
+        "maintain-workflow-using-unified"
       ],
-      "description": "可观测性、上下文管理、学习记录、目标追踪"
+      "description": "可观测性、迁移、上下文、学习、目标和使用引导"
     },
     "reflect": {
       "skills": [
-        "reflect-team-retro",
-        "reflect-team-documentation"
+        "reflect-team-documentation",
+        "reflect-team-retro"
       ],
-      "description": "事后回顾、文档工程"
+      "description": "回顾与知识沉淀"
     }
+  },
+  "skill_descriptions": {
+    "build-backend-api-design": "API 和接口设计——稳定合约、清晰边界。使用 cuando 需要设计 REST API、模块接口或数据合约",
+    "build-backend-database": "数据库工程——迁移、查询优化、数据完整性。使用 cuando 需要设计数据库 schema、写迁移或优化查询",
+    "build-backend-service-patterns": "服务架构模式——分层、通信、韧性。使用 cuando 需要设计后端服务架构、跨服务通信或处理分布式系统问题",
+    "build-cognitive-context": "上下文工程——最大化 agent 输出质量。使用 cuando 开始新任务、上下文混乱或 agent 输出质量下降",
+    "build-cognitive-decision-record": "架构决策记录。使用 cuando 面临技术选型、架构决策或方案取舍需要记录",
+    "build-cognitive-execution-engine": "任务执行引擎——选择正确的执行模式。使用 cuando build-workflow-plan 完成后需要写代码",
+    "build-cognitive-source-driven": "源码驱动开发——每个框架决策由官方文档背书。使用 cuando 使用不熟悉的 API、引入新依赖或不确定方法签名",
+    "build-content-layout": "信息设计与版式方法。使用 cuando artifact_type 为 document、deck、visual，或产物需要信息层级、阅读路径、构图、媒介适配时",
+    "build-content-writing": "内容架构与编辑方法。使用 cuando artifact_type 为 document、article、deck，或产物需要受众、主张、结构、证据、语气设计时",
+    "build-frontend-browser-testing": "浏览器测试验证——在真实浏览器中验证前端行为。使用 cuando 前端变更需要运行时验证、UI bug 调查或截图对照",
+    "build-frontend-ui-engineering": "前端 UI 工程——构建可生产、可访问、视觉精良的用户界面。使用 cuando 需要构建或修改用户界面组件",
+    "build-infrastructure-git": "版本控制工作流——原子提交、整洁历史。使用 cuando 需要提交代码、创建分支或管理变更",
+    "build-quality-tdd": "测试驱动开发。使用 cuando 需要写逻辑代码、修 bug 或改变任何行为",
+    "build-workflow-execute": "按计划增量生成软件或内容产物。使用 cuando plan 已批准需要开始实现或生成交付物",
+    "build-workflow-plan": "把 spec 拆成可执行的任务。使用 cuando spec 已批准需要拆成可执行任务",
+    "define-cognitive-brainstorm": "结构化脑暴——发散探索 + 收敛评估 = 明确方向。使用 cuando 想法模糊、面临开放性问题或需要方案对比",
+    "define-workflow-refine": "从模糊想法变成明确的 spec。使用 cuando 有一个模糊的想法需要结构化收敛",
+    "define-workflow-spec": "从 refine 产出到结构化 spec。使用 cuando refine 完成后需要编写正式 spec",
+    "design-content-direction": "导演设计——镜头/页面切换意图、情绪推进、演示节奏和呈现编排",
+    "design-content-layout": "排版设计——版式系统、构图、页面层级、媒介适配",
+    "design-content-script": "剧本设计——叙事骨架、段落消息线、讲述顺序和节奏",
+    "design-experience-interaction": "交互设计——关键流程、状态、信息架构、用户路径",
+    "design-interactive-preview": "交互式视觉对比——生成自包含 HTML 页面并通过本地 HTTP 服务在浏览器中并排展示多个设计方向，让用户直观选择",
+    "design-visual-direction": "视觉设计——风格、层级、色彩、组件视觉规则",
+    "design-workflow-design": "证据驱动的创作设计阶段总控——在 plan/build 之前用最佳实践证据定稿交互、视觉、排版、剧本、导演设计",
+    "maintain-infrastructure-observability": "可观测性——日志、指标、追踪三支柱。使用 cuando 需要监控生产、调查线上问题或配置告警",
+    "maintain-team-deprecation-migration": "弃用与迁移——管理代码生命周期。使用 cuando 需要移除、替换或迁移已有功能/API",
+    "maintain-workflow-context-restore": "恢复保存的工作上下文。使用 cuando 新 session 需要继续之前的工作",
+    "maintain-workflow-context-save": "保存工作上下文。使用 cuando 需要保存当前工作状态供后续 session 恢复",
+    "maintain-workflow-goal": "目标生命周期管理。使用 cuando 需要创建、追踪、暂停或完成跨 session 的持久化目标时",
+    "maintain-workflow-learn": "跨会话学习记忆。使用 cuando 发现项目模式、踩坑、偏好需要持久化",
+    "maintain-workflow-using-unified": "Session 启动引导 — 建立主动技能发现机制。每个 session 开始时必须加载",
+    "reflect-team-documentation": "文档工程——记录决策、API、代码约定。使用 cuando 需要写文档、记录架构决策或维护项目知识",
+    "reflect-team-retro": "事后回顾——提取经验和改进行动。使用 cuando 功能完成、里程碑达成、事故处理后需要系统性复盘",
+    "ship-artifact-export": "非软件产物导出与交付。使用 cuando artifact_type 为 document、article、deck、visual，或需要导出 PDF/DOCX/PPTX/PNG/SVG 并记录验证证据时",
+    "ship-infrastructure-ci-cd": "CI/CD 管道——自动化质量门和部署流水线。使用 cuando 需要设置或修改 CI/CD 管道、构建流程或自动化部署",
+    "ship-infrastructure-deploy": "部署管理——安全、可逆、可观测的上线。使用 cuando 准备上线部署或配置发布策略",
+    "ship-workflow-canary": "发布后健康监控。使用 cuando 代码已部署需要持续验证生产健康",
+    "ship-workflow-doc-sync": "发布后文档同步。使用 cuando 代码已合并需要同步更新项目文档",
+    "ship-workflow-land": "合并 PR → 等待 CI → 验证生产。使用 cuando PR 已创建需要合并到主分支并验证部署",
+    "ship-workflow-ship": "发布或导出检查 → Go/No-Go → 归档。使用 cuando 审查通过后需要上线或交付最终产物",
+    "verify-content-review": "内容质量审查。使用 cuando artifact_type 为 document、article、deck，或需要审查事实、逻辑、受众、语气、完整性时",
+    "verify-frontend-accessibility": "可访问性保障——WCAG 2.1 AA 合规。使用 cuando 构建 UI 组件、表单、导航或交互元素",
+    "verify-quality-code-quality": "代码质量审查。使用 cuando 需要对已通过 spec compliance 的代码进行质量评估",
+    "verify-quality-integration-testing": "集成测试——验证组件间交互和边界契约。使用 cuando 需要在单元测试之上验证跨组件/跨服务的正确性",
+    "verify-quality-performance": "性能优化——先测量、再优化、只优化测量证明有问题的。使用 cuando 性能不达标、慢页面调查或上线前性能审查",
+    "verify-quality-security": "安全加固——每个外部输入是敌意的，每个密钥是神圣的，每个鉴权检查是强制的。使用 cuando 涉及用户输入、认证、数据存储、或上线前审查",
+    "verify-quality-simplify": "系统性代码简化。使用 cuando 代码变得复杂、重复、过度抽象需要简化",
+    "verify-team-code-review-standards": "代码审查标准——五轴审查体系 + 变更大小阈值 + 严重性分类。使用 cuando 需要审查代码或定义审查基准",
+    "verify-visual-review": "视觉质量审查。使用 cuando artifact_type 为 visual，或 document/deck 需要检查视觉层级、对齐、留白、一致性、可读性时",
+    "verify-workflow-debug": "系统化根因调试。使用 cuando 遇到 bug、测试失败或意外行为",
+    "verify-workflow-receiving-review": "接收审查反馈。使用 cuando 收到代码审查反馈需要评估和实施",
+    "verify-workflow-review": "按产物类型审查。使用 cuando 软件、文档、文章、PPT 或视觉稿完成后需要质量把关",
+    "verify-workflow-spec-compliance": "功能完整性审查。使用 cuando 需要验证代码是否实现了 spec 的所有需求"
   },
   "by_artifact_type": {
     "software": {
-      "required": ["build-quality-tdd", "build-infrastructure-git"],
-      "design": ["design-workflow-design", "design-experience-interaction", "design-visual-direction"],
-      "frontend": ["build-frontend-ui-engineering", "build-frontend-browser-testing", "verify-frontend-accessibility"],
-      "backend": ["build-backend-api-design", "build-backend-database", "build-backend-service-patterns"],
-      "quality": ["verify-quality-security", "verify-quality-performance", "verify-quality-simplify"]
+      "required": [
+        "build-quality-tdd",
+        "build-infrastructure-git"
+      ],
+      "design": [
+        "design-workflow-design",
+        "design-experience-interaction",
+        "design-visual-direction",
+        "design-interactive-preview"
+      ],
+      "frontend": [
+        "build-frontend-ui-engineering",
+        "build-frontend-browser-testing",
+        "verify-frontend-accessibility"
+      ],
+      "backend": [
+        "build-backend-api-design",
+        "build-backend-database",
+        "build-backend-service-patterns"
+      ],
+      "quality": [
+        "verify-quality-security",
+        "verify-quality-performance",
+        "verify-quality-simplify"
+      ]
     },
     "document": {
-      "required": ["design-workflow-design", "design-content-script", "build-content-writing"],
-      "optional": ["design-content-layout", "build-content-layout"]
+      "required": [
+        "design-workflow-design",
+        "design-content-script",
+        "build-content-writing"
+      ],
+      "optional": [
+        "design-content-layout",
+        "build-content-layout"
+      ]
     },
     "article": {
-      "required": ["design-workflow-design", "design-content-script", "build-content-writing", "verify-content-review"],
-      "optional": ["design-content-layout"]
+      "required": [
+        "design-workflow-design",
+        "design-content-script",
+        "build-content-writing",
+        "verify-content-review"
+      ],
+      "optional": [
+        "design-content-layout"
+      ]
     },
     "deck": {
-      "required": ["design-workflow-design", "design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
-      "sequence": ["design-workflow-design", "design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
+      "required": [
+        "design-workflow-design",
+        "design-content-script",
+        "design-content-direction",
+        "design-content-layout",
+        "design-interactive-preview",
+        "build-content-writing",
+        "build-content-layout"
+      ],
+      "sequence": [
+        "design-workflow-design",
+        "design-content-script",
+        "design-content-direction",
+        "design-content-layout",
+        "build-content-writing",
+        "build-content-layout"
+      ],
       "note": "必须先通过 design-workflow-design 完成证据驱动设计定稿，再 writing，最后 layout，不可并行"
     },
     "visual": {
-      "required": ["design-workflow-design", "design-visual-direction", "design-content-layout", "build-content-layout", "verify-visual-review"]
+      "required": [
+        "design-workflow-design",
+        "design-visual-direction",
+        "design-content-layout",
+        "design-interactive-preview",
+        "build-content-layout",
+        "verify-visual-review"
+      ]
     }
   },
   "by_trigger": {
     "user_says": {
-      "bug|error|crash|报错|不工作|失败": ["verify-workflow-debug"],
-      "test|测试|tdd|单元测试": ["build-quality-tdd"],
-      "api|endpoint|接口|REST|GraphQL": ["build-backend-api-design"],
-      "ui|前端|component|组件|页面": ["design-workflow-design", "build-frontend-ui-engineering"],
-      "design|设计|交互|视觉|排版|剧本|导演|best practice|最佳实践|证据": ["design-workflow-design"],
-      "performance|性能|慢|优化|latency": ["verify-quality-performance"],
-      "security|安全|漏洞|攻击|XSS|SQL注入": ["verify-quality-security"],
-      "database|数据库|schema|migration|查询": ["build-backend-database"],
-      "accessibility|无障碍|a11y|WCAG": ["verify-frontend-accessibility"],
-      "review|审查|code review": ["verify-workflow-review"],
-      "deploy|部署|上线|发布": ["ship-workflow-ship"],
-      "brainstorm|头脑风暴|想法|方案": ["define-cognitive-brainstorm"],
-      "refine|提炼|收敛|spec": ["define-workflow-refine"],
-      "plan|计划|任务|拆分": ["build-workflow-plan"],
-      "document|文档|article|文章": ["design-workflow-design", "design-content-script", "build-content-writing"],
-      "deck|PPT|演示|slides": ["design-workflow-design", "design-content-script", "design-content-direction", "design-content-layout", "build-content-writing", "build-content-layout"],
-      "visual|视觉稿|海报|版式|layout": ["design-workflow-design", "design-visual-direction", "design-content-layout", "build-content-layout"],
-      "git|版本控制|commit|branch": ["build-infrastructure-git"],
-      "ci|cd|pipeline|持续集成": ["ship-infrastructure-ci-cd"],
-      "observability|监控|日志|metrics": ["maintain-infrastructure-observability"],
-      "retro|回顾|复盘|postmortem": ["reflect-team-retro"],
-      "goal|目标|意图|追踪": ["maintain-workflow-goal"],
-      "Good Goal|Goal Review|Done When|目标质量|目标验收": ["define-workflow-refine", "define-workflow-spec"]
+      "bug|error|crash|报错|不工作|失败": [
+        "verify-workflow-debug"
+      ],
+      "test|测试|tdd|单元测试": [
+        "build-quality-tdd"
+      ],
+      "api|endpoint|接口|REST|GraphQL": [
+        "build-backend-api-design"
+      ],
+      "ui|前端|component|组件|页面": [
+        "design-workflow-design",
+        "build-frontend-ui-engineering"
+      ],
+      "design|设计|交互|视觉|排版|剧本|导演|best practice|最佳实践|证据": [
+        "design-workflow-design"
+      ],
+      "performance|性能|慢|优化|latency": [
+        "verify-quality-performance"
+      ],
+      "security|安全|漏洞|攻击|XSS|SQL注入": [
+        "verify-quality-security"
+      ],
+      "database|数据库|schema|migration|查询": [
+        "build-backend-database"
+      ],
+      "accessibility|无障碍|a11y|WCAG": [
+        "verify-frontend-accessibility"
+      ],
+      "review|审查|code review": [
+        "verify-workflow-review"
+      ],
+      "deploy|部署|上线|发布": [
+        "ship-workflow-ship"
+      ],
+      "brainstorm|头脑风暴|想法|方案": [
+        "define-cognitive-brainstorm"
+      ],
+      "refine|提炼|收敛|spec": [
+        "define-workflow-refine"
+      ],
+      "plan|计划|任务|拆分": [
+        "build-workflow-plan"
+      ],
+      "document|文档|article|文章": [
+        "design-workflow-design",
+        "design-content-script",
+        "build-content-writing"
+      ],
+      "deck|PPT|演示|slides": [
+        "design-workflow-design",
+        "design-content-script",
+        "design-content-direction",
+        "design-content-layout",
+        "build-content-writing",
+        "build-content-layout"
+      ],
+      "visual|视觉稿|海报|版式|layout": [
+        "design-workflow-design",
+        "design-visual-direction",
+        "design-content-layout",
+        "build-content-layout"
+      ],
+      "git|版本控制|commit|branch": [
+        "build-infrastructure-git"
+      ],
+      "ci|cd|pipeline|持续集成": [
+        "ship-infrastructure-ci-cd"
+      ],
+      "observability|监控|日志|metrics": [
+        "maintain-infrastructure-observability"
+      ],
+      "retro|回顾|复盘|postmortem": [
+        "reflect-team-retro"
+      ],
+      "goal|目标|意图|追踪": [
+        "maintain-workflow-goal"
+      ],
+      "Good Goal|Goal Review|Done When|目标质量|目标验收": [
+        "define-workflow-refine",
+        "define-workflow-spec"
+      ]
     },
     "context_signals": {
-      "has_spec_no_plan": ["design-workflow-design", "build-workflow-plan"],
-      "has_plan_no_code": ["build-workflow-execute"],
-      "has_code_no_tests": ["build-quality-tdd"],
-      "has_code_no_review": ["verify-workflow-review"],
-      "has_review_no_ship": ["ship-workflow-ship"],
-      "new_session_has_checkpoint": ["maintain-workflow-context-restore"],
-      "complex_codebase_unfamiliar": ["build-cognitive-context"],
-      "using_unfamiliar_api": ["build-cognitive-source-driven"],
-      "facing_technical_decision": ["build-cognitive-decision-record"]
+      "has_spec_no_plan": [
+        "design-workflow-design",
+        "build-workflow-plan"
+      ],
+      "has_plan_no_code": [
+        "build-workflow-execute"
+      ],
+      "has_code_no_tests": [
+        "build-quality-tdd"
+      ],
+      "has_code_no_review": [
+        "verify-workflow-review"
+      ],
+      "has_review_no_ship": [
+        "ship-workflow-ship"
+      ],
+      "new_session_has_checkpoint": [
+        "maintain-workflow-context-restore"
+      ],
+      "complex_codebase_unfamiliar": [
+        "build-cognitive-context"
+      ],
+      "using_unfamiliar_api": [
+        "build-cognitive-source-driven"
+      ],
+      "facing_technical_decision": [
+        "build-cognitive-decision-record"
+      ]
     }
   },
   "by_risk": {
-    "user_input": ["verify-quality-security"],
-    "authentication": ["verify-quality-security"],
-    "authorization": ["verify-quality-security"],
-    "data_storage": ["verify-quality-security", "build-backend-database"],
-    "ui_change": ["design-workflow-design", "verify-frontend-accessibility"],
-    "performance_critical": ["verify-quality-performance"],
-    "public_api": ["build-backend-api-design", "verify-quality-security"],
-    "breaking_change": ["verify-quality-integration-testing"],
-    "production_deployment": ["ship-workflow-ship", "ship-workflow-canary"]
-  },
-  "skill_descriptions": {
-    "design-workflow-design": "需要在 plan/build 前用最佳实践证据定稿创作设计阶段",
-    "design-experience-interaction": "需要用证据设计用户路径、页面结构、状态或信息架构",
-    "design-visual-direction": "需要用证据确定视觉方向、风格、层级或组件视觉规则",
-    "design-content-script": "需要用证据先定故事线、剧本骨架、段落或页级消息线",
-    "design-content-direction": "需要用证据设计页序推进、演讲节奏或情绪推进",
-    "design-content-layout": "需要用证据先定版式系统、构图、页面层级或导出规格",
-    "define-cognitive-brainstorm": "想法模糊、开放性问题、需要方案对比",
-    "define-workflow-refine": "模糊想法收敛到 spec",
-    "define-workflow-spec": "refine 完成后需要编写正式 spec",
-    "build-workflow-plan": "spec 已批准需要拆成可执行任务",
-    "build-workflow-execute": "plan 已批准需要开始实现或生成交付物",
-    "build-quality-tdd": "写逻辑代码（MUST）",
-    "build-cognitive-context": "上下文混乱或输出质量下降",
-    "build-cognitive-source-driven": "使用不熟悉的 API/框架",
-    "build-cognitive-execution-engine": "build-workflow-plan 完成后需要选择执行模式并写代码",
-    "build-cognitive-decision-record": "面临技术选型或架构决策",
-    "build-infrastructure-git": "需要提交代码、创建分支或管理变更",
-    "build-frontend-ui-engineering": "构建/修改 UI 组件",
-    "build-frontend-browser-testing": "前端变更需要运行时验证或 UI bug 调查",
-    "build-backend-api-design": "设计 API/接口/数据合约",
-    "build-backend-database": "设计 schema/写迁移/优化查询",
-    "build-backend-service-patterns": "需要设计后端服务架构或跨服务通信",
-    "build-content-writing": "artifact_type 为 document/article/deck，或需要内容创作",
-    "build-content-layout": "artifact_type 为 document/deck/visual，或需要版式设计",
-    "verify-workflow-review": "产物完成后质量把关",
-    "verify-workflow-spec-compliance": "需要验证实现是否完整覆盖 spec 和验收标准",
-    "verify-quality-code-quality": "需要按五轴标准评估实现质量",
-    "verify-workflow-debug": "遇到 bug/测试失败/意外行为（MUST）",
-    "verify-frontend-accessibility": "构建 UI 组件/表单/导航",
-    "verify-quality-integration-testing": "需要在单元测试之上验证跨组件/跨服务的正确性",
-    "verify-quality-performance": "性能不达标或上线前审查",
-    "verify-quality-security": "涉及用户输入/认证/数据存储",
-    "verify-team-code-review-standards": "需要审查代码或定义审查基准",
-    "verify-content-review": "artifact_type 为 document/article/deck，或需要内容质量审查",
-    "verify-visual-review": "artifact_type 为 visual，或需要检查视觉质量",
-    "verify-workflow-receiving-review": "收到代码审查反馈需要评估和实施",
-    "verify-quality-simplify": "代码变得复杂/重复/过度抽象",
-    "ship-workflow-ship": "审查通过后上线或交付",
-    "ship-infrastructure-ci-cd": "设置/修改 CI/CD 管道",
-    "ship-infrastructure-deploy": "部署操作",
-    "ship-artifact-export": "artifact_type 为非 software，需要导出最终文件",
-    "ship-workflow-canary": "代码已部署需要持续验证",
-    "ship-workflow-land": "PR 合并到主分支并验证部署",
-    "ship-workflow-doc-sync": "代码已合并需要同步更新项目文档",
-    "maintain-infrastructure-observability": "需要监控生产、调查线上问题或配置告警",
-    "maintain-team-deprecation-migration": "需要移除、替换或迁移已有功能/API",
-    "maintain-workflow-using-unified": "session 启动时建立主动技能发现机制",
-    "maintain-workflow-context-save": "保存工作上下文供后续恢复",
-    "maintain-workflow-context-restore": "新 session 继续之前的工作",
-    "maintain-workflow-learn": "发现项目模式/踩坑/偏好需要持久化",
-    "reflect-team-retro": "功能完成/里程碑达成/事故处理后复盘",
-    "reflect-team-documentation": "记录架构决策或维护项目知识",
-    "maintain-workflow-goal": "创建、追踪、暂停或完成跨 session 的持久化目标"
+    "user_input": [
+      "verify-quality-security"
+    ],
+    "authentication": [
+      "verify-quality-security"
+    ],
+    "authorization": [
+      "verify-quality-security"
+    ],
+    "data_storage": [
+      "verify-quality-security",
+      "build-backend-database"
+    ],
+    "ui_change": [
+      "design-workflow-design",
+      "verify-frontend-accessibility"
+    ],
+    "performance_critical": [
+      "verify-quality-performance"
+    ],
+    "public_api": [
+      "build-backend-api-design",
+      "verify-quality-security"
+    ],
+    "breaking_change": [
+      "verify-quality-integration-testing"
+    ],
+    "production_deployment": [
+      "ship-workflow-ship",
+      "ship-workflow-canary"
+    ]
   }
 }

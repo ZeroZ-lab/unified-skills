@@ -252,7 +252,10 @@
       "computedHash": "74c7a30dbff74ed012ab273475054504ad11f9f587cfb17ede3382c924788199"
     },
     "design-workflow-design": {
-      "computedHash": "da4ad26eb114696ed6e488fb77d1935c57194c78ed5cf3511386620a2b21713b"
+      "computedHash": "b864590a4d31c6dcec5b224fe77bf7abbe959bafc98dfb68f8e2a42f75e3a4f6"
+    },
+    "design-interactive-preview": {
+      "computedHash": "4df0fc2c51ee7d817dd0c228c7a80b56d90a92334e633b61f27e084ce2b5e63d"
     }
   }
 }

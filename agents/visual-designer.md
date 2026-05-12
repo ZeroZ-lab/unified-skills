@@ -26,6 +26,7 @@ description: 视觉设计师 — 优先服务 /design，负责有证据支撑的
 - `design-experience-interaction`
 - `design-visual-direction`
 - `design-content-layout`
+- `design-interactive-preview`
 - `references/design-best-practices.md`
 - `build-content-layout`
 - `build-workflow-execute`

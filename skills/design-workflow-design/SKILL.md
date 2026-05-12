@@ -125,6 +125,34 @@ skip 时必须明确记录：
 - 实施前置条件
 - 按类型的设计内容
 
+**条件：多方案产出（visual comparison applicable 时）**
+
+当 `artifact_type` 为 `software`(有 UI)、`visual` 或 `deck` 时，产出 2-3 个设计方向而非单一草案：
+
+- 每个方向在 `## Design Alternatives` 区段中独立记录
+- 各方向在最有影响力的维度上差异化：
+  - `software + UI`: 不同布局结构 + 交互模式组合
+  - `visual`: 不同构图 / 色彩方向 / 风格
+  - `deck`: 不同叙事结构 / 页面节奏
+- 每个方向仍需独立的设计目标、关键决策和 Adopt 证据链
+- 产出后进入 Step 4.5 进行交互式视觉对比
+
+不适用多方案的场景（`document` / `article` / 纯后端）：产出单一草案，跳过 Step 4.5。
+
+### Step 4.5：交互式视觉对比（conditional）
+
+**仅当** Step 4 产出了 2-3 个 alternatives 时执行。
+
+调用 `design-interactive-preview` 技能：
+1. 启动本地 HTTP 服务 (`scripts/design-preview.mjs`)
+2. 生成对比 HTML 并在浏览器中展示
+3. 多轮对比：先整体方向，再按维度细化
+4. 捕获用户选择
+5. 精炼 `02-design.md`：选定方向成为主设计，未选方案移入 Alternatives Considered
+6. 关闭服务
+
+选择完成后，`02-design.md` 从多方案精炼为单一方向，继续进入 Step 5。
+
 ### Step 5：用户批准
 
 向 human partner 展示设计稿，逐项确认：
@@ -133,6 +161,8 @@ skip 时必须明确记录：
 - Adopt / Reject 是否符合项目目标
 - 是否仍缺关键状态/节奏/构图
 - 是否有不做项需要调整
+
+**注**: 如果经过 Step 4.5 视觉对比，用户已确认方向选择，此处批准可聚焦证据质量、完整性和不做清单，无需重复讨论方向。
 
 没有批准不得进入 `/plan`。
 

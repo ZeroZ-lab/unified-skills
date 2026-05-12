@@ -69,13 +69,35 @@ Transform approved spec into an approved, evidence-driven design contract for us
 2. 按 artifact_type 产出对应设计决策
 3. 只有进入 Adopt 的外部模式才能成为设计决策
 4. 明确设计目标、关键决策、设计边界、批准标准、实施前置条件
-**Output:** docs/features/YYYYMMDD-<name>/02-design.md（draft）
+5. **条件分支**: 当 `artifact_type` 为 `software`(有 UI)、`visual` 或 `deck` 时，产出 2-3 个 Design Alternatives（不同布局 / 交互 / 视觉方向），供 Phase 3.5 视觉对比；其他类型产出单一草案
+**Output:** docs/features/YYYYMMDD-<name>/02-design.md（draft, 含 alternatives 或单一方案）
 **Validation:**
 - [ ] Design References / Pattern Synthesis / Inferences / Adopt-Reject 已填写
 - [ ] 设计目标明确
 - [ ] 关键决策已定稿
 - [ ] 不做清单明确
 - [ ] 没有实现任务分解
+- [ ] visual comparison applicable 时：Design Alternatives 区段包含 2-3 个方向
+
+### Phase 3.5: Interactive Preview (conditional)
+
+**Condition:** artifact_type 为 `software`(有 UI)、`visual` 或 `deck`，且 Phase 3 产出了 Design Alternatives
+**Agent:** visual-designer
+**Skills:** design-interactive-preview
+**Input:** 02-design.md (draft with alternatives)
+**Process:**
+1. 启动本地 HTTP 服务 (`scripts/design-preview.mjs`)
+2. 生成对比 HTML 并在浏览器中展示
+3. 多轮对比：先整体方向，再按维度细化（布局 / 配色 / 字体 / 交互模式等）
+4. 捕获用户选择，精炼 `02-design.md` 为选定方向
+5. 关闭服务
+**Output:** 02-design.md (refined draft, 单一方向) + design-selection.json
+**Validation:**
+- [ ] HTTP 服务已启动并返回端口
+- [ ] 对比页面已在浏览器打开
+- [ ] 用户已做出选择
+- [ ] 02-design.md 已精炼为选定方向
+- [ ] 未选方案已移入 Alternatives Considered
 
 ### Phase 4: Design Review
 
@@ -94,11 +116,12 @@ Transform approved spec into an approved, evidence-driven design contract for us
 
 **Agent:** current
 **Skills:** design-workflow-design
-**Input:** 02-design.md（draft）+ design-review-comments.md
+**Input:** 02-design.md（refined draft）+ design-review-comments.md
 **Process:**
 1. 向用户展示设计稿 + design review 反馈
 2. 记录反馈并修改
 3. 获得批准后定稿
+4. **注**: 如果经过 Phase 3.5 视觉对比，用户已确认方向选择，此处聚焦证据质量、完整性和不做清单
 **Output:** docs/features/YYYYMMDD-<name>/02-design.md（final）
 **Validation:**
 - [ ] design-reviewer 的 Blocking 已处理
