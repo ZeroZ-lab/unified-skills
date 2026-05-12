@@ -35,7 +35,7 @@ Transform approved spec into an approved, evidence-driven design contract for us
 **Skills:**
 - design-workflow-design
 - artifact_type 对应 design-* 专项技能
-**Input:** 01-spec.md + references/design-best-practices.md + local project context
+**Input:** 01-spec.md + references/design-best-practices.md + references/design-inspiration-catalog.md + references/design-pattern-extract.md + DESIGN.md（如存在）+ local project context
 **Process:**
 1. 围绕交互 / 视觉 / 排版 / 剧本 / 导演目标重新扫描创作与呈现层最佳实践
 2. 按 Enterprise Product Patterns / Official Systems / Methods / Anti-patterns / Local Project Truth 分层记录来源
@@ -48,6 +48,26 @@ Transform approved spec into an approved, evidence-driven design contract for us
 - [ ] Inferences 已从模式和本地约束推导
 - [ ] Adopt / Reject 已记录
 - [ ] Unknown / Search unavailable 已处理或阻塞
+
+### Phase 2.5: Codex Visual Generation + Token Extraction (conditional)
+
+**Condition:** `codex:codex-rescue` agent 可用 且 artifact_type 为 `software`(有 UI)、`visual` 或 `deck`
+**Agent:** codex:codex-rescue（图片生成） + current（token 提取）
+**Skills:** design-workflow-design
+**Input:** 01-spec.md + Phase 2 design-best-practice-scan（Adopt 模式 + 参考公司视觉特征）
+**Process:**
+1. 将 spec 约束 + Best-Practice Scan 的 Adopt 条目组装为 Codex prompt
+2. 调用 `codex:codex-rescue` agent 生成 2-3 张设计方向 mockup 图（PNG），每张代表差异化视觉方向
+3. 图片保存到 `docs/features/YYYYMMDD-<name>/assets/` 目录（mockup-direction-{1,2,3}.png）
+4. 用视觉分析能力逐张分析 mockup 图，提取结构化 design token（colors / typography / spacing / rounded / components）
+5. Token 数据保存到 `docs/features/YYYYMMDD-<name>/assets/design-tokens-extracted.json`
+6. 提取的 token 作为 Pattern Synthesis 视觉证据进入 Phase 3 Adopt / Reject
+**Output:** 2 个产物——设计参考图（PNG）+ design-tokens-extracted.json
+**Degradation:** Codex 不可用时跳过此 Phase，记录 `Codex Visual Generation unavailable`，继续依赖 Phase 2 文字证据
+**Validation:**
+- [ ] Codex 可用时：mockup 图片已生成且保存
+- [ ] Codex 可用时：design-tokens-extracted.json 已提取且结构合法
+- [ ] Codex 不可用时：降级记录已写入
 
 ### Phase 3: Create Design Draft
 
@@ -128,6 +148,23 @@ Transform approved spec into an approved, evidence-driven design contract for us
 - [ ] 用户已批准 design
 - [ ] 设计稿满足批准标准
 
+### Phase 6: Sync Project Design Constraints
+
+**Agent:** current
+**Skills:** design-workflow-design
+**Input:** 02-design.md（final）
+**Process:**
+1. 读取项目根 DESIGN.md（如存在）
+2. 如不存在，使用 templates/root/DESIGN.md 模板创建
+3. 从 02-design.md 提取项目级设计 token 和约束（详见 Step 6 提取规则）
+4. 将新 token/约束合并到 DESIGN.md（YAML front matter + Markdown 章节），不覆盖手动内容
+5. 更新 Sync Log
+**Output:** DESIGN.md（创建或更新）
+**Validation:**
+- [ ] DESIGN.md 已存在
+- [ ] YAML token 合法且不覆盖手动 token
+- [ ] Sync Log 已更新
+
 ---
 
 ## Entry Conditions
@@ -138,6 +175,7 @@ Transform approved spec into an approved, evidence-driven design contract for us
 - [ ] design required 时：02-design.md 存在且已批准
 - [ ] design required 时：02-design.md 包含证据来源、模式综合、Adopt / Reject
 - [ ] design skipped 时：skip 理由已明确记录
+- [ ] design required 时：DESIGN.md 已同步（创建或更新）
 
 ## Next Steps
 - If design approved → /plan

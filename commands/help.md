@@ -28,7 +28,7 @@ Show what Unified Skills can do: available commands, artifact types, workflow st
 |------|------|--------|------|
 | /brainstorm | Define | 模糊想法 → 2-3 方案 + 推荐 | 00-brainstorm.md |
 | /refine | Define | 模糊想法 → 明确 spec | 01-spec.md |
-| /design | Design | spec → 证据驱动设计定稿 | 02-design.md |
+| /design | Design | spec → 证据驱动设计定稿 | 02-design.md + DESIGN.md |
 | /plan | Build | spec + design → 可执行任务计划 | 03-plan.md |
 | /build | Build | 按计划增量生成产物 | 软件/内容/视觉 + ADR |
 | /review | Verify | 按制品类型质量审查 | 04-review.md |
@@ -52,6 +52,13 @@ Show what Unified Skills can do: available commands, artifact types, workflow st
 ### 典型工作流
 
 想法模糊 → /brainstorm → /refine → /design → /plan → /build → /review → /ship
+
+### 项目级设计约束
+
+| 文档 | 位置 | 用途 |
+|------|------|------|
+| DESIGN.md | 项目根目录 | 跨 feature 的设计系统（Google Stitch token 格式），/design 批准后自动同步 |
+| 02-design.md | docs/features/YYYYMMDD-<name>/ | 当前 feature 的创作设计定稿 |
 
 ### 宪法（CANON.md）
 

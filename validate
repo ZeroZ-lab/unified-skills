@@ -101,8 +101,8 @@ if [ "$skill_count" != "$EXPECTED_SKILL_COUNT" ]; then
 fi
 
 template_count=$(find templates -type f | wc -l | tr -d ' ')
-if [ "$template_count" != "7" ]; then
-  fail "模板数量应为 7，实际为 $template_count"
+if [ "$template_count" != "8" ]; then
+  fail "模板数量应为 8，实际为 $template_count"
 fi
 
 for file in templates/feature/01-spec.md templates/feature/02-design.md templates/feature/03-plan.md skills/define-workflow-spec/SKILL.md README.md AGENTS.md; do
@@ -220,6 +220,26 @@ done
 
 sgrep '不替代 `/design` 的设计扫描' AGENTS.md || fail "AGENTS 缺少 refine scan 与 design scan 的边界"
 sgrep '不替代 `/design` 的创作与呈现层扫描' docs/architecture/command-agent-skill-architecture.md || fail "架构文档缺少 refine/design scan 边界"
+
+printf '\n== 检查 DESIGN.md 模板 ==\n'
+[ -f "templates/root/DESIGN.md" ] || fail "缺少项目级设计约束模板: templates/root/DESIGN.md"
+sgrep 'colors:' templates/root/DESIGN.md || fail "DESIGN.md 模板缺少 YAML colors token"
+sgrep 'typography:' templates/root/DESIGN.md || fail "DESIGN.md 模板缺少 YAML typography token"
+sgrep 'components:' templates/root/DESIGN.md || fail "DESIGN.md 模板缺少 YAML components token"
+sgrep 'Sync Log' templates/root/DESIGN.md || fail "DESIGN.md 模板缺少 Sync Log 章节"
+sgrep 'DESIGN\.md' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 DESIGN.md 引用"
+sgrep 'DESIGN\.md' commands/design.md || fail "design 命令缺少 DESIGN.md 引用"
+sgrep 'DESIGN\.md' references/design-best-practices.md || fail "design-best-practices 缺少 DESIGN.md 说明"
+sgrep 'design-inspiration-catalog' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 design-inspiration-catalog 引用"
+sgrep 'design-pattern-extract' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 design-pattern-extract 引用"
+sgrep 'Step 3\.5：Codex' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 Step 3.5 Codex 视觉生成"
+sgrep 'design-tokens-extracted' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 design-tokens-extracted 产物"
+sgrep 'Phase 2\.5: Codex' commands/design.md || fail "design 命令缺少 Phase 2.5 Codex 视觉生成"
+sgrep 'mockup-direction' commands/design.md || fail "design 命令缺少 mockup 产物说明"
+sgrep 'codex-rescue' AGENTS.md || fail "AGENTS 缺少 codex-rescue 引用"
+sgrep 'design-tokens-extracted' AGENTS.md || fail "AGENTS 缺少 design-tokens-extracted 产物说明"
+[ -f "references/design-inspiration-catalog.md" ] || fail "缺少设计灵感目录: references/design-inspiration-catalog.md"
+[ -f "references/design-pattern-extract.md" ] || fail "缺少设计模式提取: references/design-pattern-extract.md"
 [ "$status" -eq 0 ] && printf '通过\n'
 
 for file in README.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do

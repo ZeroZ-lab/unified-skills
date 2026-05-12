@@ -190,11 +190,20 @@ Unified 的主路径是一条带回路的状态机，而不是线性清单：
 关键门控：
 
 - `/refine` 使用 External Scan，把信息分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject。
-- `/design` 使用 Design Best-Practice Scan；`02-design.md` 必须写明 Design References、Pattern Synthesis、Adopt / Reject 和 Evidence Quality。
+- `/design` 使用 Design Best-Practice Scan + 可选 Codex 视觉生成（mockup 图片 → design token）；`02-design.md` 必须写明 Design References、Pattern Synthesis、Adopt / Reject 和 Evidence Quality。批准后自动同步跨 feature token 到项目根 `DESIGN.md`。
 - `/plan` 负责任务拓扑；只有 `Parallel Execution Matrix` 证明 `parallel_safe` 时才允许并行。
 - `/build` 消费已批准的 `03-plan.md`；大型任务还会读取 `plans/*.md`。
 - `/review` 负责阻断质量问题；blocking 不能靠口头承诺跳过。
 - `/ship` 负责发布 / 导出审计、回滚或恢复路径、文档同步。
+
+### 项目级设计约束
+
+| 文档 | 位置 | 用途 |
+|------|------|------|
+| `DESIGN.md` | 项目根目录 | 跨 feature 的设计系统（Google Stitch token 格式），`/design` 批准后自动同步 |
+| `02-design.md` | `docs/features/YYYYMMDD-<name>/` | 当前 feature 的创作设计定稿 |
+| `design-inspiration-catalog.md` | `references/` | 优秀公司设计索引，Phase 2 扫描参考 |
+| `design-pattern-extract.md` | `references/` | 高频设计模式提炼，Adopt / Reject 基线 |
 
 ## 产物类型路由
 
@@ -307,7 +316,7 @@ Unified 提供以下自动化工具减少手动同步负担：
 
 ```bash
 # 1. 更新 package.json 版本号
-vim package.json  # 修改为 2.15.0
+vim package.json  # 修改为新版本号
 
 # 2. 运行同步脚本
 bash scripts/sync-version.sh
@@ -367,65 +376,6 @@ bash scripts/tests/test-generate-index.sh
 - 索引与技能目录一致性
 - 自动化脚本存在性
 - 其他项目健康检查
-
-## 自动化工具
-
-Unified 提供以下自动化工具减少手动同步负担：
-
-### 版本同步
-
-发版时使用版本同步脚本自动更新所有版本号：
-
-```bash
-# 1. 更新 package.json 版本号
-# 2. 运行同步脚本
-bash scripts/sync-version.sh
-
-# 3. 验证同步成功
-./validate
-```
-
-**支持的选项：**
-- `--dry-run` - 预览模式，不实际修改文件
-- `--help` - 显示帮助信息
-
-### 索引生成
-
-修改技能后重新生成索引：
-
-```bash
-# 生成 skills-index.json
-bash scripts/generate-index.sh
-
-# 验证生成成功
-./validate
-```
-
-**支持的选项：**
-- `--dry-run` - 预览模式，不实际写入文件
-- `--verbose` - 显示详细信息
-- `--help` - 显示帮助信息
-
-### 测试
-
-所有自动化脚本都有对应的测试：
-
-```bash
-# 测试版本同步
-bash scripts/tests/test-sync-version.sh
-
-# 测试索引生成
-bash scripts/tests/test-generate-index.sh
-```
-
-### 使用场景
-
-| 场景 | 使用的工具 | 频率 |
-|------|-----------|------|
-| 发版前 | `scripts/sync-version.sh` | 每次发版 |
-| 修改技能后 | `scripts/generate-index.sh` | 修改技能时 |
-| 提交前 | `./validate` | 每次提交 |
-| 新增脚本测试 | `scripts/tests/test-*` | 开发时 |
 
 ## 扩展与贡献
 

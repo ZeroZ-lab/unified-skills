@@ -1,5 +1,38 @@
 # Changelog
 
+## [2.16.0] - 2026-05-12
+
+### Added
+- design: 项目级设计约束模板 `templates/root/DESIGN.md`（Google Stitch token 格式）
+  - YAML front matter 包含 colors / typography / rounded / spacing / components token 槽位
+  - 10 个 Markdown 章节：视觉主题、色彩、字体、组件、布局、深度、Do/Don't、响应式、Agent 指南、Sync Log
+- design: 设计灵感目录 `references/design-inspiration-catalog.md`
+  - 紧索引 18+ 公司（Developer Tools / Finance / SaaS / Media / E-Commerce / Electronics / Social / AI）
+  - 每个条目包含核心视觉特征、色彩 token、字体详情和设计哲学关键词
+  - 数据来源标注 awesome-design-md（73 个真实 DESIGN.md）
+  - awesome-design-systems（24K+ stars，200+ 设计系统）作为 web search 扩展种子
+- design: 高频设计模式提炼 `references/design-pattern-extract.md`
+  - 5 种色彩策略、5 种字体策略、5 种组件模式、4 种布局策略
+  - 通用 Do's 和 Don'ts 作为设计验证基线
+- design: Codex 视觉生成 + Token 提取（Step 3.5 / Phase 2.5）
+  - codex-rescue agent 生成 2-3 张设计方向 mockup 图片（PNG）
+  - 视觉分析提取结构化 design token（colors / typography / spacing / rounded / components）
+  - 两个产物：设计参考图 + design-tokens-extracted.json
+  - 可选增强：Codex 不可用时降级，不影响后续步骤
+- design: DESIGN.md 项目级约束自动同步（Step 6 / Phase 6）
+  - 每次 /design 批准后提取跨 feature token 写入项目根 DESIGN.md
+  - 合并规则：手动优先，新增追加，冲突标注 <!-- conflict-note -->
+
+### Changed
+- design: 6 个 design 子技能引用更新（catalog / pattern / DESIGN.md）
+- design: design-workflow-design SKILL.md 灵感来源优先级增加搜索种子
+- design: commands/design.md 新增 Phase 2.5 和 Phase 6
+- docs: commands/help.md 项目级设计约束说明
+- docs: AGENTS.md /design 命令映射更新
+- validation: validate 新增 DESIGN.md 模板检查 + Codex 视觉生成检查 + catalog/pattern 存在检查
+- validation: 模板数量从 8 更新为 9（新增 templates/root/DESIGN.md）
+- fix: .claude-plugin/plugin.json description 从 Unicode 转义改为 UTF-8 编码
+
 ## [2.15.0] - 2026-05-10
 
 ### Added

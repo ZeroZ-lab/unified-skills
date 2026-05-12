@@ -78,7 +78,7 @@ reflect/   → retro（回顾）、documentation（文档）
 | 命令 | 加载的技能 | 产出 | 文档路径 |
 |------|-----------|------|----------|
 | `/refine` | define-workflow-refine | 规范 spec | `docs/features/YYYYMMDD-<name>/01-spec.md` |
-| `/design` | design-workflow-design + artifact_type 对应 design 技能 | 证据驱动的创作设计定稿 | `docs/features/YYYYMMDD-<name>/02-design.md` |
+| `/design` | design-workflow-design + artifact_type 对应 design 技能 + codex-rescue（可选，视觉 mockup） | 证据驱动的创作设计定稿 + Codex 视觉 mockup（可选） + 项目级约束同步 | `docs/features/YYYYMMDD-<name>/02-design.md` + `assets/mockup-direction-{1,2,3}.png` + `assets/design-tokens-extracted.json`（可选） + `DESIGN.md` |
 | `/plan` | build-workflow-plan | 任务计划 | `docs/features/YYYYMMDD-<name>/03-plan.md` |
 | `/build` | build-workflow-execute + artifact_type 对应技能 | 软件/内容产物+验证+ADR | `docs/features/YYYYMMDD-<name>/adr/` |
 | `/review` | verify-workflow-review + artifact_type 对应审查 | 审查报告 | `docs/features/YYYYMMDD-<name>/04-review.md` |
@@ -129,6 +129,8 @@ spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `doc
 ## 文档产出链
 
 ```
+DESIGN.md                     ← /design（项目级设计系统，Google Stitch token 格式，自动同步）
+
 docs/features/YYYYMMDD-<name>/
 ├── 00-brainstorm.md        ← /brainstorm
 ├── 01-spec.md              ← /refine

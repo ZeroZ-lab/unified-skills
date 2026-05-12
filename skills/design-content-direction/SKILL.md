@@ -25,14 +25,14 @@ description: 导演设计——镜头/页面切换意图、情绪推进、演示
 
 ## 最佳实践输入
 
-先读取 `references/design-best-practices.md`，并把导演相关证据写入 `02-design.md` 的 `Design References / Pattern Synthesis / Adopt / Reject`。
+先读取 `references/design-best-practices.md` 和 `references/design-inspiration-catalog.md`，并把导演相关证据写入 `02-design.md` 的 `Design References / Pattern Synthesis / Adopt / Reject`。
 
 扫描重点：
 - Enterprise Product Patterns: pitch deck、发布会、产品演示、汇报材料的页序和揭示模式
 - Official Systems / Platform Rules: 演示媒介、时长、品牌语气、动画/导出限制
 - Methods / Theory / Style Schools: 戏剧张力、揭示顺序、节奏控制、speaker load 管理
 - Anti-patterns / Verification: 每页平均用力、无转折、动画代替叙事、一页多功能
-- Local Project Truth: 观众任务、现场/异步阅读场景、页数限制、演讲者能力和素材边界
+- Local Project Truth: 观众任务、现场/异步阅读场景、页数限制、演讲者能力和素材边界；项目根 `DESIGN.md`（如果存在，作为导演约束参考）
 
 导演设计必须说明为什么这样推进；不能把页序写成材料清单。
 

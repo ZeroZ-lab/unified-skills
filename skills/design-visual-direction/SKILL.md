@@ -29,14 +29,14 @@ description: 视觉设计——风格、层级、色彩、组件视觉规则
 
 ## 最佳实践输入
 
-先读取 `references/design-best-practices.md`，并把视觉相关证据写入 `02-design.md` 的 `Design References / Pattern Synthesis / Adopt / Reject`。
+先读取 `references/design-best-practices.md`、`references/design-inspiration-catalog.md` 和 `references/design-pattern-extract.md`，并把视觉相关证据写入 `02-design.md` 的 `Design References / Pattern Synthesis / Adopt / Reject`。
 
 扫描重点：
 - Enterprise Product Patterns: 同类产品的视觉密度、信任感、品牌气质和组件语言
 - Official Systems / Platform Rules: 品牌规范、设计系统、平台视觉规则、可访问性对比度
 - Methods / Theory / Style Schools: 视觉层级、色彩角色、排版体系、风格流派
 - Anti-patterns / Verification: 单色调滥用、装饰压过信息、卡片泛滥、品牌混搭冲突
-- Local Project Truth: 现有 token、组件库、品牌资产、媒介限制和用户目标
+- Local Project Truth: 现有 token、组件库、品牌资产、媒介限制和用户目标；项目根 `DESIGN.md`（如果存在，读取 YAML token 和视觉方向）
 
 流行风格必须经过 Adopt / Reject；不能把“高级”“科技感”“像某品牌”直接写成结论。
 
