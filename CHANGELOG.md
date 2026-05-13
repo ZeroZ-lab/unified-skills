@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.16.3] - 2026-05-13
+
+### Changed
+- skills: normalize `SKILL.md` descriptions and Chinese section headings across the skill set.
+- skills: add explicit `何时不使用` boundaries and validation coverage for every skill.
+- skills: slim large skill entrypoints by moving long examples, templates, rubrics, and review guidance into referenced auxiliary files.
+- validation: extend `skills-lock.json` checks to cover skill auxiliary `.md` files and require them to be referenced by the owning `SKILL.md`.
+
 ## [2.16.2] - 2026-05-13
 
 ### Changed
