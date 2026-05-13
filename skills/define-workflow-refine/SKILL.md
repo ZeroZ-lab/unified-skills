@@ -1,6 +1,6 @@
 ---
 name: define-workflow-refine
-description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊的想法需要结构化收敛
+description: 从模糊想法变成明确的 spec。当有一个模糊的想法需要结构化收敛
 ---
 
 # Refine — 想法收敛
@@ -17,7 +17,7 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 - 需求已经清晰结构化，直接写 spec
 - 打字错误/单行修复等琐碎变更
 
-## HARD GATE
+## 硬门
 
 <HARD-GATE>
 **在用户批准设计之前，禁止调用任何实现技能、写任何代码、创建任何项目脚手架。**
@@ -37,37 +37,7 @@ description: 从模糊想法变成明确的 spec。使用 cuando 有一个模糊
 **Step 1.2.5：Goal Review（目标质量检查）**
 在继续细化方案前，先判断当前 goal 是否足够清楚，能否安全进入 spec。Goal Review 只检查目标质量，**不替代** `/goal` 的生命周期管理。
 
-按 6 个维度评分，每项 0-2 分：
-
-| Dimension | 0 | 1 | 2 |
-|-----------|---|---|---|
-| Clarity | 目标模糊，无法一句话说明 | 有方向但对象/结果不清 | 一句话能说明具体目标 |
-| Scope | 没有边界或混入多个任务 | 有部分边界但仍有歧义 | Include / Exclude 清楚 |
-| Context | 缺少项目、文件、背景或复现信息 | 有部分上下文但不足以执行 | 相关上下文足够开始 |
-| Constraints | 没有限制或默认可随意改 | 有隐含限制但未写清 | API、行为、依赖、格式等约束明确 |
-| Acceptance | 无法判断完成 | 有成功描述但不可验证 | Done When 具体、可验证 |
-| Safety | 没有风险或停止条件 | 风险隐约存在但未界定 | 高风险区域和 Stop Conditions 明确 |
-
-输出固定结构：
-
-```markdown
-## Goal Review
-- Source Goal: conversation / `GOAL.md` / Codex `/goal`
-- Goal Status: accepted / needs-refinement / blocked
-- Goal Review Score: <score>/12
-- Blocking:
-  - <没有则写 none>
-- Done When:
-  - Functional:
-  - Technical:
-  - Regression:
-  - Output:
-- Stop Conditions:
-  - Acceptance 无法验证
-  - 需要修改明确排除范围
-  - 需要改变 API / 权限 / 数据结构 / 生产配置
-  - 实际范围明显大于当前 Goal
-```
+评分维度和输出模板见 `refine-artifacts.md`。
 
 Gate:
 - `10-12`: accepted，可以进入 spec
@@ -109,29 +79,7 @@ Gate:
 | `deck` | 同类演示结构、叙事模式、页面信息密度、数据表达方式 |
 | `visual` | 竞品视觉、品牌/媒介规范、布局模式、可读性要求 |
 
-**输出必须分层：**
-
-分层契约固定为：Fact / Pattern / Inference / Unknown / Adopt / Reject。
-
-```markdown
-## External Scan
-- Search status: completed / skipped / unavailable
-- Scan date: YYYY-MM-DD
-- Sources:
-  - [source] — why relevant
-- Fact:
-  - 有来源支撑的事实
-- Pattern:
-  - 多个来源重复出现的做法
-- Inference:
-  - 基于事实和模式得出的推断
-- Unknown:
-  - 仍需用户确认的问题
-- Adopt:
-  - 采纳什么，以及为什么
-- Reject:
-  - 不采纳什么，以及为什么
-```
+**输出必须分层：** Fact / Pattern / Inference / Unknown / Adopt / Reject。固定输出模板见 `refine-artifacts.md`。
 
 搜索结果不能直接变成需求。只有进入 `Adopt` 且和用户目标、约束、artifact_type 一致的内容，才能进入方案或 spec。进入 `Reject` 的内容要写明原因，防止后续反复膨胀 scope。
 
@@ -165,27 +113,7 @@ Idea draft (clarification + External Scan + local context)
 - 当前项目上下文
 - 明确的"不做/待确认"边界
 
-**Scout 输出必须使用统一结构：**
-
-```markdown
-## Verdict
-Blocking / Important / Suggestion
-
-## Evidence Used
-- local:
-- external:
-- inferred:
-
-## Findings
-- [Blocking] ...
-- [Important] ...
-- [Suggestion] ...
-
-## Spec Impact
-- adopt:
-- reject:
-- ask user:
-```
+**Scout 输出必须使用统一结构**，模板见 `refine-artifacts.md`。
 
 **反馈处理规则：**
 - **Blocking** — 必须解决（如：问题假设被推翻、技术上不可行），修正后重新验证
@@ -225,72 +153,7 @@ Blocking / Important / Suggestion
 
 ### Phase 3 产出 spec
 
-输出结构化的 one-pager 到 `docs/features/YYYYMMDD-<name>/01-spec.md`（YYYYMMDD 为当天日期）：
-
-```markdown
-# [功能名称]
-
-## 问题陈述
-[一句话 How Might We 问题]
-
-## 方案及理由
-[2-3 段]
-
-## Artifact Type
-artifact_type: software
-
-Allowed: software / document / article / deck / visual
-
-## Goal Alignment
-- Source Goal: conversation / `GOAL.md` / Codex `/goal`
-- Goal Status: accepted / needs-refinement / blocked
-- Goal Review Score: <score>/12
-
-### One-line Goal
-[一句话目标]
-
-### Done When
-- [ ] Functional:
-- [ ] Technical:
-- [ ] Regression:
-- [ ] Output:
-
-### Stop Conditions
-- [ ] Acceptance 无法验证
-- [ ] 需要修改明确排除范围
-- [ ] 需要改变 API / 权限 / 数据结构 / 生产配置
-- [ ] 实际范围明显大于当前 Goal
-
-## External References
-- Search status: completed / skipped / unavailable
-- Fact:
-- Pattern:
-- Inference:
-- Unknown:
-- Adopt:
-- Reject:
-
-## Scout Review Summary
-- CEO:
-- Eng:
-- Design:
-- Blocking resolved:
-- Important adopted:
-- Suggestions deferred:
-
-## 核心假设（待验证）
-- [ ] 假设 1 — 如何验证
-- [ ] 假设 2 — 如何验证
-
-## MVP 范围
-[最小可验证版本包括什么，不包括什么]
-
-## 不做清单（及理由）
-- [事项] — [理由]
-
-## 待解决问题
-- [实施前需要回答的问题]
-```
+输出结构化的 one-pager 到 `docs/features/YYYYMMDD-<name>/01-spec.md`（YYYYMMDD 为当天日期）。完整模板见 `refine-artifacts.md` 或 `templates/feature/01-spec.md`。
 
 **"不做清单" 是最有价值的部分之一。** 专注在于拒绝好的想法。明确 trade-off。
 
@@ -303,6 +166,14 @@ Allowed: software / document / article / deck / visual
 | 隐藏假设被推翻 | 更新假设集，评估影响，可能需要调整或放弃当前方向 |
 | 发现已有类似方案 | 分析差别，确认确实需要新方案后继续，否则执行复用 |
 | 需求从模糊变明确后范围暴增 | 先分解为子项目，只 refine 第一个子项目，其余的后续处理 |
+
+## 验证证据
+
+输出或记录必须包含：
+- **输入/来源**: 读取的 spec、plan、代码、反馈或发布上下文。
+- **执行动作**: 实际完成的检查、生成、修复、导出或发布步骤。
+- **验证结果**: 命令、审查结论、产物路径、截图或人工确认。
+- **阻塞/回退**: 未通过项、回退路径或需要 human partner 决策的问题。
 
 ## 常见说辞
 

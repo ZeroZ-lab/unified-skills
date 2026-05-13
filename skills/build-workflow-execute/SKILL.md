@@ -1,6 +1,6 @@
 ---
 name: build-workflow-execute
-description: 按计划增量生成软件或内容产物。使用 cuando plan 已批准需要开始实现或生成交付物
+description: 按计划增量生成软件或内容产物。适用于 plan 已批准、需要开始实现或生成交付物时
 ---
 
 # Execute — 增量生成
@@ -213,6 +213,14 @@ const ENABLE_FEATURE = process.env.FEATURE_X === 'true';
 | 切片比预期复杂 | 评估是否需分解切片。预计耗时翻倍时与用户沟通 |
 | 架构决策（ADR）阻塞 | 停止实现，记录 ADR，执行备选方案，可能需要更新 plan |
 | Scope creep | 记录为 "NOTED"，不移出当前范围。Scope Discipline > 效率假象 |
+
+## 验证证据
+
+输出或记录必须包含：
+- **输入/来源**: 读取的 spec、plan、代码、反馈或发布上下文。
+- **执行动作**: 实际完成的检查、生成、修复、导出或发布步骤。
+- **验证结果**: 命令、审查结论、产物路径、截图或人工确认。
+- **阻塞/回退**: 未通过项、回退路径或需要 human partner 决策的问题。
 
 ## 常见说辞
 

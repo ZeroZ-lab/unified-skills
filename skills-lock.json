@@ -4,237 +4,258 @@
     "build-backend-api-design": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "f4664be765fb91ab61760659c33c052d4f1291ebe42f91b49424ce88ced41307"
+      "computedHash": "6f8a8330801ad5a0725cc991b422ab7b87713f72f0039fac47399e455510dcd1"
     },
     "build-backend-database": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "aba44b91c03fa841ef9ef95e29cc5971461d6a960b0b5ed76330772d04f11d05"
+      "computedHash": "3d5fde167d5170d400fedcfd2da1d796d080e93ddb041b2d0bdd2e901ff24c18"
     },
     "build-backend-service-patterns": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "1dcd17caa054b95d2bf216cccee5014caf3fec87823531dbd0c9ca844a832914"
+      "computedHash": "fc93bd43fa37e390700967b64ebbf6bb266e71c9464d4ce86ada7b85ca32fb28"
     },
     "build-cognitive-context": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "2f9c0e5dc054d6c94c4783dda0950ea4b17477cc91e70dfba66913164edf7c15"
+      "computedHash": "5c955b7dfbbd2e7c600b5215a4b98aa0f28e741f97870c6858d1bbdad393a230"
     },
     "build-cognitive-decision-record": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "32abfbc409f878309d614dc6cb4ae705895f50f6e879c2f286b2e6f2a7e5873b"
+      "computedHash": "9b26fc15ee794217eded5e4196560e6beb722fd04e7d6587111fa1289eb0864f"
     },
     "build-cognitive-execution-engine": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "82e1aed2dcf8d990901f1590bf358945ee7844bca3503120a08dee5e1661eabe"
+      "computedHash": "0342dfcb086f29d9ac31d6c3a123d4fcb952385762f3b85775bbdb7cde314630",
+      "auxiliaryHashes": {
+        "implementer-prompt.md": "6fb0dbbce0c81c71e9792806ba03ac8814d6bf8a5e421f9e8db78ef56b1acc50",
+        "quality-reviewer-prompt.md": "802fbfde028c5bfabd4e9d5b3c73d3eaf209f8f9ef913ecfcec1b9c0165791b2",
+        "spec-reviewer-prompt.md": "89aca484e37a1e39529b0b6582782e3db2ec79e843ed398992039547898d7eb8"
+      }
     },
     "build-cognitive-source-driven": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "de746233546fc08ea137c526da29edfc5f217f98e183dbf2e46ab38aabfcd6b8"
+      "computedHash": "1ecff0668be4796dc5f044a57a856d846234e70640ad9e86245597159abcf5e4"
     },
     "build-content-layout": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "7984a80d23bb21556f3eddda7acba976ae9d4cc6b55a3bdc5c4ae163c1263bcc"
+      "computedHash": "5f1b027c9ec07991bc05a85f3751deca4c5d36ce7c53bd120d0819dac07b6517"
     },
     "build-content-writing": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "3ce3b4b23621bcd16450050309e7e14a2ebc7c2d8d80ad48f9dd9c5e68c6facf"
+      "computedHash": "476037dce1c98c0906158343c2d4f83d461df9fd484fb9a66493146c70002a1e"
     },
     "build-frontend-browser-testing": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "ca6412582e46c5b81f897be5c276e9b47adacee72606f4d7595f32c974426daa"
+      "computedHash": "d3e62315edc816e4e22a49fb0d7232e6435d2eac8970dce86ea784309966a361"
     },
     "build-frontend-ui-engineering": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "cb4e2f21815a34a1fe30462e945bfe9d10f08a2943ca47135e732bba4deb3fb1"
+      "computedHash": "6e7b17ceb700b0a63809331d4e0450127feaa126e261a4898feb59bc99814ebb"
     },
     "build-infrastructure-git": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "ec4d5f0bddaa5b5bc35992facdbd9fd624ba99f69377c3e8b7d43be02fce8070"
+      "computedHash": "561bbf3e422c2a5834e43a611b588402429848901ce5463df613831a67a01170"
     },
     "build-quality-tdd": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "79100b751ea673b68cbdb790230ac767540d9fd3e735faaa04110c455abd2eeb"
+      "computedHash": "30d839ca8d5bcd12d6bb86d718c61691b6b350f62aa270a466f19ee798a4ae32",
+      "auxiliaryHashes": {
+        "examples.md": "d832b55027920960a312b0df9e30a4673da46718e07d49ee3acf60416d9d61f7"
+      }
     },
     "build-workflow-execute": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "65dd2c96a013644cf3cc6dff2b4d2b47b9516008df3b3fa1e6e1fb8d1f359fe8"
+      "computedHash": "a64c2e71b300417de8f33af7b29ef6c21dfc8958bcb1822b735db5cc6d9b2332"
     },
     "build-workflow-plan": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "9d0e865d3249842d710b9563d100cf5e33bda2741fd579cfa182fe0406b92f80"
+      "computedHash": "35317bf59d5b77589dfaee289be25ce76e69c7e348b3b1d148f366ecdf67f310",
+      "auxiliaryHashes": {
+        "task-templates.md": "b7c7dee1e130b2054b5ef80d5c0cac4efc942c3893c5f293b57e0710453bbcb4"
+      }
     },
     "define-cognitive-brainstorm": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "858ab82042d1c9a8a7fa03fba3999d665424a5076bce0e2dfa2219896c9fbca7"
+      "computedHash": "487c3d4f59fc17a66f9cc575953c1b3414ac0270a5a364ddbbeefe83ddd985ad"
     },
     "define-workflow-refine": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "a2b69d2839640477c6a6fb0eb3e004dced937515c22cf1e1999780eddf7d936b"
+      "computedHash": "9b0e60fe47656605c1259263b8fbf192b5227dc55cae45057b6125cdc2fdaebb",
+      "auxiliaryHashes": {
+        "refine-artifacts.md": "10ac7b64a923a4a6c393887a01bf86dc74f8b93c43410f58364365c908ccc4f0"
+      }
     },
     "define-workflow-spec": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "00e7d70e1661429decf32e84de8a268aa07da438720194b8651756f846c225c9"
+      "computedHash": "ad43abe733a6afc78c9dfb34903627a5b02d76c6dafa67069b815e9e3d7a8761"
     },
     "maintain-infrastructure-observability": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "fe33b113ea414694ef050d70de7c18d202bc8595f42dcbf137fe2bc347ad8767"
+      "computedHash": "c5052b1f1e426ee78ea8b2658f6d5666f466c132ee6c1087970128e895eddd5b"
     },
     "maintain-team-deprecation-migration": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "e6020fa66d45cbb93b3010779376e4af2ec0c9168a016c95e7c3240265232cea"
+      "computedHash": "39c0e0e2bbd901a5bd2a17bd765b46d5cd20ad70c0806b5576d2ab0a0ec04401"
     },
     "maintain-workflow-context-restore": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "992fcbd917ee71c8ecfb14ba4e8d4def69c070112429f1aec386d50f85cc010f"
+      "computedHash": "75daecde2ab2bafd7517ae12930eeff2e6720ab4272148827d1556e6b59425c1"
     },
     "maintain-workflow-context-save": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "c270ccacbf66ec56ebd75d28704cf9f49f94444ea38dedf23c9a57149397f0b4"
+      "computedHash": "dae4b7b08c54703d57dd077c44c137baeee893f8f75ce3b2387b2e4516fdb833"
     },
     "maintain-workflow-learn": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "c3dd1c49d71421d753d0865a624b552f3df8603980c8b10d5a8f895db79d79fc"
+      "computedHash": "43fe1d8638dac7dc5dd34d038d140d3121aab091cde02854052fca4f46af42b6"
     },
     "maintain-workflow-goal": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "49e77f7102466eaba311f9254b2d84bc17dc2cd4f3936698fdf17a4dd2b1a5bd"
+      "computedHash": "2eb6b40fbfac683d2a24bfdfec5c6d01b271cbb4eefa3a02e95652dc43b91dc2"
     },
     "reflect-team-documentation": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "6e05beefd2f620803e1cb9b3dbe8bbf9ac20ec4e8e88c086a0eb81c5a7a825b5"
+      "computedHash": "d72e34b28bca010c5bd0a3197107310adff91c33c289d0046f316ffa0c48a833"
     },
     "reflect-team-retro": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "e7654af5239b8ec2e35b8bf0a188011b919f5b07edbe19acfb509b1a8c27d123"
+      "computedHash": "7431c7d8b22e82ee7c26400fe9a04951763c37d79cde5f882f8670123648540a"
     },
     "ship-artifact-export": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "3057b112016a752bc35594f7cac0caea5528605bd38be93456fe1fdddc5ea387"
+      "computedHash": "e07f874c99e190c83b92d2f2c8333b2a6323795fe7a0320584adba7585a6023b"
     },
     "ship-infrastructure-ci-cd": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "f75f6d6005be3f9a6515604ef4e9338c7f65c3b9d69ba380fce6b9014d08ed28"
+      "computedHash": "b154526c24b716c552782b29572003729f9c8d01bf79101ab49607c52909730b"
     },
     "ship-infrastructure-deploy": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "91b22ba82a183a41ebfc9c96850552dcf95eac376a3fadba865da7e055f6d53a"
+      "computedHash": "c09b1fedf89dd4026d112c899b0ed618a4e28230134d87b66548ded1fd251a30"
     },
     "ship-workflow-canary": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "eb28cb3a56d176ea4bb5725eb41114c1432a6f8a96a049ac3ae08223e0d15e07"
+      "computedHash": "8770c29d2d234c93cac4a96282cbce6ae1417121da82344d5d4231d423c0d92a"
     },
     "ship-workflow-doc-sync": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "2ba07a1f3eab7d4de6f5bb907de871fcce24dc7f98fa9a91296529b1f6906c5b"
+      "computedHash": "ae00aace996d54235693a3d700b7619324d431b4ea7f4bf2ed36663d22a4e17c"
     },
     "ship-workflow-land": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "9775fad976521c27f860eb03fc2c9126dfe96781a8dafd4141068c8c0568499c"
+      "computedHash": "5ee11a4e54e78c851490c2193df9548f260bee481d411b6927e79526b0a6409a"
     },
     "ship-workflow-ship": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "3329fc7c783e08222903ba37ea859c59c039003501220988785f1c849d44f886"
+      "computedHash": "0711e3e4c0fd904376e9f0310d71f0db16eee1e304c464c5e820719b1c232c7d"
     },
     "verify-content-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "b51708768bd5d67e7bbd08dade53fafaf7555a8835fdbc16527ef7c3a509e1d1"
+      "computedHash": "78dd73a35e5d8ed78e13519aa0d861c60eb0d88918fb60a2442ed539711f0eee"
     },
     "verify-frontend-accessibility": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "bd26324476a6a1dcef916515cf316cb7dc94f3f7afbba236b2bd51807d03b5c4"
+      "computedHash": "5938cf74f4a2273d484a6f73b9282a07c00e31a800621b4dd9aa0ea1a0fd2008"
     },
     "verify-quality-code-quality": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "03c8836a35e62307b6f91431870db8feba6d6eb77847444f2fe3a34ef0aa0b39"
+      "computedHash": "0cb97e7b403b4e18370c710ca0256bc8f77f2e164ec0634559d26bf3ee4e0fcb",
+      "auxiliaryHashes": {
+        "report-template.md": "38a15e1c69d4846c9916969c62cee6bc4dc0b3965fd582ed8b176a4aa00b6096",
+        "rubric.md": "9e3e3bb194848a70b0239033611f5946761131e1c8fb76cd7baf9194d32aa7d6"
+      }
     },
     "verify-quality-integration-testing": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "3b3387d3823647b7008a21e5ae50281e85441fc5ff0e21f8eeed8785ec7cbf6e"
+      "computedHash": "92dac61d372609ac9bde79eaaa0a421d62d1049c51f9f5346dfd973f6e115e5f"
     },
     "verify-quality-performance": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "b40c104c4afcc8ac66bcf66962c1fdcfcfbf63f54e5de80149a7ea3981436dd6"
+      "computedHash": "9d951b1803ab0d214c8eabd3e7d28ee4fb763b9a977a44e5b1204678cc2cf566"
     },
     "verify-quality-security": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "899180278fa71795d52b0edcf52bb84725c90550dc298ece5bbd5ae7098143cc"
+      "computedHash": "8af8f894c0dc64a7de4f534d431003010488e3c5c7820c7e06e77e8203d81f55"
     },
     "verify-quality-simplify": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "57f66618b7718dd073166e2535cbb68ed2e4bb08f1ce4cfb43b2cff2a30cc277"
+      "computedHash": "cdaec3606d2220d85679e46219806d3c6d26899e89586e0b706caa2f29b71ae3"
     },
     "verify-team-code-review-standards": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "9753f8f55e2fed64ae7b2ab63f24aecd7a451484a1a617c2a5db12d87e0d9b59"
+      "computedHash": "b726a739c6503ee1ab7db824cb17f6852e1f8d5059dc7b7edb9d79021be9876d"
     },
     "verify-visual-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "82b1949c5707673d3a7a9056580a87309d30e7dbb9838cc050b22a56ac948151"
+      "computedHash": "cee87fb0f4c7786e8726ddc79a07422c3887091bf44974fb9f1308bdd3afe7fd"
     },
     "verify-workflow-debug": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "d3103e525b0d3e75d43e46b8f5fe8b8d7b48d81dd231a978dcfcdf6f70f7d004"
+      "computedHash": "4a8bc05990316ab2acf78d3e16f723e10220a85486763aa60dc40ed716619b48"
     },
     "verify-workflow-receiving-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "8b1ee3b09ccf1a5f0b355a039688a2fd8bc19339c1e2eea46cd4a5547fc6246d"
+      "computedHash": "b61b7004f5d4313f7512f082635deb755ede589a5a84685ae13b8f887a9ae9f7"
     },
     "verify-workflow-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "edca7ec6496b34b5d1730b832c8dc150c8d4fe2fb7cf7514156c6a8cdea63618"
+      "computedHash": "ac3f1f004740eaa0a66c01e224d5df964aa92daed43bdec665c0664bb6af78aa",
+      "auxiliaryHashes": {
+        "review-guidance.md": "38675fd61819bb5819a3350f1638d589c72cd7e4045392ac3f3b7ac8c6201178"
+      }
     },
     "verify-workflow-spec-compliance": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "356cc61527c45c4cc87efd34e883923d39d4aad05d9ff64f1439f8b60c53f86f"
+      "computedHash": "d5ac3f556f7439b05658cc7181aefc65b8966b68824a9c75517c57abd62e6387"
     },
     "maintain-workflow-using-unified": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "6cb69abaf06e4abdcc2945f5c767815af76bcd67943035d8452137c446dafd40"
+      "computedHash": "5bd91c26bf9ac3177844c735bd83fffdfb357ca5c54a29892e7a36b4a5713d9b"
     },
     "design-content-direction": {
       "computedHash": "77d04281ab69e139a6414eedf8af1658a8623f80df2dc37228a0ac45aa5dd490"

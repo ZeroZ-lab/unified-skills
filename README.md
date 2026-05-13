@@ -74,7 +74,7 @@ hooks = true
                                     │
 ┌───────────────────────────────────▼───────────────────────────────────┐
 │ Skill 层：能力注入 / Capability Protocol                                │
-│ SKILL.md 提供入口/出口、流程、红旗、常见说辞和验证清单                  │
+│ SKILL.md 提供入口/出口、何时不使用、流程、红旗、常见说辞和验证清单      │
 └───────────────────────────────────┬───────────────────────────────────┘
                                     │
 ┌───────────────────────────────────▼───────────────────────────────────┐
@@ -149,7 +149,7 @@ Agent 不负责：
 
 ### 4. Skill：能力注入层
 
-`skills/` 是真实能力目录。每个技能以 `<phase>-<role>-<skill>/SKILL.md` 命名，提供可操作流程、入口/出口条件、常见说辞表、红旗清单和验证清单。强纪律技能还包含 Iron Law。
+`skills/` 是真实能力目录。每个技能以 `<phase>-<role>-<skill>/SKILL.md` 命名，提供可操作流程、入口/出口条件、何时不使用、常见说辞表、红旗清单和验证清单。强纪律技能还包含 Iron Law。长模板、长示例或评分表可以放在同目录辅助 `.md` 文件中，但必须由主 `SKILL.md` 引用并纳入 `skills-lock.json`。
 
 | 阶段 | 技能数 | 架构职责 |
 |------|--------|----------|
@@ -283,7 +283,7 @@ unified/
 [CLAUDE.md](CLAUDE.md) 只保留 Claude 侧指针；
 [.codex-plugin/plugin.json](.codex-plugin/plugin.json) 指向真实 `skills/`；
 [skills-index.json](skills-index.json) 是默认技能发现索引；
-[skills-lock.json](skills-lock.json) 锁定每个 `SKILL.md` 的 SHA-256。
+[skills-lock.json](skills-lock.json) 锁定每个 `SKILL.md` 以及技能同目录辅助 `.md` 文件的 SHA-256。
 
 ### 文档产物链
 
@@ -399,7 +399,8 @@ bash scripts/tests/test-generate-index.sh
 新增或修改技能时还必须遵守：
 
 - 新技能命名为 `<phase>-<role>-<skill>/SKILL.md`。
-- 新技能必须有入口/出口条件、可操作流程、常见说辞表、红旗清单、验证清单。
+- 新技能必须有入口/出口条件、何时不使用、可操作流程、常见说辞表、红旗清单、验证清单。
+- 技能辅助 `.md` 文件必须由主 `SKILL.md` 明确引用，并同步写入 `skills-lock.json` 的 `auxiliaryHashes`。
 - 强纪律技能必须额外包含 Iron Law。
 - 技能只能增加 `CANON.md` 的纪律，不能减少或绕开。
 - 不引入第三方依赖；Unified 保持零依赖。

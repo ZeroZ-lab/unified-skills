@@ -1,6 +1,6 @@
 ---
 name: verify-workflow-review
-description: 按产物类型审查。使用 cuando 软件、文档、文章、PPT 或视觉稿完成后需要质量把关
+description: 按产物类型审查。当软件、文档、文章、PPT 或视觉稿完成后需要质量把关
 ---
 
 # Review — 产物审查
@@ -14,7 +14,7 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 
 ## 何时不使用
 - 代码在私有分支中还没准备好合入主分支
-- 变更已由专人实时 review（配对编程）
+- 已有等价两阶段审查报告，且包含 Spec Compliance、质量评估和验证证据
 
 ## Iron Law
 
@@ -124,28 +124,7 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 **出口条件:** 五轴全部覆盖，无 Blocking 问题，Important 问题 ≤2 个。
 
 **审查输出示例:**
-```markdown
-## Code Quality 审查结果
-
-**状态:** 通过 / 不通过
-
-### 五轴评分
-| 轴 | 评分 | 状态 |
-|---|------|------|
-| Correctness | 9/10 | ✅ 良好 |
-| Readability | 8/10 | ✅ 良好 |
-| Architecture | 9/10 | ✅ 良好 |
-| Security | 10/10 | ✅ 优秀 |
-| Performance | 8/10 | ✅ 良好 |
-
-**总体评分: 44/50 (88%)**
-
-### Blocking 问题（如有）
-[列出所有必须修复的问题]
-
-### Important 问题（如有）
-[列出所有强烈建议修复的问题]
-```
+完整模板见 `verify-quality-code-quality/report-template.md`。
 
 ### Step 4：分类意见
 
@@ -178,52 +157,14 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 3. 两阶段都通过后，生成最终审查报告
 
 ### 并行发散模式（高风险 --full）
-同时派发 4 个 subagent 做专业审查：
 
-```
-安全敏感            → + review-security-auditor agent
-代码质量敏感         → + review-code-quality-auditor agent
-测试覆盖需要验证     → + review-test-engineer agent
-无障碍合规          → + review-accessibility-auditor agent
-```
-
-触发条件：敏感数据 / >50 行变更 / >2 文件 / 有 UI 变更 / 用户指定 `--full`。
-
-**最少触发条件：**
-- 小型变更（<50 行、无安全/UI 敏感）→ 可跳过并行模式，用标准模式
-- 标准变更 → 至少 review-spec-compliance-auditor + review-code-quality-auditor
-- 有 UI 变更 → 加 review-accessibility-auditor
-- 安全敏感 → 加 review-security-auditor
-- 用户指定 `--full` → 4 角色全开
-
-**注意:** 即使使用并行模式，也必须先完成 Spec Compliance 审查，再进行 Code Quality 审查。
-
-每个 subagent 输出 Blocking / Important / Suggestion 三级反馈。
-
-**反馈处理规则：**
-- **Blocking** — 必须解决，合并前修复
-- **Important** — 强烈必须采纳，不采纳需在审查报告中记录原因
-- **Suggestion** — 自主判断，采纳后标注来源
+敏感数据、UI 变更、>50 行变更、>2 文件变更或用户指定 `--full` 时，可以派发专业审查 agent。具体触发条件、角色和反馈处理规则见 `review-guidance.md`。
 
 ## 审查标准
 
 **批准标准：** 变更明确了改进了整体代码健康度，即使不完美。完美代码不存在——目标是持续改进。
 
-**分值指南：**
-```
-~100 行   → 好，一次会议审完
-~300 行   → 接受如果是一个逻辑变更
-~1000 行  → 过大，要拆分
-```
-
-**拆分策略（当变更过大时）：**
-
-| 策略 | 方法 | 适用场景 |
-|------|------|---------|
-| **Stack** | 提交一个小的，下一个基于它 | 串行依赖 |
-| **按文件组** | 按需不同审查者的文件分开 | 跨关注点变更 |
-| **水平拆分** | 先建共享代码/stub，再建消费者 | 分层架构 |
-| **垂直拆分** | 拆成多个全栈功能切片 | 功能开发 |
+变更大小、拆分策略、Dead Code、提交描述和依赖审查的详细指南见 `review-guidance.md`。
 
 ## 审查分歧处理
 
@@ -236,45 +177,6 @@ description: 按产物类型审查。使用 cuando 软件、文档、文章、PP
 
 **不接受 "之后清理"。** 经验表明延期的清理很少发生。合入前要求清理，除非是真正的紧急情况。
 
-## Dead Code 卫生
-
-审查时检查并标记废弃代码：
-
-```
-DEAD CODE IDENTIFIED:
-- formatLegacyDate() in src/utils/date.ts — replaced by formatDate()
-- OldTaskCard 组件 — 已由 TaskCard 替代
-- LEGACY_API_URL 常量 — 无剩余引用
-→ 安全删除？
-```
-
-- 重构或实现后检查是否有不可达或不再使用的代码
-- 明确列出废弃代码
-- **询问后再删除：** "是否删除这些不再使用的元素：[列表]？"
-- 不遗留死代码——它混淆未来读者和 AI
-
-## 变更描述标准
-
-每次变更需要能在版本控制历史中独立理解的描述：
-
-**标题行：** 简短、祈使句、自包含。"添加用户注册功能" 不是 "Adding..." 或 "Added..."。必须足够信息让搜索历史的人不读 diff 就能理解变更。
-
-**正文：** 什么在变和为什么。包含代码中不可见的上下文、决策、理由。关联 bug 编号、设计文档、benchmark 结果。
-
-**反模式：** "Fix bug"、"Fix build"、"Add patch"、"Phase 1"、"Add convenience functions"。
-
-## 依赖自律
-
-审查变更中的依赖：
-
-- 现有技术栈能否解决这个问题？（通常可以）
-- 依赖多大？（检查 bundle 影响）
-- 是否活跃维护？（检查最近 commit、open issues）
-- 有已知漏洞吗？
-- 许可证兼容吗？
-
-**规则：** 优先用标准库和现有工具。每个新增依赖都是负债。
-
 ## 验证失败处理
 
 | 失败场景 | 处理方式 |
@@ -285,6 +187,14 @@ DEAD CODE IDENTIFIED:
 | 作者拒绝修改 | 升级到技术主管。审查者不妥协，也不放任问题合入 |
 | 测试不充分 | 要求补充边界情况测试、错误路径测试后再审查 |
 | 验证证据不足 | 要求补全测试结果、构建输出、UI 截图等证据 |
+
+## 验证证据
+
+输出或记录必须包含：
+- **输入/来源**: 读取的 spec、plan、代码、反馈或发布上下文。
+- **执行动作**: 实际完成的检查、生成、修复、导出或发布步骤。
+- **验证结果**: 命令、审查结论、产物路径、截图或人工确认。
+- **阻塞/回退**: 未通过项、回退路径或需要 human partner 决策的问题。
 
 ## 常见说辞
 

@@ -1,6 +1,6 @@
 ---
 name: reflect-team-documentation
-description: 文档工程——记录决策、API、代码约定。使用 cuando 需要写文档、记录架构决策或维护项目知识
+description: 文档工程——记录决策、API、代码约定。当需要写文档、记录架构决策或维护项目知识
 ---
 
 # Documentation — 文档工程
@@ -11,6 +11,11 @@ description: 文档工程——记录决策、API、代码约定。使用 cuando
 - **出口**: 可引用的文档 + ADR 文件
 - **指向**: 文档完成后回到原流程
 - **假设已加载**: CANON.md + `build-cognitive-decision-record/SKILL.md`（需要写 ADR 时）
+
+## 何时不使用
+- 只是代码实现或修 bug，文档契约没有变化
+- 决策尚未形成，仍处于 brainstorm/refine 阶段
+- 只是给用户口头解释，不需要留下项目级记录
 
 ## Iron Law
 

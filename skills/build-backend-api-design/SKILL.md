@@ -1,6 +1,6 @@
 ---
 name: build-backend-api-design
-description: API 和接口设计——稳定合约、清晰边界。使用 cuando 需要设计 REST API、模块接口或数据合约
+description: API 和接口设计——稳定合约、清晰边界。当需要设计 REST API、模块接口或数据合约
 ---
 
 # API Design — 接口与合约设计
@@ -11,6 +11,11 @@ description: API 和接口设计——稳定合约、清晰边界。使用 cuand
 - **出口**: 类型定义 + 合约测试 + 接口文档
 - **指向**: 接口稳定后进入实现（`build-workflow-execute`）
 - **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md`
+
+## 何时不使用
+- 只是实现既有 API，不改变请求/响应、错误语义或模块边界
+- 纯内部重构，调用方不可观察的合约没有变化
+- 数据库 schema 或查询设计是主要问题（使用 `build-backend-database`）
 
 ## 核心原则
 

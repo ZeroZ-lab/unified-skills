@@ -1,6 +1,6 @@
 ---
 name: maintain-infrastructure-observability
-description: 可观测性——日志、指标、追踪三支柱。使用 cuando 需要监控生产、调查线上问题或配置告警
+description: 可观测性——日志、指标、追踪三支柱。当需要监控生产、调查线上问题或配置告警
 ---
 
 # Observability — 可观测性
@@ -11,6 +11,11 @@ description: 可观测性——日志、指标、追踪三支柱。使用 cuando
 - **出口**: 可工作的监控 Dashboard + 告警规则
 - **指向**: 上线后持续监控，异常时进入 `verify-workflow-debug`
 - **假设已加载**: CANON.md
+
+## 何时不使用
+- 还没到上线或生产诊断阶段，只是在本地修复功能
+- 只是单次运行测试或查看日志，不需要长期指标/告警
+- 根因未知且没有可观测数据时，先进入 `verify-workflow-debug`
 
 ## 三支柱
 

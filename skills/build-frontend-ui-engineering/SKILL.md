@@ -1,6 +1,6 @@
 ---
 name: build-frontend-ui-engineering
-description: 前端 UI 工程——构建可生产、可访问、视觉精良的用户界面。使用 cuando 需要构建或修改用户界面组件
+description: 前端 UI 工程——构建可生产、可访问、视觉精良的用户界面。当需要构建或修改用户界面组件
 ---
 
 # UI Engineering — 前端界面工程
@@ -11,6 +11,11 @@ description: 前端 UI 工程——构建可生产、可访问、视觉精良的
 - **出口**: 可生产、通过可访问性检查的 UI 组件 + 测试
 - **指向**: 前端变更完成 → `build-frontend-browser-testing` 进行浏览器验证
 - **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md`
+
+## 何时不使用
+- 只做产品/视觉/交互决策，尚未进入工程实现
+- 纯后端、脚本、CI 或数据迁移变更
+- UI 已实现，只需要浏览器截图、交互验证或可访问性审查
 
 ## 职责边界
 

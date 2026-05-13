@@ -1,6 +1,6 @@
 ---
 name: build-workflow-plan
-description: 把 spec 拆成可执行的任务。使用 cuando spec 已批准需要拆成可执行任务
+description: 把 spec 拆成可执行的任务。适用于 spec 已批准、需要拆成可执行任务时
 ---
 
 # Plan — 任务分解
@@ -15,6 +15,8 @@ description: 把 spec 拆成可执行的任务。使用 cuando spec 已批准需
 ## 何时不使用
 - 变更只涉及 1-2 个文件且 scope 明显
 - spec 已经包含明确定义的任务（此时直接进入 build）
+
+## 核心流程
 
 ### Step 1：进入只读模式
 
@@ -108,157 +110,10 @@ Task 4: 用户查看任务列表（查询 + API + 列表 UI）
 
 任务模板按 `artifact_type` 调整。`software` 使用测试驱动模板；非软件产物使用产物验证模板。
 
-**代码示例风格原则:**
-
-给执行 agent 提供**方向和约束**，而不是**完整实现**。
-
-**最小示例包含:**
-- 函数签名（参数类型、返回类型）
-- 关键步骤的意图注释（不是实现代码）
-- 边界条件和错误处理的提示
-- 与 spec 的对应关系
-
-**最小示例不包含:**
-- 完整的实现逻辑（让 agent 推理）
-- 具体的算法细节（除非 spec 明确要求）
-- 所有可能的边界情况处理（只提示关键的）
-
-**例外情况使用完整代码:**
-- 复杂的算法（如加密、解析）
-- 精确的数据结构（如 schema 定义）
-- 关键的安全逻辑（如鉴权检查）
-- 非软件产物的具体内容（如 WorldEdit 命令、SQL 语句）
-
----
-
-**Software 任务模板（TDD）:**
-
-```markdown
-### Task N: <功能描述>
-
-**Files:**
-- Create: `src/path/to/file.ts`
-- Test: `tests/path/to/test.ts`
-
-**依赖:** Task N-1
-
-- [ ] **Step 1: 写失败测试**
-
-```typescript
-test('描述预期行为', () => {
-  // 测试 spec 中的验收标准
-  const result = targetFunction(input);
-  expect(result).toEqual(expected);
-});
-```
-
-- [ ] **Step 2: 验证测试失败**
-
-Run: `npm test -- --grep "描述预期行为"` → FAIL
-
-- [ ] **Step 3: 写最小实现**
-
-```typescript
-function targetFunction(input: InputType): ReturnType {
-  // 1. 验证输入（null/undefined/边界值）
-  // 2. 执行核心逻辑（参考 spec 第 X 节）
-  // 3. 返回符合 spec 的结果格式
-}
-```
-
-**说明:** 具体实现由执行 agent 根据 spec 和上下文推理。
-
-- [ ] **Step 4: 验证测试通过**
-
-Run: `npm test -- --grep "描述预期行为"` → PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add src/path/to/file.ts tests/path/to/test.ts
-git commit -m "feat: add <功能描述>"
-```
-```
-
----
-
-**非 Software 任务模板（产物验证）:**
-
-```markdown
-### Task N: [产物切片]
-
-**Files:**
-- Create/Modify: `path/to/artifact-source`
-- Export: `path/to/final-artifact`
-
-- [ ] **Step 1: 明确切片验收标准**
-[读者目标、页面目标、视觉目标或导出规格]
-
-- [ ] **Step 2: 生成/修改最小产物**
-[写章节、做页面、调整版式或视觉稿]
-
-- [ ] **Step 3: 按类型验证**
-[事实核查、逻辑审查、版式检查、导出预览]
-
-- [ ] **Step 4: 记录验证证据**
-[审查结论、截图、导出文件路径或人工确认]
-```
-
-如果触发多计划模式，先写 `03-plan.md` 总控，再为每个可独立执行的任务包写 `plans/<NN>-<name>.md`。编号表达执行顺序；名称表达职责，不强制固定为 backend/frontend/content。
-
-子计划必须包含：
-
-```markdown
-## Subplan Contract
-- **Owner:** 主 agent / subagent 名称或角色
-- **Status:** serial / parallel_safe / gated
-- **Depends On:** `plans/01-contracts.md` 或其他子计划；没有则写 none
-- **Write Scope:** 允许创建/修改的文件、目录或产物路径
-- **Read Scope:** 需要读取的 spec、契约、现有文件或外部材料
-- **Verification Evidence:** 独立验证命令、审查方式、导出预览或人工确认
-- **Merge Checkpoint:** 合并前必须满足的条件
-```
-
-`Parallel Safety` 判定：
-- `parallel_safe: yes` 只允许在无共享文件、无顺序依赖、接口契约已定、验证可独立完成时使用
-- 共享 schema、共享 API 契约未定、同一文件写入、迁移/发布/全局样式/全局配置一律 `parallel_safe: no`
-- 需要协调时用 `gated`：先完成契约子计划，再并行执行依赖该契约的子计划
-
-每个步骤是 2-5 分钟的一个操作。每个任务包含：
-
-```markdown
-### Task N: [组件名]
-
-**Files:**
-- Create: `src/path/to/file.ts`
-- Modify: `src/path/to/existing.ts:123-145`
-- Test: `tests/path/to/test.ts`
-
-- [ ] **Step 1: 写失败测试**
-
-```typescript
-test('特定行为', () => {
-  const result = function(input);
-  assert.equal(result, expected);
-});
-```
-
-- [ ] **Step 2: 验证测试失败**
-
-Run: `npm test -- --grep "特定行为"` → FAIL
-
-- [ ] **Step 3: 写最小实现**
-
-```typescript
-function function(input) {
-  return expected;
-}
-```
-
-- [ ] **Step 4: 验证测试通过**
-
-Run: `npm test -- --grep "特定行为"` → PASS
-```
+任务模板、Subplan Contract、Parallel Safety 判定和代码示例规则见 `task-templates.md`。主流程只保留约束：
+- 给执行 agent 提供方向和约束，不提供完整实现，除非是复杂算法、安全逻辑或非软件精确产物。
+- Software 任务使用 RED → GREEN → REFACTOR 结构；非 software 任务使用产物切片 + 验证证据结构。
+- 每个步骤必须是 2-5 分钟可执行操作，并包含明确验证方式。
 
 **禁止占位符：**
 每个步骤必须包含实际操作内容。以下都是 plan 失败：
@@ -381,6 +236,14 @@ Plan draft
 - 发现 plan 遗漏 spec 需求 → 补充对应任务，更新 plan
 - 计划的依赖关系不正确 → 调整任务顺序，重新做 Step 2
 - 任务过大无法估计 → 进一步分解，直到每个任务 < 5 文件
+
+## 验证证据
+
+输出或记录必须包含：
+- **输入/来源**: 读取的 spec、plan、代码、反馈或发布上下文。
+- **执行动作**: 实际完成的检查、生成、修复、导出或发布步骤。
+- **验证结果**: 命令、审查结论、产物路径、截图或人工确认。
+- **阻塞/回退**: 未通过项、回退路径或需要 human partner 决策的问题。
 
 ## 常见说辞
 

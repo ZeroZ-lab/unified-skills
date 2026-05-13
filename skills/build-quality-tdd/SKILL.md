@@ -1,6 +1,6 @@
 ---
 name: build-quality-tdd
-description: 测试驱动开发。使用 cuando 需要写逻辑代码、修 bug 或改变任何行为
+description: 测试驱动开发。当需要写逻辑代码、修 bug 或改变任何行为
 ---
 
 # TDD — 测试驱动开发
@@ -42,39 +42,11 @@ description: 测试驱动开发。使用 cuando 需要写逻辑代码、修 bug 
 
 **先写测试。测试必须失败。** 一写就过的测试什么都没证明——它可能测的是错误的行为。
 
-```typescript
-// RED: 测试失败 —— createTask 还不存在
-describe('TaskService', () => {
-  it('用标题创建任务并设置默认状态', async () => {
-    const task = await taskService.createTask({ title: '买菜' });
-
-    expect(task.id).toBeDefined();
-    expect(task.title).toBe('买菜');
-    expect(task.status).toBe('pending');
-    expect(task.createdAt).toBeInstanceOf(Date);
-  });
-});
-```
-
 **验证 RED:** 运行测试，确认它失败，确认失败原因是你预期的（函数不存在/行为不符合预期）。看到测试 PASS 才写实现 = 你反了。
 
 ### Step 2: GREEN — 让测试通过
 
 **写最少代码让测试通过。** 不过度工程化。测试告诉你要写什么，不要多写：
-
-```typescript
-// GREEN: 最小实现
-export async function createTask(input: { title: string }): Promise<Task> {
-  const task = {
-    id: generateId(),
-    title: input.title,
-    status: 'pending' as const,
-    createdAt: new Date(),
-  };
-  await db.tasks.insert(task);
-  return task;
-}
-```
 
 ### Step 3: REFACTOR — 保持绿色改进代码
 
@@ -89,6 +61,8 @@ export async function createTask(input: { title: string }): Promise<Task> {
 ### 重复
 
 一个循环完成 → 下一个测试 → 下一个最小实现 → 再重构。每次循环几分钟。
+
+具体 RED/GREEN 代码示例、bug 复现示例和测试写法示例见 `examples.md`。
 
 ## Prove-It Pattern — Bug 修复
 
@@ -113,30 +87,7 @@ Bug 被报告
   跑全量测试套件（确认无回归）
 ```
 
-**示例：**
-
-```typescript
-// Bug: "完成任务时不更新 completedAt 时间戳"
-
-// Step 1: 写复现测试（必须失败）
-it('任务完成时设置 completedAt', async () => {
-  const task = await taskService.createTask({ title: 'Test' });
-  const completed = await taskService.completeTask(task.id);
-
-  expect(completed.status).toBe('completed');
-  expect(completed.completedAt).toBeInstanceOf(Date);  // 因为 completedAt 缺失，这里失败 → bug 确认
-});
-
-// Step 2: 修复
-export async function completeTask(id: string): Promise<Task> {
-  return db.tasks.update(id, {
-    status: 'completed',
-    completedAt: new Date(),  // 原来缺这行
-  });
-}
-
-// Step 3: 测试通过 → bug 修复 + 回归保护
-```
+示例见 `examples.md`。
 
 ## 测试金字塔
 
@@ -174,42 +125,11 @@ export async function completeTask(id: string): Promise<Task> {
 
 ### 测试状态，不测试交互
 
-断言**操作结果**，不断言内部调用了哪个方法。测试方法调用序列的代码在重构时会无故失败。
-
-```typescript
-// Good: 测试行为结果（状态）
-it('按创建时间倒序返回任务', async () => {
-  const tasks = await listTasks({ sortBy: 'createdAt', sortOrder: 'desc' });
-  expect(tasks[0].createdAt.getTime())
-    .toBeGreaterThan(tasks[1].createdAt.getTime());
-});
-
-// Bad: 测试内部实现细节（交互）
-it('调用 db.query 并传入 ORDER BY created_at DESC', async () => {
-  await listTasks({ sortBy: 'createdAt', sortOrder: 'desc' });
-  expect(db.query).toHaveBeenCalledWith(
-    expect.stringContaining('ORDER BY created_at DESC')
-  );
-});
-```
+断言操作结果，不断言内部调用了哪个方法。测试方法调用序列的代码在重构时会无故失败。
 
 ### DAMP 优于 DRY
 
 生产代码用 DRY（Don't Repeat Yourself）是正确的。测试用 **DAMP（Descriptive And Meaningful Phrases）** 更好。每个测试是独立可读的完整故事，不需要读者追溯共享 helper：
-
-```typescript
-// DAMP: 每个测试自包含、可读数
-it('拒绝空标题的任务', () => {
-  const input = { title: '', assignee: 'user-1' };
-  expect(() => createTask(input)).toThrow('标题不能为空');
-});
-
-it('去除标题首尾空格', () => {
-  const input = { title: '  买菜  ', assignee: 'user-1' };
-  const task = createTask(input);
-  expect(task.title).toBe('买菜');
-});
-```
 
 测试中的重复是可接受的——当它让每个测试独立可读。
 
@@ -227,34 +147,11 @@ it('去除标题首尾空格', () => {
 
 ### Arrange-Act-Assert 模式
 
-```typescript
-it('逾期任务应被标记为过期', () => {
-  // Arrange: 构建测试场景
-  const task = createTask({ title: 'Test', deadline: new Date('2025-01-01') });
-
-  // Act: 执行被测动作
-  const result = checkOverdue(task, new Date('2025-01-02'));
-
-  // Assert: 验证结果
-  expect(result.isOverdue).toBe(true);
-});
-```
+按 Arrange（构建场景）→ Act（执行动作）→ Assert（验证结果）组织测试。
 
 ### 每个概念一个断言
 
-```typescript
-// Good: 每个测试验证一个行为
-it('拒绝空标题', () => { ... });
-it('去除标题首尾空格', () => { ... });
-it('限制标题最大长度', () => { ... });
-
-// Bad: 所有验证塞一个测试
-it('正确验证标题', () => {
-  expect(() => createTask({ title: '' })).toThrow();
-  expect(createTask({ title: '  hello  ' }).title).toBe('hello');
-  expect(() => createTask({ title: 'a'.repeat(256) })).toThrow();
-});
-```
+一个测试验证一个行为。多个边界条件拆成多个测试，避免失败时无法定位真正破坏的概念。
 
 ### 测试命名：描述行为
 
@@ -285,6 +182,14 @@ describe('TaskService', () => {
 | 无测试隔离 | 单独跑过但一起跑失败 | 每个测试设置和清理自己的状态 |
 | Mock 一切 | 测试过但生产崩溃 | 优先真实实现 > fake > stub > mock |
 | 测试私有方法 | 封装破坏，重构时全挂 | 通过公共 API 间接测试私有行为 |
+
+## 验证证据
+
+输出或记录必须包含：
+- **输入/来源**: 读取的 spec、plan、代码、反馈或发布上下文。
+- **执行动作**: 实际完成的检查、生成、修复、导出或发布步骤。
+- **验证结果**: 命令、审查结论、产物路径、截图或人工确认。
+- **阻塞/回退**: 未通过项、回退路径或需要 human partner 决策的问题。
 
 ## 常见说辞
 

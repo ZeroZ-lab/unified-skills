@@ -1,6 +1,6 @@
 ---
 name: verify-content-review
-description: 内容质量审查。使用 cuando artifact_type 为 document、article、deck，或需要审查事实、逻辑、受众、语气、完整性时
+description: 内容质量审查。适用于 artifact_type 为 document、article、deck，或需要审查事实、逻辑、受众、语气、完整性时
 ---
 
 # Content Review — 内容审查

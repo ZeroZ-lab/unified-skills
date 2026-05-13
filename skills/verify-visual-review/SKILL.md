@@ -1,6 +1,6 @@
 ---
 name: verify-visual-review
-description: 视觉质量审查。使用 cuando artifact_type 为 visual，或 document/deck 需要检查视觉层级、对齐、留白、一致性、可读性时
+description: 视觉质量审查。适用于 artifact_type 为 visual，或 document/deck 需要检查视觉层级、对齐、留白、一致性、可读性时
 ---
 
 # Visual Review — 视觉审查

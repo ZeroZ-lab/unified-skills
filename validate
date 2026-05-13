@@ -355,10 +355,9 @@ done < <(find skills -name 'SKILL.md' | sort)
 
 printf '\n== 检查技能核心章节 ==\n'
 while IFS= read -r file; do
-  # maintain-workflow-using-unified 是引导技能，使用非标准格式，跳过章节检查
   dir=$(basename "$(dirname "$file")")
-  [ "$dir" = "maintain-workflow-using-unified" ] && continue
   sgrep '^## .*入口/出口' "$file" || fail "缺少入口/出口章节: $file"
+  sgrep '^## .*何时不使用' "$file" || fail "缺少何时不使用章节: $file"
   sgrep '^## .*常见说辞' "$file" || fail "缺少常见说辞章节: $file"
   sgrep '^## .*红旗' "$file" || fail "缺少红旗章节: $file"
   sgrep '^## .*验证清单' "$file" || fail "缺少验证清单章节: $file"
@@ -683,29 +682,82 @@ PY
 
 printf '\n== 检查 skills-lock.json 完整性 ==\n'
 if [ -f "skills-lock.json" ]; then
-  lock_valid=0
-  while IFS= read -r skill_dir; do
-    if [ ! -f "skills/$skill_dir/SKILL.md" ]; then
-      continue
-    fi
-    lock_hash=$(python3 -c "
+  lock_counts=$(
+python3 <<'PY'
+import hashlib
 import json
-m = json.load(open('skills-lock.json'))
-entry = m.get('skills',{}).get('$skill_dir',{})
-print(entry.get('computedHash',''))
-" 2>/dev/null)
-    if [ -n "$lock_hash" ]; then
-      actual_hash=$(shasum -a 256 "skills/$skill_dir/SKILL.md" 2>/dev/null | awk '{print $1}')
-      if [ "$lock_hash" != "$actual_hash" ]; then
-        fail "skills-lock.json 哈希不匹配: $skill_dir"
-      fi
-      lock_valid=$((lock_valid + 1))
-    fi
-  done < <(ls -d skills/*/ 2>/dev/null | while IFS= read -r d; do basename "$d"; done | grep -E '^(define|design|build|verify|ship|maintain|reflect)-')
-  if [ "$lock_valid" -eq 0 ]; then
-    fail "skills-lock.json 中没有有效的技能哈希"
-  fi
-  [ "$status" -eq 0 ] && printf '通过（%d 个技能哈希校验）\n' "$lock_valid"
+import re
+from pathlib import Path
+
+def sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+lock = json.load(open("skills-lock.json", encoding="utf-8"))
+entries = lock.get("skills", {})
+if not isinstance(entries, dict):
+    raise SystemExit("skills-lock.json 缺少 skills 对象")
+
+skill_dirs = []
+for skill_file in sorted(Path("skills").glob("*/SKILL.md")):
+    skill_dir = skill_file.parent.name
+    if re.match(r"^(define|design|build|verify|ship|maintain|reflect)-", skill_dir):
+        skill_dirs.append(skill_dir)
+
+checked_skills = 0
+checked_auxiliary = 0
+
+for skill_dir in skill_dirs:
+    skill_path = Path("skills") / skill_dir / "SKILL.md"
+    skill_text = skill_path.read_text(encoding="utf-8")
+    entry = entries.get(skill_dir)
+    if not isinstance(entry, dict):
+        raise SystemExit(f"skills-lock.json 缺少技能: {skill_dir}")
+
+    expected = entry.get("computedHash")
+    if not expected:
+        raise SystemExit(f"skills-lock.json 缺少 computedHash: {skill_dir}")
+    actual = sha256(skill_path)
+    if actual != expected:
+        raise SystemExit(f"skills-lock.json 哈希不匹配: {skill_dir}")
+    checked_skills += 1
+
+    skill_root = Path("skills") / skill_dir
+    actual_auxiliary = sorted(
+        p.name for p in skill_root.glob("*.md") if p.name != "SKILL.md"
+    )
+    declared_auxiliary = entry.get("auxiliaryHashes", {})
+    if declared_auxiliary is None:
+        declared_auxiliary = {}
+    if not isinstance(declared_auxiliary, dict):
+        raise SystemExit(f"skills-lock.json auxiliaryHashes 必须是对象: {skill_dir}")
+
+    missing = sorted(set(actual_auxiliary) - set(declared_auxiliary))
+    extra = sorted(set(declared_auxiliary) - set(actual_auxiliary))
+    if missing:
+        raise SystemExit(f"skills-lock.json 缺少辅助文件哈希: {skill_dir}: {', '.join(missing)}")
+    if extra:
+        raise SystemExit(f"skills-lock.json 声明了不存在的辅助文件: {skill_dir}: {', '.join(extra)}")
+
+    for name in actual_auxiliary:
+        if "/" in name or name == "SKILL.md":
+            raise SystemExit(f"skills-lock.json 辅助文件名无效: {skill_dir}: {name}")
+        if name not in skill_text:
+            raise SystemExit(f"辅助文件未被主 SKILL.md 引用: {skill_dir}/{name}")
+        expected_aux = declared_auxiliary.get(name)
+        actual_aux = sha256(skill_root / name)
+        if actual_aux != expected_aux:
+            raise SystemExit(f"skills-lock.json 辅助文件哈希不匹配: {skill_dir}/{name}")
+        checked_auxiliary += 1
+
+if checked_skills == 0:
+    raise SystemExit("skills-lock.json 中没有有效的技能哈希")
+
+print(f"{checked_skills} {checked_auxiliary}")
+PY
+  ) || fail "skills-lock.json 完整性检查失败"
+  lock_valid=$(printf '%s' "$lock_counts" | awk '{print $1}')
+  auxiliary_valid=$(printf '%s' "$lock_counts" | awk '{print $2}')
+  [ "$status" -eq 0 ] && printf '通过（%d 个技能哈希校验，%d 个辅助文件哈希校验）\n' "$lock_valid" "$auxiliary_valid"
 else
   fail "缺少 skills-lock.json"
 fi

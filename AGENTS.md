@@ -153,17 +153,18 @@ docs/bugs/<name>/
 ## 约定
 
 ### 命名规范
-- 技能目录：`<阶段>-<角色>-<技能名>/` —— 每个目录下恰好一个 `SKILL.md`
+- 技能目录：`<阶段>-<角色>-<技能名>/` —— 每个目录必须有一个 `SKILL.md`，可包含辅助文件
 - 阶段：`define` / `design` / `build` / `verify` / `ship` / `maintain` / `reflect`
 - 角色：`workflow` / `experience` / `frontend` / `backend` / `quality` / `cognitive` / `infrastructure` / `team` / `content` / `visual` / `artifact`
 - 技能名：kebab-case，描述动作（如 `tdd`、`debug`、`api-design`）
 
 ### SKILL.md 格式
-- 每个技能必须包含中文语义章节：入口/出口条件、可操作流程、常见说辞表、红旗清单、验证清单
+- 每个技能必须包含中文语义章节：入口/出口条件、何时不使用、可操作流程、常见说辞表、红旗清单、验证清单
 - 验证失败处理用于 workflow / gatekeeping / 高风险技能；不强制所有辅助技能重复该章节
 - 引用其他技能用技能名，不用文件路径
 - 强制纪律类技能（TDD、调试、审查、发布）必须有 Iron Law 章节
-- 辅助文件仅在内容超过 100 行时才创建
+- 辅助文件用于下沉长模板、长示例、评分表或证据格式；主 `SKILL.md` 应保留行为流程和硬门
+- 技能目录下的辅助 `.md` 文件必须由主 `SKILL.md` 明确引用，并纳入 `skills-lock.json` 的 `auxiliaryHashes`
 
 ### 命令
 - `commands/` 下每个命令一个 `.md` 文件（Claude Code 斜杠命令）
@@ -208,7 +209,7 @@ docs/bugs/<name>/
   - `skill_descriptions`
 - 入口收口后，`AGENTS.md` 是统一项目约束源，`CLAUDE.md` 只保留指针职责。改动入口文档时，不要再把完整合同复制回 `CLAUDE.md`。
 - 历史设计文档会反向污染当前合同。旧 spec/plan/优化报告里如果保留过时方案，必须显式标注“历史 / 已过期”，不能让它们继续像当前真相一样表述。
-- 改动任何 `SKILL.md` 后，除了跑 `./validate`，还要确认 `skills-lock.json` 哈希已同步更新；否则仓库会在最后一步才暴露漂移。
+- 改动任何 `SKILL.md` 或技能辅助 `.md` 文件后，除了跑 `./validate`，还要确认 `skills-lock.json` 中 `computedHash` / `auxiliaryHashes` 已同步更新；否则仓库会在最后一步才暴露漂移。
 
 ### 自动化工具使用（v2.15.0+）
 

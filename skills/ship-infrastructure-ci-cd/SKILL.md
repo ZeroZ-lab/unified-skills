@@ -1,6 +1,6 @@
 ---
 name: ship-infrastructure-ci-cd
-description: CI/CD 管道——自动化质量门和部署流水线。使用 cuando 需要设置或修改 CI/CD 管道、构建流程或自动化部署
+description: CI/CD 管道——自动化质量门和部署流水线。当需要设置或修改 CI/CD 管道、构建流程或自动化部署
 ---
 
 # CI/CD — 持续集成与持续部署
@@ -11,6 +11,11 @@ description: CI/CD 管道——自动化质量门和部署流水线。使用 cua
 - **出口**: 工作管道定义 + 所有质量门通过
 - **指向**: CI/CD 配置完成后继续 `/ship` 流程
 - **假设已加载**: CANON.md
+
+## 何时不使用
+- 只是运行现有 CI 或查看一次构建结果
+- 项目没有新增/修改自动化流水线、质量门或部署流程
+- 发布决策或上线验证是主要问题（使用 `ship-workflow-ship` / `ship-infrastructure-deploy`）
 
 ## Iron Law
 

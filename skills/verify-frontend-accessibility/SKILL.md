@@ -1,6 +1,6 @@
 ---
 name: verify-frontend-accessibility
-description: 可访问性保障——WCAG 2.1 AA 合规。使用 cuando 构建 UI 组件、表单、导航或交互元素
+description: 可访问性保障——WCAG 2.1 AA 合规。当构建 UI 组件、表单、导航或交互元素
 ---
 
 # Accessibility — 可访问性保障
@@ -11,6 +11,11 @@ description: 可访问性保障——WCAG 2.1 AA 合规。使用 cuando 构建 U
 - **出口**: 通过 a11y 检查的组件
 - **指向**: a11y 验证通过后继续 build 或进入 `/review`
 - **假设已加载**: CANON.md + `build-frontend-ui-engineering/SKILL.md`
+
+## 何时不使用
+- 变更不涉及用户可交互 UI、表单、导航或视觉呈现
+- 只是纯文案、后端、脚本或数据迁移
+- 需要先实现 UI，当前还没有可检查的界面
 
 ## Iron Law
 

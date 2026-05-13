@@ -1,6 +1,6 @@
 ---
 name: build-cognitive-execution-engine
-description: 任务执行引擎——选择正确的执行模式。使用 cuando build-workflow-plan 完成后需要写代码
+description: 任务执行引擎——选择正确的执行模式。适用于 build-workflow-plan 完成后需要写代码
 ---
 
 # 执行引擎 — 3 种执行模式
@@ -11,6 +11,11 @@ description: 任务执行引擎——选择正确的执行模式。使用 cuando
 - **出口**: 所有任务完成 + 测试通过 + 代码合并
 - **指向**: 全部任务完成后建议 `/review`
 - **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-workflow-execute/SKILL.md`
+
+## 何时不使用
+- 还没有批准的 plan 或任务列表
+- 当前只是探索、诊断或写 spec/design，不进入实现
+- 只有一个微小文档或配置改动，不需要选择执行模式
 
 ## 任务输入契约
 
@@ -132,6 +137,8 @@ Phase 3: 分派 Code Quality Reviewer subagent（五轴审查）
 - Code Quality Reviewer **必须等到 spec 合规确认后才开始** — 绝不提前审查不合规的代码
 - **严禁**并行分派 Implementer → 并行实现产生合并冲突
 - 审查阶段串行门控：先 Spec Reviewer，只有 `SPEC_MATCH` 后才分派 Code Quality Reviewer
+
+**提示词模板:** 模式 C 分派时使用 `implementer-prompt.md`、`spec-reviewer-prompt.md`、`quality-reviewer-prompt.md`，并按当前任务填充 Task、scope、spec、验证证据和输出格式。
 
 ## Subagent 模型选择
 

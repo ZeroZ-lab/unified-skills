@@ -21,6 +21,12 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 - **入口**: Session 启动、新任务开始、用户发出任何指令
 - **出口**: 技能发现完成，至少一个技能已宣告加载，或确认无适用技能（极少见）
 
+## 何时不使用
+
+- 当前 agent 是被派发的 subagent，且 `<SUBAGENT-STOP>` 已命中
+- 用户只要求解释 Unified Skills 本身，不需要进入任务执行
+- 当前平台已经由宿主自动完成等价技能发现，并提供了明确结果
+
 ## 指令优先级
 
 1. **用户显式指令**（直接请求）和项目入口 `AGENTS.md` — 最高优先级
@@ -84,7 +90,7 @@ Using [skill-name] to [purpose]
 没有输出 "Using [skill-name] to [purpose]" 不得开始任何实现操作。
 </HARD-GATE>
 
-## Red Flags — 这些想法意味着你在跳过发现流程
+## 红旗 — 这些想法意味着你在跳过发现流程
 
 <HARD-GATE>
 以下任何一个想法出现，立即停止并执行发现流程：

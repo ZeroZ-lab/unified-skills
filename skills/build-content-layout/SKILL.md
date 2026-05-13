@@ -1,6 +1,6 @@
 ---
 name: build-content-layout
-description: 信息设计与版式方法。使用 cuando artifact_type 为 document、deck、visual，或产物需要信息层级、阅读路径、构图、媒介适配时
+description: 信息设计与版式方法。适用于 artifact_type 为 document、deck、visual，或产物需要信息层级、阅读路径、构图、媒介适配时
 ---
 
 # Content Layout — 信息设计与版式

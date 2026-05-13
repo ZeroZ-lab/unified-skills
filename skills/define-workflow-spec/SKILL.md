@@ -1,6 +1,6 @@
 ---
 name: define-workflow-spec
-description: 从 refine 产出到结构化 spec。使用 cuando refine 完成后需要编写正式 spec
+description: 从 refine 产出到结构化 spec。适用于 refine 完成后需要编写正式 spec
 ---
 
 # Spec — 规范编写
@@ -145,6 +145,14 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 - 用户拒绝 spec → 回到 `define-workflow-refine` Phase 1，获取澄清后重新写 spec
 - 用户要求大幅修改 → 直接在 spec 文件上修改，重走用户审查步骤
 - 需求变更 → 更新 spec，不需要重新 refine
+
+## 验证证据
+
+输出或记录必须包含：
+- **输入/来源**: 读取的 spec、plan、代码、反馈或发布上下文。
+- **执行动作**: 实际完成的检查、生成、修复、导出或发布步骤。
+- **验证结果**: 命令、审查结论、产物路径、截图或人工确认。
+- **阻塞/回退**: 未通过项、回退路径或需要 human partner 决策的问题。
 
 ## 常见说辞
 

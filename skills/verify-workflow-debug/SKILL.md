@@ -1,6 +1,6 @@
 ---
 name: verify-workflow-debug
-description: 系统化根因调试。使用 cuando 遇到 bug、测试失败或意外行为
+description: 系统化根因调试。当遇到 bug、测试失败或意外行为
 ---
 
 # Debug — 系统化调试
@@ -158,6 +158,14 @@ function renderChart(data: ChartData[]) {
 ## 相关技能
 - 写复现测试 → `build-quality-tdd/SKILL.md`
 - 验证修复 → CANON 第 5 条（Verify Don't Assume）
+
+## 验证证据
+
+输出或记录必须包含：
+- **输入/来源**: 读取的 spec、plan、代码、反馈或发布上下文。
+- **执行动作**: 实际完成的检查、生成、修复、导出或发布步骤。
+- **验证结果**: 命令、审查结论、产物路径、截图或人工确认。
+- **阻塞/回退**: 未通过项、回退路径或需要 human partner 决策的问题。
 
 ## 常见说辞
 

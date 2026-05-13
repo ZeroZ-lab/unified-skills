@@ -1,6 +1,6 @@
 ---
 name: ship-infrastructure-deploy
-description: 部署管理——安全、可逆、可观测的上线。使用 cuando 准备上线部署或配置发布策略
+description: 部署管理——安全、可逆、可观测的上线。当准备上线部署或配置发布策略
 ---
 
 # Deploy — 部署管理
@@ -11,6 +11,11 @@ description: 部署管理——安全、可逆、可观测的上线。使用 cua
 - **出口**: 成功部署 + 上线后验证 + 回滚剧本
 - **指向**: 部署完成 → 监控（`maintain-infrastructure-observability`）
 - **假设已加载**: CANON.md + `ship-infrastructure-ci-cd/SKILL.md`
+
+## 何时不使用
+- 还没有通过 review/ship gate，不能进入实际部署
+- 只是准备发布清单或导出非软件产物
+- 已部署后只需要健康监控或回归观察
 
 ## Iron Law
 
