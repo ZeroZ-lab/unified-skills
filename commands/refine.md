@@ -1,12 +1,12 @@
 ---
-description: 需求提炼 + External Scan + 多角色 Idea Scout 审查
+description: 需求提炼 + External Scan + 按风险升级的 Idea Scout 审查
 ---
 
 # Command: /refine
 
 ## Goal
 
-Transform vague idea into structured spec with multi-perspective validation.
+Transform vague idea into structured spec with risk-based multi-perspective validation.
 
 ## Phases
 
@@ -39,9 +39,9 @@ Transform vague idea into structured spec with multi-perspective validation.
 - [ ] 至少 3 个事实来源
 - [ ] 分层结果完整
 
-### Phase 3: Multi-Role Scout Review (Parallel)
+### Phase 3: Risk-Based Scout Review
 
-**Agents (parallel dispatch):**
+**Agents (selected by `define-workflow-refine` minimum trigger rules):**
 - refine-ceo-scout（商业可行性、市场定位）
 - refine-eng-scout（技术可行性、实现复杂度）
 - refine-design-scout（用户体验、交互创新）
@@ -49,7 +49,8 @@ Transform vague idea into structured spec with multi-perspective validation.
 **Input:** 01-spec.md（draft）+ external-scan-results.md
 **Output:** scout-feedback.md
 **Validation:**
-- [ ] 3 个 Scouts 全部完成
+- [ ] 已按风险升级规则选择必要 Scout（小型变更可跳过，标准至少 CEO + Eng，大型 UI/合规三视角全开）
+- [ ] 已选 Scouts 全部完成
 - [ ] Blocking issues 已识别
 
 ### Phase 4: Present Scout Feedback to User + Refine
@@ -75,7 +76,7 @@ Transform vague idea into structured spec with multi-perspective validation.
 ## Exit Conditions
 - [ ] 01-spec.md 存在且为最终版
 - [ ] artifact_type 已声明
-- [ ] 经 3 个视角审查
+- [ ] 经最小必要视角审查，或记录了跳过 Scout Army 的理由
 
 ## Next Steps
 - If approved → /design

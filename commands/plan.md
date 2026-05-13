@@ -1,12 +1,12 @@
 ---
-description: 从已批准 spec + design 到详细任务分解 + 多角色计划审查
+description: 从已批准 spec + design 到详细任务分解 + 按风险升级的计划审查
 ---
 
 # Command: /plan
 
 ## Goal
 
-Transform approved spec and design into actionable task plan with multi-perspective review.
+Transform approved spec and design into actionable task plan with risk-based multi-perspective review.
 
 ## Phases
 
@@ -30,9 +30,9 @@ Transform approved spec and design into actionable task plan with multi-perspect
 - [ ] 并行安全任务已标记
 - [ ] 复杂度已估算
 
-### Phase 2: Multi-Role Plan Review (Parallel)
+### Phase 2: Risk-Based Plan Review
 
-**Agents (parallel dispatch):**
+**Agents (selected by `build-workflow-plan` minimum trigger rules):**
 - plan-ceo-reviewer（市场价值、投资回报、优先级）
 - plan-eng-reviewer（可行性、技术复杂度、依赖风险）
 - plan-design-reviewer（设计约束覆盖、体验任务映射、错误下沉检查）
@@ -41,7 +41,8 @@ Transform approved spec and design into actionable task plan with multi-perspect
 **Input:** 03-plan.md（draft）
 **Output:** plan-review-comments.md
 **Validation:**
-- [ ] 4 个 Reviewers 全部完成
+- [ ] 已按风险升级规则选择必要 Reviewer（小型变更可跳过，标准至少 CEO + Eng，大型/安全/合规四视角全开）
+- [ ] 已选 Reviewers 全部完成
 - [ ] Blocking issues 已识别
 
 ### Phase 3: Present Review to User + Refine
@@ -68,7 +69,7 @@ Transform approved spec and design into actionable task plan with multi-perspect
 
 ## Exit Conditions
 - [ ] 03-plan.md 存在
-- [ ] 经 4 个视角审查
+- [ ] 经最小必要视角审查，或记录了跳过 Plan Review Army 的理由
 - [ ] 所有 Blocking issues 已解决
 
 ## Next Steps

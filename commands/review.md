@@ -1,12 +1,12 @@
 ---
-description: 两阶段审查（Spec Compliance → Code Quality）+ 多角色并行审查
+description: 两阶段审查（Spec Compliance → Code Quality）+ 按风险升级的专业审查
 ---
 
 # Command: /review
 
 ## Goal
 
-Two-stage artifact review: first verify functional completeness (Spec Compliance), then assess implementation quality (Code Quality). Multi-perspective review with severity-graded feedback.
+Two-stage artifact review: first verify functional completeness (Spec Compliance), then assess implementation quality (Code Quality). Add specialist reviewers only when risk triggers require them or the user requests `--full`.
 
 ## 两阶段审查流程
 
@@ -46,7 +46,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 
 **前置条件:** Phase 2 已通过（spec compliance ✅）
 
-**Agents (parallel dispatch, software 类型):**
+**Agents (selected by `verify-workflow-review/review-guidance.md` risk triggers, software 类型):**
 - review-code-quality-auditor（五轴：Correctness、Readability、Architecture、Security、Performance）
 - review-security-auditor（OWASP、威胁建模、密钥扫描，安全敏感时）
 - review-test-engineer（happy path、边界、错误路径、并发）
@@ -60,7 +60,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 - verify-visual-review（deck / visual）
 
 **Input:** 产物文件
-**Output:** 各 Reviewer 独立反馈（五轴评分 + Blocking/Important/Suggestion 分级）
+**Output:** 已选 Reviewer 独立反馈（五轴评分 + Blocking/Important/Suggestion 分级）
 
 ### Phase 4: Merge Feedback and Report
 
@@ -71,7 +71,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 **Validation:**
 - [ ] 报告包含 Spec Compliance 审查结果
 - [ ] 报告包含 Code Quality 审查结果（五轴评分）
-- [ ] 报告包含所有 Reviewer 反馈
+- [ ] 报告包含所有已选 Reviewer 反馈，或记录标准模式未派发专业 reviewer 的理由
 - [ ] Blocking issues 清晰标注
 
 ---

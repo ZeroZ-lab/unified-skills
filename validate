@@ -674,6 +674,47 @@ review = Path("commands/review.md").read_text(encoding="utf-8")
 for required in ("document / article", "deck", "verify-content-review", "verify-visual-review"):
     if required not in review:
         errors.append(f"commands/review.md missing artifact review route: {required}")
+for required in ("Spec Compliance", "Code Quality"):
+    if required not in review:
+        errors.append(f"commands/review.md missing two-stage review gate: {required}")
+
+contract_files = [
+    Path("AGENTS.md"),
+    Path("agents/README.md"),
+    Path("commands/refine.md"),
+    Path("commands/plan.md"),
+    Path("commands/review.md"),
+    Path("commands/ship.md"),
+    Path("docs/architecture/command-agent-skill-architecture.md"),
+]
+for path in contract_files:
+    text = path.read_text(encoding="utf-8")
+    forbidden = [
+        r"[34]\s*个\s*(?:Scouts|Reviewers|Auditors)\s*全部完成",
+        r"经\s*[34]\s*个视角审查",
+        r"报告包含所有\s*Reviewer\s*(?:的)?反馈",
+        r"所有\s*(?:Reviewers|Auditors)\s*(?:已)?完成",
+        r"所有\s*Auditors\s*通过",
+        r"必须同时并行派发",
+        r"(?:Review Army|Plan Review Army|Refine Scout Army|Ship Audit Army)[^\n]*（\s*[34]\s*个\s*）",
+    ]
+    for pattern in forbidden:
+        if re.search(pattern, text, re.IGNORECASE):
+            errors.append(f"{path} contains fixed all-role review wording: {pattern}")
+
+required_role_contracts = {
+    "AGENTS.md": ["Risk-Based Role Escalation", "`--full`", "最小必要角色", "并行只用于已被阶段技能选中的角色"],
+    "agents/README.md": ["风险升级", "`--full`", "并行只用于已选角色"],
+    "commands/refine.md": ["按风险升级", "minimum trigger rules", "已选 Scouts"],
+    "commands/plan.md": ["按风险升级", "minimum trigger rules", "已选 Reviewers"],
+    "commands/review.md": ["按风险升级", "risk triggers", "已选 Reviewer"],
+    "commands/ship.md": ["按风险升级", "minimum trigger rules", "已选 Auditor"],
+}
+for file, phrases in required_role_contracts.items():
+    text = Path(file).read_text(encoding="utf-8")
+    for phrase in phrases:
+        if phrase not in text:
+            errors.append(f"{file} missing risk-based role escalation phrase: {phrase}")
 
 if errors:
     raise SystemExit("\n".join(errors))

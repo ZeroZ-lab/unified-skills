@@ -1,0 +1,70 @@
+{
+  "colors": {
+    "primary": "#FF5000",
+    "secondary": "#FF8A00",
+    "ink": "#333333",
+    "canvas": "#F5F5F5",
+    "card_bg": "#FFFFFF",
+    "price_text": "#FF2D00",
+    "accent_pink": "#FF3D71",
+    "accent_purple": "#7B61FF",
+    "accent_teal": "#15B8A6",
+    "accent_green": "#2AC769",
+    "accent_coral": "#FF6B4A",
+    "nav_active": "#FF5000",
+    "nav_inactive": "#666666",
+    "promo_warm": "#FFD3C3",
+    "promo_cool": "#D6EDFF",
+    "promo_pink": "#FFE1EF",
+    "promo_lavender": "#E7E0FF",
+    "banner_gold": "#FFB000"
+  },
+  "typography": {
+    "family": "PingFang SC, Helvetica Neue, sans-serif",
+    "heading_weight": 500,
+    "body_weight": 400,
+    "tracking": "0.02em"
+  },
+  "spacing": {
+    "base_unit": "4px",
+    "card_padding": "8px",
+    "section_gap": "8px",
+    "grid_columns": 2,
+    "page_margin": "16px",
+    "column_gap": "10px",
+    "card_width": "166px",
+    "header_height": "44px",
+    "search_bar_height": "32px",
+    "search_bar_margin": "18px",
+    "bottom_nav_height": "50px"
+  },
+  "rounded": {
+    "card_radius": "8px",
+    "cta_radius": "12px",
+    "icon_radius": "20px",
+    "search_bar_radius": "16px",
+    "promo_radius": "12px",
+    "button_radius": "20px"
+  },
+  "components": {
+    "cta_style": "pill-shaped with primary orange background (#FF5000), white text, full-width on cards",
+    "card_style": "white background (#FFFFFF) on grey canvas (#F5F5F5), 2-column waterfall grid, 8px border-radius, 8px internal padding, no visible border/shadow",
+    "nav_style": "fixed bottom bar (50px height) on white background, 5-tab layout, active tab in #FF5000, inactive tabs in #666666, icon + text pattern",
+    "search_style": "rounded pill (radius ~16px) on #FF5000 header background, white (#FFFFFF) fill, horizontally centered with 18px side margins, placeholder text in grey"
+  },
+  "visual_keywords": [
+    "orange-brand",
+    "waterfall-grid",
+    "promo-tiles",
+    "category-chrome",
+    "price-red",
+    "pill-search",
+    "fixed-bottom-nav",
+    "card-white-on-grey",
+    "mobile-commerce",
+    "colorful-category-icons",
+    "gradient-banner",
+    "compact-dense"
+  ],
+  "mood_description": "High-energy commercial; warm orange brand (#FF5000) dominates the header and active states, creating urgency and excitement. The grey canvas (#F5F5F5) with white cards produces a clean, scannable product grid. Price text in bold red (#FF2D00) draws immediate attention. Multi-colored category/promo accents (pink, purple, teal, green) add vibrancy while maintaining readability. Overall mood: lively, transactional, dense-but-organized -- classic Chinese mobile e-commerce aesthetic prioritizing conversion over minimalism."
+}

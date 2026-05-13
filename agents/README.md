@@ -1,6 +1,6 @@
-# Agents — 多角色并行体系
+# Agents — 多角色风险升级体系
 
-24 个 agent 按职责分组：7 个核心工程角色 + 17 个审查 / 侦察角色。用于 define、design、build、review、refine 和 ship 的多角色并行发散模式。
+agent 按职责分组，用于 define、design、build、review、refine 和 ship 的阶段执行与风险升级审查。Unified 不默认全角色参与；阶段技能先按风险选择必要角色，只有 `--full`、大型/高风险变更、对抗性审核或发版前才全开。
 
 ## Design Review（设计阶段）
 
@@ -24,11 +24,11 @@
 
 | Agent | 职责 | 调用时机 |
 |-------|------|---------|
-| review-spec-compliance-auditor | Spec 合规性审查（需求覆盖、验收标准、scope creep） | review --full Phase 1 |
-| review-code-quality-auditor | 五轴审查（正确性、可读性、架构、安全、性能） | review --full Phase 2 |
-| review-security-auditor | 安全审计（OWASP、威胁建模、密钥扫描） | review --full |
-| review-test-engineer | 测试覆盖分析（happy path、边界、错误路径、并发） | review --full |
-| review-accessibility-auditor | 无障碍审查（WCAG、屏幕阅读器、表单错误、动态内容） | review --full（有 UI 变更时） |
+| review-spec-compliance-auditor | Spec 合规性审查（需求覆盖、验收标准、scope creep） | review 高风险或 `--full` Phase 1 |
+| review-code-quality-auditor | 五轴审查（正确性、可读性、架构、安全、性能） | review 标准质量审查或 `--full` Phase 2 |
+| review-security-auditor | 安全审计（OWASP、威胁建模、密钥扫描） | 安全敏感或 `--full` |
+| review-test-engineer | 测试覆盖分析（happy path、边界、错误路径、并发） | 测试覆盖不确定或 `--full` |
+| review-accessibility-auditor | 无障碍审查（WCAG、屏幕阅读器、表单错误、动态内容） | UI 变更或 `--full` |
 
 ## Plan Review Army（计划阶段）
 
@@ -58,4 +58,4 @@
 
 ## 使用方式
 
-各 Army 的 agent 必须同时并行派发，各自产出独立报告，在主 session 合并。反馈按 Blocking / Important / Suggestion 三级分级。
+各 Army 的 agent 由对应阶段技能按风险升级规则选择。并行只用于已选角色；未被选中的角色不需要占位报告。已选角色各自产出独立报告，在主 session 合并。反馈按 Blocking / Important / Suggestion 三级分级。

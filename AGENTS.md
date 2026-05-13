@@ -123,6 +123,16 @@ spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `doc
 
 多产物扩展技能采用角色化方法论：先定义角色责任、长期原则和决策框架，再给出流程和验证证据；它们不是工具清单。
 
+### 角色审查升级规则
+
+Unified 使用 Risk-Based Role Escalation，而不是所有阶段默认全角色参与：
+
+- 小型变更（单文件、纯配置、无 UI/安全/合规敏感）可跳过 army，只保留当前阶段的自审和验证证据。
+- 标准变更使用最小必要角色；例如 `/refine` 和 `/plan` 至少覆盖 CEO + Eng 视角，`/review` 先完成两阶段审查，`/ship` 至少覆盖 security + docs 审计。
+- 高风险变更按风险维度加角色：UI 加 design/accessibility，安全或合规加 security，性能敏感加 performance，测试覆盖不确定加 test。
+- 只有大型变更、高风险发版、对抗性审核、全身体检，或用户明确指定 `--full` 时，才开启该阶段全部相关角色。
+- 并行只用于已被阶段技能选中的角色；未被选中的角色不需要产出占位反馈。
+
 `/refine` 使用 Unified 原生 External Scan：按 `artifact_type` 搜索已有方案、事实来源、设计/技术模式，并把结果分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject，再交给 Idea Scout Army 审查。
 
 `/refine` 的 External Scan 不替代 `/design` 的设计扫描。`/design` 使用 `references/design-best-practices.md` 的 4+1 来源模型：Enterprise Product Patterns、Official Systems / Platform Rules、Methods / Theory / Style Schools、Anti-patterns / Verification、Local Project Truth。

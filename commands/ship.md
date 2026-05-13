@@ -1,5 +1,5 @@
 ---
-description: 发布或导出检查 + 多角色发布审计 → Go/No-Go → 归档
+description: 发布或导出检查 + 按风险升级的发布审计 → Go/No-Go → 归档
 ---
 
 # Command: /ship
@@ -21,16 +21,16 @@ Pre-release audit and artifact export/publishing.
 3. 生成变更摘要
 **Output:** 发布准备状态
 
-### Phase 2: Ship Audit (Parallel)
+### Phase 2: Risk-Based Ship Audit
 
-**Agents (parallel dispatch):**
+**Agents (selected by `ship-workflow-ship` minimum trigger rules):**
 - ship-security-auditor（OWASP、输入边界、认证授权）
 - ship-performance-auditor（关键路径、N+1查询、内存资源）
 - ship-accessibility-auditor（WCAG合规、屏幕阅读器）
 - ship-docs-auditor（CHANGELOG、README、API文档）
 **Skills:** ship-workflow-ship（审计部分）
 **Input:** 产物文件 + 04-review.md
-**Output:** 各 Auditor 审计报告
+**Output:** 已选 Auditor 审计报告
 
 ### Phase 3: Export / Publish
 
