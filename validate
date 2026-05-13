@@ -87,23 +87,27 @@ else
 fi
 
 printf '\n== 检查插件元数据描述 ==\n'
-python3 - "$pkg_ver" "$EXPECTED_SKILL_COUNT" <<'PY' || fail "插件元数据描述与版本/技能数量不一致"
+python3 - "$pkg_ver" <<'PY' || fail "插件元数据描述与版本/动态数量规则不一致"
 import json
+import re
 import sys
 from pathlib import Path
 
 version = sys.argv[1]
-skill_count = sys.argv[2]
 
 metadata_fields = [
-    (".claude-plugin/plugin.json", ("description",)),
-    (".codex-plugin/plugin.json", ("description",)),
-    (".codex-plugin/plugin.json", ("interface", "shortDescription")),
-    (".claude-plugin/marketplace.json", ("description",)),
-    (".claude-plugin/marketplace.json", ("plugins", 0, "description")),
+    (".claude-plugin/plugin.json", ("description",), True),
+    (".codex-plugin/plugin.json", ("description",), True),
+    (".codex-plugin/plugin.json", ("interface", "shortDescription"), False),
+    (".claude-plugin/marketplace.json", ("description",), True),
+    (".claude-plugin/marketplace.json", ("plugins", 0, "description"), True),
+    ("package.json", ("description",), False),
 ]
 
+dynamic_count_re = re.compile(r"(^|[^0-9.])\d+\s*(?:个)?(?:技能|命令|角色|SKILL)")
 errors = []
+package_description = None
+description_bodies = []
 
 def get_field(data, path):
     current = data
@@ -111,7 +115,7 @@ def get_field(data, path):
         current = current[key]
     return current
 
-for file, path in metadata_fields:
+for file, path, require_version_prefix in metadata_fields:
     p = Path(file)
     if not p.exists():
         errors.append(f"missing metadata file: {file}")
@@ -125,12 +129,26 @@ for file, path in metadata_fields:
     if not isinstance(value, str):
         errors.append(f"{file} field {'.'.join(map(str, path))} is not a string")
         continue
-    if f"{skill_count} 技能" not in value:
-        errors.append(f"{file} field {'.'.join(map(str, path))} missing {skill_count} 技能")
-    if "53 技能" in value or "v2.14.0" in value:
+    if dynamic_count_re.search(value):
+        errors.append(f"{file} field {'.'.join(map(str, path))} contains dynamic inventory count")
+    if "v2.14.0" in value:
         errors.append(f"{file} field {'.'.join(map(str, path))} contains stale metadata")
-    if path[-1] == "description" and not value.startswith(f"v{version}"):
+    if require_version_prefix and not value.startswith(f"v{version}"):
         errors.append(f"{file} field {'.'.join(map(str, path))} must start with v{version}")
+    if path[-1] == "description":
+        body = value
+        prefix = f"v{version} — "
+        if require_version_prefix and body.startswith(prefix):
+            body = body[len(prefix):]
+        if file == "package.json":
+            package_description = body
+        else:
+            description_bodies.append((file, path, body))
+
+if package_description:
+    for file, path, body in description_bodies:
+        if body != package_description:
+            errors.append(f"{file} field {'.'.join(map(str, path))} does not match package.json description body")
 
 if errors:
     raise SystemExit("\n".join(errors))
@@ -207,9 +225,6 @@ _expected_cmd_count=12
 if [ "$_cmd_count" != "$_expected_cmd_count" ]; then
   fail "commands/ 目录应包含 $_expected_cmd_count 个命令，实际为 $_cmd_count"
 fi
-for file in AGENTS.md README.md package.json .claude-plugin/plugin.json docs/directory-architecture.md docs/architecture/command-agent-skill-architecture.md; do
-  sgrep "${_expected_cmd_count} 命令" "$file" || fail "缺少 ${_expected_cmd_count} 命令说明: $file"
-done
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查 refine External Scan ==\n'
@@ -301,9 +316,14 @@ sgrep 'design-tokens-extracted' AGENTS.md || fail "AGENTS 缺少 design-tokens-e
 [ -f "references/design-pattern-extract.md" ] || fail "缺少设计模式提取: references/design-pattern-extract.md"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-for file in README.md AGENTS.md package.json .claude-plugin/plugin.json docs/directory-architecture.md; do
-  sgrep "${EXPECTED_SKILL_COUNT} 技能|${EXPECTED_SKILL_COUNT} SKILL" "$file" || fail "缺少 ${EXPECTED_SKILL_COUNT} 技能说明: $file"
-done
+if sgrep_n '(^|[^0-9.])[0-9]+[[:space:]]*(个)?(技能|命令|角色|SKILL)' \
+  README.md AGENTS.md docs/directory-architecture.md docs/architecture/command-agent-skill-architecture.md package.json .claude-plugin .codex-plugin >/tmp/unified-validate-dynamic-count.$$ 2>/dev/null; then
+  cat /tmp/unified-validate-dynamic-count.$$
+  rm -f /tmp/unified-validate-dynamic-count.$$
+  fail '当前描述不应包含动态库存数量；具体数量由目录、索引、锁文件和 validate 计算'
+else
+  rm -f /tmp/unified-validate-dynamic-count.$$
+fi
 
 for type in software document article deck visual; do
   sgrep "$type" templates/feature/01-spec.md || fail "spec 模板缺少 artifact_type 取值: $type"
@@ -584,12 +604,11 @@ PY
 fi
 
 printf '\n== 检查技能加载合同 ==\n'
-python3 - "$EXPECTED_SKILL_COUNT" <<'PY' || fail "技能加载合同不一致"
+python3 <<'PY' || fail "技能加载合同不一致"
 import json
-import sys
+import re
 from pathlib import Path
 
-expected_count = sys.argv[1]
 index = json.load(open("skills-index.json"))
 guide_path = Path("skills/maintain-workflow-using-unified/SKILL.md")
 guide = guide_path.read_text(encoding="utf-8")
@@ -600,10 +619,8 @@ for entry in index.get("by_phase", {}).values():
 
 errors = []
 
-if f"{expected_count} 个技能" not in guide:
-    errors.append(f"{guide_path} missing current skill count: {expected_count} 个技能")
-if "53 个技能" in guide or "53 技能" in guide:
-    errors.append(f"{guide_path} contains stale 53-skill wording")
+if re.search(r"(^|[^0-9.])\d+\s*(?:个)?技能", guide):
+    errors.append(f"{guide_path} contains dynamic skill count")
 if "`AGENTS.md`" not in guide:
     errors.append(f"{guide_path} missing AGENTS.md single-entry wording")
 if "CLAUDE.md、直接请求" in guide or "CLAUDE.md / spec" in guide:

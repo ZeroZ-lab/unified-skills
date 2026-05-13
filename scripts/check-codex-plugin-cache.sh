@@ -53,14 +53,14 @@ compare_file ".claude-plugin/marketplace.json"
 compare_file "skills-index.json"
 compare_file "skills/maintain-workflow-using-unified/SKILL.md"
 
-python3 - "$cache_root" "$version" "$repo_skill_count" <<'PY' || fail "Codex cache 元数据仍含过期版本或技能数量"
+python3 - "$cache_root" "$version" <<'PY' || fail "Codex cache 元数据仍含过期版本或动态数量"
 import json
+import re
 import sys
 from pathlib import Path
 
 cache_root = Path(sys.argv[1])
 version = sys.argv[2]
-skill_count = sys.argv[3]
 
 checks = [
     (cache_root / ".codex-plugin/plugin.json", ("description",)),
@@ -70,6 +70,7 @@ checks = [
 ]
 
 errors = []
+dynamic_count_re = re.compile(r"(^|[^0-9.])\d+\s*(?:个)?(?:技能|命令|角色|SKILL)")
 
 def get(data, path):
     current = data
@@ -83,9 +84,9 @@ for file_path, path in checks:
     except Exception as exc:
         errors.append(f"{file_path} missing {'.'.join(map(str, path))}: {exc}")
         continue
-    if f"{skill_count} 技能" not in value:
-        errors.append(f"{file_path} {'.'.join(map(str, path))} missing {skill_count} 技能")
-    if "53 技能" in value or "53 个技能" in value or "v2.14.0" in value:
+    if dynamic_count_re.search(value):
+        errors.append(f"{file_path} {'.'.join(map(str, path))} contains dynamic inventory count")
+    if "v2.14.0" in value:
         errors.append(f"{file_path} {'.'.join(map(str, path))} contains stale metadata")
     if path[-1] == "description" and not value.startswith(f"v{version}"):
         errors.append(f"{file_path} {'.'.join(map(str, path))} must start with v{version}")

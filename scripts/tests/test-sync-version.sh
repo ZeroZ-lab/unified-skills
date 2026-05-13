@@ -40,6 +40,7 @@ claude_ver=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugi
 codex_ver=$(python3 -c "import json; print(json.load(open('.codex-plugin/plugin.json'))['version'])")
 metadata_check=$(python3 - <<'PY'
 import json
+import re
 
 files = [
     ".claude-plugin/plugin.json",
@@ -54,9 +55,9 @@ for file in files:
 joined = "\n".join(texts)
 if "v2.15.0-test" not in joined:
     raise SystemExit("missing synced version prefix in descriptions")
-if "54 技能" not in joined:
-    raise SystemExit("missing current skill count in descriptions")
-if "53 技能" in joined or "v2.14.0" in joined:
+if re.search(r"(^|[^0-9.])\d+\s*(?:个)?(?:技能|命令|角色|SKILL)", joined):
+    raise SystemExit("dynamic inventory count remains in descriptions")
+if "v2.14.0" in joined:
     raise SystemExit("stale metadata remains")
 print("ok")
 PY

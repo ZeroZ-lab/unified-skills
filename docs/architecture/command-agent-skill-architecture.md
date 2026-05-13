@@ -1149,9 +1149,9 @@ Command: /ship
 **影响范围：** `/build` 命令
 
 **现状：** `build-workflow-execute` 根据 artifact_type 加载完全不同的技能集：
-- software → TDD + API + DB + Frontend + Backend（5+ 技能）
-- document → Content Writing（1 技能）
-- visual → Layout（1 技能）
+- software → TDD + API + DB + Frontend + Backend 等工程技能
+- document → Content Writing
+- visual → Layout
 
 **后果：**
 - 违反单一职责原则
@@ -2434,7 +2434,7 @@ unified/
 ├── CANON.md                          宪法
 ├── CLAUDE.md                         入口配置
 │
-├── commands/                         12 命令（重写为编排协议）
+├── commands/                         命令入口（重写为编排协议）
 │   ├── refine.md                     ← 重写
 │   ├── plan.md                       ← 重写
 │   ├── build.md                      ← 重写
@@ -2446,10 +2446,10 @@ unified/
 │
 ├── skills/                            真实技能目录（Codex 直接读取）
 │
-├── agents/                           24 角色（7 核心工程 + 17 审查 / 侦察）
+├── agents/                           角色目录
 │   ├── README.md                     ← 更新
 │   │
-│   ├── # 核心工程角色（7 新增）───────────────────
+│   ├── # 核心工程角色（新增）─────────────────────
 │   ├── requirements-analyst.md       ← 新增
 │   ├── task-planner.md               ← 新增
 │   ├── software-engineer.md          ← 新增
@@ -2458,39 +2458,39 @@ unified/
 │   ├── content-writer.md             ← 新增
 │   ├── visual-designer.md            ← 新增
 │   │
-│   ├── # Review Army（4 重命名）─────────────────
+│   ├── # Review Army（重命名）───────────────────
 │   ├── review-code-reviewer.md       ← 重命名（原 code-reviewer.md）
 │   ├── review-security-auditor.md    ← 重命名（原 security-auditor.md）
 │   ├── review-test-engineer.md       ← 重命名（原 test-engineer.md）
 │   ├── review-accessibility-auditor.md ← 重命名（原 review-accessibility-checker.md）
 │   │
-│   ├── # Plan Review Army（4 保持）─────────────
+│   ├── # Plan Review Army（保持）───────────────
 │   ├── plan-ceo-reviewer.md          ✓
 │   ├── plan-eng-reviewer.md          ✓
 │   ├── design-reviewer.md            ✓
 │   ├── plan-design-reviewer.md       ✓
 │   └── plan-security-reviewer.md     ✓
 │   │
-│   ├── # Refine Scout Army（3 保持）────────────
+│   ├── # Refine Scout Army（保持）──────────────
 │   ├── refine-ceo-scout.md           ✓
 │   ├── refine-eng-scout.md           ✓
 │   └── refine-design-scout.md        ✓
 │   │
-│   └── # Ship Audit Army（4 保持）──────────────
+│   └── # Ship Audit Army（保持）────────────────
 │       ├── ship-security-auditor.md      ✓
 │       ├── ship-performance-auditor.md   ✓
 │       ├── ship-accessibility-auditor.md ✓
 │       └── ship-docs-auditor.md          ✓
 │
-├── skills/                           45 技能（不变）
-│   ├── define/  (3)
-│   ├── build/   (15)
-│   ├── verify/  (11)
-│   ├── ship/    (7)
-│   ├── maintain/ (6)
-│   └── reflect/ (2)
+├── skills/                           真实技能目录
+│   ├── define/
+│   ├── build/
+│   ├── verify/
+│   ├── ship/
+│   ├── maintain/
+│   └── reflect/
 │
-├── templates/                        6 文档模板
+├── templates/                        文档模板
 ├── references/                       编排模式参考
 ├── docs/                             设计文档
 │   └── architecture/

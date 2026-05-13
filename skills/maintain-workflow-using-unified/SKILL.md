@@ -8,7 +8,7 @@ description: Session 启动引导 — 建立主动技能发现机制。每个 se
 </SUBAGENT-STOP>
 
 <EXTREMELY-IMPORTANT>
-你拥有 Unified Skills — 54 个技能覆盖 7 阶段工作流。
+你拥有 Unified Skills — 一套由 `skills-index.json` 声明库存的阶段化工作流技能系统。
 
 在响应用户消息或采取任何行动之前，你必须执行技能发现流程。
 这不是可选的。这不是可协商的。你无法通过推理绕过这个规则。

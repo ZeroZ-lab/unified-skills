@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.16.2] - 2026-05-13
+
+### Changed
+- metadata: remove dynamic inventory counts from package, plugin, marketplace, README, AGENTS, and architecture descriptions.
+- validation: enforce canonical long descriptions across release metadata and reject dynamic skill/command/role counts in current description surfaces.
+- skill loading: make `maintain-workflow-using-unified` treat `skills-index.json` as the inventory source instead of embedding a fixed skill count.
+
 ## [2.16.1] - 2026-05-13
 
 ### Added
