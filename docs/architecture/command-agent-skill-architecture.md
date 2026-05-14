@@ -2736,9 +2736,8 @@ skills/
 
 ## 4.6 Phase 5：更新 load-manifest.json
 
-> **⚠️ 已废弃（v2.14.0）**  
-> 本章节描述的 `load-manifest.json` 已被删除。相关功能已统一使用 `skills-index.json` 实现。  
-> 参见：`docs/history/20260510-cleanup-load-manifest.md`
+> **⚠️ 已废弃（v2.14.0）**
+> 本章节描述的 `load-manifest.json` 已被删除。相关功能已统一使用 `skills-index.json` 实现。
 
 ### 原始目标（已废弃）
 确保 `load-manifest.json` 中的 Agent 引用使用新名称。
