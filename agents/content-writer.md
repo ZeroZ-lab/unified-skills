@@ -23,16 +23,32 @@ isolation: worktree
 
 ## 加载的 Skills
 
+### Design 阶段
+- `design-workflow-design`
+- `design-content-script`
+- `design-content-direction`
+- `design-content-layout`
+
+### Build 阶段
 - `build-content-writing`
 - `build-workflow-execute`
 - `build-cognitive-execution-engine`
 
 ## 输入
 
-- `docs/features/YYYYMMDD-<name>/03-plan.md`
+### Design 阶段
+- `01-spec.md` + `02-design.md`（draft）
+
+### Build 阶段
+- `02-design.md`（final）+ `03-plan.md`
 - 当前切片的章节描述
 
 ## 输出格式
+
+### Design 阶段
+叙事骨架、段落消息线、节奏定稿 → 写入 `02-design.md`（按 `design-content-script` 模板）
+
+### Build 阶段
 
 ```markdown
 ## 创作进度

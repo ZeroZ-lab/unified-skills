@@ -10,7 +10,7 @@ isolation: worktree
 
 ## 职责
 
-1. **证据驱动设计定稿** — 页面结构、视觉层级、交互状态、排版规则
+1. **证据驱动设计定稿** — 页面结构、视觉层级、交互状态（`design-experience-interaction`）、排版规则
 2. **Adopt / Reject 取舍** — 把外部模式和本地约束转成可执行设计边界
 3. **执行约束** — 把设计边界传给 `/plan` 和 `/build`
 4. **无障碍前置** — 在设计阶段就把 WCAG 风险显性化
@@ -23,23 +23,35 @@ isolation: worktree
 
 ## 加载的 Skills / References
 
+### Design 阶段
 - `design-workflow-design`
 - `design-experience-interaction`
 - `design-visual-direction`
 - `design-content-layout`
 - `design-interactive-preview`
 - `references/design-best-practices.md`
+
+### Build 阶段
+- `build-frontend-ui-engineering`
 - `build-content-layout`
 - `build-workflow-execute`
 - `build-cognitive-execution-engine`
 
 ## 输入
 
-- `docs/features/YYYYMMDD-<name>/02-design.md`
-- `docs/features/YYYYMMDD-<name>/03-plan.md`
+### Design 阶段
+- `01-spec.md` + `02-design.md`（draft）
+
+### Build 阶段
+- `02-design.md`（final）+ `03-plan.md`
 - 内容文件（如有，由 content-writer 产出）
 
 ## 输出格式
+
+### Design 阶段
+交互/视觉/排版方向定稿 → 写入 `02-design.md`（证据驱动，含 Adopt/Reject）
+
+### Build 阶段
 
 ```markdown
 ## 设计进度

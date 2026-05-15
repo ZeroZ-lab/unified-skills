@@ -124,36 +124,27 @@ Transform approved spec into an approved, evidence-driven design contract for us
 - [ ] 02-design.md 已精炼为选定方向
 - [ ] 未选方案已移入 Alternatives Considered
 
-### Phase 4: Design Review
+### Phase 4: Design Review + Approval
 
-**Agent:** design-reviewer
-**Input:** 02-design.md（draft）
+**Agent:** design-reviewer（审查）+ current（批准）
+**Skills:** design-workflow-design（Step 5）
+**Input:** 02-design.md（refined draft）
 **Process:**
-1. 审查设计目标、关键决策、证据质量、边界和实施前置条件
-2. 输出 Blocking / Important / Suggestion
+1. design-reviewer 审查设计目标、关键决策、证据质量、边界和实施前置条件
+2. 输出 Blocking / Important / Suggestion（反馈合并进设计迭代，非独立产出）
 3. 如有 Blocking，先修设计稿再进入批准
-**Output:** design-review-comments.md
-**Validation:**
-- [ ] design-reviewer 已完成
-- [ ] Blocking issues 已识别
-
-### Phase 5: Approval
-
-**Agent:** current
-**Skills:** design-workflow-design
-**Input:** 02-design.md（refined draft）+ design-review-comments.md
-**Process:**
-1. 向用户展示设计稿 + design review 反馈
-2. 记录反馈并修改
-3. 获得批准后定稿
-4. **注**: 如果经过 Phase 3.5 视觉对比，用户已确认方向选择，此处聚焦证据质量、完整性和不做清单
+4. 向用户展示设计稿 + review 反馈
+5. 记录用户反馈并修改
+6. 获得批准后定稿
+7. **注**: 如果经过 Phase 3.5 视觉对比，用户已确认方向选择，此处聚焦证据质量、完整性和不做清单
 **Output:** docs/features/YYYYMMDD-<name>/02-design.md（final）
 **Validation:**
-- [ ] design-reviewer 的 Blocking 已处理
+- [ ] design-reviewer 已完成
+- [ ] Blocking issues 已处理
 - [ ] 用户已批准 design
 - [ ] 设计稿满足批准标准
 
-### Phase 6: Sync Project Design Constraints
+### Phase 5: Sync Project Design Constraints
 
 **Agent:** current
 **Skills:** design-workflow-design
@@ -180,6 +171,7 @@ Transform approved spec into an approved, evidence-driven design contract for us
 - [ ] design required 时：02-design.md 存在且已批准
 - [ ] design required 时：02-design.md 包含证据来源、模式综合、Adopt / Reject
 - [ ] design skipped 时：skip 理由已明确记录
+- [ ] design required 时：design-reviewer 已完成，Blocking 已处理
 - [ ] design required 时：DESIGN.md 已同步（创建或更新）
 
 ## Next Steps
