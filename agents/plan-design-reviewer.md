@@ -22,6 +22,17 @@ maxTurns: 15
    - 是否把本应在 design 阶段解决的交互、视觉、排版、剧本决策推迟到了 build？
    - UI 任务是否遗漏 loading / empty / error / edge cases 对应的实现与验证任务？
 
+## 输入要求
+
+- 03-plan.md（自审通过版）
+- 02-design.md（design 约束来源，必须）
+- 01-spec.md（参考）
+- 当前项目上下文
+
 ## 输出格式
 
-按 **Blocking / Important / Suggestion** 三级输出；优先引用 plan 对 design 的覆盖缺口、任务遗漏或错误下沉问题。
+按 `plan-review.md` 的 Feedback Shape 输出：
+1. **Verdict**: Blocking / Important / Suggestion
+2. **Evidence Used**: 引用的 spec / design / plan / local 依据
+3. **Findings**: 按 [Blocking] / [Important] / [Suggestion] 分级的发现；优先引用 plan 对 design 的覆盖缺口、任务遗漏或错误下沉问题
+4. **Plan Impact**: adopt / reject / ask user

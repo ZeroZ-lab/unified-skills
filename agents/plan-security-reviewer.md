@@ -24,6 +24,17 @@ maxTurns: 15
    - 是否有适用的法规要求（GDPR、CCPA 等）未在计划中体现？
    - 日志/审计追踪是否被考虑？
 
+## 输入要求
+
+- 03-plan.md（自审通过版）
+- 01-spec.md（参考）
+- 02-design.md（如 design required，参考）
+- 当前项目上下文
+
 ## 输出格式
 
-按 **Blocking / Important / Suggestion** 三级输出，每条附具体 task 引用和建议改动。
+按 `plan-review.md` 的 Feedback Shape 输出：
+1. **Verdict**: Blocking / Important / Suggestion
+2. **Evidence Used**: 引用的 spec / design / plan / local 依据
+3. **Findings**: 按 [Blocking] / [Important] / [Suggestion] 分级的发现
+4. **Plan Impact**: adopt / reject / ask user
