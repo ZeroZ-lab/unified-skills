@@ -981,7 +981,7 @@ if not isinstance(data, dict):
 hooks = data.get("hooks")
 if not isinstance(hooks, dict):
     raise SystemExit("missing hooks object")
-for event in ("SessionStart", "PreToolUse"):
+for event in ("SessionStart", "PreToolUse", "PostToolUse", "Stop"):
     entries = hooks.get(event)
     if not isinstance(entries, list) or not entries:
         raise SystemExit(f"missing {event} hooks")
@@ -994,6 +994,17 @@ for event in ("SessionStart", "PreToolUse"):
         for hook in nested:
             if hook.get("type") != "command" or not hook.get("command"):
                 raise SystemExit(f"{event} hook must be command with command string")
+# Verify PostToolUse has Agent and Write|Edit matchers
+ptu_entries = hooks.get("PostToolUse", [])
+ptu_matchers = [e.get("matcher", "") for e in ptu_entries]
+if "Agent" not in ptu_matchers:
+    raise SystemExit("PostToolUse must have Agent matcher for agent-dispatch")
+if not any(m in ("Write|Edit", "Write", "Edit") for m in ptu_matchers):
+    raise SystemExit("PostToolUse must have Write|Edit matcher for doc-tracker")
+# Verify Stop hook exists
+stop_entries = hooks.get("Stop", [])
+if not stop_entries:
+    raise SystemExit("Stop hook required for phase-stop")
 PY
   [ "$status" -eq 0 ] && printf '通过\n'
 fi

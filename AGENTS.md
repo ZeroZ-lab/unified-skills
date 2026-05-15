@@ -112,15 +112,18 @@ Codex 侧不再维护 repo 内 `$command` 薄包装入口。当前模型是：
 
 如果需要理解工作流阶段，对照上方命令映射即可；Codex 直接消费真实技能，不再依赖 repo 内旧的薄包装目录。
 
-## Hooks（安全护栏）
+## Hooks（安全护栏 + 可观测性）
 
-Unified Skills 有 3 个 hooks，在两个平台上行为有差异：
+Unified Skills 有 6 个 hooks，在两个平台上行为有差异：
 
 | Hook | Claude Code | Codex CLI |
 |------|-------------|-----------|
 | SessionStart | 自动注入 Boot Kernel + router 加载提示 | 自动注入 Boot Kernel + router 加载提示（需启用 hooks） |
 | careful（破坏性命令拦截） | `permissionDecision: "ask"` — 提示用户确认 | `permissionDecision: "deny"` — 直接阻止（fail-closed） |
 | freeze（编辑范围冻结） | `permissionDecision: "deny"` — 阻止范围外编辑 | `permissionDecision: "deny"` — 阻止范围外编辑 |
+| agent-dispatch（派出通知） | `additionalContext` — 显示 subagent 角色和职责 | Codex 暂未适配（使用 `statusMessage` 模式） |
+| doc-tracker（阶段进度） | `additionalContext` — 写入阶段文档时显示链进展 | Codex 暂未适配 |
+| phase-stop（save 提醒） | `additionalContext` — 检查未保存工作上下文并建议 /save | Codex 暂未适配 |
 
 **Codex hooks 激活：** 需在 `.codex/config.toml` 的 `[features]` 表中设置 `hooks = true`，或通过 CLI 参数 `--enable hooks` 临时启用。
 
