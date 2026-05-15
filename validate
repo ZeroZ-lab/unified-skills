@@ -317,7 +317,7 @@ sgrep 'design-tokens-extracted' AGENTS.md || fail "AGENTS 缺少 design-tokens-e
 [ "$status" -eq 0 ] && printf '通过\n'
 
 if sgrep_n '(^|[^0-9.])[0-9]+[[:space:]]*(个)?(技能|命令|角色|SKILL)' \
-  README.md AGENTS.md docs/directory-architecture.md docs/architecture/command-agent-skill-architecture.md package.json .claude-plugin .codex-plugin >/tmp/unified-validate-dynamic-count.$$ 2>/dev/null; then
+  README.md AGENTS.md docs/architecture/command-agent-skill-architecture.md package.json .claude-plugin .codex-plugin >/tmp/unified-validate-dynamic-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-dynamic-count.$$
   rm -f /tmp/unified-validate-dynamic-count.$$
   fail '当前描述不应包含动态库存数量；具体数量由目录、索引、锁文件和 validate 计算'
@@ -437,7 +437,7 @@ PY
 
 printf '\n== 检查过期内容 ==\n'
 if sgrep_n '第 9 条（Every Feature Leaves a Trace|CANON\.md 9 条|9 条不可变|宪法的 9 条|Use AskUserQuestion, Never Plain Text|禁止.*纯文本' \
-  CANON.md README.md CLAUDE.md AGENTS.md docs/directory-architecture.md skills >/tmp/unified-validate-stale-canon.$$ 2>/dev/null; then
+  CANON.md README.md CLAUDE.md AGENTS.md skills >/tmp/unified-validate-stale-canon.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-canon.$$
   rm -f /tmp/unified-validate-stale-canon.$$
   fail '发现过期宪法编号或不可移植提问规则'
@@ -446,7 +446,7 @@ else
 fi
 
 if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|43 技能|43 SKILL|44 技能|44 SKILL|46 技能|46 SKILL|47 技能|47 SKILL|11 命令|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令' \
-  README.md CLAUDE.md AGENTS.md docs/directory-architecture.md package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
+  README.md CLAUDE.md AGENTS.md package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-count.$$
   rm -f /tmp/unified-validate-stale-count.$$
   fail '发现过期技能数量说明'
@@ -455,7 +455,7 @@ else
 fi
 
 if sgrep_n '6 模板|templates/feature/review\.md|templates/feature/ship\.md' \
-  README.md CLAUDE.md AGENTS.md docs/directory-architecture.md >/tmp/unified-validate-stale-template.$$ 2>/dev/null; then
+  README.md CLAUDE.md AGENTS.md >/tmp/unified-validate-stale-template.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-template.$$
   rm -f /tmp/unified-validate-stale-template.$$
   fail '发现过期模板说明'
@@ -464,7 +464,7 @@ else
 fi
 
 if sgrep_n 'fail-open|permissionDecision: "ask".*Codex|Codex.*permissionDecision: "ask"|docs/features/.*/ship\.md|docs/features/<name>/ship\.md|docs/features/YYYYMMDD-<name>/ship\.md|verify-quality-code-review-standards|scripts/install-codex\.sh|\.agents/skills/' \
-  README.md CLAUDE.md AGENTS.md docs/directory-architecture.md skills >/tmp/unified-validate-stale-contract.$$ 2>/dev/null; then
+  README.md CLAUDE.md AGENTS.md skills >/tmp/unified-validate-stale-contract.$$ 2>/dev/null; then
   cat /tmp/unified-validate-stale-contract.$$
   rm -f /tmp/unified-validate-stale-contract.$$
   fail '发现过期合同说明'
