@@ -859,6 +859,12 @@ for phrase in ("skills-router.json", "`light`", "`standard`", "`expanded`", "`fu
 if "1% 可能相关" in guide:
     errors.append(f"{guide_path} still contains old 1% loading rule")
 
+for command_path in sorted(Path("commands").glob("*.md")):
+    command = command_path.read_text(encoding="utf-8")
+    for phrase in ("## Runtime Preflight", "skills-router.json", "skills-index.json", "loading tier"):
+        if phrase not in command:
+            errors.append(f"{command_path} missing command Runtime Preflight phrase: {phrase}")
+
 if hook_path.exists():
     output = subprocess.check_output(
         ["bash", str(hook_path)],

@@ -4,6 +4,11 @@ description: 结构化脑暴——发散探索 + 收敛评估 = 明确方向
 
 # Command: /brainstorm
 
+## Runtime Preflight
+
+执行本命令前，先读取 `skills-router.json` 并声明 loading tier（`light` / `standard` / `expanded` / `full`）和选中技能原因。加载本命令必需技能；如 router 命中风险或专项触发，再追加对应 specialist skills。只有 router 无法回答、需要完整库存、或进入 `full` 模式时，才读取 `skills-index.json`。
+
+
 ## Goal
 
 Transform open-ended question or vague idea into 2-3 structured proposals with clear recommendation.
