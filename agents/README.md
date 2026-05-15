@@ -14,7 +14,7 @@ agent 按职责分组，用于 define、design、build、review、refine 和 shi
 
 | Agent | 职责 | 调用时机 |
 |-------|------|---------|
-| requirements-analyst | 需求澄清、5W1H、spec 生成 | /refine |
+| requirements-analyst | 需求澄清、5W1H、非功能需求识别、MoSCoW 优先级、利益相关者识别、spec 生成 | /refine |
 | task-planner | 任务分解、依赖分析、并行安全性 | /plan, /build |
 | software-engineer | TDD 开发、API/数据库/前后端实现 | /build (software) |
 | data-architect | 数据建模、schema 设计、迁移策略 | /build (软件子领域) |
