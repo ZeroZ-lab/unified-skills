@@ -27,6 +27,8 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 
 **Agent selection (by artifact_type):**
 - software → software-engineer
+- API contract task → api-designer first, then software-engineer
+- schema/migration task → data-architect first, then software-engineer
 - document/article → content-writer
 - deck → content-writer + visual-designer
 - visual → visual-designer

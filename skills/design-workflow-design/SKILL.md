@@ -54,6 +54,16 @@ skip 时必须明确记录：
 - 不决定数据库/API/服务架构
 - 不把像素级微调当成阶段主目标
 
+## Agent Dispatch Contract
+
+`/design` 由阶段技能按 `artifact_type` 选择 persona；persona 不能绕过本技能直接进入 plan/build。
+
+- `agents/requirements-analyst.md`：只用于 Step 1 的 design required / skipped 判断，读取 spec 并确认是否有用户可感知产物。
+- `agents/content-writer.md`：用于 `document` / `article` / `deck` 的剧本、叙事、内容结构设计。
+- `agents/visual-designer.md`：用于 `software + UI`、`deck`、`visual` 的交互、视觉方向、排版和交互式预览。
+- `agents/design-reviewer.md`：用于审查 `02-design.md` 的证据质量、边界和实施前置条件；Blocking 未处理前不得批准 design。
+- `codex:codex-rescue` 只是可选视觉生成增强，不替代上述 persona 和证据门。
+
 ## 最佳实践来源模型
 
 设计阶段抽象迁移 `cc-design` 的来源分层思想，但不内置其完整 reference 库。每次 required design 都按 4+1 层记录证据：

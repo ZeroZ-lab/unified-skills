@@ -26,6 +26,20 @@ description: 任务执行引擎——选择正确的执行模式。适用于 bui
 - 引擎可以选择 inline / subagent / parallel，但不能重新创建正式任务列表。
 - 任何 subagent 输入都必须绑定一个明确的 `Task N` 或 `plans/*.md` 子计划。
 
+## Agent Dispatch Contract
+
+执行引擎选择执行模式时，也必须选择明确 persona；persona 选择不改变 Task N / Write Scope / Verification Evidence。
+
+- Plan / mode selection → `agents/task-planner.md`
+- Software implementation → `agents/software-engineer.md`
+- API contract task → `agents/api-designer.md` first, then `agents/software-engineer.md`
+- Data schema / migration task → `agents/data-architect.md` first, then `agents/software-engineer.md`
+- Document / article task → `agents/content-writer.md`
+- Deck task → `agents/content-writer.md` for narrative first, then `agents/visual-designer.md` for layout
+- Visual task → `agents/visual-designer.md`
+
+Mode B fan-out can use different personas in parallel only when their Write Scope does not overlap. Mode C implementer/reviewer prompts must name the selected persona and include its required skills, inputs, outputs, and scope.
+
 ## 三种执行模式
 
 根据任务的性质（独立/依赖/复杂）选择对应模式：

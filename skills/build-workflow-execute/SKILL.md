@@ -42,6 +42,18 @@ For execution: **implement this plan task-by-task**.
 
 没有 `Parallel Execution Matrix` 或没有 `parallel_safe` 证据时，降级为 `serial` 执行。降级原因必须写入 build 记录。
 
+## Agent Dispatch Contract
+
+`/build` 的主流程由本技能和 `build-cognitive-execution-engine` 控制；persona 只在被阶段技能选中后执行对应 Task N 或子计划。
+
+- `agents/task-planner.md`：只用于读取计划、提取 task queue、检查 Parallel Execution Matrix 和选择 inline / subagent / parallel；不得在 `/build` 中重写正式任务列表。
+- `agents/software-engineer.md`：`artifact_type: software` 的默认 implementer，执行 TDD、实现和验证；遇到 API、DB、UI 子领域时加载对应 build skills。
+- `agents/api-designer.md`：当 Task N 是 API 契约、endpoint shape、request/response/error contract 或版本策略时先执行；输出契约后交给 `software-engineer` 实现。
+- `agents/data-architect.md`：当 Task N 涉及 schema、migration、索引、约束或数据迁移策略时先执行；输出数据契约后交给 `software-engineer` 实现。
+- `agents/content-writer.md`：`document` / `article` / `deck` 的内容切片 implementer。
+- `agents/visual-designer.md`：`visual` 和 `deck` 的版式/视觉切片 implementer；deck 必须等 `content-writer` 完成叙事骨架后再进入 layout。
+- 并行分派只允许给 `Parallel Execution Matrix` 证明 `parallel_safe` 的 Task N 或子计划；每个 persona 的 changed_files 必须落在 Write Scope 内。
+
 再读取 spec 的 `artifact_type`：
 - `software`（默认）→ 若涉及 UI/页面/组件/交互/视觉，先确认 `02-design.md` 已批准；再加载 `build-quality-tdd` 以及需要的 frontend/backend/database 技能
 - `document` / `article` → 按需加载 `build-content-writing`；涉及版式时加载 `build-content-layout`

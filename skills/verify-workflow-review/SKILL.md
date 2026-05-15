@@ -25,6 +25,15 @@ description: 按产物类型审查。当软件、文档、文章、PPT 或视觉
 `software` 必须覆盖 Spec Compliance + 五轴质量评估；非软件产物必须覆盖目标受众、内容/视觉质量、完整性和导出证据。
 </HARD-GATE>
 
+## Agent Dispatch Contract
+
+`/review` 默认由 current agent 直接执行两阶段审查；高风险或 `--full` 时才分派 reviewer persona。阶段顺序不能被 persona 选择改变。
+
+- Stage 1 Spec Compliance 可由 current agent 或 `agents/review-spec-compliance-auditor.md` 执行；必须加载 `verify-workflow-spec-compliance`。
+- Stage 2 Code Quality 只能在 Stage 1 通过后执行，可由 current agent 或 `agents/review-code-quality-auditor.md` 执行；必须加载 `verify-quality-code-quality`。
+- 安全敏感时追加 `agents/review-security-auditor.md`；测试覆盖不确定时追加 `agents/review-test-engineer.md`；UI/a11y 风险时追加 `agents/review-accessibility-auditor.md`。
+- 未被风险规则选中的 reviewer 不产出占位反馈；所有已选 reviewer 输出 Blocking / Important / Suggestion。
+
 ### Step 1：理解上下文
 
 看代码前先理解意图：

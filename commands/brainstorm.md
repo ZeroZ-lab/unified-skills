@@ -8,6 +8,8 @@ description: 结构化脑暴——发散探索 + 收敛评估 = 明确方向
 
 Transform open-ended question or vague idea into 2-3 structured proposals with clear recommendation.
 
+`/brainstorm` has no dedicated `agents/*.md` persona. It is a current-agent cognitive workflow: the command loads `define-cognitive-brainstorm`, and the current agent executes the exploration, divergence, convergence, and recommendation loop.
+
 ## Phases
 
 ### Phase 1: Context Exploration

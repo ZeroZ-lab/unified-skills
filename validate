@@ -388,6 +388,51 @@ for file in agents/requirements-*.md agents/task-*.md agents/software-*.md agent
   sgrep '职责' "$file" || fail "缺少职责章节: $file"
   sgrep '输出格式' "$file" || fail "缺少输出格式章节: $file"
 done
+
+python3 <<'PY' || fail "Agent 调用合同检查失败"
+from pathlib import Path
+
+errors = []
+skills_text = "\n".join(
+    path.read_text(encoding="utf-8")
+    for path in sorted(Path("skills").rglob("*.md"))
+)
+
+for agent_path in sorted(Path("agents").glob("*.md")):
+    if agent_path.name == "README.md":
+        continue
+    token = f"agents/{agent_path.name}"
+    if token not in skills_text:
+        errors.append(f"{agent_path} is declared but not consumed by any skills/*.md contract")
+
+required_skill_consumers = {
+    "agents/requirements-analyst.md": ["skills/define-workflow-refine/SKILL.md", "skills/design-workflow-design/SKILL.md"],
+    "agents/task-planner.md": ["skills/build-workflow-plan/SKILL.md", "skills/build-workflow-execute/SKILL.md", "skills/build-cognitive-execution-engine/SKILL.md"],
+    "agents/software-engineer.md": ["skills/build-workflow-execute/SKILL.md", "skills/build-cognitive-execution-engine/SKILL.md"],
+    "agents/api-designer.md": ["skills/build-workflow-execute/SKILL.md", "skills/build-cognitive-execution-engine/SKILL.md"],
+    "agents/data-architect.md": ["skills/build-workflow-execute/SKILL.md", "skills/build-cognitive-execution-engine/SKILL.md"],
+    "agents/content-writer.md": ["skills/design-workflow-design/SKILL.md", "skills/build-workflow-execute/SKILL.md", "skills/build-cognitive-execution-engine/SKILL.md"],
+    "agents/visual-designer.md": ["skills/design-workflow-design/SKILL.md", "skills/build-workflow-execute/SKILL.md", "skills/build-cognitive-execution-engine/SKILL.md"],
+    "agents/design-reviewer.md": ["skills/design-workflow-design/SKILL.md"],
+    "agents/review-spec-compliance-auditor.md": ["skills/verify-workflow-review/SKILL.md"],
+    "agents/review-code-quality-auditor.md": ["skills/verify-workflow-review/SKILL.md"],
+    "agents/review-security-auditor.md": ["skills/verify-workflow-review/SKILL.md", "skills/verify-workflow-review/review-guidance.md"],
+    "agents/review-test-engineer.md": ["skills/verify-workflow-review/SKILL.md", "skills/verify-workflow-review/review-guidance.md"],
+    "agents/review-accessibility-auditor.md": ["skills/verify-workflow-review/SKILL.md", "skills/verify-workflow-review/review-guidance.md"],
+}
+for token, paths in required_skill_consumers.items():
+    for path in paths:
+        text = Path(path).read_text(encoding="utf-8")
+        if token not in text:
+            errors.append(f"{path} missing agent dispatch token: {token}")
+
+brainstorm = Path("skills/define-cognitive-brainstorm/SKILL.md").read_text(encoding="utf-8")
+if "不调用专属 `agents/*.md` persona" not in brainstorm or "当前 agent 直接执行" not in brainstorm:
+    errors.append("define-cognitive-brainstorm must state current-agent execution with no dedicated persona")
+
+if errors:
+    raise SystemExit("\n".join(errors))
+PY
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查过期内容 ==\n'

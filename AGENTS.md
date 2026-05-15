@@ -123,6 +123,15 @@ spec 必须声明 `artifact_type`，默认 `software`；可选 `software` / `doc
 
 多产物扩展技能采用角色化方法论：先定义角色责任、长期原则和决策框架，再给出流程和验证证据；它们不是工具清单。
 
+### Agent Persona 调用规则
+
+`agents/` 是 persona / 职责定义层，不是独立路由器。真正的调用时机必须写在对应阶段技能或技能辅助文件中；`commands/` 和 `agents/README.md` 只能镜像阶段技能，不创建额外规则。
+
+- 简单认知型阶段（如 `/brainstorm`）可以由 current agent 直接执行，不需要专属 persona。
+- 阶段技能决定是否按 `artifact_type`、风险或任务性质选择 persona。
+- persona 可以声明常用/必需 skills，但不能绕过阶段技能自行扩大 scope。
+- `agents/README.md` 中声明有调用时机的 persona，必须能在 `skills/` 中找到对应消费点。
+
 ### 角色审查升级规则
 
 Unified 使用 Risk-Based Role Escalation，而不是所有阶段默认全角色参与：

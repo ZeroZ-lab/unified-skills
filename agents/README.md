@@ -1,6 +1,8 @@
 # Agents — 多角色风险升级体系
 
-agent 按职责分组，用于 define、design、build、review、refine 和 ship 的阶段执行与风险升级审查。Unified 不默认全角色参与；阶段技能先按风险选择必要角色，只有 `--full`、大型/高风险变更、对抗性审核或发版前才全开。
+agent 按职责分组，用于 define、design、build、review、refine 和 ship 的阶段执行与风险升级审查。Unified 不默认全角色参与；阶段技能先按风险选择必要角色，只有 `--full`、大型/高风险变更、对抗性审核或发版前才全开。`agents/` 只定义 persona，真正调用合同必须出现在对应 `skills/` 或技能辅助文件中。
+
+`/brainstorm` 当前没有专属 persona；它由 current agent 直接执行 `define-cognitive-brainstorm`。
 
 ## Design Review（设计阶段）
 
@@ -17,8 +19,8 @@ agent 按职责分组，用于 define、design、build、review、refine 和 shi
 | software-engineer | TDD 开发、API/数据库/前后端实现 | /build (software) |
 | data-architect | 数据建模、schema 设计、迁移策略 | /build (软件子领域) |
 | api-designer | API 接口设计、契约定义、版本管理 | /build (软件子领域) |
-| content-writer | 文档/文章/PPT 叙事创作 | /build (document/article/deck) |
-| visual-designer | 版式布局、视觉层级、交互设计 | /build (visual/deck) |
+| content-writer | 文档/文章/PPT 叙事创作 | /design, /build (document/article/deck) |
+| visual-designer | 版式布局、视觉层级、交互设计 | /design, /build (visual/deck) |
 
 ## Review Army（审查阶段）
 

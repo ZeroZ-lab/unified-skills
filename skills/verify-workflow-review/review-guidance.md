@@ -7,10 +7,10 @@
 高风险场景可以派发专业审查 agent：
 
 ```
-安全敏感             -> review-security-auditor agent
-代码质量敏感          -> review-code-quality-auditor agent
-测试覆盖需要验证      -> review-test-engineer agent
-无障碍合规           -> review-accessibility-auditor agent
+安全敏感             -> agents/review-security-auditor.md
+代码质量敏感          -> agents/review-code-quality-auditor.md
+测试覆盖需要验证      -> agents/review-test-engineer.md
+无障碍合规           -> agents/review-accessibility-auditor.md
 ```
 
 触发条件：

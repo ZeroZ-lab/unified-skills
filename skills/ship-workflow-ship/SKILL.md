@@ -74,6 +74,8 @@ Pre-launch checks (Phase A passed)
 
 每个 auditor 输出 Blocking / Important / Suggestion 三级反馈。
 
+阶段技能只分派已被最少触发条件选中的 auditor；未被选中的 auditor 不产出占位反馈。
+
 **反馈处理规则：**
 - **Blocking** — 必须解决，不上线直到修复
 - **Important** — 强烈必须修复，不修复需在 ship 报告中记录风险接受理由
