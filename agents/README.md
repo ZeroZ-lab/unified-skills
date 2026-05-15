@@ -45,9 +45,9 @@ agent 按职责分组，用于 define、design、build、review、refine 和 shi
 
 | Agent | 职责 | 调用时机 |
 |-------|------|---------|
-| refine-ceo-scout | CEO视角：商业可行性、市场定位、投资回报 | /refine Phase 1.6 |
-| refine-eng-scout | 工程视角：技术可行性、实现复杂度、技术债务 | /refine Phase 1.6 |
-| refine-design-scout | 设计视角：用户体验、信息架构、交互创新 | /refine Phase 1.6 |
+| refine-ceo-scout | CEO视角：问题真实度、方案杠杆、优先级、成功标准、范围纪律 | /refine Phase 1.6 |
+| refine-eng-scout | 工程视角：可行性、复杂度、已有方案、依赖风险、替代路径 | /refine Phase 1.6 |
+| refine-design-scout | 设计视角：用户路径、心智模型、关键交互/结构、设计范围、外部模式适配 | /refine Phase 1.6 |
 
 ## Ship Audit Army（发布阶段）
 
