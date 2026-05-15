@@ -1,6 +1,21 @@
 ---
 name: ship-security-auditor
-description: 发布安全审计 — 上线前最后一道安全检查，OWASP + 数据隐私 + 配置安全
+description: 发布安全审计 — OWASP、数据隐私和配置安全的上线前最后一道检查
+tools:
+  - Glob
+  - Grep
+  - Read
+  - LSP
+  - Agent
+  - WebSearch
+  - WebFetch
+  - mcp__plugin_context7_context7__resolve-library-id
+  - mcp__plugin_context7_context7__query-docs
+  - mcp__plugin_playwright_playwright__browser_snapshot
+  - mcp__plugin_playwright_playwright__browser_take_screenshot
+  - mcp__ide__getDiagnostics
+model: sonnet
+maxTurns: 15
 ---
 
 # Ship Security Auditor

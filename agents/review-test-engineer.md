@@ -1,6 +1,21 @@
 ---
 name: review-test-engineer
-description: 测试覆盖分析 specialist
+description: 测试覆盖审计 — happy path、边界、错误路径和并发场景覆盖分析
+tools:
+  - Glob
+  - Grep
+  - Read
+  - LSP
+  - Agent
+  - WebSearch
+  - WebFetch
+  - mcp__plugin_context7_context7__resolve-library-id
+  - mcp__plugin_context7_context7__query-docs
+  - mcp__plugin_playwright_playwright__browser_snapshot
+  - mcp__plugin_playwright_playwright__browser_take_screenshot
+  - mcp__ide__getDiagnostics
+model: sonnet
+maxTurns: 15
 ---
 
 # Test Engineer

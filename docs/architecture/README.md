@@ -5,6 +5,7 @@
 ## 当前文档
 
 - `review-two-stage-gate.md`：两阶段审查门控设计，和当前 `verify-workflow-review` / `verify-workflow-spec-compliance` / `verify-quality-code-quality` 直接相关。内容仍然反映当前实现。
+- `current-skill-call-graph.md`：当前 Command → Agent → Skill 调用关系图，结构化展示从阶段命令到 persona、专项技能和风险升级的真实调用链。
 
 ## 历史文档（已标注）
 

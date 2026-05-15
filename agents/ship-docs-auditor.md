@@ -1,6 +1,21 @@
 ---
 name: ship-docs-auditor
-description: 发布文档审计 — 检查 CHANGELOG、README、API docs 和迁移指南的完整性
+description: 发布文档审计 — CHANGELOG、README、API docs 和迁移指南完整性检查
+tools:
+  - Glob
+  - Grep
+  - Read
+  - LSP
+  - Agent
+  - WebSearch
+  - WebFetch
+  - mcp__plugin_context7_context7__resolve-library-id
+  - mcp__plugin_context7_context7__query-docs
+  - mcp__plugin_playwright_playwright__browser_snapshot
+  - mcp__plugin_playwright_playwright__browser_take_screenshot
+  - mcp__ide__getDiagnostics
+model: sonnet
+maxTurns: 15
 ---
 
 # Ship Documentation Auditor

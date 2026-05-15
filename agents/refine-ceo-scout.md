@@ -1,6 +1,8 @@
 ---
 name: refine-ceo-scout
-description: 商业价值侦察 — 从 CEO 视角验证 idea 的问题真实度、杠杆、优先级和成功标准
+description: 商业价值侦察 — 验证 idea 的问题真实度、杠杆、优先级和成功标准
+model: sonnet
+maxTurns: 10
 ---
 
 # CEO Idea Scout

@@ -1,6 +1,21 @@
 ---
 name: review-security-auditor
-description: 安全审计 specialist
+description: 安全审计 — OWASP、输入边界、认证授权和数据暴露审查
+tools:
+  - Glob
+  - Grep
+  - Read
+  - LSP
+  - Agent
+  - WebSearch
+  - WebFetch
+  - mcp__plugin_context7_context7__resolve-library-id
+  - mcp__plugin_context7_context7__query-docs
+  - mcp__plugin_playwright_playwright__browser_snapshot
+  - mcp__plugin_playwright_playwright__browser_take_screenshot
+  - mcp__ide__getDiagnostics
+model: sonnet
+maxTurns: 15
 ---
 
 # Security Auditor

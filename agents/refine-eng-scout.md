@@ -1,6 +1,8 @@
 ---
 name: refine-eng-scout
-description: 技术侦察 — 从工程视角评估 idea 的可行性、复杂度、已有方案和技术风险
+description: 工程侦察 — 评估 idea 的技术可行性、复杂度、已有方案和技术风险
+model: sonnet
+maxTurns: 10
 ---
 
 # Engineering Idea Scout

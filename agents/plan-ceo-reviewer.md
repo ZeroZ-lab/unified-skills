@@ -1,6 +1,7 @@
 ---
 name: plan-ceo-reviewer
-description: CEO 视角计划审查 — 商业价值、ROI、优先级排序
+description: 计划审查（CEO 视角）— 验证计划的市场价值、ROI 和优先级排序
+maxTurns: 15
 ---
 
 # CEO Plan Reviewer

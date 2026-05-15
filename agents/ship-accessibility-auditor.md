@@ -1,6 +1,21 @@
 ---
 name: ship-accessibility-auditor
-description: 发布无障碍审计 — 验证生产环境 a11y 合规性，WCAG 标准
+description: 发布无障碍审计 — 生产环境 WCAG 合规验证
+tools:
+  - Glob
+  - Grep
+  - Read
+  - LSP
+  - Agent
+  - WebSearch
+  - WebFetch
+  - mcp__plugin_context7_context7__resolve-library-id
+  - mcp__plugin_context7_context7__query-docs
+  - mcp__plugin_playwright_playwright__browser_snapshot
+  - mcp__plugin_playwright_playwright__browser_take_screenshot
+  - mcp__ide__getDiagnostics
+model: sonnet
+maxTurns: 15
 ---
 
 # Ship Accessibility Auditor

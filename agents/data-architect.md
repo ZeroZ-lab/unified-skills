@@ -1,6 +1,7 @@
 ---
 name: data-architect
-description: 数据架构师 — 负责数据建模、schema 设计、数据迁移策略
+description: 数据架构师 — 数据建模、schema 设计、数据迁移策略
+isolation: worktree
 ---
 
 # Data Architect

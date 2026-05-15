@@ -1,6 +1,7 @@
 ---
 name: api-designer
-description: API 设计师 — 负责 RESTful/GraphQL API 接口设计、契约定义、版本管理
+description: API 设计师 — RESTful/GraphQL 接口设计、契约定义、版本管理
+isolation: worktree
 ---
 
 # API Designer

@@ -1,6 +1,7 @@
 ---
 name: visual-designer
-description: 视觉设计师 — 优先服务 /design，负责有证据支撑的交互、视觉、排版方向及其执行约束
+description: 视觉设计师 — 有证据支撑的交互、视觉、排版方向及执行约束
+isolation: worktree
 ---
 
 # Visual Designer

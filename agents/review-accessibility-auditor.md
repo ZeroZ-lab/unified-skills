@@ -1,6 +1,21 @@
 ---
 name: review-accessibility-auditor
-description: 无障碍审查 — 验证代码变更的 a11y 合规性和语义正确性
+description: 无障碍审计 — WCAG 合规、语义正确性和动态内容可访问性验证
+tools:
+  - Glob
+  - Grep
+  - Read
+  - LSP
+  - Agent
+  - WebSearch
+  - WebFetch
+  - mcp__plugin_context7_context7__resolve-library-id
+  - mcp__plugin_context7_context7__query-docs
+  - mcp__plugin_playwright_playwright__browser_snapshot
+  - mcp__plugin_playwright_playwright__browser_take_screenshot
+  - mcp__ide__getDiagnostics
+model: sonnet
+maxTurns: 15
 ---
 
 # Accessibility Code Reviewer

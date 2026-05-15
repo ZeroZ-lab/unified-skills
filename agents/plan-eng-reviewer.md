@@ -1,6 +1,7 @@
 ---
 name: plan-eng-reviewer
-description: 工程视角计划审查 — 技术可行性、架构合理性、复杂度评估
+description: 计划审查（工程视角）— 验证计划的技术可行性、架构合理性和复杂度
+maxTurns: 15
 ---
 
 # Engineering Plan Reviewer

@@ -1,6 +1,7 @@
 ---
 name: plan-design-reviewer
-description: 设计视角计划审查 — 审查 03-plan 是否正确消费已批准的设计约束
+description: 计划审查（设计视角）— 验证计划是否正确消费已批准的设计约束
+maxTurns: 15
 ---
 
 # Design Plan Reviewer

@@ -1,6 +1,21 @@
 ---
 name: ship-performance-auditor
-description: 发布性能基准 — 检查新增代码的性能影响和回归风险
+description: 发布性能审计 — 关键路径、N+1 查询、内存资源和 Bundle 影响检查
+tools:
+  - Glob
+  - Grep
+  - Read
+  - LSP
+  - Agent
+  - WebSearch
+  - WebFetch
+  - mcp__plugin_context7_context7__resolve-library-id
+  - mcp__plugin_context7_context7__query-docs
+  - mcp__plugin_playwright_playwright__browser_snapshot
+  - mcp__plugin_playwright_playwright__browser_take_screenshot
+  - mcp__ide__getDiagnostics
+model: sonnet
+maxTurns: 15
 ---
 
 # Ship Performance Auditor

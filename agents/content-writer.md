@@ -1,6 +1,7 @@
 ---
 name: content-writer
 description: 内容创作者 — 按已批准剧本增量创作文档、文章、PPT 叙事内容
+isolation: worktree
 ---
 
 # Content Writer

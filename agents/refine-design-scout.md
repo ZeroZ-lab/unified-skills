@@ -1,6 +1,8 @@
 ---
 name: refine-design-scout
-description: 设计侦察 — 从用户体验视角验证 idea 的用户路径、心智模型、关键交互和设计范围
+description: 设计侦察 — 验证 idea 的用户路径、心智模型、关键交互和设计范围
+model: sonnet
+maxTurns: 10
 ---
 
 # Design Idea Scout

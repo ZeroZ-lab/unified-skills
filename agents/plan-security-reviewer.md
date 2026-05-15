@@ -1,6 +1,7 @@
 ---
 name: plan-security-reviewer
-description: 安全视角计划审查 — 数据隐私、攻击面、合规风险
+description: 计划审查（安全视角）— 验证计划的数据隐私、攻击面和合规风险
+maxTurns: 15
 ---
 
 # Security Plan Reviewer

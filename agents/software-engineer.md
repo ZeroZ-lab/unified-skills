@@ -1,6 +1,7 @@
 ---
 name: software-engineer
-description: 软件工程师 — TDD 驱动软件开发，覆盖 API 设计、数据库、前后端实现
+description: 软件工程师 — TDD 循环开发，覆盖 API、数据库、前后端实现
+isolation: worktree
 ---
 
 # Software Engineer

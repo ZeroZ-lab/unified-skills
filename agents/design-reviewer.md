@@ -1,6 +1,7 @@
 ---
 name: design-reviewer
-description: 设计阶段审查 — 审查 02-design.md 的证据质量、交互、视觉、排版、剧本、导演和设计边界
+description: 设计阶段审查 — 审查设计稿的证据质量、交互、视觉、排版和设计边界
+maxTurns: 15
 ---
 
 # Design Reviewer
