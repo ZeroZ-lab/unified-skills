@@ -11,7 +11,8 @@ argument-hint: "[--full | --focus: spec|code-quality|security|performance]"
 - **入口**: 已完成的功能代码、即将合并的 PR
 - **出口**: `docs/features/<name>/04-review.md` 审查报告
 - **指向**: 通过 → `ship-workflow-ship`；有问题 → 退回 build 修复后重审
-- **假设已加载**: CANON.md
+- **输出路径**: → ship-workflow-ship
+- **前置加载**: CANON.md
 
 ## 何时不使用
 - 代码在私有分支中还没准备好合入主分支
@@ -245,6 +246,50 @@ argument-hint: "[--full | --focus: spec|code-quality|security|performance]"
 - [ ] 构建成功
 - [ ] 验证故事已记录
 - [ ] 审查产出存到 `docs/features/<name>/04-review.md`
+
+## 好坏示例
+
+### Good — 结构化两阶段审查 + 发现表
+Stage 1 Spec Compliance：逐条检查 spec 需求覆盖率 100% ✓ → Stage 2 Code Quality：五轴审查产出 Findings Summary 表（Blocking/Important/Suggestion 分级，每条有文件:行号）。审查有证据，作者能按严重性排序修复。
+
+### Bad — "看起来没问题" 无证据
+"LGTM，代码写得挺清楚的。" — 没有 Spec Compliance 检查、没有五轴审查、没有发现表、没有严重性分级。作者无法区分必须改 vs 可选改，后续合并可能引入已知问题。
+
+## 输出模板
+
+审查完成后，`04-review.md` 必须包含以下结构（完整模板见 `verify-quality-code-quality/report-template.md`）：
+
+```markdown
+# [功能名称] — Review
+
+## Artifact Type
+artifact_type: [software/document/article/deck/visual]
+
+## Stage 1: Spec Compliance
+- Status: PASS / FAIL
+- Coverage: [X/Y] requirements covered
+- Blocking gaps: [list or none]
+
+## Stage 2: Code Quality (if Stage 1 PASS)
+- Correctness: [findings]
+- Readability: [findings]
+- Architecture: [findings]
+- Security: [findings]
+- Performance: [findings]
+
+## Findings Summary
+| # | Severity | Category | Description | File:Line | Status |
+|---|----------|----------|-------------|-----------|--------|
+| 1 | Blocking | Security | SQL injection in query | src/api.ts:42 | Open |
+| 2 | Important | Correctness | Missing null check | src/utils.ts:15 | Open |
+| 3 | Suggestion | Readability | Variable name unclear | src/db.ts:28 | Deferred |
+
+## Verdict
+- Overall: APPROVED / APPROVED_WITH_CONCERNS / REJECTED
+- Blocking issues: [count]
+- Important issues: [count]
+- Merge condition: [all Blocking resolved + ≤2 Important remaining]
+```
 
 ## 审查反馈后处理
 

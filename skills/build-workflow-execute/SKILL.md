@@ -11,7 +11,8 @@ argument-hint: "[artifact-type] [--parallel-safe]"
 - **入口**: 已批准 plan（`docs/features/<name>/03-plan.md` + 可选 `docs/features/<name>/plans/*.md`）
 - **出口**: 软件代码或内容产物 + 验证证据 + ADR（如有决策）
 - **指向**: 完成 → `verify-workflow-review`；遇到 Bug → `verify-workflow-debug`
-- **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-cognitive-execution-engine/SKILL.md`
+- **输出路径**: → verify-workflow-review
+- **前置加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-cognitive-execution-engine/SKILL.md`
 
 ## 何时不使用
 - 探索性原型（标注 `// UNTESTED` 可跳过 TDD，但受 HARD GATE 约束）
@@ -237,13 +238,13 @@ const ENABLE_FEATURE = process.env.FEATURE_X === 'true';
 
 ## 常见说辞
 
-| 说辞 | 现实 |
-|------|------|
-| "先写代码，测试最后一起跑" | Bug 叠加。切片 1 的 bug 让切片 2-5 都错。 |
-| "一次做完更快" | 感觉更快直到 500 行改了之后找不到哪行出的问题。 |
-| "这个改动太小不需要单独提交" | 小提交没成本。大提交隐藏 bug 并让回滚困难。 |
-| "之后加 feature flag" | 功能不完整就不暴露给用户。现在加 flag。 |
-| "顺便重构一下" | 重构混在新功能里让审查和回滚都更难。分开提交。 |
+| 说辞 | 现实 | 后果 |
+|------|------|------|
+| "先写代码，测试最后一起跑" | Bug 叠加。切片 1 的 bug 让切片 2-5 都错。 | Bug 延迟发现 → 定位成本线性增长 → 5 个切片叠加 bug 排查 ≥ 4 小时，vs 每切片测试 < 5 分钟 |
+| "一次做完更快" | 感觉更快直到 500 行改了之后找不到哪行出的问题。 | 单次大提交出错时回退范围 = 全部改动；频繁提交出错时回退范围 = 最后一个切片，损失差距 10-50x |
+| "这个改动太小不需要单独提交" | 小提交没成本。大提交隐藏 bug 并让回滚困难。 | 混合提交回退行为变更 → 格式化也丢失 → 重新审查，额外 30-60 分钟 |
+| "之后加 feature flag" | 功能不完整就不暴露给用户。现在加 flag。 | 无 flag → 出问题时只能回滚整个部署 → 全部用户受影响 vs flag 关闭 < 1 分钟恢复 |
+| "顺便重构一下" | 重构混在新功能里让审查和回滚都更难。分开提交。 | 混合提交无法独立 revert 重构 → 行为变更回退被迫同时回退重构 → 丢失格式化改进 |
 
 ## 红旗
 - 写了超过 100 行还没有跑测试
@@ -280,3 +281,64 @@ const ENABLE_FEATURE = process.env.FEATURE_X === 'true';
 - [ ] `Parallel Execution Matrix` 支持所有 fan-out 决策
 - [ ] 每个 subagent 的 changed_files 没有越过 Write Scope
 - [ ] 合并后全量验证通过
+
+## 好坏示例
+
+### Good — 增量切片 + TDD
+
+```markdown
+### Task 1: 用户注册 API
+
+**Step 1: RED** — 写失败测试
+```typescript
+describe('register', () => {
+  it('should return 201 with valid input', async () => {
+    const res = await request(app).post('/api/register').send({ email, password });
+    expect(res.status).toBe(201);
+  });
+});
+```
+→ 测试失败（endpoint 不存在）
+
+**Step 2: GREEN** — 写最小实现让测试通过
+```typescript
+router.post('/api/register', async (req, res) => {
+  const user = await User.create(req.body);
+  res.status(201).json(user);
+});
+```
+→ 测试通过
+
+**Step 3: Commit** — `feat: add user registration endpoint`
+→ 一个逻辑变更，描述性信息
+```
+
+### Bad — 大批量 + 跳过测试
+
+```markdown
+（一次性写 500 行代码，包含注册、登录、任务创建、列表查询全部功能）
+
+→ 问题: 500 行未跑测试 → Bug叠加 → 修一个 bug 破坏另一个
+→ 问题: 单次提交包含 4 个功能 → 回滚需要丢弃全部 4 个功能
+→ 问题: 无 feature flag → 注册失败时登录/任务/列表也暴露给用户
+→ 问题: 无垂直切片 → 任何一步阻塞，所有后续功能都无法推进
+```
+
+## 输出模板
+
+```markdown
+### Build Execute 交付记录
+
+**Plan 来源**: [03-plan.md / plans/*.md 子计划名]
+**执行模式**: [inline / subagent / parallel]
+**artifact_type**: [software / document / article / deck / visual]
+
+**Task 完成状态**:
+| Task N | 实现描述 | 测试结果 | 验证证据 | 提交 SHA |
+|--------|---------|---------|---------|---------|
+| Task 1 | [描述] | PASS / FAIL | [证据] | [SHA] |
+
+**PLAN GAP**（如有）: [缺口描述 + 处理方式]
+**ADR**（如有）: [adr/<num>-<title>.md 路径]
+**合并后全量验证**: [通过 / 失败]
+```

@@ -10,7 +10,8 @@ description: 系统化根因调试。当遇到 bug、测试失败或意外行为
 - **入口**: Bug 报告、测试失败、意外行为、性能问题、构建失败
 - **出口**: 复现测试通过 + `docs/bugs/<name>/01-root-cause.md`（根因记录）
 - **指向**: 回到原流程（重新 build 或 review）
-- **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md`
+- **前置加载**: CANON.md + `build-quality-tdd/SKILL.md`
+- **输出路径**: `docs/bugs/<name>/01-root-cause.md` → build-workflow-execute（重新 build）或 verify-workflow-review（重新 review）
 
 ## 何时不使用
 - 已知行为不需要修复（已文档化的限制、预期行为）
@@ -153,6 +154,48 @@ function renderChart(data: ChartData[]) {
     return <ErrorBoundaryFallback />;
   }
 }
+```
+
+## 好坏示例
+
+### Good — 系统化根因 + 修复验证
+Phase 1 读错误信息 + 稳定复现 + 最小复现 → Phase 2 找工作示例对比差异 → Phase 3 假设"N+1 查询是根因" → Phase 4 写复现测试（RED）→ 修复 → 测试通过（GREEN）。根因可追溯，修复可验证。
+
+### Bad — 随机试错法
+"试试改这个"、"再改那个"、"改三个地方一起跑"。没有读错误信息、没有复现步骤、没有单一假设、没有复现测试。修了症状不知道根因，同类 bug 在其他位置复发。
+
+## 输出模板
+
+`docs/bugs/<name>/01-root-cause.md`:
+
+```markdown
+# 根因记录: <bug-name>
+
+## 症状
+- 错误信息:
+- 复现步骤:
+- 频率: 每次必现 / 偶发 / 条件触发
+
+## 调查过程
+- Phase 1 最小复现:
+- Phase 2 差异分析:
+- Phase 3 假设与验证:
+
+## 根因
+- 根因描述:
+- 影响范围:
+
+## 修复方案
+- Phase 4 复现测试:
+- 修复内容:
+- 验证结果: GREEN / 回退
+
+## 复现测试路径
+- `<test-file-path>`
+
+## 如有架构质疑 (Phase 4.5)
+- 质疑理由:
+- 与 human partner 讨论结论:
 ```
 
 ## 相关技能

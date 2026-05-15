@@ -11,7 +11,8 @@ argument-hint: "[--parallel-safe | --sequential]"
 - **入口**: 已批准 spec（`docs/features/YYYYMMDD-<name>/01-spec.md`）+ 已批准 design（如 required）
 - **出口**: `docs/features/<name>/03-plan.md`；大型/并行任务额外产出 `docs/features/<name>/plans/*.md` + 用户批准
 - **指向**: 用户批准 plan 后必须调用 `build-workflow-execute`
-- **假设已加载**: CANON.md
+- **输出路径**: → build-workflow-execute
+- **前置加载**: CANON.md
 
 ## 何时不使用
 - 变更只涉及 1-2 个文件且 scope 明显
@@ -219,10 +220,14 @@ release/export/ship 类子计划默认串行收口，不能标为 `parallel_safe
 
 ## 验证失败处理
 
-- 用户拒绝 plan → 问清原因，修改 plan，重新提交审查
-- 发现 plan 遗漏 spec 需求 → 补充对应任务，更新 plan
-- 计划的依赖关系不正确 → 调整任务顺序，重新做 Step 2
-- 任务过大无法估计 → 进一步分解，直到每个任务 < 5 文件
+| 失败场景 | 处理方式 |
+|---------|---------|
+| 用户拒绝 plan | 问清原因，修改 plan，重新提交审查。不推进已拒绝的 plan。 |
+| plan 遗漏 spec 需求 | 补充对应任务，更新 plan。每条 spec 需求必须能找到对应任务。 |
+| 依赖关系不正确 | 调整任务顺序，重做 Step 2 依赖图。不靠猜测修正，必须重新画图验证。 |
+| 任务过大无法估计 | 进一步分解，直到每个任务 < 5 文件。标题出现"and"= 拆分信号。 |
+| 验收条件缺失 | 强制补充。无验收条件的任务不能进入 build，因为"做完"无法判定。 |
+| parallel_safe 子计划写入重叠 | 标记为串行，调整 Integration Order。重叠写入是并行安全的天敌。 |
 
 ## 验证证据
 
@@ -234,13 +239,13 @@ release/export/ship 类子计划默认串行收口，不能标为 `parallel_safe
 
 ## 常见说辞
 
-| 说辞 | 现实 |
-|------|------|
-| "边做边想" | 那正是产生混乱和返工的方式。10 分钟计划节省数小时。 |
-| "任务很明显不需要写下来" | 写下来暴露隐藏依赖和被遗忘的边界情况。 |
-| "计划就是开销" | 计划就是任务。没计划的实现只是在打字。 |
-| "我脑子里装得下" | 上下文窗口有限。书面计划跨越 session 边界和压缩。 |
-| "之后再来补验收条件" | 没有验收条件就无法判断"做完"。先定义再做。 |
+| 说辞 | 现实 | 后果 |
+|------|------|------|
+| "边做边想" | 那正是产生混乱和返工的方式。10 分钟计划节省数小时。 | 无计划的实现典型遗漏 2-3 个依赖关系，每个遗漏导致 2-4 小时返工。 |
+| "任务很明显不需要写下来" | 写下来暴露隐藏依赖和被遗忘的边界情况。 | 未记录的"明显"任务平均隐藏 1-2 个边界情况，上线后以 bug 爆发。 |
+| "计划就是开销" | 计划就是任务。没计划的实现只是在打字。 | 无计划直接编码 → 任务间依赖混乱 → 集成阶段 >50% 代码需要重排或重写。 |
+| "我脑子里装得下" | 上下文窗口有限。书面计划跨越 session 边界和压缩。 | 口头计划在 session 切换后丢失 70%+ 细节，后续执行者只能猜测原始意图。 |
+| "之后再来补验收条件" | 没有验收条件就无法判断"做完"。先定义再做。 | 后补验收条件倾向顺应已实现行为而非原始需求，遗漏的边界被永久锁定。 |
 
 ## 红旗
 
@@ -272,3 +277,65 @@ release/export/ship 类子计划默认串行收口，不能标为 `parallel_safe
 - [ ] 每个子计划有 Write Scope、Dependencies、Parallel Safety、Verification Evidence
 - [ ] `parallel_safe` 子计划之间没有重叠写入范围
 - [ ] 用户已审查并批准 plan
+
+## 好坏示例
+
+### Good — 垂直切片 + 验收条件
+
+```markdown
+### Task 1: 用户注册
+
+**Files:** `src/models/User.ts`, `src/api/register.ts`, `src/components/RegisterForm.tsx`
+
+**Steps:**
+1. 定义 User model schema — 验证: `npx prisma validate` 通过
+2. 实现 register API endpoint — 验证: `curl -X POST /api/register` 返回 201
+3. 实现 RegisterForm component — 验证: 浏览器渲染表单，提交后显示成功
+
+**Verification:** `npm test -- --coverage --grep register` 覆盖率 > 80%
+
+→ 每步有动词+验证命令，垂直切片交付可工作功能
+```
+
+### Bad — 水平切片 + 无验收
+
+```markdown
+### Task 1: 建数据库
+建整个数据库 schema。
+
+### Task 2: 建所有 API
+建所有 API 端点。
+
+### Task 3: 建所有 UI
+建所有 UI 组件。
+
+→ 问题: 水平切片 → Task 3 完成前无法验证任何用户路径
+→ 问题: 无验收条件 → "建完"无法判定
+→ 问题: 依赖链过长 → 任何前置任务阻塞后续全部任务
+```
+
+## 输出模板
+
+```markdown
+### Plan 交付记录 — <feature-name>
+
+**Plan Topology**: [serial / parallel / gated-parallel]
+**artifact_type**: [software / document / article / deck / visual]
+
+**Task 清单**:
+| Task N | 标题 | 文件数 | 验收条件 | 验证命令 | 依赖 |
+|--------|------|-------|---------|---------|------|
+| Task 1 | [标题] | [N] | [条件] | [命令] | [无 / Task N] |
+
+**子计划索引**（如适用）:
+| 子计划 | Write Scope | parallel_safe | 依赖 | 验证证据 |
+|--------|------------|--------------|------|---------|
+| plans/01-contracts.md | [范围] | [yes/no] | [依赖] | [命令] |
+
+**Parallel Execution Matrix**（如适用）:
+| 子计划 A | 子计划 B | parallel_safe | Write Scope 不重叠 |
+|----------|----------|--------------|-------------------|
+| [子计划1] | [子计划2] | [yes/no] | [✓/✗] |
+
+**用户批准**: [已批准 / 待批准]
+```

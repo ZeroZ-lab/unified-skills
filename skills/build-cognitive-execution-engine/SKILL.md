@@ -10,7 +10,8 @@ description: 任务执行引擎——选择正确的执行模式。适用于 bui
 - **入口**: `build-workflow-plan` 完成，任务列表已就绪
 - **出口**: 所有任务完成 + 测试通过 + 代码合并
 - **指向**: 全部任务完成后建议 `/review`
-- **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-workflow-execute/SKILL.md`
+- **输出路径**: → verify-workflow-review
+- **前置加载**: CANON.md + `build-quality-tdd/SKILL.md` + `build-workflow-execute/SKILL.md`
 
 ## 何时不使用
 - 还没有批准的 plan 或任务列表
@@ -195,12 +196,12 @@ Agent 3 结果 ─┘
 
 ## 常见说辞
 
-| 说辞 | 现实 |
-|------|------|
-| "分派太慢，我直接写" | 1 个复杂任务 subagent 做 15 分钟 > 你猜 2 小时。并行 3 个独立任务 15 分钟 vs 串行 45 分钟。 |
-| "并行不会冲突" | 两个 agent 改同一文件 = 必定合并冲突。B 模式前提是文件不重叠。 |
-| "跳过审查，代码看起来对" | 两阶段审查正好用来防止"看起来对但不符 spec"的错误。Subagent 没有完整上下文，容易偏离 spec。 |
-| "再分派一次也一样" | 如果第一次 Implementer 偏离 spec → 补文档/更具体约束 → 第二次才可能对。 |
+| 说辞 | 现实 | 后果 |
+|------|------|------|
+| "分派太慢，我直接写" | 1 个复杂任务 subagent 做 15 分钟 > 你猜 2 小时。并行 3 个独立任务 15 分钟 vs 串行 45 分钟。 | 主 agent 猜测实现 > 单次返工概率 30-50%，总耗时 2-3x subagent 流水线。 |
+| "并行不会冲突" | 两个 agent 改同一文件 = 必定合并冲突。B 模式前提是文件不重叠。 | 并行写同一文件 → 合并冲突 → 手动解决 > 30 分钟/冲突，严重时需丢弃一个 agent 全部变更。 |
+| "跳过审查，代码看起来对" | 两阶段审查正好用来防止"看起来对但不符 spec"的错误。 | 模式 C 无审查 → Implementer 偏离 spec → 主 agent 合入不合规代码 → 后续 review 才发现 → 返工 > 2x。 |
+| "再分派一次也一样" | 第一次偏离 spec → 补约束 → 第二次才可能对。 | 不补约束重分派 → 同样的偏离 → 3 次循环后浪费 45+ 分钟且问题未解。 |
 
 ## 红旗 — STOP
 
@@ -227,3 +228,72 @@ Agent 3 结果 ─┘
 - [ ] 合并后全量测试通过
 - [ ] 每个 subagent 有明确的约束和验收条件
 - [ ] 没有"看起来 DONE 但没证据"的状态
+
+## 验证失败处理
+
+| 失败场景 | 处理方式 |
+|---------|---------|
+| Implementer 返回 BLOCKED | 人类介入。不猜测阻塞原因，不静默跳过阻塞任务。 |
+| Implementer 返回 NEEDS_CONTEXT | 提供更多上下文（spec、设计、相关代码），重新分派。不自行补充模糊上下文。 |
+| Spec Reviewer 返回 SPEC_GAP | 退回 Implementer 修正。列出具体 gap，不笼统说"不符 spec"。 |
+| Code Quality Reviewer 发现 Spec Reviewer 应发现的问题 | 审查顺序执行有误。STOP，重走 Spec Review → Quality Review 顺序。 |
+| 连续 3 次 Implementer 返回 ISSUES | STOP。约束或任务描述有问题。回到 `/plan` 修补，不第四次分派相同输入。 |
+| 并行 agent changed_files 越界 | 回退越界 agent 变更，降级串行或重新切分 Write Scope。 |
+| 并行 agent 文件冲突 | 合并有效部分，冲突部分手动处理或串行重做。不强行合并。 |
+| 全量测试在合并后失败 | 检查交叉影响。定位失败 agent，回退其变更，修复后重跑。 |
+
+## 好坏示例
+
+### Good — 模式 B 并行 fan-out
+
+```markdown
+Plan Topology: gated-parallel
+
+Step 1: 串行执行 contracts 子计划（API schema + DB schema）
+→ 验证: npm test -- schema → 全部通过
+
+Step 2: 并行分派
+Agent 1: 执行 plans/02-backend.md
+  Write Scope: src/server/**, tests/server/**
+  Verification: npm test -- server
+
+Agent 2: 执行 plans/03-frontend.md
+  Write Scope: src/ui/**, tests/ui/**
+  Verification: npm test -- ui
+
+→ 两个 agent 文件不重叠，测试各自通过
+→ 合并后全量验证: npm test → 通过
+```
+
+### Bad — 盲目并行
+
+```markdown
+（看到 3 个 task，直接并行分派，不检查 Write Scope）
+
+Agent 1: 实现 Task 1-3 → 改 src/api/auth.ts
+Agent 2: 实现 Task 4-5 → 改 src/api/auth.ts
+
+→ 问题: 两个 agent 改同一文件 → 合并冲突 → 需手动解决
+→ 问题: 无 Parallel Execution Matrix → 并行无证据支撑
+→ 问题: 无 Merge Checkpoint → 合并后无法验证交叉影响
+```
+
+## 输出模板
+
+```markdown
+### Execution Engine 交付记录
+
+**执行模式**: [inline / subagent / parallel fan-out]
+**任务来源**: [03-plan.md Task N / plans/*.md 子计划名]
+
+**任务完成状态**:
+| Task N | 状态 | changed_files | test_results | 验证证据 |
+|--------|------|--------------|-------------|---------|
+| [Task N] | DONE / BLOCKED / NEEDS_CONTEXT | [文件列表] | [通过/失败] | [描述] |
+
+**并行结果**（如适用）:
+- Agent 1: [status] — Write Scope: [范围] — changed_files ⊆ Write Scope ✓/✗
+- Agent 2: [status] — Write Scope: [范围] — changed_files ⊆ Write Scope ✓/✗
+
+**合并后全量验证**: [通过 / 失败 — 具体原因]
+```

@@ -12,7 +12,8 @@ argument-hint: "[feature-name 或模糊想法]"
 - **入口**: 模糊想法、功能请求、用户"我想做 X"
 - **出口**: `docs/features/YYYYMMDD-<name>/01-spec.md` + 用户批准
 - **指向**: 完成后必须调用 `define-workflow-spec`
-- **假设已加载**: CANON.md
+- **输出路径**: → define-workflow-spec
+- **前置加载**: CANON.md
 
 ## 何时不使用
 - 需求已经清晰结构化，直接写 spec
@@ -186,13 +187,13 @@ Idea draft (clarification + External Scan + local context)
 
 ## 常见说辞
 
-| 说辞 | 现实 |
-|------|------|
-| "这个很简单不需要设计" | 简单项目正是未检查假设导致最多返工的地方。 |
-| "先做一个方向看看" | 只探索一个方案就无法比较 trade-off。至少 2-3 个。 |
-| "之后再加这些功能" | MVP 的范围定义就是专注。不做清单比做清单更重要。 |
-| "别问了，直接做吧" | 跳过澄清的问题一定会回来。15 分钟澄清 > 15 小时返工。 |
-| "先写代码再看" | Hard Gate 禁止实现前写代码。设计批准后才进入 build。 |
+| 说辞 | 现实 | 后果 |
+|------|------|------|
+| "这个很简单不需要设计" | 简单项目正是未检查假设导致最多返工的地方。 | 跳过澄清的"简单"项目平均返工 1-2 次，总耗时 > 按流程走的 3-5x。 |
+| "先做一个方向看看" | 只探索一个方案就无法比较 trade-off。至少 2-3 个。 | 单方案无法发现更优路径，实施后才发现方向错误，修复成本 10-50x。 |
+| "之后再加这些功能" | MVP 的范围定义就是专注。不做清单比做清单更重要。 | 不控制 MVP 范围 → 需求膨胀 → 发布延期 2-4 周，核心价值被边缘功能稀释。 |
+| "别问了，直接做吧" | 跳过澄清的问题一定会回来。15 分钟澄清 > 15 小时返工。 | 跳过澄清的假设在实现阶段暴露，每次假设推翻平均增加 4-8 小时返工。 |
+| "先写代码再看" | Hard Gate 禁止实现前写代码。设计批准后才进入 build。 | 代码先行 → 设计假设被实现锁定 → 改方向时需重写 >50% 代码，浪费全部已投入时间。 |
 
 ## 红旗
 
@@ -225,3 +226,105 @@ Idea draft (clarification + External Scan + local context)
 - [ ] "不做清单"让 trade-off 明确
 - [ ] 产出是一份 spec 文件，不只是一段对话
 - [ ] 用户批准了方向，未跳过 HARD GATE
+
+## 好坏示例
+
+### Good — 结构化 spec 产出
+
+```markdown
+# 用户通知系统 — Spec
+
+## Artifact Type
+artifact_type: software
+
+## Goal Alignment
+- Source Goal: conversation
+- Goal Status: accepted
+- Goal Review Score: 11/12
+
+### One-line Goal
+为活跃用户提供实时通知推送，提升关键事件响应速度
+
+### Done When
+- [ ] Functional: 用户能在 5s 内收到通知，未读计数准确
+- [ ] Technical: WebSocket 连接稳定，断连后 30s 内重连
+- [ ] Regression: 现有功能无新增 bug
+- [ ] Output: spec 文件产出至 docs/features/20260515-user-notifications/01-spec.md
+
+### Stop Conditions
+- [ ] WebSocket 基础设施不可用且无法在 2 天内搭建
+- [ ] 通知量级超出当前服务器承载上限
+
+## External References
+- Search status: completed
+- Fact: WebSocket 长连接在日活 10k 下需 2 台服务器
+- Pattern: 主流产品使用 toast + 未读计数 + 通知列表三层
+- Adopt: 三层通知架构（toast/计数/列表）
+- Reject: SMS 通知（成本/ROI 不匹配）
+
+## 核心假设（待验证）
+- [ ] WebSocket 基础设施已就绪 — 检查 ops team 确认
+- [ ] 用户日活 > 5k — 查看 analytics dashboard
+
+## MVP 范围
+Include: toast 推送 + 未读计数 + 通知列表
+Exclude: 邮件通知、SMS、通知偏好设置、批量通知
+
+## 不做清单
+- 邮件通知 — 当前 scope 外，下一期
+- 通知偏好 — 需要额外 UI 设计，MVP 阶段延后
+- 批量通知管理 — 管理端需求，与用户端无关
+```
+
+### Bad — 无结构化产出
+
+```markdown
+用户想加个通知功能。
+
+我直接开始写 WebSocket 服务了。
+→ 问题: 没有 spec → 没有 Goal Review → 没有确认 MVP 范围
+→ 问题: 没有不做清单 → 开发过程中不断加功能 → 延期
+→ 问题: 没有验证假设 → WebSocket 基础设施可能不可用 → 实现一半才发现阻塞
+```
+
+## 输出模板
+
+Refine 完成后，spec 产出必须包含以下结构（完整模板见 `refine-artifacts.md`）：
+
+```markdown
+# [功能名称] — Spec
+
+## Artifact Type
+artifact_type: [software/document/article/deck/visual]
+
+## Goal Alignment
+- Source Goal: [来源]
+- Goal Status: [accepted/needs-refinement/blocked]
+- Goal Review Score: [score]/12
+
+### One-line Goal
+[一句话目标]
+
+### Done When
+- [ ] Functional: [可验证的功能完成标准]
+- [ ] Technical: [技术完成标准]
+- [ ] Regression: [回归保证]
+- [ ] Output: [产出路径]
+
+### Stop Conditions
+- [ ] [明确停止条件]
+
+## External References
+- Search status: [completed/skipped/unavailable]
+- Fact / Pattern / Inference / Unknown / Adopt / Reject
+
+## 核心假设（待验证）
+- [ ] 假设 — 验证方式
+
+## MVP 范围
+Include: [最小可验证范围]
+Exclude: [明确排除]
+
+## 不做清单（及理由）
+- [事项] — [理由]
+```

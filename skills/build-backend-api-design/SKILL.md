@@ -10,7 +10,8 @@ description: API 和接口设计——稳定合约、清晰边界。当需要设
 - **入口**: 需要定义新 API 端点、模块接口或跨服务合约
 - **出口**: 类型定义 + 合约测试 + 接口文档
 - **指向**: 接口稳定后进入实现（`build-workflow-execute`）
-- **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md`
+- **前置加载**: CANON.md + `build-quality-tdd/SKILL.md`
+- **输出路径**: 接口稳定后进入 `build-workflow-execute`
 
 ## 何时不使用
 - 只是实现既有 API，不改变请求/响应、错误语义或模块边界
@@ -197,13 +198,13 @@ interface TaskOutput {
 
 ## 常见说辞
 
-| 说辞 | 现实 |
-|------|------|
-| "现在就我们一个消费者" | Hyrum 法则。未来可能有其他消费者。你有 1 个消费者时最容易做对。 |
-| "字段名随便叫" | 命名是接口的 UI。一致的命名减少消费者困惑和重复问询。 |
-| "错误格式不重要" | 错误格式不一致 = 每个消费者需要不同的错误解析器。成本转嫁给了用户。 |
-| "以后再补分页" | 不分页的列表端点会在某个星期五爆炸。从第一天起给列表接口加分页。 |
-| "v2 用新字段，v1 不兼容就废弃" | 扩展优于版本化。两个版本意味着双倍的维护、文档和调试。 |
+| 说辞 | 现实 | 后果 |
+|------|------|------|
+| "现在就我们一个消费者" | Hyrum 法则。未来可能有其他消费者。你有 1 个消费者时最容易做对。 | 新消费者接入时需重构接口 → 响应格式变更影响 2-3 个团队 |
+| "字段名随便叫" | 命名是接口的 UI。一致的命名减少消费者困惑和重复问询。 | 消费者每次调用需翻文档 → 集成时间 ×2；命名不一致导致误解和 bug |
+| "错误格式不重要" | 错误格式不一致 = 每个消费者需要不同的错误解析器。成本转嫁给了用户。 | 每个消费者写 1 个解析器 ×5 个端点 ×3 种格式 = 15 个解析器 |
+| "以后再补分页" | 不分页的列表端点会在某个星期五爆炸。从第一天起给列表接口加分页。 | 数据增长后一次返回 10000+ 条 → 服务崩溃、消费者超时、用户白屏 |
+| "v2 用新字段，v1 不兼容就废弃" | 扩展优于版本化。两个版本意味着双倍的维护、文档和调试。 | 维护 2 个版本 = 双倍测试 + 双倍文档 + 双倍 bug；消费者迁移成本 ×3 |
 
 ## 红旗 — STOP
 
@@ -213,6 +214,68 @@ interface TaskOutput {
 - 列表接口无分页
 - 数据库 model 直接序列化暴露给 API
 - PATCH 和 PUT 的语义混用
+
+## 验证失败处理
+
+| 验证项 | 失败表现 | 处理方式 |
+|--------|----------|---------|
+| 接口类型未先于实现 | 先写了代码再回头定义类型 | 停止实现，先定义 TypeScript interface / schema，再写逻辑 |
+| 错误格式不一致 | 不同端点返回不同错误结构 | 统一为 `{ error: { code, message, details } }` 格式，逐端点修正 |
+| 列表端点无分页 | GET /tasks 返回全部数据 | 添加 `page` / `pageSize` 参数和 `PaginatedResponse` wrapper |
+| 数据库 model 直接暴露 | API 返回包含内部字段（如 passwordHash） | 定义独立的 Output 类型，只暴露消费者需要的字段 |
+| 命名不一致 | 端点混用 snake_case 和 camelCase | 选定一种命名规范（REST: snake_case，JS: camelCase），逐端点修正 |
+
+## 好坏示例
+
+### Good: 合约优先 + 输入/输出分离 + 分页
+```typescript
+// 1. 先定义合约
+interface CreateTaskRequest {
+  title: string;
+  priority: 'low' | 'medium' | 'high';
+}
+interface TaskOutput {
+  id: string;
+  title: string;
+  status: 'pending' | 'completed';
+  createdAt: string;
+}
+interface PaginatedResponse<T> {
+  data: T[];
+  pagination: { page: number; pageSize: number; total: number; };
+}
+// 2. 再实现
+async function createTask(req: CreateTaskRequest): Promise<TaskOutput> { ... }
+```
+
+### Bad: 实现优先 + 数据库直出 + 无分页
+```typescript
+// 直接返回数据库 model（包含 passwordHash、internalNotes）
+async function getTasks(): Promise<Task[]> {
+  return db.tasks.findMany();  // 无分页，返回全部
+}
+```
+
+## 输出模板
+
+```
+API 设计完成：
+
+端点列表:
+  - GET    /tasks          → PaginatedResponse<TaskOutput>
+  - POST   /tasks          → CreateTaskRequest → TaskOutput
+  - GET    /tasks/:id      → TaskOutput
+  - PATCH  /tasks/:id      → PatchTaskRequest → TaskOutput
+  - DELETE /tasks/:id      → 204
+
+错误格式: { error: { code, message, details } }
+命名规范: REST snake_case / JS camelCase
+分页: page + pageSize, PaginatedResponse wrapper
+输入/输出分离: CreateTaskRequest / TaskOutput (不暴露 DB model)
+
+类型定义路径: src/types/api.ts
+合约测试路径: tests/api-contracts/
+```
 
 ## 验证清单
 

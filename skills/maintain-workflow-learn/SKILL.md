@@ -11,7 +11,8 @@ argument-hint: "[--list | --add: insight | --clear]"
 - **入口**: 手动添加或技能自动采集的学习条目
 - **出口**: `.claude/learnings.jsonl`
 - **指向**: 其他技能在关键节点调用本技能记录学习
-- **假设已加载**: CANON.md
+- **前置加载**: CANON.md
+- **输出路径**: 学习记录后回到 `maintain-workflow-using-unified` 或原调用技能
 
 ## 何时不使用
 - 只是一次性任务细节，没有跨 session 复用价值
@@ -150,13 +151,13 @@ Architecture (3):
 
 ## 常见说辞
 
-| 说辞 | 现实 |
-|------|------|
-| "学习记了也没用" | 每次重复踩坑的代价远超记录成本。一条 pitfall 避免一次返工就回本。 |
-| "让 AI 自己记" | 自动采集是补充不是替代。人工判断价值更高——auto 记录需要人工筛选和提权。 |
-| "JSONL 格式太原始" | 原始 = 可 grep、可追加、无依赖。不需要数据库。 |
-| "confidence 主观不靠谱" | 主观但有价值。confidence 7 和 3 的差异传达了确定程度。全标 10 才是问题。 |
-| "prune 太麻烦" | 不 prune 更麻烦——过时和矛盾的学习比没有学习更危险。 |
+| 说辞 | 现实 | 后果 |
+|------|------|------|
+| "学习记了也没用" | 每次重复踩坑的代价远超记录成本。一条 pitfall 避免一次返工就回本。 | 重复踩坑 ×3 次 ×2 小时 = 6 小时浪费；记录成本 = 5 分钟 |
+| "让 AI 自己记" | 自动采集是补充不是替代。人工判断价值更高——auto 记录需要人工筛选和提权。 | auto 全部 confidence=5 → 信噪比低 → 有价值的学习被淹没 → prune 成本 ×3 |
+| "JSONL 格式太原始" | 原始 = 可 grep、可追加、无依赖。不需要数据库。 | 引入数据库 = 新依赖 + 迁移成本 + 维护负担；JSONL 零依赖 |
+| "confidence 主观不靠谱" | 主观但有价值。confidence 7 和 3 的差异传达了确定程度。全标 10 才是问题。 | 全标 10 → 无法区分确凿 vs 初步 → 高 confidence 学习无优先权 → 误导决策 |
+| "prune 太麻烦" | 不 prune 更麻烦——过时和矛盾的学习比没有学习更危险。 | 过时学习误导 → 按已废弃的 pattern 实现 → 返工 2-4 小时；prune 只需 10 分钟 |
 
 ## 红旗 — STOP
 
@@ -166,6 +167,55 @@ Architecture (3):
 - insight 超过两句话 — 太长了。insight 是一句话洞察，不是段落。长文本放文档，key 指向文档。
 - 缺少 files 字段 — 是空列表，但字段必须存在。引用文件的学习比泛泛描述有价值 10 倍。
 - key 不用 kebab-case — 命名不一致导致去重失败，同一洞察出现多个变体。
+
+## 验证失败处理
+
+| 验证项 | 失败表现 | 处理方式 |
+|--------|----------|---------|
+| JSONL 格式错误 | 非有效 JSON 或多行对象 | 逐行验证；修复格式或删除损坏行 |
+| type 不在枚举范围 | 使用了非标准 type | 映射到最接近的标准 type；无法映射则拒绝写入 |
+| confidence 超出范围 | < 1 或 > 10 | 截断到 1-10；全标 10 的条目需人工降权 |
+| key 非 kebab-case | 使用 camelCase 或含空格 | 转换为 kebab-case；去重后保留最新条目 |
+| 条目超过 1000 条 | learnings.jsonl 过长 | 执行 prune：清理过时、矛盾、低 confidence 条目 |
+
+## 好坏示例
+
+### Good: 一句话洞察 + kebab-case key + 有 files + 合理 confidence
+```json
+{"type":"pitfall","key":"orm-n+1-query","insight":"User.list() 默认加载关联，列表接口必须用 .select() 限制字段","confidence":8,"files":["src/services/user.service.ts"],"source":"manual","ts":"2026-04-24T14:30:52+08:00"}
+```
+
+### Bad: 泛泛描述 + 非 kebab-case + 无 files + 全标 10
+```json
+{"type":"pitfall","key":"ORM Problem","insight":"ORM sometimes has performance issues when loading too much data and this can cause slow queries in production environments especially on list endpoints","confidence":10,"files":[],"source":"auto","ts":"2026-04-24T14:30:52+08:00"}
+```
+
+## 输出模板
+
+```
+学习记录完成：
+
+操作: [add / list / search / prune / export]
+条目数: [N] (add 时 = 1)
+
+新增条目 (add):
+  type: [pattern/pitfall/preference/architecture]
+  key: [kebab-case]
+  insight: [一句话]
+  confidence: [1-10]
+  files: [相关路径列表]
+  source: [auto/manual]
+
+列表摘要 (list):
+  Patterns: [N] 条 (avg conf: [X])
+  Pitfalls: [N] 条 (avg conf: [X])
+  Preferences: [N] 条 (avg conf: [X])
+  Architecture: [N] 条 (avg conf: [X])
+
+修剪结果 (prune):
+  已删除: [N] 条 (过时/矛盾/低 conf)
+  保留: [N] 条
+```
 
 ## 验证清单
 

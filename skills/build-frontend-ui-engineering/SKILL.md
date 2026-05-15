@@ -10,7 +10,8 @@ description: 前端 UI 工程——构建可生产、可访问、视觉精良的
 - **入口**: build 中需要 UI 组件或页面
 - **出口**: 可生产、通过可访问性检查的 UI 组件 + 测试
 - **指向**: 前端变更完成 → `build-frontend-browser-testing` 进行浏览器验证
-- **假设已加载**: CANON.md + `build-quality-tdd/SKILL.md`
+- **输出路径**: `verify-frontend-accessibility`（下游验证技能）
+- **前置加载**: CANON.md + `build-quality-tdd/SKILL.md`
 
 ## 何时不使用
 - 只做产品/视觉/交互决策，尚未进入工程实现
@@ -170,13 +171,65 @@ const handleComplete = async (taskId: string) => {
 
 ## 常见说辞
 
-| 说辞 | 现实 |
-|------|------|
-| "可访问性最后加" | 最后加 = 不会加。从第一个组件做起。 |
-| "这个渐变看起来很棒" | "AI 审美"会降低信任。项目色 > 花哨特效。 |
-| "不用测 loading/error 状态" | 用户遇到空状态和错误状态的频率远超理想状态。 |
-| "PC 端先做，手机之后适配" | 移动优先 CSS 更简洁。先做 PC 再向下适配很难。 |
-| "骨架屏太麻烦，用个转圈就行" | 转圈 + 内容跳入 = CLS = 用户体验差 + Core Web Vitals 降分。 |
+| 说辞 | 现实 | 后果 |
+|------|------|------|
+| "可访问性最后加" | 最后加 = 不会加。从第一个组件做起。 | 可访问性后补 → 平均每个组件需额外 2-4 小时修复，且遗漏 ARIA 标签导致 15-20% 用户无法操作 |
+| "这个渐变看起来很棒" | "AI 审美"会降低信任。项目色 > 花哨特效。 | AI 审美 → 产品被识别为 AI 生成，用户信任度下降；后续统一品牌色需重构 50-70% 样式代码 |
+| "不用测 loading/error 状态" | 用户遇到空状态和错误状态的频率远超理想状态。 | 遗漏状态 → 30%+ 用户遇到白屏或无反馈操作，客户投诉率提升，Core Web Vitals CLS 分数下降 |
+| "PC 端先做，手机之后适配" | 移动优先 CSS 更简洁。先做 PC 再向下适配很难。 | PC 优先 → 向下适配时需重写 40-60% CSS 响应式规则，等于做两遍 |
+| "骨架屏太麻烦，用个转圈就行" | 转圈 + 内容跳入 = CLS = 用户体验差 + Core Web Vitals 降分。 | Spinner 代替 Skeleton → CLS 分数增加 0.1-0.3，Lighthouse 评分下降 5-15 分 |
+
+## 验证失败处理
+
+| 失败场景 | 处理方式 |
+|---------|---------|
+| 使用了项目调色板外的颜色 | 立即替换为项目品牌色，读取 tailwind.config 或 DESIGN.md 中的色值 |
+| 交互元素无键盘访问 | 添加 tabIndex + onKeyDown 或改用 `<button>`，不允许 div onClick 无键盘支持 |
+| 缺少 Loading / Empty / Error 状态 | 停止前进，先补齐三个基础状态的 UI 和逻辑，再继续主功能 |
+| 颜色作为唯一状态指示器 | 添加图标、文字或形状作为辅助信息通道，确保色盲用户可识别 |
+| 移动端布局溢出 | 检查 max-width、触摸目标尺寸和横向滚动，320px 宽度下必须无溢出 |
+
+## 好坏示例
+
+### ✅ Good: 项目色 + 完整状态 + 可访问性
+
+```tsx
+// 项目品牌色（来源: tailwind.config → brand.primary = #2563EB）
+<Button className="bg-brand-primary text-white rounded-md px-4 py-2">
+  创建任务
+</Button>
+
+// 图标按钮有 aria-label
+<button aria-label="关闭对话框" onClick={handleClose}>
+  <XIcon className="w-4 h-4" />
+</button>
+
+// 完整状态覆盖
+{loading ? <TaskListSkeleton /> : (
+  tasks.length === 0 ? (
+    <EmptyState message="还没有任务" actionLabel="创建第一个" onAction={handleCreate} />
+  ) : error ? (
+    <ErrorState message={error.message} onRetry={handleRetry} />
+  ) : (
+    <TaskList tasks={tasks} />
+  )
+)}
+```
+
+### ❌ Bad: AI 审美 + 遗漏状态 + 不可访问
+
+```tsx
+// AI 审美——靛蓝渐变 + 超大圆角
+<Button className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl px-8 py-6">
+  创建任务
+</Button>
+
+// div onClick 无键盘支持
+<div onClick={handleClose}>✕</div>
+
+// 只有正常状态，无 loading / empty / error
+<TaskList tasks={tasks} />  // 白屏或崩溃时用户无任何反馈
+```
 
 ## 红旗 — STOP
 
@@ -188,6 +241,43 @@ const handleComplete = async (taskId: string) => {
 - 图片不设宽高（CLS 隐患）
 - 移动端弹窗无法滚动
 - `px-8 py-24` 的 Hero Section 配通用插图 = AI 审美警报
+
+## 输出模板
+
+UI 工程完成后，应在组件文件或相关 ADR 中记录以下结构：
+
+```markdown
+## UI Component — [组件名称]
+
+### 设计来源
+- 交互设计: `02-design.md` → [交互流程描述]
+- 视觉方向: `02-design.md` → [视觉层级和色值]
+- 项目 token: DESIGN.md → [使用的 spacing / color / rounded 值]
+
+### 状态覆盖
+| 状态 | UI 表现 | 数据条件 |
+|------|---------|---------|
+| Normal | [正常渲染] | data.length > 0 && !error |
+| Loading | [Skeleton / Spinner] | isLoading === true |
+| Empty | [空态文案 + 行动引导] | data.length === 0 && !isLoading |
+| Error | [错误信息 + 重试按钮] | error !== null |
+
+### 可访问性
+- 键盘导航: [Tab / Enter / Escape 路径]
+- ARIA: [aria-label / aria-role 清单]
+- 焦点管理: [模态框焦点循环 / 关闭后回退]
+- 色盲兼容: [颜色 + 图标/文字双通道]
+
+### 响应式
+- 移动端 (< 640px): [布局变化]
+- 平板 (768-1024px): [布局变化]
+- 桌面 (> 1280px): [布局变化]
+
+### 组合模式
+- 父组件: [包裹方式]
+- 子组件: [拆分方式]
+- 配置项: [仅必要配置，避免配置爆炸]
+```
 
 ## 验证清单
 

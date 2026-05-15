@@ -10,7 +10,8 @@ argument-hint: "[artifact-type: software|document|article|deck|visual]"
 - **入口**: `01-spec.md` 已批准，且任务会产生用户可感知产物
 - **出口**: `docs/features/YYYYMMDD-<name>/02-design.md` + 用户批准；项目根 `DESIGN.md` 同步更新；纯后端/脚本/迁移允许 skip
 - **指向**: 设计批准后进入 `build-workflow-plan`；设计探索不足时回到 `define-workflow-refine`
-- **假设已加载**: CANON.md
+- **输出路径**: → build-workflow-plan
+- **前置加载**: CANON.md
 - **需读取**: `references/design-best-practices.md`、`references/design-inspiration-catalog.md`、`references/design-pattern-extract.md`、项目根 `DESIGN.md`（如果存在）
 
 ## 何时不使用
@@ -208,13 +209,13 @@ skip 时必须明确记录：
 
 ## 常见说辞
 
-| 说辞 | 现实 |
-|------|------|
-| “先把代码写出来再调设计” | 这会把创作决策伪装成实现细节，返工更贵。 |
-| “排版/剧本/交互都可以在 build 里顺手做” | 顺手做意味着没有阶段门，也没有定稿依据。 |
-| “这只是小 UI，不需要设计” | 只要用户看得见、用得到，就可能需要先定主路径和状态。 |
-| “设计就是把实现写详细一点” | 错。设计定方向，plan 才拆任务，build 才落实现。 |
-| “参考几个案例就够了” | 案例必须转成 Pattern / Adopt / Reject，否则只是灵感堆砌。 |
+| 说辞 | 现实 | 后果 |
+|------|------|------|
+| “先把代码写出来再调设计” | 这会把创作决策伪装成实现细节，返工更贵。 | 代码先行 → 交互路径被实现锁定 → 改方向时需重写 UI 组件 >50%，浪费所有已投入时间。 |
+| “排版/剧本/交互都可以在 build 里顺手做” | 顺手做意味着没有阶段门，也没有定稿依据。 | 无阶段门 → 每位开发者自由发挥 → 视觉和交互不一致 → 用户体验断裂。 |
+| “这只是小 UI，不需要设计” | 只要用户看得见、用得到，就可能需要先定主路径和状态。 | 小 UI 跳过设计 → 遗漏状态（空态、错误态、加载态）→ 上线后用户看到空白或崩溃界面。 |
+| “设计就是把实现写详细一点” | 错。设计定方向，plan 才拆任务，build 才落实现。 | 设计写实现步骤 → 混淆创作决策和技术执行 → 审查者无法区分设计门和实现细节 → 审查失效。 |
+| “参考几个案例就够了” | 案例必须转成 Pattern / Adopt / Reject，否则只是灵感堆砌。 | 灵感堆砌 → 无证据链 → 关键决策无法回溯 → 后续阶段无法验证设计是否按预期落地。 |
 
 ## 红旗 — STOP
 
@@ -237,3 +238,64 @@ skip 时必须明确记录：
 - [ ] 没有实现步骤或任务分解
 - [ ] 用户已批准 design，或 skip 理由已明确记录
 - [ ] required 时：DESIGN.md 已同步（创建或更新）
+
+## 好坏示例
+
+### Good — 证据驱动的设计定稿
+
+```markdown
+# 设计: 用户通知系统
+
+## Design References
+- Enterprise: Slack toast + sidebar notification pattern
+- Official: Material Design 3 snackbar spec
+- Local: DESIGN.md primary-action token (#0066CC)
+
+## Pattern Synthesis
+- Toast + counter + list 三层模式（5/5 参考产品使用）
+- 徽标计数器位于图标右上角（4/5 参考产品使用）
+
+## Adopt / Reject
+- Adopt: 三层通知模式 — 用户可快速扫描、深入查看、管理历史
+- Reject: 全屏通知中心 — 当前日活 <10k，全屏管理过度设计
+- Evidence Quality: 3/5 sources, patterns confirmed by 2+ references
+
+## 关键决策
+1. 通知优先级: 紧急→toast，一般→徽标，历史→列表
+2. 通知状态: unread/read/dismissed，无"已处理"状态（简化 MVP）
+```
+
+### Bad — 灵感堆砌无证据链
+
+```markdown
+# 设计: 用户通知系统
+
+我看到 Slack 有 toast，Gmail 有 sidebar，Telegram 有 badge。
+
+→ 问题: 只有灵感，没有 Pattern / Adopt / Reject → 无法判断哪个模式适用于当前项目
+→ 问题: 缺少 Evidence Quality → 无法确认模式是否有足够来源支撑
+→ 问题: Local Project Truth 缺失 → 可能与已有 DESIGN.md 设计系统冲突
+→ 问题: 无关键决策 → 后续 plan/build 无定稿依据，设计意图在实现中被稀释
+```
+
+## 输出模板
+
+```markdown
+### Design 交付记录 — <feature-name>
+
+**Design Status**: [required / skipped — 跳过原因]
+**artifact_type**: [software / document / article / deck / visual]
+**设计轨道**: [交互 / 视觉方向 / 排版 / 剧本 / 导演]
+
+**Design Best-Practice Scan**:
+- Design References: [来源列表]
+- Pattern Synthesis: [综合模式]
+- Adopt / Reject: [采纳/拒绝清单 + 理由]
+- Evidence Quality: [评分 / 来源数]
+
+**关键决策**: [决策1 / 决策2 / ...]
+**设计边界**: [不做清单 + trade-off]
+**实施前置条件**: [前提条件列表]
+**用户批准**: [已批准 / 待批准]
+**DESIGN.md 同步**: [已同步 / 未同步]
+```

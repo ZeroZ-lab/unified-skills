@@ -11,7 +11,8 @@ argument-hint: "[artifact-type] [--canary]"
 - **入口**: 通过 review 的代码
 - **出口**: `docs/features/<name>/05-ship.md` + `docs/features/<name>/README.md`（事后总结）
 - **指向**: 完成后进入 `reflect-team-retro`（可选）
-- **假设已加载**: CANON.md + `verify-workflow-review/SKILL.md`
+- **输出路径**: → ship-workflow-land
+- **前置加载**: CANON.md + `verify-workflow-review/SKILL.md`
 
 ## 何时不使用
 - 纯配置变更（环境变量、DNS）— 可在监控下直接变更
@@ -194,6 +195,66 @@ DEPLOY(flag OFF) → ENABLE(团队内测) → GRADUAL(5%→25%→50%→100%) →
 | P95 延迟 | 在基准 ±20% 内 | 高于基准 20-50% | > 50% 基准 |
 | 客户端 JS 错误 | 无新错误类型 | 新增 < 0.1% session | 新增 > 0.1% session |
 | 业务指标 | 正向或中性 | 下降 < 5%（可能噪声） | 下降 > 5% |
+
+## 好/坏示例
+
+### 好示例：结构化 Go/No-Go + 回滚计划
+
+```
+## Go/No-Go — 任务管理 v2.3
+- [x] 阻塞项：无未解决 Critical
+- [x] 已知风险：旧版 API 兼容窗口 48h，已准备 fallback 路由
+- [x] 回滚计划：feature flag 关闭 < 1min；git revert + redeploy < 5min
+- [x] Staging 全绿，冒烟测试通过
+- 决策：GO
+```
+
+优点：每项可验证、回滚时间量化、风险显式记录。
+
+### 坏示例："发了吧"
+
+```
+代码能跑了，周五之前上线吧。出问题再修。
+```
+
+问题：无回滚计划、无 staging 验证、无监控确认、无 Go/No-Go 决策记录。上线后故障无法快速回退。
+
+## 输出模板
+
+```markdown
+# Ship Report — <feature-name>
+
+## 基本信息
+- artifact_type: software / document / article / deck / visual
+- 版本: <version>
+- 发布时间: YYYY-MM-DD HH:MM
+
+## Phase A: 预发检查
+- 测试: [PASS/FAIL] — 命令 + 结果
+- 构建: [PASS/FAIL]
+- Lint + type check: [PASS/FAIL]
+
+## Phase B: Audit Army 结果
+- security: [Blocking/Important/Suggestion 条目]
+- performance: [同上]
+- accessibility: [同上]
+- docs: [同上]
+
+## Phase B.5: Staging 验证
+- 冒烟测试: [PASS/FAIL]
+- 集成验证: [PASS/FAIL]
+
+## Phase C: Go/No-Go
+- 阻塞项: [无 / 列出]
+- 已知风险: [列出]
+- 回滚计划: [已准备 / 未准备]
+- 决策: GO / NO-GO
+
+## Phase E: 发布后闭环
+- 健康检查: [PASS/FAIL]
+- 错误率: [正常 / 异常]
+- 下一步: canary / land / doc-sync
+```
 
 ## 监控与可观测性
 
