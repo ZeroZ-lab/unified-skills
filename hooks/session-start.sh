@@ -44,6 +44,13 @@ Context Runtime:
 
 $platform_hint"
 
+# Show visible prompt to user
+if [ "$is_codex" -eq 1 ]; then
+  echo "⚡ Unified Skills 已加载（Codex 模式）— AGENTS.md + skills-router.json 就绪"
+else
+  echo "⚡ Unified Skills 已加载 — 使用 /refine /design /plan /build /review /ship 进入工作流"
+fi
+
 # Output in format compatible with both Claude Code and Codex
 escaped=$(printf '%s' "$full_message" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))')
 printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":%s}}\n' "$escaped"
