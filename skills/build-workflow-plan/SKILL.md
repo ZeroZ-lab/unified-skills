@@ -189,31 +189,9 @@ release/export/ship 类子计划默认串行收口，不能标为 `parallel_safe
 
 ### Step 7.5：Plan Review Army（计划审查军团）
 
-自审通过后，**并行分派** 4 个 specialist 审查 plan：
+自审通过后，按风险升级规则执行 Plan Review Army。默认标准变更至少覆盖 CEO + Eng；`--full`、大型变更或高风险任务才全开。
 
-```
-Plan draft
-    │
-    ├── agents/plan-ceo-reviewer.md     → CEO 视角: 商业价值、范围、优先级
-    ├── agents/plan-eng-reviewer.md     → Eng 视角: 技术可行、架构、实现风险
-    ├── agents/plan-design-reviewer.md  → Design 视角: 用户体验、交互、一致性
-    └── agents/plan-security-reviewer.md → Security 视角: 数据隐私、攻击面、合规
-            │
-            ▼
-    收集反馈 → 分级合并 → 修改 plan → 进入 Step 8
-```
-
-每个 specialist 输出 Blocking / Important / Suggestion 三级反馈。
-
-**反馈处理规则：**
-- **Blocking** — 必须解决，修改 plan 后再提交批准
-- **Important** — 强烈必须采纳，不采纳需在 plan 中记录原因
-- **Suggestion** — 自主判断，采纳后标注来源
-
-**最少触发条件：**
-- 小型变更（1-3 任务、非安全敏感、无 UI）→ 可跳过 Review Army
-- 标准变更 → 至少 CEO + Eng 双视角
-- 大型变更（>10 任务或有安全/合规需求）→ 四视角全开
+详细 reviewer 列表、最小触发规则、反馈模板和合并规则见 `plan-review.md`。
 
 ### Step 8：用户批准
 

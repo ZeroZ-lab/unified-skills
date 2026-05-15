@@ -118,53 +118,9 @@ skip 时必须明确记录：
 
 ### Step 3.5：Codex 视觉生成 + Token 提取（可选增强）
 
-**触发条件**：`codex:codex-rescue` agent 可用 且 `artifact_type` 为 `software`(有 UI)、`visual` 或 `deck`
+触发摘要：`codex:codex-rescue` agent 可用，且 `artifact_type` 为 `software`（有 UI）、`visual` 或 `deck`。产物包括 mockup PNG 和 `assets/design-tokens-extracted.json`。
 
-**流程：**
-
-1. 将 Step 1 的 spec 约束 + Step 3 扫描结果（Adopt 模式 + 参考公司视觉特征）组装为 Codex prompt
-2. 调用 `codex:codex-rescue` agent，prompt 包含：
-   - 设计目标描述（产品类型、目标用户、核心交互）
-   - 视觉方向关键词（从 Step 3 Adopt 条目提取：色彩策略、字体风格、布局模式、组件样式）
-   - 输出要求：生成 2-3 张设计方向 mockup 图（PNG），每张代表一个差异化视觉方向
-3. Codex 产出图片 → 保存到 `docs/features/YYYYMMDD-<name>/assets/` 目录：
-   - `mockup-direction-1.png`、`mockup-direction-2.png`、`mockup-direction-3.png`
-4. 用 `analyze_image`（或同等视觉分析能力）逐张分析 mockup 图，提取结构化 token：
-   ```json
-   {
-     "direction": "1",
-     "tokens": {
-       "colors": { "primary": "#...", "canvas": "#...", "ink": "#...", "accent": "#..." },
-       "typography": { "family": "...", "display_weight": ..., "display_tracking": "...px", "body_weight": ... },
-       "spacing": { "base_unit": "...px", "section_gap": "...px", "card_padding": "...px" },
-       "rounded": { "cta_radius": "...px", "card_radius": "...px" },
-       "components": { "cta_style": "pill|rect|rounded", "card_style": "flat|elevated|bordered", "nav_style": "sidebar|topbar|mixed" }
-     },
-     "visual_keywords": ["dark-theme", "single-accent", "negative-tracking", ...],
-     "mood_description": "..."
-   }
-   ```
-5. 提取的 token 保存到 `docs/features/YYYYMMDD-<name>/assets/design-tokens-extracted.json`
-6. Token 数据作为 **Pattern Synthesis 的视觉证据** 进入 Step 4 的 Adopt / Reject
-
-**两个产物：**
-- 设计参考图（PNG mockup）→ 可用于 Step 4.5 交互式视觉对比的辅助素材
-- design-tokens-extracted.json → 结构化 token，供 Step 4 和 Step 6 消费
-
-**降级规则：**
-- Codex agent 不可用（额度耗尽 / 网络不通 / 未配置）→ 记录 `Codex Visual Generation unavailable`，跳过此步
-- Codex 可用但图片生成失败 → 跳过此步，继续使用 Step 3 的文字证据
-- 降级不影响后续步骤，Step 4 仍基于 Step 3 的 Best-Practice Scan 产出
-
-**适用 artifact_type：**
-
-| 类型 | 是否触发 | 理由 |
-|------|----------|------|
-| `software` + UI | 是 | 需要视觉 mockup 验证布局和交互方向 |
-| `visual` | 是 | 核心产出就是视觉 |
-| `deck` | 是 | 需要页面视觉节奏参考 |
-| `document` / `article` | 否 | 无视觉 mockup 需求 |
-| `software` 纯后端 | 否 | design 已 skipped |
+默认不读取详细流程。需要实际执行视觉生成、图片分析或 token 提取时，读取 `visual-generation.md`。
 
 ### Step 4：产出 `02-design.md`
 
@@ -224,30 +180,9 @@ skip 时必须明确记录：
 
 ### Step 6：同步项目级设计约束到 DESIGN.md
 
-读取已批准的 `02-design.md`，提取项目级设计 token 和约束写入项目根 `DESIGN.md`。
+读取已批准的 `02-design.md`，仅提取跨 feature 适用的项目级设计 token 和约束写入项目根 `DESIGN.md`；feature-specific 流程和功能范围不写入。
 
-**提取规则：**
-- 扫描 Adopt 条目中描述跨 feature 适用模式的条目
-- 扫描 Local Project Truth 中描述项目范围约束的内容（品牌色、组件库、字体系统等）
-- 将视觉决策转化为 YAML token（colors / typography / rounded / spacing / components）
-- 将交互/布局/响应式决策转化为对应 Markdown 章节
-- 不提取 feature-specific 的交互流程、页面结构或功能范围决策
-
-**Token 提取示例：**
-如果 02-design.md 的 Adopt 记录了"项目使用 Indigo 作为主色调"：
-  → 写入 YAML: `colors.primary: "#4F46E5"`
-  → 写入 Markdown Color Palette 章节: `primary (#4F46E5) — 主操作色，用于 CTA、链接、选中态`
-
-**合并规则：**
-- DESIGN.md 不存在：使用 `templates/root/DESIGN.md` 创建
-- YAML token：已存在的不覆盖（手动优先），新增的追加
-- Markdown 章节：新约束追加到对应章节末尾，标注 `<!-- auto-sync: /design <feature-name> -->`
-- 已有手动内容（无 auto-sync 标注）不覆盖；冲突时保留手动内容并添加 `<!-- conflict-note: ... -->`
-- 更新 `## Sync Log`
-
-**跳过条件：**
-- design required = skipped 时不执行同步
-- 02-design.md 中无项目级约束时不写入
+默认不读取详细合并规则。需要创建、合并或处理 `DESIGN.md` 冲突时，读取 `design-sync.md`。
 
 ## 验证失败处理
 

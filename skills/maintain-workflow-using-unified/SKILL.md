@@ -8,7 +8,7 @@ description: Session 启动引导 — 建立主动技能发现机制。每个 se
 </SUBAGENT-STOP>
 
 <EXTREMELY-IMPORTANT>
-你拥有 Unified Skills — 一套由 `skills-index.json` 声明库存的阶段化工作流技能系统。
+你拥有 Unified Skills — 一套由 `skills-router.json` 轻量路由、由 `skills-index.json` 声明完整库存的阶段化工作流技能系统。
 
 在响应用户消息或采取任何行动之前，你必须执行技能发现流程。
 这不是可选的。这不是可协商的。你无法通过推理绕过这个规则。
@@ -37,51 +37,66 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 
 ## 主动发现流程（每个任务必执行）
 
-### Step 1: 读取技能索引
+### Step 1: 读取轻量路由
 
 ```
-读取 skills-index.json 获取完整技能地图
+先读取 skills-router.json 获取 compact routing surface。
+只有当 router 无法回答、需要完整库存、或进入 full 模式时，才读取 skills-index.json。
 ```
 
 ### Step 2: 分析任务特征
 
-识别以下 5 个维度：
+识别以下 6 个维度：
 
 - **阶段** — 这是 define/design/build/verify/ship/maintain/reflect 哪个阶段？
 - **产物类型** — artifact_type 是什么？（software/document/article/deck/visual）
 - **触发词** — 用户消息包含哪些关键词？
 - **上下文信号** — 当前状态是什么？（有 spec 无 plan？有 code 无 review？）
 - **风险因素** — 涉及用户输入？认证？UI 变更？性能关键？
+- **loading tier** — 本次应该是 `light`、`standard`、`expanded` 还是 `full`？
 
-### Step 3: 查询相关技能
+### Step 3: 选择 loading tier
 
-根据 Step 2 的分析，从 skills-index.json 查询：
+| Tier | 触发 | 默认加载 | 扩展条件 |
+|------|------|----------|----------|
+| `light` | 简单解释、状态查询、命令查找、无 repo 编辑 | Boot Kernel + `skills-router.json` | 只有答案依赖当前仓库事实时读少量文件 |
+| `standard` | 常规工作流任务 | 1 个主 workflow skill | artifact_type 或 trigger 明确要求时追加 1 个专项 |
+| `expanded` | 命名风险或混合产物 | 1 个主 workflow skill + 最多 2 个专项 | 每个额外技能必须说明 trigger / risk |
+| `full` | `--full`、对抗性审核、全身体检、高风险发版、用户明确要求 | 阶段技能允许的全部相关角色/技能 | 必须说明 full 触发原因 |
+
+### Step 4: 查询相关技能
+
+根据 Step 2-3 的分析，从 `skills-router.json` 查询：
 
 ```
 相关技能 = 
-  by_phase[当前阶段] 
-  + by_artifact_type[产物类型].required
-  + by_artifact_type.software.design（仅当 software 且存在 UI / 用户可见产物信号）
-  + by_trigger.user_says[匹配的关键词]
-  + by_trigger.context_signals[匹配的上下文]
-  + by_risk[匹配的风险因素]
+  routes.user_says[匹配的关键词]
+  + routes.context_signals[匹配的上下文]
+  + routes.risk[匹配的风险因素]
+  + skills[候选技能].phase / role / default_tier
 ```
 
-### Step 4: 决策加载
+如果 `skills-router.json` 没有覆盖当前问题，再读取 `skills-index.json` 作为完整库存兜底，并记录原因。
 
-对查询结果中的每个技能：
+### Step 5: 决策加载
 
-- **required 标记的** → 必须加载
-- **用户可见产物规则** → 如果 `artifact_type` 是 `document` / `article` / `deck` / `visual`，必须先加载 `design-workflow-design`
-- **software + UI 规则** → 如果 `artifact_type: software` 且触发词 / 风险 / 上下文表明涉及页面、组件、交互或视觉呈现，必须追加 `by_artifact_type.software.design`
-- **sequence 标记的** → 按顺序加载
-- **其他** → 如果有 1% 可能相关，加载
+按 tier 决策：
 
-### Step 5: 宣告并执行
+- `light` → 不加载完整技能，除非当前事实必须从仓库验证。
+- `standard` → 加载 1 个主 workflow skill；最多 1 个专项 skill。
+- `expanded` → 加载 1 个主 workflow skill；最多 2 个专项 skill；每个专项必须有命名 trigger / risk。
+- `full` → 按阶段技能和 Risk-Based Role Escalation 选择全部相关技能；未被选中的角色不产出占位反馈。
+
+用户可见产物规则仍然成立：
+
+- `document` / `article` / `deck` / `visual` → 先加载 `design-workflow-design`。
+- `software` + UI / 页面 / 组件 / 交互 / 视觉信号 → 追加必要的 design/frontend 技能。
+
+### Step 6: 宣告并执行
 
 输出：
 ```
-Using [skill-name] to [purpose]
+Using [tier] tier: [skill-name] to [purpose] because [trigger/risk]
 ```
 
 然后在当前平台加载技能：Claude Code 调用 Skill 工具；Codex 读取对应 `skills/<name>/SKILL.md` 或使用宿主暴露的技能入口。
@@ -97,11 +112,11 @@ Using [skill-name] to [purpose]
 
 | 想法 | 现实 |
 |------|------|
-| "这个任务很明显不需要查索引" | 每个任务都查。没有例外。 |
-| "我已经知道该用哪个技能" | 索引可能有你不知道的相关技能。查。 |
+| "这个任务很明显不需要查 router" | 每个任务都先过 `skills-router.json`。没有例外。 |
+| "我已经知道该用哪个技能" | router 可能有你不知道的相关触发。查。 |
 | "让我先理解需求再查技能" | 技能告诉你如何理解需求。先查。 |
-| "这只是个简单问题" | 简单问题也有对应技能。查索引。 |
-| "我先探索代码库" | 技能告诉你如何探索。先查索引。 |
+| "这只是个简单问题" | 简单问题可走 `light`，但仍要过 router。 |
+| "我先探索代码库" | 技能告诉你如何探索。先查 router。 |
 | "我查查文件/代码就好" | 文件缺少对话上下文。先查技能。 |
 | "我先收集信息再说" | 技能告诉你如何收集信息。先查。 |
 | "这不算任务" | 有行动就有任务。查技能。 |
@@ -117,7 +132,7 @@ Using [skill-name] to [purpose]
 
 | 说辞 | 现实 |
 |------|------|
-| "我记住技能了，不用查" | 技能会演进。每次查索引确保用最新版。 |
+| "我记住技能了，不用查" | 技能和 router 会演进。每次查 `skills-router.json` 确保用最新版。 |
 | "这个任务很明显" | 明显的任务也有对应技能。不查 = 跳过纪律。 |
 | "我直接做更快" | 跳过技能发现 = 跳过质量保障。慢就是快。 |
 | "这不算任务" | 有行动就有任务。查技能。 |
@@ -125,9 +140,10 @@ Using [skill-name] to [purpose]
 
 ## 验证清单
 
-- [ ] skills-index.json 已读取
-- [ ] 5 维度分析已完成（阶段、产物类型、触发词、上下文信号、风险因素）
-- [ ] 至少一个技能已宣告："Using [skill-name] to [purpose]"
+- [ ] skills-router.json 已读取；必要时才读取 skills-index.json
+- [ ] 6 维度分析已完成（阶段、产物类型、触发词、上下文信号、风险因素、loading tier）
+- [ ] loading tier 已宣告：`light` / `standard` / `expanded` / `full`
+- [ ] 至少一个技能已宣告："Using [tier] tier: [skill-name] to [purpose] because [trigger/risk]"
 - [ ] 无 Red Flags 触发
 
 ## 决策流程图
@@ -141,126 +157,30 @@ Using [skill-name] to [purpose]
       ├─ 否 → 先加载 define-cognitive-brainstorm
       └─ 是 → 继续发现流程
   ↓
-读取 skills-index.json
+读取 skills-router.json
   ↓
-分析任务特征（5 个维度）
+分析任务特征（6 个维度）
   ↓
 查询相关技能
   ↓
-有 required 技能？
-  ├─ 是 → 必须加载
-  └─ 否 → 有 1% 可能相关的？
-      ├─ 是 → 加载
-      └─ 否 → 直接响应（极少见）
+选择 loading tier
+  ├─ light → router-only 或少量当前事实
+  ├─ standard → 1 个主技能 + 最多 1 个专项
+  ├─ expanded → 1 个主技能 + 最多 2 个专项
+  └─ full → 阶段允许的全部相关技能
   ↓
-输出 "Using [skill-name] to [purpose]"
+输出 "Using [tier] tier: [skill-name] to [purpose] because [trigger/risk]"
   ↓
 技能有清单项？
   ├─ 是 → 为每个清单项创建 todo
   └─ 否 → 直接执行
 ```
 
-## 技能分类速查
+## 按需参考
 
-### Define 阶段（想法模糊、需要方案对比、收敛到规格）
+完整技能分类速查、技能优先级、技能类型、用户指令边界和平台适配说明见 `skill-reference.md`。
 
-- `define-cognitive-brainstorm` — 想法模糊、开放性问题、需要方案对比
-- `define-workflow-refine` — 模糊想法收敛到 spec
-- `define-workflow-spec` — 规格化文档
-
-### Design 阶段（证据驱动的创作设计定稿）
-
-- `design-workflow-design` — 证据驱动设计阶段总控和 gate
-- `design-experience-interaction` — 基于证据的交互设计、流程和状态
-- `design-visual-direction` — 基于证据的视觉方向和风格系统
-- `design-content-script` — 基于证据的剧本设计、故事线、消息线
-- `design-content-direction` — 基于证据的导演设计、页序推进、节奏
-- `design-content-layout` — 基于证据的排版设计、构图、媒介适配
-- `design-interactive-preview` — 交互式视觉对比、本地预览、方向选择
-
-### Build 阶段（拆分任务、增量生成产物）
-
-- `build-workflow-plan` — 拆分任务
-- `build-workflow-execute` — 增量生成产物
-- `build-quality-tdd` — 写逻辑代码（MUST）
-- `build-cognitive-context` — 上下文混乱或输出质量下降
-- `build-cognitive-source-driven` — 使用不熟悉的 API/框架
-- `build-cognitive-execution-engine` — 执行引擎
-- `build-cognitive-decision-record` — 面临技术选型或架构决策
-- `build-infrastructure-git` — 版本控制操作
-- `build-frontend-ui-engineering` — 构建/修改 UI 组件
-- `build-frontend-browser-testing` — 浏览器自动化测试
-- `build-backend-api-design` — 设计 API/接口/数据合约
-- `build-backend-database` — 设计 schema/写迁移/优化查询
-- `build-backend-service-patterns` — 服务模式和架构
-- `build-content-writing` — 文档/文章/PPT 内容
-- `build-content-layout` — 版式执行落地/信息层级
-
-### Verify 阶段（质量把关、Bug 调查、审查）
-
-- `verify-workflow-review` — 产物完成后质量把关
-- `verify-workflow-spec-compliance` — 功能完整性审查
-- `verify-quality-code-quality` — 代码质量审查
-- `verify-workflow-debug` — 遇到 bug/测试失败/意外行为（MUST）
-- `verify-frontend-accessibility` — 构建 UI 组件/表单/导航
-- `verify-quality-integration-testing` — 集成测试
-- `verify-quality-performance` — 性能不达标或上线前审查
-- `verify-quality-security` — 涉及用户输入/认证/数据存储
-- `verify-team-code-review-standards` — 代码审查标准
-- `verify-content-review` — 内容审查
-- `verify-visual-review` — 视觉审查
-- `verify-workflow-receiving-review` — 接收审查反馈
-- `verify-quality-simplify` — 代码变得复杂/重复/过度抽象
-
-### Ship 阶段（发布检查、部署、监控）
-
-- `ship-workflow-ship` — 审查通过后上线或交付
-- `ship-infrastructure-ci-cd` — 设置/修改 CI/CD 管道
-- `ship-infrastructure-deploy` — 部署操作
-- `ship-artifact-export` — 产物导出
-- `ship-workflow-canary` — 代码已部署需要持续验证
-- `ship-workflow-land` — PR 合并到主分支并验证部署
-- `ship-workflow-doc-sync` — 文档同步
-
-### Maintain 阶段（可观测性、上下文管理、学习记录）
-
-- `maintain-infrastructure-observability` — 可观测性
-- `maintain-team-deprecation-migration` — 废弃迁移
-- `maintain-workflow-context-save` — 保存工作上下文供后续恢复
-- `maintain-workflow-context-restore` — 新 session 继续之前的工作
-- `maintain-workflow-goal` — 目标生命周期管理
-- `maintain-workflow-learn` — 发现项目模式/踩坑/偏好需要持久化
-- `maintain-workflow-using-unified` — Session 启动引导和主动技能发现
-
-### Reflect 阶段（事后回顾、文档工程）
-
-- `reflect-team-retro` — 功能完成/里程碑达成/事故处理后复盘
-- `reflect-team-documentation` — 记录架构决策或维护项目知识
-
-## 技能优先级
-
-当多个技能可能适用时：
-
-1. **流程技能优先**（brainstorm、debug、tdd）— 决定如何做
-2. **实现技能其次**（ui-engineering、api-design）— 指导执行
-
-## 技能类型
-
-- **刚性技能**（TDD、调试、审查）：严格遵循，不要适应掉纪律
-- **柔性技能**（模式、设计）：根据上下文调整原则
-
-技能本身会告诉你它是哪种类型。
-
-## 用户指令
-
-用户指令说明"做什么"，不是"怎么做"。"添加 X" 或 "修复 Y" 不意味着跳过工作流。
-
-## 平台适配
-
-技能使用 Claude Code 的工具名和约定。在其他平台上的等效方式：
-
-- **Claude Code**：使用 `Skill` 工具调用技能。当技能被调用时，其内容会被加载并呈现——直接遵循。不要用 Read 工具读技能文件。
-- **Codex CLI**：直接读取 `AGENTS.md` 与 `skills/` 中的真实技能；如果宿主暴露技能入口，优先使用宿主入口，否则读取对应 `skills/<name>/SKILL.md`。Codex 不依赖 repo 内旧的命令薄包装或 wrapper skill 目录。
+默认不要读取 `skill-reference.md`。只有当 `skills-router.json` 无法解释路由、需要完整库存速查、或进入 `full` tier 时才读取。
 
 ## Session 启动检查
 
