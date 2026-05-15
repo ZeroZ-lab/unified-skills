@@ -63,7 +63,7 @@ hooks = true
                                     │
 ┌───────────────────────────────────▼───────────────────────────────────┐
 │ Command 层：阶段协议 / Workflow Controller                              │
-│ /refine /design /plan /build /review /ship /save /restore /learn /goal │
+│ /refine /design /plan /build /review /ship /save /restore /learn │
 │ /brainstorm /help                                                       │
 └───────────────────────────────────┬───────────────────────────────────┘
                                     │
@@ -127,7 +127,6 @@ CANON.md
 | `/ship` | 发布、导出与文档同步门 | `05-ship.md` |
 | `/save` / `/restore` | 上下文持久化入口 | checkpoint |
 | `/learn` | 跨 session 学习入口 | learnings 记录 |
-| `/goal` | 目标生命周期入口 | goal 状态 |
 | `/help` | 能力发现入口 | 命令概览 |
 
 ### 3. Agent：角色责任层

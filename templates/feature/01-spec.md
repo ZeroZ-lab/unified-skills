@@ -6,7 +6,7 @@
 可选值：`software` / `document` / `article` / `deck` / `visual`。默认 `software`。
 
 ## Goal Alignment
-- Source Goal: conversation / `GOAL.md` / Codex `/goal`
+- Source Goal: conversation / `GOAL.md`
 - Goal Status: accepted / needs-refinement / blocked
 - Goal Review Score: `<score>/12`
 

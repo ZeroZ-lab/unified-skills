@@ -111,13 +111,13 @@
       "sourceType": "github",
       "computedHash": "8130ecd4075ece48bde35a2d30c25c7be83064ef41cdf32e9856a751a73d26dd",
       "auxiliaryHashes": {
-        "refine-artifacts.md": "10ac7b64a923a4a6c393887a01bf86dc74f8b93c43410f58364365c908ccc4f0"
+        "refine-artifacts.md": "8f23d2c7701876c9f649ae0dd35eb6d69c43eaab9d82d78961fb52471baa22be"
       }
     },
     "define-workflow-spec": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "114a5e12bc23d21068078efe49b8cf2aafb389efbadb39d66399a7ee42a3fa8e",
+      "computedHash": "3c5ae932ada5a881d9f90a36fa6c10ea2a921256c83e0afb4985ef27bba2353b",
       "auxiliaryHashes": {}
     },
     "maintain-infrastructure-observability": {
@@ -148,12 +148,6 @@
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
       "computedHash": "d88c9707474385a000ad62e0c505863a222c6af33199ee270fb2ce7f1145527f",
-      "auxiliaryHashes": {}
-    },
-    "maintain-workflow-goal": {
-      "source": "ZeroZ-lab/unified-skills",
-      "sourceType": "github",
-      "computedHash": "0b9dfeeda205b6b0ff91c829996e94c619e7cae826cbe6547c9477687eed548e",
       "auxiliaryHashes": {}
     },
     "reflect-team-documentation": {
@@ -298,7 +292,7 @@
       "sourceType": "github",
       "computedHash": "25894d4363e1a48afd3f455029f4f5cc33c47f487556bc2fe8d351f26ad24e3d",
       "auxiliaryHashes": {
-        "skill-reference.md": "f6d1874aeb1dd6373c8c9e3b4312d73d3bde81c524b7b6ce82c613f976cb3ff7"
+        "skill-reference.md": "f9fa67a36b865cc152238ba15c948b9bc4354db062d5afd342935a676ff6a403"
       }
     },
     "design-content-direction": {

@@ -41,7 +41,6 @@ Show what Unified Skills can do: available commands, artifact types, workflow st
 | /save | Maintain | 保存工作上下文 | checkpoint 文件 |
 | /restore | Maintain | 恢复之前的工作上下文 | — |
 | /learn | Maintain | 跨 session 学习记录 | learnings.jsonl |
-| /goal | Maintain | 目标生命周期管理 | Codex goal API |
 | /help | — | 显示本概览 | — |
 
 ### 制品类型（artifact_type）

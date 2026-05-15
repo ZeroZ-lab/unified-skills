@@ -17,7 +17,7 @@
 
 ```markdown
 ## Goal Review
-- Source Goal: conversation / `GOAL.md` / Codex `/goal`
+- Source Goal: conversation / `GOAL.md`
 - Goal Status: accepted / needs-refinement / blocked
 - Goal Review Score: <score>/12
 - Blocking:
@@ -95,7 +95,7 @@ artifact_type: software
 Allowed: software / document / article / deck / visual
 
 ## Goal Alignment
-- Source Goal: conversation / `GOAL.md` / Codex `/goal`
+- Source Goal: conversation / `GOAL.md`
 - Goal Status: accepted / needs-refinement / blocked
 - Goal Review Score: <score>/12
 

@@ -76,7 +76,6 @@
         "maintain-team-deprecation-migration",
         "maintain-workflow-context-restore",
         "maintain-workflow-context-save",
-        "maintain-workflow-goal",
         "maintain-workflow-learn",
         "maintain-workflow-using-unified"
       ],
@@ -120,7 +119,6 @@
     "maintain-team-deprecation-migration": "弃用与迁移——管理代码生命周期。当需要移除、替换或迁移已有功能/API",
     "maintain-workflow-context-restore": "恢复保存的工作上下文。当新 session 需要继续之前的工作",
     "maintain-workflow-context-save": "保存工作上下文。当需要保存当前工作状态供后续 session 恢复",
-    "maintain-workflow-goal": "目标生命周期管理。当需要创建、追踪、暂停或完成跨 session 的持久化目标时",
     "maintain-workflow-learn": "跨会话学习记忆。当发现项目模式、踩坑、偏好需要持久化",
     "maintain-workflow-using-unified": "Session 启动引导 — 建立主动技能发现机制。每个 session 开始时必须加载",
     "reflect-team-documentation": "文档工程——记录决策、API、代码约定。当需要写文档、记录架构决策或维护项目知识",
@@ -315,9 +313,6 @@
       ],
       "retro|回顾|复盘|postmortem": [
         "reflect-team-retro"
-      ],
-      "goal|目标|意图|追踪": [
-        "maintain-workflow-goal"
       ],
       "Good Goal|Goal Review|Done When|目标质量|目标验收": [
         "define-workflow-refine",

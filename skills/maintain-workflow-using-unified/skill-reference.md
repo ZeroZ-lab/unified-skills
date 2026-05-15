@@ -70,7 +70,6 @@
 - `maintain-team-deprecation-migration` — 废弃迁移
 - `maintain-workflow-context-save` — 保存工作上下文供后续恢复
 - `maintain-workflow-context-restore` — 新 session 继续之前的工作
-- `maintain-workflow-goal` — 目标生命周期管理
 - `maintain-workflow-learn` — 发现项目模式/踩坑/偏好需要持久化
 - `maintain-workflow-using-unified` — Session 启动引导和主动技能发现
 

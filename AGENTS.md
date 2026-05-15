@@ -98,7 +98,6 @@ reflect/   → retro（回顾）、documentation（文档）
 | `/save` | maintain-workflow-context-save | 工作上下文 checkpoint | `.claude/checkpoints/YYYYMMDD-HHMMSS-{title}.md` |
 | `/restore` | maintain-workflow-context-restore | 恢复上下文 | — |
 | `/learn` | maintain-workflow-learn | 学习记录管理 | `.claude/learnings.jsonl` |
-| `/goal` | maintain-workflow-goal | 目标管理 | Codex goal API |
 | `/brainstorm` | define-cognitive-brainstorm | 2-3 方案 + 推荐 + 不做清单 | `docs/features/YYYYMMDD-<name>/00-brainstorm.md` |
 | `/help` | — | 能力概览 | — |
 

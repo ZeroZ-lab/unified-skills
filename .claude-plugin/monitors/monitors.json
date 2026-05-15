@@ -186,12 +186,6 @@
     "when": "on-skill-invoke:maintain-workflow-context-save"
   },
   {
-    "name": "skill-load-maintain-workflow-goal",
-    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-workflow-goal\"",
-    "description": "🔧 [skill] loaded maintain-workflow-goal",
-    "when": "on-skill-invoke:maintain-workflow-goal"
-  },
-  {
     "name": "skill-load-maintain-workflow-learn",
     "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-workflow-learn\"",
     "description": "🔧 [skill] loaded maintain-workflow-learn",
