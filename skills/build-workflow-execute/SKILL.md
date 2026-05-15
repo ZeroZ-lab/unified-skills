@@ -1,6 +1,7 @@
----
+------
 name: build-workflow-execute
 description: 按计划增量生成软件或内容产物。适用于 plan 已批准、需要开始实现或生成交付物时
+argument-hint: "[artifact-type] [--parallel-safe]"
 ---
 
 # Execute — 增量生成

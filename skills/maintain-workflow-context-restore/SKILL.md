@@ -1,6 +1,7 @@
----
+------
 name: maintain-workflow-context-restore
 description: 恢复保存的工作上下文。当新 session 需要继续之前的工作
+argument-hint: "[--latest | checkpoint-title]"
 ---
 
 # Context Restore — 恢复工作上下文

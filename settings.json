@@ -2,5 +2,35 @@
   "subagentStatusLine": {
     "type": "command",
     "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/subagent-statusline.sh"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "jq -r '\"[\\(.output_style.name // \"Default\")] \\(.context_window.used_percentage // 0)% ctx | \\(.model.display_name // \"?\")\"'",
+    "padding": 2,
+    "refreshInterval": 5,
+    "hideVimModeIndicator": false
+  },
+  "spinnerTipsOverride": {
+    "excludeDefault": true,
+    "tips": [
+      "/refine — 从模糊想法收敛到明确 spec",
+      "/design — 证据驱动的创作设计定稿",
+      "/plan — 把 spec 拆成可执行任务",
+      "/build — 按计划增量生成产物",
+      "/review — 两阶段审查（功能 + 质量）",
+      "/ship — Go/No-Go 发布检查",
+      "/save — 保存工作上下文供后续恢复",
+      "/brainstorm — 结构化脑暴，2-3 方案 + 推荐",
+      "/help — 查看 Unified 全部能力",
+      "CANON 第 5 条：没有验证证据不能声称完成",
+      "CANON 第 3 条：只改该改的，不相关优化只能记录",
+      "/learn — 跨 session 学习记忆管理",
+      "/goal — 目标生命周期管理",
+      "/restore — 恢复之前保存的工作上下文"
+    ]
+  },
+  "spinnerVerbs": {
+    "mode": "append",
+    "verbs": ["Refining", "Designing", "Planning", "Building", "Reviewing", "Shipping", "Restoring", "Specifying"]
   }
 }

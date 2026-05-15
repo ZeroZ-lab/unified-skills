@@ -1,0 +1,14 @@
+[
+  {
+    "name": "deploy-status",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/poll-deploy.sh\"",
+    "description": "Deployment health polling — status, errors, latency",
+    "when": "on-skill-invoke:ship-workflow-ship"
+  },
+  {
+    "name": "error-watcher",
+    "command": "tail -F ./logs/error.log 2>/dev/null || echo ''",
+    "description": "Application error log monitoring",
+    "when": "on-skill-invoke:verify-workflow-debug"
+  }
+]

@@ -1,6 +1,7 @@
----
+------
 name: verify-workflow-review
 description: 按产物类型审查。当软件、文档、文章、PPT 或视觉稿完成后需要质量把关
+argument-hint: "[--full | --focus: spec|code-quality|security|performance]"
 ---
 
 # Review — 产物审查

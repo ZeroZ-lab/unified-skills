@@ -1,0 +1,19 @@
+{
+  "name": "Unified Dark",
+  "base": "dark",
+  "overrides": {
+    "claude": "#a78bfa",
+    "promptBorder": "#a78bfa",
+    "planMode": "#38bdf8",
+    "autoAccept": "#22d3ee",
+    "diffAdded": "#14532d",
+    "diffRemoved": "#7f1d1d",
+    "diffAddedDimmed": "#0f3d1f",
+    "diffRemovedDimmed": "#5f1414",
+    "userMessageBackground": "#1e1b4b",
+    "remember": "#fbbf24",
+    "success": "#4ade80",
+    "warning": "#fbbf24",
+    "error": "#f87171"
+  }
+}

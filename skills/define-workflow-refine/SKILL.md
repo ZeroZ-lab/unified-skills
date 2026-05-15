@@ -1,6 +1,7 @@
----
+------
 name: define-workflow-refine
 description: 从模糊想法变成明确的 spec。当有一个模糊的想法需要结构化收敛
+argument-hint: "[feature-name 或模糊想法]"
 ---
 
 # Refine — 想法收敛

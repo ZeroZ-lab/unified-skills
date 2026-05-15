@@ -1,6 +1,7 @@
----
+------
 name: maintain-workflow-goal
 description: 目标生命周期管理。当需要创建、追踪、暂停或完成跨 session 的持久化目标时
+argument-hint: "[--create | --track | --pause | --complete: goal-name]"
 ---
 
 # Goal — 目标生命周期管理
