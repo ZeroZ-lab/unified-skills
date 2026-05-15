@@ -103,7 +103,7 @@
     "define-cognitive-brainstorm": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "4c0ff722ec494a8f6d69da8ff15205e918958bf85adebe484ebacd57695333d5",
+      "computedHash": "ce89945a437ea919adade640e670c66edee3da855905fab4b64eda26353bb4a1",
       "auxiliaryHashes": {}
     },
     "define-workflow-refine": {
