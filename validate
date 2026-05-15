@@ -510,6 +510,19 @@ else
   [ -x "scripts/generate-index.sh" ] || fail "索引生成脚本不可执行: chmod +x scripts/generate-index.sh"
 fi
 
+# 检查 Claude Code skill-load monitor 脚本
+if [ ! -f "scripts/notify-skill-loaded.sh" ]; then
+  fail "缺少 skill-load 通知脚本: scripts/notify-skill-loaded.sh"
+else
+  [ -x "scripts/notify-skill-loaded.sh" ] || fail "skill-load 通知脚本不可执行: chmod +x scripts/notify-skill-loaded.sh"
+fi
+
+if [ ! -f "scripts/generate-skill-load-monitors.sh" ]; then
+  fail "缺少 skill-load monitor 生成脚本: scripts/generate-skill-load-monitors.sh"
+else
+  [ -x "scripts/generate-skill-load-monitors.sh" ] || fail "skill-load monitor 生成脚本不可执行: chmod +x scripts/generate-skill-load-monitors.sh"
+fi
+
 # 检查测试目录
 if [ ! -d "scripts/tests" ]; then
   fail "缺少脚本测试目录: scripts/tests"
@@ -1006,6 +1019,80 @@ stop_entries = hooks.get("Stop", [])
 if not stop_entries:
     raise SystemExit("Stop hook required for phase-stop")
 PY
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
+printf '\n== 检查 Claude Code skill-load monitors ==\n'
+if [ ! -f ".claude-plugin/monitors/monitors.json" ]; then
+  fail "缺少 .claude-plugin/monitors/monitors.json"
+else
+  python3 <<'PY' || fail "Claude Code skill-load monitors 配置无效"
+import json
+import re
+from pathlib import Path
+
+monitors_path = Path(".claude-plugin/monitors/monitors.json")
+monitors = json.loads(monitors_path.read_text(encoding="utf-8"))
+if not isinstance(monitors, list):
+    raise SystemExit("monitors.json must be a list")
+
+skills = sorted(p.parent.name for p in Path("skills").glob("*/SKILL.md"))
+skill_set = set(skills)
+names = []
+skill_monitors = {}
+errors = []
+
+for monitor in monitors:
+    if not isinstance(monitor, dict):
+        errors.append("monitor entry must be object")
+        continue
+    name = monitor.get("name")
+    when = monitor.get("when")
+    command = monitor.get("command")
+    description = monitor.get("description")
+    if not isinstance(name, str) or not name:
+        errors.append("monitor missing name")
+        continue
+    names.append(name)
+    if name.startswith("skill-load-"):
+        skill = name[len("skill-load-"):]
+        skill_monitors[skill] = monitor
+        expected = {
+            "command": f'bash "${{CLAUDE_PLUGIN_ROOT}}/scripts/notify-skill-loaded.sh" "{skill}"',
+            "description": f"🔧 [skill] loaded {skill}",
+            "when": f"on-skill-invoke:{skill}",
+        }
+        for key, value in expected.items():
+            if monitor.get(key) != value:
+                errors.append(f"{name} has invalid {key}: {monitor.get(key)!r}")
+        if skill not in skill_set:
+            errors.append(f"{name} references missing skill: {skill}")
+
+if len(names) != len(set(names)):
+    errors.append("monitor names must be unique")
+
+missing = sorted(skill_set - set(skill_monitors))
+extra = sorted(set(skill_monitors) - skill_set)
+if missing:
+    errors.append("missing skill-load monitor(s): " + ", ".join(missing))
+if extra:
+    errors.append("extra skill-load monitor(s): " + ", ".join(extra))
+
+business_monitors = {m.get("name") for m in monitors if isinstance(m, dict)}
+for required in ("deploy-status", "error-watcher"):
+    if required not in business_monitors:
+        errors.append(f"missing existing business monitor: {required}")
+
+notify = Path("scripts/notify-skill-loaded.sh")
+if not notify.exists():
+    errors.append("missing scripts/notify-skill-loaded.sh")
+elif "🔧 [skill] loaded" not in notify.read_text(encoding="utf-8"):
+    errors.append("notify script must emit emoji skill-load message")
+
+if errors:
+    raise SystemExit("\n".join(errors))
+PY
+  bash scripts/generate-skill-load-monitors.sh --check || fail "skill-load monitors 未由生成脚本同步"
   [ "$status" -eq 0 ] && printf '通过\n'
 fi
 

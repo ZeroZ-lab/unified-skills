@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.18.1] - 2026-05-15
+
+### Added
+- claude-plugin: add per-skill `on-skill-invoke` monitors that emit `🔧 [skill] loaded <skill-name>` when Claude Code dispatches any bundled skill.
+- automation: add scripts to generate and validate the full skill-load monitor set from the real `skills/` inventory.
+
+### Changed
+- validation: enforce complete skill-load monitor coverage, unique monitor names, emoji notification format, and generator sync.
+
 ## [2.16.3] - 2026-05-13
 
 ### Changed

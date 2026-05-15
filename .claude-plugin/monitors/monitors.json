@@ -10,5 +10,329 @@
     "command": "tail -F ./logs/error.log 2>/dev/null || echo ''",
     "description": "Application error log monitoring",
     "when": "on-skill-invoke:verify-workflow-debug"
+  },
+  {
+    "name": "skill-load-build-backend-api-design",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-backend-api-design\"",
+    "description": "🔧 [skill] loaded build-backend-api-design",
+    "when": "on-skill-invoke:build-backend-api-design"
+  },
+  {
+    "name": "skill-load-build-backend-database",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-backend-database\"",
+    "description": "🔧 [skill] loaded build-backend-database",
+    "when": "on-skill-invoke:build-backend-database"
+  },
+  {
+    "name": "skill-load-build-backend-service-patterns",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-backend-service-patterns\"",
+    "description": "🔧 [skill] loaded build-backend-service-patterns",
+    "when": "on-skill-invoke:build-backend-service-patterns"
+  },
+  {
+    "name": "skill-load-build-cognitive-context",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-cognitive-context\"",
+    "description": "🔧 [skill] loaded build-cognitive-context",
+    "when": "on-skill-invoke:build-cognitive-context"
+  },
+  {
+    "name": "skill-load-build-cognitive-decision-record",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-cognitive-decision-record\"",
+    "description": "🔧 [skill] loaded build-cognitive-decision-record",
+    "when": "on-skill-invoke:build-cognitive-decision-record"
+  },
+  {
+    "name": "skill-load-build-cognitive-execution-engine",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-cognitive-execution-engine\"",
+    "description": "🔧 [skill] loaded build-cognitive-execution-engine",
+    "when": "on-skill-invoke:build-cognitive-execution-engine"
+  },
+  {
+    "name": "skill-load-build-cognitive-source-driven",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-cognitive-source-driven\"",
+    "description": "🔧 [skill] loaded build-cognitive-source-driven",
+    "when": "on-skill-invoke:build-cognitive-source-driven"
+  },
+  {
+    "name": "skill-load-build-content-layout",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-content-layout\"",
+    "description": "🔧 [skill] loaded build-content-layout",
+    "when": "on-skill-invoke:build-content-layout"
+  },
+  {
+    "name": "skill-load-build-content-writing",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-content-writing\"",
+    "description": "🔧 [skill] loaded build-content-writing",
+    "when": "on-skill-invoke:build-content-writing"
+  },
+  {
+    "name": "skill-load-build-frontend-browser-testing",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-frontend-browser-testing\"",
+    "description": "🔧 [skill] loaded build-frontend-browser-testing",
+    "when": "on-skill-invoke:build-frontend-browser-testing"
+  },
+  {
+    "name": "skill-load-build-frontend-ui-engineering",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-frontend-ui-engineering\"",
+    "description": "🔧 [skill] loaded build-frontend-ui-engineering",
+    "when": "on-skill-invoke:build-frontend-ui-engineering"
+  },
+  {
+    "name": "skill-load-build-infrastructure-git",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-infrastructure-git\"",
+    "description": "🔧 [skill] loaded build-infrastructure-git",
+    "when": "on-skill-invoke:build-infrastructure-git"
+  },
+  {
+    "name": "skill-load-build-quality-tdd",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-quality-tdd\"",
+    "description": "🔧 [skill] loaded build-quality-tdd",
+    "when": "on-skill-invoke:build-quality-tdd"
+  },
+  {
+    "name": "skill-load-build-workflow-execute",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-workflow-execute\"",
+    "description": "🔧 [skill] loaded build-workflow-execute",
+    "when": "on-skill-invoke:build-workflow-execute"
+  },
+  {
+    "name": "skill-load-build-workflow-plan",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"build-workflow-plan\"",
+    "description": "🔧 [skill] loaded build-workflow-plan",
+    "when": "on-skill-invoke:build-workflow-plan"
+  },
+  {
+    "name": "skill-load-define-cognitive-brainstorm",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"define-cognitive-brainstorm\"",
+    "description": "🔧 [skill] loaded define-cognitive-brainstorm",
+    "when": "on-skill-invoke:define-cognitive-brainstorm"
+  },
+  {
+    "name": "skill-load-define-workflow-refine",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"define-workflow-refine\"",
+    "description": "🔧 [skill] loaded define-workflow-refine",
+    "when": "on-skill-invoke:define-workflow-refine"
+  },
+  {
+    "name": "skill-load-define-workflow-spec",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"define-workflow-spec\"",
+    "description": "🔧 [skill] loaded define-workflow-spec",
+    "when": "on-skill-invoke:define-workflow-spec"
+  },
+  {
+    "name": "skill-load-design-content-direction",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"design-content-direction\"",
+    "description": "🔧 [skill] loaded design-content-direction",
+    "when": "on-skill-invoke:design-content-direction"
+  },
+  {
+    "name": "skill-load-design-content-layout",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"design-content-layout\"",
+    "description": "🔧 [skill] loaded design-content-layout",
+    "when": "on-skill-invoke:design-content-layout"
+  },
+  {
+    "name": "skill-load-design-content-script",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"design-content-script\"",
+    "description": "🔧 [skill] loaded design-content-script",
+    "when": "on-skill-invoke:design-content-script"
+  },
+  {
+    "name": "skill-load-design-experience-interaction",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"design-experience-interaction\"",
+    "description": "🔧 [skill] loaded design-experience-interaction",
+    "when": "on-skill-invoke:design-experience-interaction"
+  },
+  {
+    "name": "skill-load-design-interactive-preview",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"design-interactive-preview\"",
+    "description": "🔧 [skill] loaded design-interactive-preview",
+    "when": "on-skill-invoke:design-interactive-preview"
+  },
+  {
+    "name": "skill-load-design-visual-direction",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"design-visual-direction\"",
+    "description": "🔧 [skill] loaded design-visual-direction",
+    "when": "on-skill-invoke:design-visual-direction"
+  },
+  {
+    "name": "skill-load-design-workflow-design",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"design-workflow-design\"",
+    "description": "🔧 [skill] loaded design-workflow-design",
+    "when": "on-skill-invoke:design-workflow-design"
+  },
+  {
+    "name": "skill-load-maintain-infrastructure-observability",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-infrastructure-observability\"",
+    "description": "🔧 [skill] loaded maintain-infrastructure-observability",
+    "when": "on-skill-invoke:maintain-infrastructure-observability"
+  },
+  {
+    "name": "skill-load-maintain-team-deprecation-migration",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-team-deprecation-migration\"",
+    "description": "🔧 [skill] loaded maintain-team-deprecation-migration",
+    "when": "on-skill-invoke:maintain-team-deprecation-migration"
+  },
+  {
+    "name": "skill-load-maintain-workflow-context-restore",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-workflow-context-restore\"",
+    "description": "🔧 [skill] loaded maintain-workflow-context-restore",
+    "when": "on-skill-invoke:maintain-workflow-context-restore"
+  },
+  {
+    "name": "skill-load-maintain-workflow-context-save",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-workflow-context-save\"",
+    "description": "🔧 [skill] loaded maintain-workflow-context-save",
+    "when": "on-skill-invoke:maintain-workflow-context-save"
+  },
+  {
+    "name": "skill-load-maintain-workflow-goal",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-workflow-goal\"",
+    "description": "🔧 [skill] loaded maintain-workflow-goal",
+    "when": "on-skill-invoke:maintain-workflow-goal"
+  },
+  {
+    "name": "skill-load-maintain-workflow-learn",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-workflow-learn\"",
+    "description": "🔧 [skill] loaded maintain-workflow-learn",
+    "when": "on-skill-invoke:maintain-workflow-learn"
+  },
+  {
+    "name": "skill-load-maintain-workflow-using-unified",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"maintain-workflow-using-unified\"",
+    "description": "🔧 [skill] loaded maintain-workflow-using-unified",
+    "when": "on-skill-invoke:maintain-workflow-using-unified"
+  },
+  {
+    "name": "skill-load-reflect-team-documentation",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"reflect-team-documentation\"",
+    "description": "🔧 [skill] loaded reflect-team-documentation",
+    "when": "on-skill-invoke:reflect-team-documentation"
+  },
+  {
+    "name": "skill-load-reflect-team-retro",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"reflect-team-retro\"",
+    "description": "🔧 [skill] loaded reflect-team-retro",
+    "when": "on-skill-invoke:reflect-team-retro"
+  },
+  {
+    "name": "skill-load-ship-artifact-export",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"ship-artifact-export\"",
+    "description": "🔧 [skill] loaded ship-artifact-export",
+    "when": "on-skill-invoke:ship-artifact-export"
+  },
+  {
+    "name": "skill-load-ship-infrastructure-ci-cd",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"ship-infrastructure-ci-cd\"",
+    "description": "🔧 [skill] loaded ship-infrastructure-ci-cd",
+    "when": "on-skill-invoke:ship-infrastructure-ci-cd"
+  },
+  {
+    "name": "skill-load-ship-infrastructure-deploy",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"ship-infrastructure-deploy\"",
+    "description": "🔧 [skill] loaded ship-infrastructure-deploy",
+    "when": "on-skill-invoke:ship-infrastructure-deploy"
+  },
+  {
+    "name": "skill-load-ship-workflow-canary",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"ship-workflow-canary\"",
+    "description": "🔧 [skill] loaded ship-workflow-canary",
+    "when": "on-skill-invoke:ship-workflow-canary"
+  },
+  {
+    "name": "skill-load-ship-workflow-doc-sync",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"ship-workflow-doc-sync\"",
+    "description": "🔧 [skill] loaded ship-workflow-doc-sync",
+    "when": "on-skill-invoke:ship-workflow-doc-sync"
+  },
+  {
+    "name": "skill-load-ship-workflow-land",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"ship-workflow-land\"",
+    "description": "🔧 [skill] loaded ship-workflow-land",
+    "when": "on-skill-invoke:ship-workflow-land"
+  },
+  {
+    "name": "skill-load-ship-workflow-ship",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"ship-workflow-ship\"",
+    "description": "🔧 [skill] loaded ship-workflow-ship",
+    "when": "on-skill-invoke:ship-workflow-ship"
+  },
+  {
+    "name": "skill-load-verify-content-review",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-content-review\"",
+    "description": "🔧 [skill] loaded verify-content-review",
+    "when": "on-skill-invoke:verify-content-review"
+  },
+  {
+    "name": "skill-load-verify-frontend-accessibility",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-frontend-accessibility\"",
+    "description": "🔧 [skill] loaded verify-frontend-accessibility",
+    "when": "on-skill-invoke:verify-frontend-accessibility"
+  },
+  {
+    "name": "skill-load-verify-quality-code-quality",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-quality-code-quality\"",
+    "description": "🔧 [skill] loaded verify-quality-code-quality",
+    "when": "on-skill-invoke:verify-quality-code-quality"
+  },
+  {
+    "name": "skill-load-verify-quality-integration-testing",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-quality-integration-testing\"",
+    "description": "🔧 [skill] loaded verify-quality-integration-testing",
+    "when": "on-skill-invoke:verify-quality-integration-testing"
+  },
+  {
+    "name": "skill-load-verify-quality-performance",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-quality-performance\"",
+    "description": "🔧 [skill] loaded verify-quality-performance",
+    "when": "on-skill-invoke:verify-quality-performance"
+  },
+  {
+    "name": "skill-load-verify-quality-security",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-quality-security\"",
+    "description": "🔧 [skill] loaded verify-quality-security",
+    "when": "on-skill-invoke:verify-quality-security"
+  },
+  {
+    "name": "skill-load-verify-quality-simplify",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-quality-simplify\"",
+    "description": "🔧 [skill] loaded verify-quality-simplify",
+    "when": "on-skill-invoke:verify-quality-simplify"
+  },
+  {
+    "name": "skill-load-verify-team-code-review-standards",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-team-code-review-standards\"",
+    "description": "🔧 [skill] loaded verify-team-code-review-standards",
+    "when": "on-skill-invoke:verify-team-code-review-standards"
+  },
+  {
+    "name": "skill-load-verify-visual-review",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-visual-review\"",
+    "description": "🔧 [skill] loaded verify-visual-review",
+    "when": "on-skill-invoke:verify-visual-review"
+  },
+  {
+    "name": "skill-load-verify-workflow-debug",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-workflow-debug\"",
+    "description": "🔧 [skill] loaded verify-workflow-debug",
+    "when": "on-skill-invoke:verify-workflow-debug"
+  },
+  {
+    "name": "skill-load-verify-workflow-receiving-review",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-workflow-receiving-review\"",
+    "description": "🔧 [skill] loaded verify-workflow-receiving-review",
+    "when": "on-skill-invoke:verify-workflow-receiving-review"
+  },
+  {
+    "name": "skill-load-verify-workflow-review",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-workflow-review\"",
+    "description": "🔧 [skill] loaded verify-workflow-review",
+    "when": "on-skill-invoke:verify-workflow-review"
+  },
+  {
+    "name": "skill-load-verify-workflow-spec-compliance",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-workflow-spec-compliance\"",
+    "description": "🔧 [skill] loaded verify-workflow-spec-compliance",
+    "when": "on-skill-invoke:verify-workflow-spec-compliance"
   }
 ]
