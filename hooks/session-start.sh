@@ -42,14 +42,10 @@ Context Runtime:
 - 修改技能前读完整技能和 CANON.md；修改后同步 skills-index.json / skills-lock.json，并运行 ./validate。
 - 保留 hard gates、Iron Laws、human partner 措辞、AGENTS 单入口和真实 skills/ 树。
 
-$platform_hint"
+$platform_hint
 
-# Show visible prompt to user
-if [ "$is_codex" -eq 1 ]; then
-  echo "⚡ Unified Skills 已加载（Codex 模式）— AGENTS.md + skills-router.json 就绪"
-else
-  echo "⚡ Unified Skills 已加载 — 使用 /refine /design /plan /build /review /ship 进入工作流"
-fi
+每次新 session 启动时，必须在首次回复的开头用一行显示加载提示：
+⚡ Unified Skills 已加载 — 使用 /help 查看命令，或直接说需求开始工作。"
 
 # Output in format compatible with both Claude Code and Codex
 escaped=$(printf '%s' "$full_message" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))')
