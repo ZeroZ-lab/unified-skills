@@ -66,9 +66,10 @@ if [ "$has_unsaved" = "no" ] || [ "$has_unsaved" = "already_saved" ]; then
   exit 0
 fi
 
-# There is unsaved work — emit reminder
+# There is unsaved work — emit systemMessage reminder
+# Stop hooks support: systemMessage, decision, reason, continue, suppressOutput, stopReason
+# NOT hookSpecificOutput.additionalContext (that's only for PreToolUse/UserPromptSubmit/PostToolUse)
 message="[reminder] 本 session 有可保存的工作上下文，建议 /save 后再离开"
 
-# Output in hookSpecificOutput.additionalContext format
 escaped=$(printf '%s' "$message" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))')
-printf '{"hookSpecificOutput":{"hookEventName":"Stop","additionalContext":%s}}\n' "$escaped"
+printf '{"systemMessage":%s}\n' "$escaped"
