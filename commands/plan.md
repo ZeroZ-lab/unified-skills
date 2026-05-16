@@ -1,5 +1,5 @@
 ---
-description: 从已批准 spec + design 到详细任务分解 + 按风险升级的计划审查
+description: 从已批准 spec + design 到详细任务分解 + 按风险升级的计划审查。当 spec 和 design 已定稿需要拆任务，或提到"计划""任务拆分""排期"
 ---
 
 # Command: /plan

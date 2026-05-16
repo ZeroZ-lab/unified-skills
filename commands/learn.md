@@ -1,5 +1,5 @@
 ---
-description: 跨 session 学习记录管理
+description: 跨 session 学习记录管理。当需要查看、添加或清除学习记录，或提到"学习""记忆""记住""learn"
 ---
 
 # Command: /learn

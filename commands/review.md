@@ -1,5 +1,5 @@
 ---
-description: 两阶段审查（Spec Compliance → Code Quality）+ 按风险升级的专业审查
+description: 两阶段审查（Spec Compliance → Code Quality）+ 按风险升级的专业审查。当代码或内容完成后需要质量把关，或提到"审查""review""质量检查"
 ---
 
 # Command: /review

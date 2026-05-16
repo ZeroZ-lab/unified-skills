@@ -1,5 +1,5 @@
 ---
-description: 按计划增量生成产物（软件 TDD / 内容 / 视觉）+ ADR
+description: 按计划增量生成产物（软件 TDD / 内容 / 视觉）+ ADR。当 plan 已批准需要开始实现，或提到"实现""编码""构建"
 ---
 
 # Command: /build

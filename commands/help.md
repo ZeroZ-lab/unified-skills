@@ -1,5 +1,5 @@
 ---
-description: 显示 Unified Skills 能力概览——命令、制品类型、工作流阶段
+description: 显示 Unified Skills 能力概览——命令、制品类型、工作流阶段。当需要了解 Unified 支持什么，或提到"帮助""help""命令列表"
 ---
 
 # Command: /help

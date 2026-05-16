@@ -1,5 +1,5 @@
 ---
-description: 恢复之前保存的工作上下文
+description: 恢复之前保存的工作上下文。当新 session 需要继续之前的工作，或提到"恢复""restore""继续上次"
 ---
 
 # Command: /restore

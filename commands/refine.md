@@ -1,5 +1,5 @@
 ---
-description: 需求提炼 + External Scan + 按风险升级的 Idea Scout 审查
+description: 需求提炼 + External Scan + 按风险升级的 Idea Scout 审查。当有一个模糊想法需要结构化收敛为 spec，或提到"提炼""收敛""需求""spec"
 ---
 
 # Command: /refine
