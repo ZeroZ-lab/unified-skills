@@ -76,7 +76,7 @@ verify/    → review（审查）、spec-compliance（功能完整性）、code-
              accessibility（无障碍）、integration-testing（集成测试）、
              performance（性能）、security（安全）、code-review-standards（审查标准）、
              content-review（内容审查）、visual-review（视觉审查）、
-             receiving-review（接收审查反馈）、simplify（代码简化）
+             skill-quality（Skill 质量审查）、receiving-review（接收审查反馈）、simplify（代码简化）
 ship/      → ship（发布）、ci-cd（持续集成部署）、deploy（部署）、artifact-export（产物导出）、
              canary（金丝雀监控）、land（合并部署）、doc-sync（文档同步）
 maintain/  → observability（可观测性）、deprecation-migration（废弃迁移）、

@@ -50,6 +50,7 @@
         "verify-quality-security",
         "verify-quality-simplify",
         "verify-team-code-review-standards",
+        "verify-team-skill-quality",
         "verify-visual-review",
         "verify-workflow-debug",
         "verify-workflow-receiving-review",
@@ -138,6 +139,7 @@
     "verify-quality-security": "安全加固——假设每个外部输入是敌意的。当涉及用户输入、认证、数据存储、上线前审查，或提到\"XSS\"\"SQL注入\"\"CSRF\"\"OWASP\"",
     "verify-quality-simplify": "系统性代码简化。当代码变得复杂、重复、过度抽象需要简化，或提到\"简化\"\"重构\"\"太复杂\"\"重复代码\"",
     "verify-team-code-review-standards": "代码审查标准——五轴审查体系。当需要审查代码或定义审查基准，或提到\"code review\"\"审查标准\"\"CR\"",
+    "verify-team-skill-quality": "Skill 质量审查与优化。当创建、修改、审查或压缩 Agent Skill、SKILL.md、技能 description、触发边界、STOP 条件、输出契约、progressive disclosure、trigger eval 或 task eval 时使用；不用于普通业务文档或仅消费现有技能的任务",
     "verify-visual-review": "视觉质量审查。适用于 artifact_type 为 visual，当需要检查视觉层级、对齐、留白、一致性、可读性，或提到\"视觉审查\"\"设计稿\"\"视觉走查\"",
     "verify-workflow-debug": "系统化根因调试——先建反馈循环再假设。当遇到 bug、测试失败、意外行为，或提到\"调试\"\"debug\"\"为什么不工作\"\"crash\"",
     "verify-workflow-receiving-review": "接收审查反馈。当收到代码审查反馈需要评估和实施，或提到\"审查反馈\"\"PR comment\"\"修改意见\"",
@@ -317,6 +319,9 @@
       "Good Goal|Goal Review|Done When|目标质量|目标验收": [
         "define-workflow-refine",
         "define-workflow-spec"
+      ],
+      "Agent Skills|SKILL\\.md|Skill 优化|技能优化|skill description|技能 description|trigger eval|task eval": [
+        "verify-team-skill-quality"
       ]
     },
     "context_signals": {

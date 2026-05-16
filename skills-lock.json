@@ -255,6 +255,12 @@
       "computedHash": "1b5077354b425a815708b002e62af3b5e4f27b06c03fb21210f1304bffa919d7",
       "auxiliaryHashes": {}
     },
+    "verify-team-skill-quality": {
+      "source": "ZeroZ-lab/unified-skills",
+      "sourceType": "github",
+      "computedHash": "09fb467a6d77e24bf0d1f239ea67e9aabf34cae8e3c75a0baafaa3437409fbd1",
+      "auxiliaryHashes": {}
+    },
     "verify-visual-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
@@ -292,7 +298,7 @@
       "sourceType": "github",
       "computedHash": "b84e3adeedb646e8ed235308dd6934e1d803eba7d54cc1498e3a0dd1ce04f198",
       "auxiliaryHashes": {
-        "skill-reference.md": "f9fa67a36b865cc152238ba15c948b9bc4354db062d5afd342935a676ff6a403"
+        "skill-reference.md": "fb1101935ebf74095226c452c13ca5033ddceb8a6b060d60150c582f3e64ef17"
       }
     },
     "design-content-direction": {

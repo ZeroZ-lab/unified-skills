@@ -49,6 +49,7 @@
 - `verify-quality-performance` — 性能不达标或上线前审查
 - `verify-quality-security` — 涉及用户输入/认证/数据存储
 - `verify-team-code-review-standards` — 代码审查标准
+- `verify-team-skill-quality` — 创建/修改/审查 Agent Skill 或 `SKILL.md`
 - `verify-content-review` — 内容审查
 - `verify-visual-review` — 视觉审查
 - `verify-workflow-receiving-review` — 接收审查反馈

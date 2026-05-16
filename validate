@@ -527,6 +527,7 @@ for file in \
   skills/ship-workflow-land/SKILL.md \
   skills/verify-content-review/SKILL.md \
   skills/verify-quality-simplify/SKILL.md \
+  skills/verify-team-skill-quality/SKILL.md \
   skills/verify-team-code-review-standards/SKILL.md \
   skills/verify-visual-review/SKILL.md \
   skills/verify-workflow-receiving-review/SKILL.md \
@@ -536,6 +537,52 @@ for file in \
 do
   sgrep '^## Iron Law' "$file" || fail "缺少 Iron Law: $file"
 done
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查 Agent Skill 质量合同 ==\n'
+python3 <<'PY' || fail "Agent Skill 质量合同不完整"
+import json
+from pathlib import Path
+
+skill_path = Path("skills/verify-team-skill-quality/SKILL.md")
+index_path = Path("skills-index.json")
+errors = []
+
+if not skill_path.exists():
+    errors.append("missing skills/verify-team-skill-quality/SKILL.md")
+else:
+    text = skill_path.read_text(encoding="utf-8")
+    required_phrases = [
+        "什么时候触发",
+        "触发后怎么做",
+        "什么时候停止",
+        "如何判断做对",
+        "description",
+        "near-miss",
+        "Progressive Disclosure",
+        "STOP 条件",
+        "输出契约",
+        "Done When",
+        "Trigger Eval",
+        "Task Eval",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            errors.append(f"verify-team-skill-quality missing phrase: {phrase}")
+
+if index_path.exists():
+    index = json.loads(index_path.read_text(encoding="utf-8"))
+    triggers = index.get("by_trigger", {}).get("user_says", {})
+    if not any("verify-team-skill-quality" in skills for skills in triggers.values()):
+        errors.append("skills-index.json missing trigger route for verify-team-skill-quality")
+    if "verify-team-skill-quality" not in index.get("skill_descriptions", {}):
+        errors.append("skills-index.json skill_descriptions missing verify-team-skill-quality")
+else:
+    errors.append("missing skills-index.json")
+
+if errors:
+    raise SystemExit("\n".join(errors))
+PY
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查 HARD-GATE 覆盖 ==\n'
@@ -553,6 +600,7 @@ for file in \
   skills/ship-workflow-land/SKILL.md \
   skills/verify-content-review/SKILL.md \
   skills/verify-quality-simplify/SKILL.md \
+  skills/verify-team-skill-quality/SKILL.md \
   skills/verify-team-code-review-standards/SKILL.md \
   skills/verify-visual-review/SKILL.md \
   skills/verify-workflow-receiving-review/SKILL.md \

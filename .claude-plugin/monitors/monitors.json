@@ -300,6 +300,12 @@
     "when": "on-skill-invoke:verify-team-code-review-standards"
   },
   {
+    "name": "skill-load-verify-team-skill-quality",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-team-skill-quality\"",
+    "description": "🔧 [skill] loaded verify-team-skill-quality",
+    "when": "on-skill-invoke:verify-team-skill-quality"
+  },
+  {
     "name": "skill-load-verify-visual-review",
     "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/notify-skill-loaded.sh\" \"verify-visual-review\"",
     "description": "🔧 [skill] loaded verify-visual-review",

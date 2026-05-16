@@ -80,15 +80,21 @@ lock = json.load(open(lock_path, encoding="utf-8"))
 skills = lock.get("skills", {})
 
 if skill_name not in skills:
-    print(f"ERROR: Skill '{skill_name}' not found in skills-lock.json", file=sys.stderr)
-    sys.exit(1)
+    skills[skill_name] = {
+        "source": "ZeroZ-lab/unified-skills",
+        "sourceType": "github",
+        "computedHash": "",
+        "auxiliaryHashes": {},
+    }
+    print(f"Skill: {skill_name} (new)")
 
 entry = skills[skill_name]
 
 # Print old hashes for reference
 old_hash = entry.get("computedHash", "none")
 old_aux = entry.get("auxiliaryHashes", {})
-print(f"Skill: {skill_name}")
+if old_hash:
+    print(f"Skill: {skill_name}")
 print(f"  computedHash: {old_hash} -> {new_hash}")
 for k, v in json.loads(aux_json).items():
     old_v = old_aux.get(k, "none")
