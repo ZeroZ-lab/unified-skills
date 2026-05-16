@@ -1,6 +1,6 @@
 ---
 name: design-interactive-preview
-description: 交互式视觉对比——生成自包含 HTML 页面并通过本地 HTTP 服务在浏览器中并排展示多个设计方向，让用户直观选择
+description: 交互式视觉对比——在浏览器中并排展示设计方向。当需要对比多个设计方向，或提到"预览""mockup""设计对比""preview"
 ---
 
 # Design Interactive Preview — 交互式视觉对比

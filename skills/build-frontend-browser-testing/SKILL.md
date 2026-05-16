@@ -1,6 +1,6 @@
 ---
 name: build-frontend-browser-testing
-description: 浏览器测试验证——在真实浏览器中验证前端行为。当前端变更需要运行时验证、UI bug 调查或截图对照
+description: 浏览器测试验证——在真实浏览器中验证前端行为。当前端变更需要运行时验证、UI bug 调查或截图对照，或提到"浏览器测试""E2E""Playwright"
 ---
 
 # Browser Testing — 浏览器测试验证

@@ -1,6 +1,6 @@
 ---
 name: build-cognitive-context
-description: 上下文工程——最大化 agent 输出质量。当开始新任务、上下文混乱或 agent 输出质量下降
+description: 上下文工程——最大化 agent 输出质量。当开始新任务、上下文混乱或 agent 输出质量下降，或提到"上下文""context window""注意力"
 ---
 
 # Context — 上下文工程

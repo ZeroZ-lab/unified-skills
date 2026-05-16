@@ -1,6 +1,6 @@
 ---
 name: verify-team-code-review-standards
-description: 代码审查标准——五轴审查体系 + 变更大小阈值 + 严重性分类。当需要审查代码或定义审查基准
+description: 代码审查标准——五轴审查体系。当需要审查代码或定义审查基准，或提到"code review""审查标准""CR"
 ---
 
 # Code Review Standards — 代码审查标准

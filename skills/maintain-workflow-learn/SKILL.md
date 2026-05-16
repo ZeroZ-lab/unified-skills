@@ -1,6 +1,6 @@
 ------
 name: maintain-workflow-learn
-description: 跨会话学习记忆。当发现项目模式、踩坑、偏好需要持久化
+description: 跨会话学习记忆。当发现项目模式、踩坑经验、偏好需要持久化，或提到"学习""记忆""记住""下次注意"
 argument-hint: "[--list | --add: insight | --clear]"
 ---
 

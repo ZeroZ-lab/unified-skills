@@ -1,6 +1,6 @@
 ---
 name: reflect-team-retro
-description: 事后回顾——提取经验和改进行动。当功能完成、里程碑达成、事故处理后需要系统性复盘
+description: 事后回顾——提取经验和改进行动。当功能完成、里程碑达成、事故处理后需要系统性复盘，或提到"回顾""复盘""retro""postmortem"
 ---
 
 # Retro — 事后回顾

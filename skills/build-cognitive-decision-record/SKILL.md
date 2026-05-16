@@ -1,6 +1,6 @@
 ---
 name: build-cognitive-decision-record
-description: 架构决策记录。当面临技术选型、架构决策或方案取舍需要记录
+description: 架构决策记录（ADR）。当面临技术选型、架构决策、方案取舍需要记录，或提到"ADR""决策记录""为什么这样做"
 ---
 
 # Decision Record — 架构决策记录 (ADR)

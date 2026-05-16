@@ -1,6 +1,6 @@
 ---
 name: verify-workflow-receiving-review
-description: 接收审查反馈。当收到代码审查反馈需要评估和实施
+description: 接收审查反馈。当收到代码审查反馈需要评估和实施，或提到"审查反馈""PR comment""修改意见"
 ---
 
 # Receiving Review — 接收审查反馈

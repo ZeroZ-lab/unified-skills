@@ -1,6 +1,6 @@
 ---
 name: verify-quality-performance
-description: 性能优化——先测量、再优化、只优化测量证明有问题的。当性能不达标、慢页面调查或上线前性能审查
+description: 性能优化——先测量、再优化、只优化测量证实的瓶颈。当性能不达标、慢页面调查或上线前性能审查，或提到"性能""慢""latency""优化"
 ---
 
 # Performance — 性能优化

@@ -1,6 +1,6 @@
 ---
 name: ship-artifact-export
-description: 非软件产物导出与交付。适用于 artifact_type 为 document、article、deck、visual，或需要导出 PDF/DOCX/PPTX/PNG/SVG 并记录验证证据时
+description: 非软件产物导出与交付。适用于 artifact_type 为 document/article/deck/visual，当需要导出 PDF/DOCX/PPTX/PNG，或提到"导出""交付""PDF""PPTX"
 ---
 
 # Artifact Export — 产物导出

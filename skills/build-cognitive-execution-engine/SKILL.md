@@ -1,6 +1,6 @@
 ---
 name: build-cognitive-execution-engine
-description: 任务执行引擎——选择正确的执行模式。适用于 build-workflow-plan 完成后需要写代码
+description: 任务执行引擎——选择正确的执行模式。当 plan 已批准需要写代码，或提到"执行""实现""编码"
 ---
 
 # 执行引擎 — 3 种执行模式

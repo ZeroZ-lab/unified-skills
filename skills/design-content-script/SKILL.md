@@ -1,6 +1,6 @@
 ---
 name: design-content-script
-description: 剧本设计——叙事骨架、段落消息线、讲述顺序和节奏
+description: 剧本设计——叙事骨架、段落消息线、讲述节奏。当需要设计文章或演示的叙事结构，或提到"剧本""叙事""storyline""大纲"
 ---
 
 # Script Design — 剧本设计

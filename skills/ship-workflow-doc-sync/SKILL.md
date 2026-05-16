@@ -1,6 +1,6 @@
 ---
 name: ship-workflow-doc-sync
-description: 发布后文档同步。当代码已合并需要同步更新项目文档
+description: 发布后文档同步。当代码已合并需要同步更新项目文档，或提到"文档同步""CHANGELOG""README 更新"
 ---
 
 # Doc Sync — 发布后文档同步

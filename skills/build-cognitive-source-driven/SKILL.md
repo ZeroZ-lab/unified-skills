@@ -1,6 +1,6 @@
 ---
 name: build-cognitive-source-driven
-description: 源码驱动开发——每个框架决策由官方文档背书。当使用不熟悉的 API、引入新依赖或不确定方法签名
+description: 源码驱动开发——每个框架决策由官方文档背书。当使用不熟悉的 API、引入新依赖或不确定方法签名，或提到"文档""官方""API reference"
 ---
 
 # Source-Driven — 源码驱动开发

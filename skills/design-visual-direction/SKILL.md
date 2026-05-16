@@ -1,6 +1,6 @@
 ---
 name: design-visual-direction
-description: 视觉设计——风格、层级、色彩、组件视觉规则
+description: 视觉设计——风格、层级、色彩、组件视觉规则。当需要定义视觉风格或组件视觉规范，或提到"视觉""色彩""风格""visual"
 ---
 
 # Visual Direction — 视觉方向

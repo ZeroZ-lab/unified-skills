@@ -1,6 +1,6 @@
 ---
 name: define-workflow-spec
-description: 从 refine 产出到结构化 spec。适用于 refine 完成后需要编写正式 spec
+description: 从 refine 产出到结构化 spec。当 refine 完成后需要编写正式 spec，或提到"规格""spec""需求文档"
 ---
 
 # Spec — 规范编写

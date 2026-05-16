@@ -1,6 +1,6 @@
 ---
 name: build-frontend-ui-engineering
-description: 前端 UI 工程——构建可生产、可访问、视觉精良的用户界面。当需要构建或修改用户界面组件
+description: 前端 UI 工程——构建可访问、视觉精良的用户界面。当需要构建或修改 UI 组件、页面布局，或提到"组件""页面""前端""UI"
 ---
 
 # UI Engineering — 前端界面工程

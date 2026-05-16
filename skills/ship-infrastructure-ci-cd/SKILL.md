@@ -1,6 +1,6 @@
 ---
 name: ship-infrastructure-ci-cd
-description: CI/CD 管道——自动化质量门和部署流水线。当需要设置或修改 CI/CD 管道、构建流程或自动化部署
+description: CI/CD 管道——自动化质量门和部署流水线。当需要设置或修改 CI/CD、构建流程，或提到"CI""CD""pipeline""GitHub Actions"
 ---
 
 # CI/CD — 持续集成与持续部署

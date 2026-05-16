@@ -1,6 +1,6 @@
 ---
 name: design-content-layout
-description: 排版设计——版式系统、构图、页面层级、媒介适配
+description: 排版设计——版式系统、构图、页面层级、媒介适配。当需要设计文档或页面的视觉布局，或提到"排版""布局""layout""网格"
 ---
 
 # Layout Design — 排版设计

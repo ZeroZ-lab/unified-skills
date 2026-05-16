@@ -1,6 +1,6 @@
 ---
 name: verify-workflow-spec-compliance
-description: 功能完整性审查。当需要验证代码是否实现了 spec 的所有需求
+description: 功能完整性审查。当需要验证代码是否实现了 spec 的所有需求，或提到"spec compliance""功能完整性""需求覆盖"
 ---
 
 # Spec Compliance — 功能完整性审查

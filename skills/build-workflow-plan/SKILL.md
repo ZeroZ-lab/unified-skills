@@ -1,6 +1,6 @@
 ------
 name: build-workflow-plan
-description: 把 spec 拆成可执行的任务。适用于 spec 已批准、需要拆成可执行任务时
+description: 把 spec 拆成可执行的任务。当 spec 已批准需要拆分任务，或提到"计划""任务拆分""排期"
 argument-hint: "[--parallel-safe | --sequential]"
 ---
 

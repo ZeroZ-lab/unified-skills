@@ -1,6 +1,6 @@
 ---
 name: maintain-team-deprecation-migration
-description: 弃用与迁移——管理代码生命周期。当需要移除、替换或迁移已有功能/API
+description: 弃用与迁移——管理代码生命周期。当需要移除、替换或迁移已有功能/API，或提到"弃用""迁移""deprecation""breaking change"
 ---
 
 # Deprecation & Migration — 弃用与迁移

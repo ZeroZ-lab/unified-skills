@@ -1,6 +1,6 @@
 ---
 name: build-quality-tdd
-description: 测试驱动开发。当需要写逻辑代码、修 bug 或改变任何行为
+description: 红-绿-重构循环的测试驱动开发。当需要写逻辑代码、修 bug、改变行为，或提到"TDD""测试先行""red-green"
 ---
 
 # TDD — 测试驱动开发

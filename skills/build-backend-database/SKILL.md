@@ -1,6 +1,6 @@
 ---
 name: build-backend-database
-description: 数据库工程——迁移、查询优化、数据完整性。当需要设计数据库 schema、写迁移或优化查询
+description: 数据库工程——迁移、查询优化、数据完整性。当需要设计 schema、写迁移、优化查询，或提到"数据库""migration""索引"
 ---
 
 # Database — 数据库工程

@@ -1,6 +1,6 @@
 ---
 name: design-content-direction
-description: 导演设计——镜头/页面切换意图、情绪推进、演示节奏和呈现编排
+description: 导演设计——镜头切换意图、情绪推进、演示节奏。当需要设计演示或讲述的呈现编排，或提到"导演""节奏""演示""presentation"
 ---
 
 # Direction Design — 导演设计

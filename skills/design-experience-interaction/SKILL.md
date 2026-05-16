@@ -1,6 +1,6 @@
 ---
 name: design-experience-interaction
-description: 交互设计——关键流程、状态、信息架构、用户路径
+description: 交互设计——关键流程、状态、信息架构、用户路径。当需要设计用户交互流程或信息架构，或提到"交互""流程""用户路径""信息架构"
 ---
 
 # Interaction Design — 交互设计

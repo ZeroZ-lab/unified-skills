@@ -1,6 +1,6 @@
 ---
 name: verify-quality-security
-description: 安全加固——每个外部输入是敌意的，每个密钥是神圣的，每个鉴权检查是强制的。当涉及用户输入、认证、数据存储、或上线前审查
+description: 安全加固——假设每个外部输入是敌意的。当涉及用户输入、认证、数据存储、上线前审查，或提到"XSS""SQL注入""CSRF""OWASP"
 ---
 
 # Security — 安全加固

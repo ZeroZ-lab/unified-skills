@@ -1,6 +1,6 @@
 ---
 name: reflect-team-documentation
-description: 文档工程——记录决策、API、代码约定。当需要写文档、记录架构决策或维护项目知识
+description: 文档工程——记录决策、API、代码约定。当需要写文档、记录架构决策或维护项目知识，或提到"文档""README""API 文档"
 ---
 
 # Documentation — 文档工程

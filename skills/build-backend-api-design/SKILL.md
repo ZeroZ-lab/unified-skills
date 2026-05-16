@@ -1,6 +1,6 @@
 ---
 name: build-backend-api-design
-description: API 和接口设计——稳定合约、清晰边界。当需要设计 REST API、模块接口或数据合约
+description: API 和接口设计——稳定合约、清晰边界。当需要设计 REST/GraphQL API、模块接口或数据合约，或提到"endpoint""接口设计""契约"
 ---
 
 # API Design — 接口与合约设计

@@ -1,6 +1,6 @@
 ------
 name: design-workflow-design
-description: 证据驱动的创作设计阶段总控——在 plan/build 之前用最佳实践证据定稿交互、视觉、排版、剧本、导演设计
+description: 证据驱动的创作设计总控。当需要定稿交互、视觉、排版设计，或提到"设计""最佳实践""证据""design"
 argument-hint: "[artifact-type: software|document|article|deck|visual]"
 ---
 

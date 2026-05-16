@@ -1,6 +1,6 @@
 ---
 name: ship-infrastructure-deploy
-description: 部署管理——安全、可逆、可观测的上线。当准备上线部署或配置发布策略
+description: 部署管理——安全、可逆、可观测的上线。当准备上线部署或配置发布策略，或提到"部署""上线""deploy""发布策略"
 ---
 
 # Deploy — 部署管理

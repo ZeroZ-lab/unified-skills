@@ -1,6 +1,6 @@
 ---
 name: verify-workflow-debug
-description: 系统化根因调试。当遇到 bug、测试失败或意外行为
+description: 系统化根因调试——先建反馈循环再假设。当遇到 bug、测试失败、意外行为，或提到"调试""debug""为什么不工作""crash"
 ---
 
 # Debug — 系统化调试

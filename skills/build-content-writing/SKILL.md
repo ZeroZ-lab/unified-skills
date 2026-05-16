@@ -1,6 +1,6 @@
 ---
 name: build-content-writing
-description: 内容架构与编辑方法。适用于 artifact_type 为 document、article、deck，或产物需要受众、主张、结构、证据、语气设计时
+description: 内容架构与编辑方法。适用于 artifact_type 为 document/article/deck，当产物需要受众、主张、结构、证据、语气设计，或提到"写作""内容创作""文案"
 ---
 
 # Content Writing — 内容架构与编辑

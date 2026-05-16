@@ -1,6 +1,6 @@
 ---
 name: verify-frontend-accessibility
-description: 可访问性保障——WCAG 2.1 AA 合规。当构建 UI 组件、表单、导航或交互元素
+description: 可访问性保障——WCAG 2.1 AA 合规。当构建 UI 组件、表单、导航或交互元素需要无障碍验证，或提到"无障碍""a11y""WCAG""ARIA"
 ---
 
 # Accessibility — 可访问性保障

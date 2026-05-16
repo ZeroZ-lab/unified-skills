@@ -1,6 +1,6 @@
 ---
 name: verify-quality-integration-testing
-description: 集成测试——验证组件间交互和边界契约。当需要在单元测试之上验证跨组件/跨服务的正确性
+description: 集成测试——验证组件间交互和边界契约。当需要在单元测试之上验证跨组件/跨服务正确性，或提到"集成测试""integration""契约测试"
 ---
 
 # Integration Testing — 集成测试

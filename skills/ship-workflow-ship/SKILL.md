@@ -1,6 +1,6 @@
 ------
 name: ship-workflow-ship
-description: 发布或导出检查 → Go/No-Go → 归档。当审查通过后需要上线或交付最终产物
+description: 发布或导出检查 → Go/No-Go → 归档。当审查通过后需要上线或交付最终产物，或提到"发布""上线""ship""Go/No-Go"
 argument-hint: "[artifact-type] [--canary]"
 ---
 

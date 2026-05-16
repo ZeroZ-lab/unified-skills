@@ -1,6 +1,6 @@
 ---
 name: verify-quality-simplify
-description: 系统性代码简化。当代码变得复杂、重复、过度抽象需要简化
+description: 系统性代码简化。当代码变得复杂、重复、过度抽象需要简化，或提到"简化""重构""太复杂""重复代码"
 ---
 
 # Simplify — 系统性代码简化

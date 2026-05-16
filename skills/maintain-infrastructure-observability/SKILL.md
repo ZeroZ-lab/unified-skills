@@ -1,6 +1,6 @@
 ---
 name: maintain-infrastructure-observability
-description: 可观测性——日志、指标、追踪三支柱。当需要监控生产、调查线上问题或配置告警
+description: 可观测性——日志、指标、追踪三支柱。当需要监控生产、调查线上问题或配置告警，或提到"监控""日志""metrics""告警"
 ---
 
 # Observability — 可观测性

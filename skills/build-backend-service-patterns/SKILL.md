@@ -1,6 +1,6 @@
 ---
 name: build-backend-service-patterns
-description: 服务架构模式——分层、通信、韧性。当需要设计后端服务架构、跨服务通信或处理分布式系统问题
+description: 服务架构模式——分层、通信、韧性。当需要设计后端服务架构、跨服务通信或处理分布式问题，或提到"微服务""重试""熔断"
 ---
 
 # Service Patterns — 服务架构模式

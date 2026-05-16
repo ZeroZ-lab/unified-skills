@@ -1,6 +1,6 @@
 ---
 name: verify-quality-code-quality
-description: 代码质量审查。当需要对已通过 spec compliance 的代码进行质量评估
+description: 代码质量审查。当需要对已通过 spec compliance 的代码进行质量评估，或提到"代码质量""重构""质量审查"
 ---
 
 # Code Quality — 代码质量审查

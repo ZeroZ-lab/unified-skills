@@ -84,7 +84,7 @@ for skill in root_skills:
     skills[skill] = {
         "phase": phase_by_skill[skill],
         "role": role_for(skill),
-        "summary": descriptions.get(skill, "").split("。", 1)[0][:40],
+        "summary": descriptions.get(skill, "").split("。", 1)[0][:60],
         "default_tier": default_tier(skill),
     }
 

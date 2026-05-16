@@ -1,6 +1,6 @@
 ---
 name: ship-workflow-land
-description: 合并 PR → 等待 CI → 验证生产。适用于 PR 已创建、需要合并到主分支并验证部署时
+description: 合并 PR → 等待 CI → 验证生产。当 PR 已创建需要合并到主分支并验证部署，或提到"合并""merge""PR""land"
 ---
 
 # Land — 合并 PR 并验证部署

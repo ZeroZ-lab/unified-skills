@@ -1,6 +1,6 @@
 ---
 name: build-infrastructure-git
-description: 版本控制工作流——原子提交、整洁历史。当需要提交代码、创建分支或管理变更
+description: 版本控制工作流——原子提交、整洁历史。当需要提交代码、创建分支或管理变更，或提到"git""commit""branch""rebase"
 ---
 
 # Git — 版本控制工作流

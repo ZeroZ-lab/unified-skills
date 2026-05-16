@@ -1,6 +1,6 @@
 ---
 name: maintain-workflow-using-unified
-description: Session 启动引导 — 建立主动技能发现机制。每个 session 开始时必须加载
+description: Session 启动引导——建立主动技能发现机制。每个 session 开始时加载，或提到"Unified""启动""初始化"
 ---
 
 <SUBAGENT-STOP>

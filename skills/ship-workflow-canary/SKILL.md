@@ -1,6 +1,6 @@
 ---
 name: ship-workflow-canary
-description: 发布后健康监控。当代码已部署需要持续验证生产健康
+description: 发布后健康监控。当代码已部署需要持续验证生产健康，或提到"金丝雀""canary""监控""健康检查"
 ---
 
 # Canary — 发布后健康监控
