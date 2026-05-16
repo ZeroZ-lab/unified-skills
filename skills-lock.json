@@ -183,7 +183,7 @@
     "ship-workflow-canary": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "beba192904c2d673bdb48f8adcac95ec72edf01cdd1396c186de45f88fab0b18",
+      "computedHash": "21046a2071ccc19a5090e50411a24ae568ba5a5add3cbacb97c150b02a64eaa6",
       "auxiliaryHashes": {}
     },
     "ship-workflow-doc-sync": {
@@ -195,13 +195,13 @@
     "ship-workflow-land": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "d7f6f2a6a406816aa5f44537044f22b16f38849abf683e431c6a3c0b207477d3",
+      "computedHash": "5413b08d3c2026f12cc0f9f813cf41df16bbdb1fca2a09f436f1af62c70a30e2",
       "auxiliaryHashes": {}
     },
     "ship-workflow-ship": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "82238a3b40fc0e0f2f5fcbcabcc2336d89d4f30c796e5ca10c17a8be9483c618",
+      "computedHash": "a2618f6cab01be64604c74a45b6073849155269555e50e6e03ddac5a599316ed",
       "auxiliaryHashes": {}
     },
     "verify-content-review": {

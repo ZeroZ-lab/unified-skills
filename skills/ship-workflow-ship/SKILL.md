@@ -1,4 +1,4 @@
-------
+---
 name: ship-workflow-ship
 description: 发布或导出检查 → Go/No-Go → 归档。当审查通过后需要上线或交付最终产物，或提到"发布""上线""ship""Go/No-Go"
 argument-hint: "[artifact-type] [--canary]"
@@ -30,32 +30,12 @@ argument-hint: "[artifact-type] [--canary]"
 ### Phase A：预发检查
 
 先读取 spec 的 `artifact_type`：
-- `software`（默认）→ 执行代码质量、基础设施、Staging、回滚计划
+- `software`（默认）→ 加载 `ship-infrastructure-deploy`，按其 Pre-Launch 检查表逐项执行代码质量、安全、性能、基础设施和文档验证
 - `document` / `article` / `deck` / `visual` → 加载 `ship-artifact-export`，执行导出、预览、归档和交付检查
 
-逐项运行验证：
-
-**代码质量**
-- [ ] 全部测试通过（unit + integration + e2e）
-- [ ] 构建成功无警告
-- [ ] Lint + type check 通过
-- [ ] 没有未解决的 TODO 在代码中
-- [ ] 没有 `console.log` 调试语句在生产代码中
-- [ ] 错误处理覆盖预期失败模式
-
-**基础设施**
-- [ ] 环境变量在生产环境已设置
-- [ ] DB migration 已应用或准备应用
-- [ ] DNS 和 SSL 已配置
-- [ ] 健康检查端点存在并响应
-- [ ] 日志和错误报告已配置
-
-**验证命令（必须运行）：**
+验证命令（必须运行）：
 ```bash
-npm test
-npm run build
-npm run lint
-npx tsc --noEmit
+npm test && npm run build && npm run lint && npx tsc --noEmit
 ```
 
 ### Phase B：质量门 — Ship Audit Army（发布审计军团）
@@ -161,40 +141,7 @@ Pre-launch checks (Phase A passed)
 - `ship-workflow-land` — 合并 PR、等 CI、验证生产环境
 - `ship-workflow-doc-sync` — 交叉引用变更，同步更新过时文档
 
-## Feature Flag 策略
-
-```typescript
-const flags = await getFeatureFlags(userId);
-if (flags.newFeature) {
-  return <NewFeature />;
-}
-return <Existing />;
-```
-
-**生命周期：**
-```
-DEPLOY(flag OFF) → ENABLE(团队内测) → GRADUAL(5%→25%→50%→100%) → MONITOR → CLEAN UP
-```
-
-**规则：** 每个 flag 有 owner 和过期时间。上线后 2 周内清理。
-
-## 分阶段上线
-
-| 阶段 | 监控要点 | 持续时间 |
-|------|---------|---------|
-| 团队内测 | 核心流程可用 | 24h |
-| 5% canary | 错误率、延迟 | 24-48h |
-| 25% → 50% → 100% | 同上→稳步推进 | 每阶段视情况 |
-| Full rollout | 持续监控 | 1 周 |
-
-**推进/回滚阈值：**
-
-| 指标 | 推进（绿色） | 观察（黄色） | 回滚（红色） |
-|------|-------------|-------------|-------------|
-| 错误率 | 在基准 ±10% 内 | 高于基准 10-100% | > 2x 基准 |
-| P95 延迟 | 在基准 ±20% 内 | 高于基准 20-50% | > 50% 基准 |
-| 客户端 JS 错误 | 无新错误类型 | 新增 < 0.1% session | 新增 > 0.1% session |
-| 业务指标 | 正向或中性 | 下降 < 5%（可能噪声） | 下降 > 5% |
+分阶段上线策略、Feature Flag 生命周期和推进/回滚阈值详见 `ship-infrastructure-deploy`。
 
 ## 好/坏示例
 
