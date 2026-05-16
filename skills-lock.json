@@ -68,7 +68,7 @@
     "build-frontend-ui-engineering": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "e97165279c6094615eccc0f1c47df3bd82085727d18638acaae714cdb10c78ef",
+      "computedHash": "ddba46c64d7a1c0721895863a5f16231ab04dcdd4d29fda61e62aac12a12af00",
       "auxiliaryHashes": {}
     },
     "build-infrastructure-git": {
@@ -80,7 +80,7 @@
     "build-quality-tdd": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "83892e4ef33a45329205648cacd1a36ab88213c296ca3f86bad0751e4a401364",
+      "computedHash": "298d8eb684afb8ab3019e635cfeb73bcdbedde05cd80f052d34b565785480edd",
       "auxiliaryHashes": {
         "examples.md": "d832b55027920960a312b0df9e30a4673da46718e07d49ee3acf60416d9d61f7"
       }
@@ -270,7 +270,7 @@
     "verify-workflow-receiving-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "d96723019c6a690a269dcf7cfa7d98916bae36336b7e53b8281b0020b24e4e70",
+      "computedHash": "401213d18c4a8e0936b175ddc5a68daf5c1036aaa5f296f7d5be5ab51d0813b3",
       "auxiliaryHashes": {}
     },
     "verify-workflow-review": {
