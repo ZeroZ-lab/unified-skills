@@ -34,7 +34,7 @@
     "build-cognitive-execution-engine": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "d9dec3f159cd3c000d9bc28902a946808104c0fbdfb4db14208254a1c9396024",
+      "computedHash": "5f96297de2f476f277a2566aa4995242aaa310219b309b32fb443bd65c07f3ce",
       "auxiliaryHashes": {
         "implementer-prompt.md": "6fb0dbbce0c81c71e9792806ba03ac8814d6bf8a5e421f9e8db78ef56b1acc50",
         "quality-reviewer-prompt.md": "802fbfde028c5bfabd4e9d5b3c73d3eaf209f8f9ef913ecfcec1b9c0165791b2",
@@ -219,7 +219,7 @@
     "verify-quality-code-quality": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "8b1f39960c9a55026cf727d4ce89f606ad79aaac9153d8c857797f1b448480e5",
+      "computedHash": "c718379cc90a53bbafc02d676ccb226248e3015f7fbb2ac0d81207b6af69f6f2",
       "auxiliaryHashes": {
         "report-template.md": "38a15e1c69d4846c9916969c62cee6bc4dc0b3965fd582ed8b176a4aa00b6096",
         "rubric.md": "9e3e3bb194848a70b0239033611f5946761131e1c8fb76cd7baf9194d32aa7d6"
