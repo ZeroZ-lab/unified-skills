@@ -109,9 +109,9 @@
     "define-workflow-refine": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "9d285e2d74bafcc5819193f2a09b8c9633397814d1d358b452a34e368662dbc6",
+      "computedHash": "39f881d839d881db427d53cbdf1e8d6419729ad504a0336935a325cc9facddb4",
       "auxiliaryHashes": {
-        "refine-artifacts.md": "8f23d2c7701876c9f649ae0dd35eb6d69c43eaab9d82d78961fb52471baa22be"
+        "refine-artifacts.md": "cbefac9ba4013ae5e696875f487483ed2bb3dae9f8214d6e8a165b0a867e66b6"
       }
     },
     "define-workflow-spec": {

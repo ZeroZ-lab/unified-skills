@@ -144,3 +144,72 @@ Allowed: software / document / article / deck / visual
 ## 待解决问题
 - [实施前需要回答的问题]
 ```
+
+## External Scan 按产物类型搜索
+
+| artifact_type | 搜索目标 |
+|---------------|----------|
+| `software` | 竞品功能、现有库/框架能力、技术最佳实践、已知坑 |
+| `document` / `article` | 目标读者、同类文章/报告结构、事实来源、写作范式 |
+| `deck` | 同类演示结构、叙事模式、页面信息密度、数据表达方式 |
+| `visual` | 竞品视觉、品牌/媒介规范、布局模式、可读性要求 |
+
+## 好坏 Spec 示例
+
+### Good — 结构化 spec 产出
+
+```markdown
+# 用户通知系统 — Spec
+
+## Artifact Type
+artifact_type: software
+
+## Goal Alignment
+- Source Goal: conversation
+- Goal Status: accepted
+- Goal Review Score: 11/12
+
+### One-line Goal
+为活跃用户提供实时通知推送，提升关键事件响应速度
+
+### Done When
+- [ ] Functional: 用户能在 5s 内收到通知，未读计数准确
+- [ ] Technical: WebSocket 连接稳定，断连后 30s 内重连
+- [ ] Regression: 现有功能无新增 bug
+- [ ] Output: spec 文件产出至 docs/features/20260515-user-notifications/01-spec.md
+
+### Stop Conditions
+- [ ] WebSocket 基础设施不可用且无法在 2 天内搭建
+- [ ] 通知量级超出当前服务器承载上限
+
+## External References
+- Search status: completed
+- Fact: WebSocket 长连接在日活 10k 下需 2 台服务器
+- Pattern: 主流产品使用 toast + 未读计数 + 通知列表三层
+- Adopt: 三层通知架构（toast/计数/列表）
+- Reject: SMS 通知（成本/ROI 不匹配）
+
+## 核心假设（待验证）
+- [ ] WebSocket 基础设施已就绪 — 检查 ops team 确认
+- [ ] 用户日活 > 5k — 查看 analytics dashboard
+
+## MVP 范围
+Include: toast 推送 + 未读计数 + 通知列表
+Exclude: 邮件通知、SMS、通知偏好设置、批量通知
+
+## 不做清单
+- 邮件通知 — 当前 scope 外，下一期
+- 通知偏好 — 需要额外 UI 设计，MVP 阶段延后
+- 批量通知管理 — 管理端需求，与用户端无关
+```
+
+### Bad — 无结构化产出
+
+```markdown
+用户想加个通知功能。
+
+我直接开始写 WebSocket 服务了。
+→ 问题: 没有 spec → 没有 Goal Review → 没有确认 MVP 范围
+→ 问题: 没有不做清单 → 开发过程中不断加功能 → 延期
+→ 问题: 没有验证假设 → WebSocket 基础设施可能不可用 → 实现一半才发现阻塞
+```

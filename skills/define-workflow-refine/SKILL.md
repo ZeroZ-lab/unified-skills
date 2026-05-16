@@ -14,6 +14,7 @@ argument-hint: "[feature-name 或模糊想法]"
 - **指向**: 完成后必须调用 `define-workflow-spec`
 - **输出路径**: → define-workflow-spec
 - **前置加载**: CANON.md
+- **辅助参考**: `refine-artifacts.md`（Goal Review 评分表、External Scan 模板、Scout Output 模板、Spec One-Pager 模板、好坏示例）
 
 ## 何时不使用
 - 需求已经清晰结构化，直接写 spec
@@ -28,172 +29,94 @@ argument-hint: "[feature-name 或模糊想法]"
 
 ## Agent Dispatch Contract
 
-`/refine` 的主执行 persona 是 `agents/requirements-analyst.md`。它负责需求澄清、5W1H、artifact_type 确认和 spec 初稿生成。
+`/refine` 主执行 persona 是 `agents/requirements-analyst.md`。
 
-- External Scan 可由独立 subagent 执行，但必须受本技能的 Fact / Pattern / Inference / Unknown / Adopt / Reject 输出合同约束。
-- Idea Scout Army 只在 Phase 1.6 按最少触发条件选择 `agents/refine-ceo-scout.md`、`agents/refine-eng-scout.md`、`agents/refine-design-scout.md`。
-- 未被选中的 scout 不产出占位反馈；所有已选 scout 的反馈由主 session 分级合并。
+- External Scan 可由独立 subagent 执行，但必须受本技能的 Fact / Pattern / Inference / Unknown / Adopt / Reject 输出合同约束
+- Idea Scout Army 按 Phase 1.6 最少触发条件选择 `agents/refine-ceo-scout.md`、`agents/refine-eng-scout.md`、`agents/refine-design-scout.md`：标准功能 → CEO + Eng；涉及 UI/合规 → 三视角全开；小型变更 → 跳过
+- 未被选中的 scout 不产出占位反馈；所有已选 scout 的反馈由主 session 分级合并
 
-## 流程：3 阶段 + 外部扫描
+## 核心锚点
 
-### Phase 1 理解与探索（发散）
+### 5W1H Structured Clarification
 
-**Step 1.1：探索项目上下文**
-如果当前在代码仓库中运行，先用 Glob/Grep/Read 扫描相关上下文——现有架构、模式、约束、已有实践、相似功能。引用具体文件。**在问问题前先理解项目现状。**
+逐一询问澄清问题，一次一个，不列清单。优先用结构化提问工具（如 `AskUserQuestion`）；不可用时退化为简短纯文本。
 
-**Step 1.2：Scope 检查**
-如果请求包含多个独立子系统（如"做个带聊天、文件存储、计费、分析的平台"），立即标记——不要细化一个需要先分解的项目。先帮助用户分解成子项目，再 refine 第一个子项目。
+**执行规则：**
+- 6 个必问维度：问题/背景、目标用户、成功标准、产物类型（默认 `software`）、约束、上下文
+- 在问问题前先 Glob/Grep/Read 扫描项目上下文——引用具体文件，不在无知状态下提问
 
-**Step 1.2.5：Goal Review（目标质量检查）**
-在继续细化方案前，先判断当前 goal 是否足够清楚，能否安全进入 spec。Goal Review 只检查目标质量，**不替代** `/goal` 的生命周期管理。
+### External Scan Protocol
 
-评分维度和输出模板见 `refine-artifacts.md`。
+提出方案前，先判断是否需要搜索外部世界。使用当前宿主可用的 WebSearch/browser/文档检索。工具不可用时记录 "Search unavailable"。
 
-Gate:
-- `10-12`: accepted，可以进入 spec
-- `7-9`: needs-refinement，先补齐弱项再继续
-- `0-6`: blocked，不能进入 build；必须重新澄清或拆分 goal
+**执行规则：**
+- 默认执行：中大型功能、`artifact_type` 非 software、引入新依赖、用户问"有没有已有方案"
+- 跳过：单文件修复、用户明确禁止联网、已有素材给出足够依据
+- 输出必须分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject（模板见 `refine-artifacts.md`）
+- 搜索结果不能直接变成需求；只有进入 Adopt 且和目标/约束一致的内容才能进入方案
+- 超过 30 天的 Scan 结果标记 `[可能过时]`；按产物类型搜索目标见 `refine-artifacts.md`
 
-小型变更（单行修复、纯配置、拼写/文案小改）可记录 `Goal Review: skipped`，但仍要有可验证的完成标准。
+### Scout Army Dispatch
 
-**Step 1.3：逐一询问澄清问题**
-优先用宿主环境的结构化提问工具（如 `AskUserQuestion`）**逐一**询问以下问题；如果当前环境没有该工具，则用一条简短纯文本问题降级。一次一个问题，不要列清单：
-1. **问题/背景** — 要解决的问题是什么？现状是什么？
-2. **目标用户** — 具体为谁做的？谁受益？
-3. **成功标准** — 怎样算"做完了"？可量化的指标是什么？
-4. **产物类型** — 交付物是 `software`、`document`、`article`、`deck` 还是 `visual`？不明确时默认 `software`
-5. **约束** — 时间、技术、资源、格式、品牌或导出限制？
-6. **上下文** — 之前有人试过吗？现有代码或素材里有什么相关？
+Phase 1 完成后、提出方案前，并行分派 scout 验证可行性。
 
-### Phase 1.4：External Scan（外部扫描）
+**执行规则：**
+- 输入：用户澄清 + artifact_type + External Scan 摘要 + 项目上下文 + 不做/待确认边界
+- 输出统一结构（模板见 `refine-artifacts.md`）：Verdict + Evidence + Findings + Spec Impact
+- 反馈三级：Blocking（必须解决）、Important（不采纳需记录原因）、Suggestion（自主判断）
 
-在提出方案和分派 scout 前，先判断是否需要搜索外部世界。External Scan 是 Unified 原生流程，不依赖任何特定第三方技能；使用当前宿主可用的 WebSearch、browser、文档检索或用户提供资料。工具不可用时，明确记录"Search unavailable"，只基于本地上下文和内置知识继续。
+### Pressure Test Proposals
 
-**默认执行条件：**
-- 中大型功能、用户可见功能、市场/竞品/内容/视觉/技术方案不确定
-- 用户问"有没有已有方案"、"别人怎么做"、"参考什么"
-- `artifact_type` 为 `document` / `article` / `deck` / `visual`
-- `software` 需求引入新框架、新库、新架构模式、AI/浏览器/支付/认证等外部依赖
+提出 2-3 种方案，每种含优点和代价。
 
-**跳过条件：**
-- 单文件修复、纯配置、拼写/文案小改
-- 用户明确禁止联网或外部搜索
-- 已有 spec/素材已经给出足够外部依据
+**执行规则：**
+- 每个方案测试三个维度：用户价值（止痛药还是维生素）、可行性（最难部分是什么）、差异化（和现有方案本质不同）
+- 必须明示隐藏假设：赌什么是真的、什么会杀死方案、选择忽略什么及原因
 
-**按 artifact_type 搜索：**
+## 流程
 
-| artifact_type | 搜索目标 |
-|---------------|----------|
-| `software` | 竞品功能、现有库/框架能力、技术最佳实践、已知坑 |
-| `document` / `article` | 目标读者、同类文章/报告结构、事实来源、写作范式 |
-| `deck` | 同类演示结构、叙事模式、页面信息密度、数据表达方式 |
-| `visual` | 竞品视觉、品牌/媒介规范、布局模式、可读性要求 |
+### Phase 1：理解与探索（发散）
 
-**输出必须分层：** Fact / Pattern / Inference / Unknown / Adopt / Reject。固定输出模板见 `refine-artifacts.md`。
+**Step 1.1** 探索项目上下文（5W1H 锚点执行规则 2）
 
-搜索结果不能直接变成需求。只有进入 `Adopt` 且和用户目标、约束、artifact_type 一致的内容，才能进入方案或 spec。进入 `Reject` 的内容要写明原因，防止后续反复膨胀 scope。
+**Step 1.2** Scope 检查 — 多个独立子系统时先分解成子项目，只 refine 第一个
 
-**新鲜度：** 距离 Scan date 超过 30 天的 External Scan 结果，标记 `[可能过时]`。对于仍在活跃迭代的功能，必须在 `Phase 2` 开始时确认关键事实是否仍然有效。
+**Step 1.2.5** Goal Review — 评分维度和模板见 `refine-artifacts.md`。10-12 = accepted；7-9 = needs-refinement；0-6 = blocked。小型变更可 skip 但要有完成标准
 
-**Step 1.5（可选）：Visual Companion**
-如果涉及 UI mockup、流程图、布局对比等视觉内容，**单独发送一条消息**询问：
-> "有些内容用浏览器展示更清楚，我打开 browser 做 mockup 和可视化方案对比。要试一下吗？"
+**Step 1.3** 5W1H 澄清（锚点执行）
 
-这条消息不混合澄清问题或其他内容。用户同意后再用 browser 展示。
+**Step 1.4** Phase 1.4：External Scan（锚点执行）
 
-### Phase 1.6：Idea Scout Army（想法侦察军团）
+**Step 1.5**（可选）涉及 UI mockup/流程图时，单独一条消息询问是否用 browser 展示
 
-Phase 1 完成用户澄清和 External Scan 后，在提出方案前，**并行分派** scout 验证 idea 的可行性：
+**Step 1.6** Scout Army（锚点执行）
 
-```
-Idea draft (clarification + External Scan + local context)
-    │
-    ├── agents/refine-ceo-scout.md     → CEO 视角: 问题验证、方案杠杆、优先级、成功标准
-    ├── agents/refine-eng-scout.md     → Eng 视角: 可行性、规模估算、依赖、替代方案
-    └── agents/refine-design-scout.md  → Design 视角: UX 方向、心智模型、关键交互、设计范围
-            │
-            ▼
-    收集反馈 → 分级合并 → 修正假设 → 进入 Phase 2
-```
+### Phase 2：方案与收敛
 
-**Scout 输入必须包含：**
-- 用户澄清结果
-- `artifact_type`
-- External Scan 摘要（含 Adopt / Reject / Unknown）
-- 当前项目上下文
-- 明确的"不做/待确认"边界
+基于 Phase 1 全部输入，提出 2-3 种方案并 Pressure Test（锚点执行）。
 
-**Scout 输出必须使用统一结构**，模板见 `refine-artifacts.md`。
+### Phase 3：产出 spec
 
-**反馈处理规则：**
-- **Blocking** — 必须解决（如：问题假设被推翻、技术上不可行），修正后重新验证
-- **Important** — 强烈必须纳入方案（如：显著的杠杆点、被忽视的约束），不采纳需记录原因
-- **Suggestion** — 自主判断，采纳后标注来源
-
-**最少触发条件：**
-- 小型变更（单文件修复、纯配置）→ 可跳过 Scout Army
-- 标准功能 → 至少 CEO + Eng 双视角
-- 大型功能（涉及 UI 或有合规需求）→ 三视角全开
-
-### Phase 2 方案与收敛
-
-基于 Phase 1 用户输入、Phase 1.4 External Scan 和 Phase 1.6 Scout Army 反馈，提出 **2-3 种方案**，每种包含优点、代价、理由：
-
-```
-方案 A: [主推] — [一句话说明]
-  优点: ...
-  代价: ...
-方案 B: [备选] — [一句话说明]
-  优点: ...
-  代价: ...
-方案 C: [激进] — [一句话说明]
-  优点: ...
-  代价: ...
-```
-
-**压力测试每个方案：**
-- **用户价值** — 谁受益？程度多大？是止痛药还是维生素？
-- **可行性** — 最难的部分是什么？技术和资源成本？
-- **差异化** — 和现有方案比有什么本质不同？
-
-**明示隐藏假设：**
-- 你赌什么是真的（但还没验证）
-- 什么会杀死这个方案
-- 你选择忽略什么（以及为什么暂时忽略）
-
-### Phase 3 产出 spec
-
-输出结构化的 one-pager 到 `docs/features/YYYYMMDD-<name>/01-spec.md`（YYYYMMDD 为当天日期）。完整模板见 `refine-artifacts.md` 或 `templates/feature/01-spec.md`。
-
-**"不做清单" 是最有价值的部分之一。** 专注在于拒绝好的想法。明确 trade-off。
+输出结构化 one-pager 到 `docs/features/YYYYMMDD-<name>/01-spec.md`。完整模板见 `refine-artifacts.md`。**"不做清单"是 spec 最有价值的部分之一。**
 
 ## 验证失败处理
 
 | 失败场景 | 处理方式 |
 |---------|---------|
-| 用户拒绝方向 | 问清原因，修正假设，回到 Phase 1 重新探索 |
-| 未能收敛到方案 | 扩大搜索范围，引入更多参考/竞品分析，或缩小目标范围 |
-| 隐藏假设被推翻 | 更新假设集，评估影响，可能需要调整或放弃当前方向 |
-| 发现已有类似方案 | 分析差别，确认确实需要新方案后继续，否则执行复用 |
-| 需求从模糊变明确后范围暴增 | 先分解为子项目，只 refine 第一个子项目，其余的后续处理 |
-
-## 验证证据
-
-输出或记录必须包含：
-- **输入/来源**: 读取的 spec、plan、代码、反馈或发布上下文。
-- **执行动作**: 实际完成的检查、生成、修复、导出或发布步骤。
-- **验证结果**: 命令、审查结论、产物路径、截图或人工确认。
-- **阻塞/回退**: 未通过项、回退路径或需要 human partner 决策的问题。
+| 用户拒绝方向 | 问清原因，修正假设，回到 Phase 1 |
+| 未能收敛到方案 | 扩大搜索范围或缩小目标范围 |
+| 隐藏假设被推翻 | 更新假设集，评估影响，可能调整方向 |
+| 发现已有类似方案 | 分析差别，确认需要新方案后才继续 |
+| 范围暴增 | 分解为子项目，只 refine 第一个 |
 
 ## 常见说辞
 
 | 说辞 | 现实 | 后果 |
 |------|------|------|
-| "这个很简单不需要设计" | 简单项目正是未检查假设导致最多返工的地方。 | 跳过澄清的"简单"项目平均返工 1-2 次，总耗时 > 按流程走的 3-5x。 |
-| "先做一个方向看看" | 只探索一个方案就无法比较 trade-off。至少 2-3 个。 | 单方案无法发现更优路径，实施后才发现方向错误，修复成本 10-50x。 |
-| "之后再加这些功能" | MVP 的范围定义就是专注。不做清单比做清单更重要。 | 不控制 MVP 范围 → 需求膨胀 → 发布延期 2-4 周，核心价值被边缘功能稀释。 |
-| "别问了，直接做吧" | 跳过澄清的问题一定会回来。15 分钟澄清 > 15 小时返工。 | 跳过澄清的假设在实现阶段暴露，每次假设推翻平均增加 4-8 小时返工。 |
-| "先写代码再看" | Hard Gate 禁止实现前写代码。设计批准后才进入 build。 | 代码先行 → 设计假设被实现锁定 → 改方向时需重写 >50% 代码，浪费全部已投入时间。 |
+| "这个很简单不需要设计" | 简单项目正是未检查假设导致最多返工的地方。 | 跳过澄清的"简单"项目返工 3-5x |
+| "先做一个方向看看" | 单方案无法比较 trade-off。 | 方向错误发现时修复成本 10-50x |
+| "之后再加这些功能" | MVP 的范围定义就是专注。不做清单比做清单更重要。 | 需求膨胀 → 发布延期 2-4 周 |
+| "别问了，直接做吧" | 跳过澄清的问题一定会回来。15 分钟澄清 > 15 小时返工。 | 假设在实现阶段暴露，每次推翻增加 4-8 小时 |
 
 ## 红旗
 
@@ -213,118 +136,32 @@ Idea draft (clarification + External Scan + local context)
 
 ## 验证清单
 
-- [ ] 清晰的"为谁、解决什么问题"已定义
-- [ ] Goal Review 已完成或明确跳过，且跳过理由成立
-- [ ] Goal Alignment 已写入 spec（Source Goal、状态、评分、Done When、Stop Conditions）
-- [ ] artifact_type 已明确；未明确时按 software 处理
-- [ ] External Scan 已完成、跳过或标记不可用，并记录原因
-- [ ] 搜索结果已区分 Fact / Pattern / Inference / Unknown
-- [ ] Adopt / Reject 已写入，不把外部资料直接变成 scope
-- [ ] 必要 scout 已读取用户澄清、artifact_type、External Scan 和本地上下文
+- [ ] "为谁、解决什么问题"已定义
+- [ ] Goal Review 已完成或明确跳过（理由成立）
+- [ ] artifact_type 已明确
+- [ ] External Scan 已完成/跳过/标记不可用，并记录原因
+- [ ] 搜索结果已区分 Fact / Pattern / Inference / Unknown / Adopt / Reject
+- [ ] 必要 scout 已分派并反馈已合并
 - [ ] 探索了多个方向，不是只有第一个想法
 - [ ] 隐藏假设已列出（含验证方案）
 - [ ] "不做清单"让 trade-off 明确
-- [ ] 产出是一份 spec 文件，不只是一段对话
-- [ ] 用户批准了方向，未跳过 HARD GATE
-
-## 好坏示例
-
-### Good — 结构化 spec 产出
-
-```markdown
-# 用户通知系统 — Spec
-
-## Artifact Type
-artifact_type: software
-
-## Goal Alignment
-- Source Goal: conversation
-- Goal Status: accepted
-- Goal Review Score: 11/12
-
-### One-line Goal
-为活跃用户提供实时通知推送，提升关键事件响应速度
-
-### Done When
-- [ ] Functional: 用户能在 5s 内收到通知，未读计数准确
-- [ ] Technical: WebSocket 连接稳定，断连后 30s 内重连
-- [ ] Regression: 现有功能无新增 bug
-- [ ] Output: spec 文件产出至 docs/features/20260515-user-notifications/01-spec.md
-
-### Stop Conditions
-- [ ] WebSocket 基础设施不可用且无法在 2 天内搭建
-- [ ] 通知量级超出当前服务器承载上限
-
-## External References
-- Search status: completed
-- Fact: WebSocket 长连接在日活 10k 下需 2 台服务器
-- Pattern: 主流产品使用 toast + 未读计数 + 通知列表三层
-- Adopt: 三层通知架构（toast/计数/列表）
-- Reject: SMS 通知（成本/ROI 不匹配）
-
-## 核心假设（待验证）
-- [ ] WebSocket 基础设施已就绪 — 检查 ops team 确认
-- [ ] 用户日活 > 5k — 查看 analytics dashboard
-
-## MVP 范围
-Include: toast 推送 + 未读计数 + 通知列表
-Exclude: 邮件通知、SMS、通知偏好设置、批量通知
-
-## 不做清单
-- 邮件通知 — 当前 scope 外，下一期
-- 通知偏好 — 需要额外 UI 设计，MVP 阶段延后
-- 批量通知管理 — 管理端需求，与用户端无关
-```
-
-### Bad — 无结构化产出
-
-```markdown
-用户想加个通知功能。
-
-我直接开始写 WebSocket 服务了。
-→ 问题: 没有 spec → 没有 Goal Review → 没有确认 MVP 范围
-→ 问题: 没有不做清单 → 开发过程中不断加功能 → 延期
-→ 问题: 没有验证假设 → WebSocket 基础设施可能不可用 → 实现一半才发现阻塞
-```
+- [ ] 产出是一份 spec 文件
+- [ ] 用户批准了方向
 
 ## 输出模板
-
-Refine 完成后，spec 产出必须包含以下结构（完整模板见 `refine-artifacts.md`）：
 
 ```markdown
 # [功能名称] — Spec
 
-## Artifact Type
 artifact_type: [software/document/article/deck/visual]
-
-## Goal Alignment
-- Source Goal: [来源]
-- Goal Status: [accepted/needs-refinement/blocked]
-- Goal Review Score: [score]/12
-
-### One-line Goal
-[一句话目标]
-
-### Done When
-- [ ] Functional: [可验证的功能完成标准]
-- [ ] Technical: [技术完成标准]
-- [ ] Regression: [回归保证]
-- [ ] Output: [产出路径]
-
-### Stop Conditions
-- [ ] [明确停止条件]
-
-## External References
-- Search status: [completed/skipped/unavailable]
-- Fact / Pattern / Inference / Unknown / Adopt / Reject
-
-## 核心假设（待验证）
-- [ ] 假设 — 验证方式
-
-## MVP 范围
-Include: [最小可验证范围]
-Exclude: [明确排除]
-
-## 不做清单（及理由）
-- [事项] — [理由]
+Goal Review Score: [score]/12 | Status: [accepted/needs-refinement/blocked]
+One-line Goal: [一句话]
+Done When: [Functional + Technical + Regression + Output]
+Stop Conditions: [停止条件]
+External References: [Fact/Pattern/Inference/Unknown/Adopt/Reject]
+核心假设: [假设 — 验证方式]
+MVP 范围: Include [最小可验证] / Exclude [明确排除]
+不做清单: [事项 — 理由]
 ```
+
+完整模板和好坏示例见 `refine-artifacts.md`。
