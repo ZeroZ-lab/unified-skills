@@ -189,13 +189,13 @@
     "ship-workflow-doc-sync": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "f4bf58ac0aefdee1e71e961c9b9f2bdd88cd5c93e47b7a894875678e42fc8458",
+      "computedHash": "4dbf1dda3f7806b5d37660032172cfa15e976ae494c4e4837fe76e0abd63ecef",
       "auxiliaryHashes": {}
     },
     "ship-workflow-land": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "5413b08d3c2026f12cc0f9f813cf41df16bbdb1fca2a09f436f1af62c70a30e2",
+      "computedHash": "4f8393fe0b04d44efb1244ff8b95d750384d984ebd5ce497d101336d3fdcf5f5",
       "auxiliaryHashes": {}
     },
     "ship-workflow-ship": {
