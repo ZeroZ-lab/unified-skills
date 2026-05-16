@@ -284,7 +284,7 @@
     "verify-workflow-spec-compliance": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "16113b1dc5096b56997ce06f560194405af534124dec02684cd7f7cc4d370c4f",
+      "computedHash": "2e1480be90402875f974526872b7c0da0d03ba9672613a87c2a53d7b7c39cce7",
       "auxiliaryHashes": {}
     },
     "maintain-workflow-using-unified": {
