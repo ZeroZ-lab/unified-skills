@@ -90,7 +90,7 @@
     }
   },
   "skill_descriptions": {
-    "build-backend-api-design": "API 和接口设计——稳定合约、清晰边界。当需要设计 REST/GraphQL API、模块接口或数据合约，或提到\"endpoint\"\"接口设计\"\"契约\"",
+    "build-backend-api-design": "API 和接口设计——稳定合约、清晰边界。当需要设计 REST/HTTP API、endpoint、接口契约、请求响应 DTO、错误语义、分页、幂等、权限边界或 API 合约测试时使用",
     "build-backend-database": "数据库工程——迁移、查询优化、数据完整性。当需要设计 schema、写迁移、优化查询，或提到\"数据库\"\"migration\"\"索引\"",
     "build-backend-service-patterns": "服务架构模式——分层、通信、韧性。当需要设计后端服务架构、跨服务通信或处理分布式问题，或提到\"微服务\"\"重试\"\"熔断\"",
     "build-cognitive-context": "上下文工程——最大化 agent 输出质量。当开始新任务、上下文混乱或 agent 输出质量下降，或提到\"上下文\"\"context window\"\"注意力\"",
