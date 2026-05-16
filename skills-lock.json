@@ -94,7 +94,7 @@
     "build-workflow-plan": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "4fe93dfdf8a09620f67452996f13ea1bf5438a810ee49b2d4042beb0e1ba0e78",
+      "computedHash": "2f8d24a8ab20ed8ef6b332f03efe8d84765c378e3f8988ca394efc0c65a9466b",
       "auxiliaryHashes": {
         "plan-review.md": "ea4030cb15bd6d7e0aca3ce187482f5a3a47a82aaa77ee2791bbe1ebd33dd9d9",
         "task-templates.md": "b7c7dee1e130b2054b5ef80d5c0cac4efc942c3893c5f293b57e0710453bbcb4"
