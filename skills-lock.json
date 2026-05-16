@@ -88,7 +88,7 @@
     "build-workflow-execute": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "5943af81f801c50b6498e8ce59e98dbf01af7a193c27c65521ac07a67a8f961a",
+      "computedHash": "b73b131fd6ebdebcdef679b49d713f00e5c3f274baa0a42d5a1f35e25e5f8581",
       "auxiliaryHashes": {}
     },
     "build-workflow-plan": {
