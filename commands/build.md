@@ -47,8 +47,10 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 1. implement this plan task-by-task：按 Task N 循环生成 → 验证 → 记录
 2. 当前 Task N 未通过自身验证前，不进入下一个 Task N
 3. 只有 Parallel Execution Matrix 证明 parallel_safe 时才并行
-4. 遇到架构决策 → 写 ADR
-5. 遇到 Bug → 进入调试
+4. build 阶段的任何 pre-review gate 结果都不能替代 formal `/review`
+5. 没有 `docs/features/<name>/04-review.md` 就不算完成 formal `/review`
+6. 遇到架构决策 → 写 ADR
+7. 遇到 Bug → 进入调试
 **Output:** 增量产物 + adr/*.md（如有）
 
 ### Phase 3: Final Verification
@@ -74,6 +76,7 @@ Execute plan incrementally, generating artifact slices with continuous verificat
 - [ ] 所有计划 Task N 已完成并有验证证据
 - [ ] 所有测试通过
 - [ ] 产物完整
+- [ ] 若使用 build 内部 gate，结果仅被记录为 pre-review，不宣称 formal review 完成
 
 ## Next Steps
 - → /review

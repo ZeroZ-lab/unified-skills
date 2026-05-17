@@ -1,6 +1,6 @@
 # Implementer Subagent 提示词模板
 
-> 用于模式 C（Subagent 两阶段审查流水线）中分派实现任务。主 agent 将此模板填充后交给 subagent。
+> 用于模式 C（Subagent pre-review gate 流水线）中分派实现任务。主 agent 将此模板填充后交给 subagent。此输出只用于 build 阶段内部 gate，不是 formal review 或 merge approval。
 
 ---
 

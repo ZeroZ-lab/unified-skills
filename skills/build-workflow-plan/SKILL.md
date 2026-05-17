@@ -45,7 +45,7 @@ argument-hint: "[--parallel-safe | --sequential]"
 
 **执行规则：**
 - `serial`：有序依赖、共享文件、小任务 → 只写 `03-plan.md`
-- `parallel`：无共享文件、无顺序依赖 → `03-plan.md` + 多个 `plans/*.md`，标记 `parallel_safe`
+- `parallel`：无共享文件、无顺序依赖，且共享契约已冻结 → `03-plan.md` + 多个 `plans/*.md`，标记 `parallel_safe`
 - `gated-parallel`：共享契约先定，后续可并行 → `03-plan.md` + `plans/01-contracts.md` + 后续子计划
 - 实现顺序按依赖图自底向上；只有 `Parallel Execution Matrix` 标记 `parallel_safe: yes` 的子计划才能并行
 
@@ -89,7 +89,7 @@ argument-hint: "[--parallel-safe | --sequential]"
 
 排列任务使依赖满足、系统保持可工作、高风险任务放前面、每 2-3 个任务设验证检查点。
 
-多计划模式下 `03-plan.md` 必须包含：Subplans + Parallel Execution Matrix + Integration Order + Shared Contracts。任何子计划没有 `Write Scope` 不能分派；两个 `parallel_safe` 子计划 Write Scope 不能重叠。
+多计划模式下 `03-plan.md` 必须包含：Subplans + Parallel Execution Matrix + Integration Order + Shared Contracts。任何子计划没有 `Write Scope` / `Shared Contracts` / `Global Invariants` / `Cross-check Command` / `Semantic Independence Reason` 不能分派；两个 `parallel_safe` 子计划 Write Scope 不能重叠，且共享契约必须已冻结。
 
 ### Step 6.5：写 `Project Doc Sync Plan`
 
@@ -111,7 +111,7 @@ argument-hint: "[--parallel-safe | --sequential]"
 - [ ] 占位符扫描：无 TBD/TODO/"implement later"/"添加适当的错误处理"
 - [ ] 类型一致性：后续任务的函数签名匹配前面定义的
 - [ ] Subplans 完整：每个 `plans/*.md` 存在且有 Subplan Contract
-- [ ] 并行安全：`parallel_safe` 子计划无重叠写入
+- [ ] 并行安全：`parallel_safe` 子计划无重叠写入，且语义独立性已说明
 - [ ] 收口顺序：release/ship 类子计划默认串行
 - [ ] 任务独立性：每个任务有验收标准、独立验证步骤、依赖已标注
 - [ ] 验证完整性：每个验证步骤有具体命令 + 预期输出 + 失败诊断
@@ -135,6 +135,7 @@ argument-hint: "[--parallel-safe | --sequential]"
 | 任务过大 | 分解到 ≤5 文件；标题出现 "and" = 拆分 |
 | 验收条件缺失 | 强制补充；无验收条件的任务不能进入 build |
 | parallel_safe 写入重叠 | 标记为串行，调整 Integration Order |
+| shared contract / global invariant 未冻结 | 改为 `gated-parallel` 或串行 |
 | spec 要求同步 project docs 但 plan 未写 owner / verification | 阻塞。补 `Project Doc Sync Plan` 后再进入 build |
 
 ## 常见说辞
@@ -213,9 +214,9 @@ Task 清单:
 | 1 | [标题] | [N] | [条件] | [命令] | [无/Task N] |
 
 子计划索引（如适用）:
-| 子计划 | Write Scope | parallel_safe | 依赖 | 验证 |
-|--------|------------|--------------|------|------|
-| plans/01-*.md | [范围] | [yes/no] | [依赖] | [命令] |
+| 子计划 | Write Scope | Shared Contracts | Cross-check Command | parallel_safe | 依赖 | 验证 |
+|--------|------------|------------------|---------------------|--------------|------|------|
+| plans/01-*.md | [范围] | [契约] | [命令] | [yes/no] | [依赖] | [命令] |
 
 Parallel Execution Matrix（如适用）:
 | A | B | safe | 无重叠 |

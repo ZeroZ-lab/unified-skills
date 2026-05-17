@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.24.2] - 2026-05-17
+
+### Changed
+- review contracts: require explicit reviewer independence tracking, add `trivial exemption` rules, and make standard review default to an independent Stage 2 reviewer.
+- build/review boundary: rename build-time two-stage checking as a pre-review gate and clarify that it cannot replace formal `/review` or `04-review.md`.
+- parallel planning: upgrade `parallel_safe` from write-scope-only checks to shared-contract, invariant, and cross-check-based semantic independence.
+- validation: enforce the new review independence fields and pre-review/parallel-safety contract terms in templates and skills.
+
 ## [2.24.1] - 2026-05-17
 
 ### Added

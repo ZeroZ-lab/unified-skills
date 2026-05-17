@@ -1,6 +1,6 @@
-# Code Quality Reviewer Subagent 提示词模板
+# Code Quality Gate Subagent 提示词模板
 
-> 用于模式 C Phase 3：五轴代码质量审查。仅在 Spec Reviewer 返回 PASS 后分派。审查范围参考 `agents/review-code-quality-auditor.md` 定义的 persona。
+> 用于模式 C Phase 3：五轴代码质量审查。仅在 Spec Gate 返回 PASS 后分派。审查范围参考 `agents/review-code-quality-auditor.md` 定义的 persona。此结果是 build 内部 pre-review gate，不是 formal `/review` 通过结论。
 
 ---
 
@@ -118,7 +118,7 @@
   Suggestion: <n>
   Nit: <n>
 
-结论: <APPROVED | ISSUES>
-  APPROVED — 无 Critical 发现，可以合并
-  ISSUES — 存在 Critical 或 Important 发现，需修正后重新审查
+结论: <PRE_REVIEW_PASS | PRE_REVIEW_ISSUES>
+  PRE_REVIEW_PASS — 无 Critical 发现，可以进入 formal `/review`
+  PRE_REVIEW_ISSUES — 存在 Critical 或 Important 发现，需修正后重新运行 build gate
 ```

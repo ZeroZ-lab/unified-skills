@@ -10,6 +10,13 @@
 ## Artifact Type
 artifact_type: software
 
+## Review Independence
+- Built by:
+- Stage 1 reviewed by:
+- Stage 2 reviewed by:
+- Independence status: PASS / FAIL / EXEMPT
+- Exemption reason:
+
 ## Stage 1: Spec Compliance
 - Status: PASS / FAIL
 - Coverage: [X/Y] requirements covered

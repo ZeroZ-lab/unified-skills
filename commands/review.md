@@ -33,11 +33,12 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 1. **Step 1 理解上下文** — 这个变更要达成什么？对应 spec/plan 的哪个部分？预期的行为变化？
 2. **Step 2 先看测试** — 测试揭示意图和覆盖：有测试吗？测试行为而非实现细节？边界情况覆盖？代码改了测试能捕获回归？
 3. **Step 3 审查路由** — 确定审查策略：software → 两阶段审查；document / article → 内容审查；deck → 内容 + 视觉审查；visual → 视觉审查
+4. **Step 3.5 独立性路由** — 判定 `trivial exemption` / `standard` / `high-risk-full`；除豁免外，Stage 2 必须独立于 build implementer
 **Output:** 审查策略决策
 
 ### Phase 2: Spec Compliance Review (Stage 1)
 
-**Agent:** 主 session 或 review-spec-compliance-auditor（并行模式）
+**Agent:** current agent 或独立的 review-spec-compliance-auditor（按独立性档位）
 **Skills:** verify-workflow-spec-compliance
 **Input:** 产物文件 + 01-spec.md
 **Process:**
@@ -67,6 +68,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 
 **Input:** 产物文件
 **Output:** 已选 Reviewer 独立反馈（五轴评分 + Blocking/Important/Suggestion 分级）
+**Rule:** `standard` 起 `review-code-quality-auditor` 必须与 build implementer 独立；`high-risk-full` 时 Stage 1 和 Stage 2 都必须独立，build 阶段 pre-review 结果不能替代 formal review
 
 ### Phase 4: 分类意见 + 验证证据 + 出报告
 
@@ -76,12 +78,14 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 **Process:**
 1. **Step 4 分类意见** — 每条审查意见标注严重级别：Critical（阻塞合并）/ Nit（可选风格偏好）/ Consider（建议不强制）/ FYI（仅供参考）。防止作者把所有反馈当强制要求
 2. **Step 5 验证验证者** — 检查提交者的验证证据：跑了什么测试？构建通过？UI 变更有截图？前后对比？
-3. 合并所有反馈，生成审查报告
+3. **Step 5.2 检查审查独立性** — 写入 `Built by`、`Stage 1 reviewed by`、`Stage 2 reviewed by`、`Independence status`、`Exemption reason`
+4. 合并所有反馈，生成审查报告
 **Output:** docs/features/YYYYMMDD-<name>/04-review.md
 **Validation:**
 - [ ] 报告包含 Spec Compliance 审查结果
 - [ ] 报告包含 Code Quality 审查结果（五轴评分）
 - [ ] 报告包含所有已选 Reviewer 反馈，或记录标准模式未派发专业 reviewer 的理由
+- [ ] 报告包含独立性字段，且状态不是未解释的 FAIL
 - [ ] 意见已按严重级别分类（Critical/Nit/Consider/FYI）
 - [ ] Blocking issues 清晰标注
 
@@ -94,6 +98,7 @@ Two-stage artifact review: first verify functional completeness (Spec Compliance
 ## Exit Conditions
 - [ ] 04-review.md 存在
 - [ ] 两阶段审查都已完成（Stage 1 Spec Compliance + Stage 2 Code Quality）
+- [ ] 独立性要求已满足，或命中 `trivial exemption` 且理由具体
 - [ ] 反馈已按 Blocking / Important / Suggestion 分级
 
 ## Next Steps

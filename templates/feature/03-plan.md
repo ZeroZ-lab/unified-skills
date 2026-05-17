@@ -43,24 +43,24 @@ Task 4（依赖 2 + 3）
 
 小型任务可留空，只在本文件写任务。大型/并行任务使用：
 
-| 子计划 | 状态 | Owner | Depends On | Write Scope | Verification Evidence |
-|--------|------|-------|------------|-------------|-----------------------|
-| `plans/01-contracts.md` | serial | main agent | none | `docs/features/<name>/contracts/` | 契约审查记录 |
-| `plans/02-backend.md` | parallel_safe | backend agent | `plans/01-contracts.md` | `src/server/**`, `tests/server/**` | 后端测试结果 |
-| `plans/03-frontend.md` | parallel_safe | frontend agent | `plans/01-contracts.md` | `src/ui/**`, `tests/ui/**` | 前端测试/截图 |
+| 子计划 | 状态 | Owner | Depends On | Write Scope | Shared Contracts | Cross-check Command | Verification Evidence |
+|--------|------|-------|------------|-------------|------------------|---------------------|-----------------------|
+| `plans/01-contracts.md` | serial | main agent | none | `docs/features/<name>/contracts/` | `API contract v1` | `n/a` | 契约审查记录 |
+| `plans/02-backend.md` | parallel_safe | backend agent | `plans/01-contracts.md` | `src/server/**`, `tests/server/**` | `API contract v1`, `UserDTO` | `npm test -- backend-contract` | 后端测试结果 |
+| `plans/03-frontend.md` | parallel_safe | frontend agent | `plans/01-contracts.md` | `src/ui/**`, `tests/ui/**` | `API contract v1`, `UserDTO` | `npm test -- frontend-contract` | 前端测试/截图 |
 
 ## Parallel Execution Matrix
 
 | 子计划 A | 子计划 B | parallel_safe | 原因 |
 |----------|----------|---------------|------|
-| `plans/02-backend.md` | `plans/03-frontend.md` | yes | 契约已由 `01-contracts` 定义，Write Scope 不重叠 |
+| `plans/02-backend.md` | `plans/03-frontend.md` | yes | 契约已由 `01-contracts` 定义，Write Scope 不重叠，shared contract 可由 cross-check 独立验证 |
 | `plans/01-contracts.md` | `plans/02-backend.md` | no | backend 依赖 contracts |
 
 ## Integration Order
 
 1. 串行完成 contracts / schema / design / content / brand 等共享契约。
 2. 并行执行所有 `parallel_safe` 子计划。
-3. 主 agent 合并结果，检查 changed files 不冲突。
+3. 主 agent 合并结果，检查 changed files 不冲突并运行 cross-check。
 4. 运行全量验证。
 5. 串行执行 release/export/ship 收口任务。
 
@@ -132,8 +132,12 @@ git commit -m "feat: add <功能描述>"
 - **Depends On:** none
 - **Write Scope:** `path/or/glob`
 - **Read Scope:** `docs/features/YYYYMMDD-<name>/01-spec.md`, `docs/features/YYYYMMDD-<name>/03-plan.md`
+- **Shared Contracts:** `types/api.ts`, `design tokens`, `feature flag semantics`
+- **Global Invariants:** 登录态不丢失、响应 shape 不变化、导出分页不改变
 - **Parallel Safety:** yes/no + 原因
 - **Verification Evidence:** 测试命令、审查方式、截图、导出预览或人工确认
+- **Cross-check Command:** `npm test -- contract-suite`
+- **Semantic Independence Reason:** 为什么即使文件不重叠，语义上也不互相阻塞
 - **Merge Checkpoint:** 合并前必须满足的条件
 
 ## Tasks

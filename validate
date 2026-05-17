@@ -211,6 +211,10 @@ printf '\n== 检查文档模板族完整性 ==\n'
 [ -f "templates/maintain/checkpoint.md" ] || fail "缺少 checkpoint 模板"
 sgrep '^## 假设' templates/feature/00-brainstorm.md || fail "brainstorm 模板缺少假设区"
 sgrep '^## Documentation Compliance' templates/feature/04-review.md || fail "review 模板缺少 Documentation Compliance"
+sgrep '^## Review Independence' templates/feature/04-review.md || fail "review 模板缺少 Review Independence"
+for pattern in 'Built by:' 'Stage 1 reviewed by:' 'Stage 2 reviewed by:' 'Independence status:' 'Exemption reason:'; do
+  sgrep "$pattern" templates/feature/04-review.md || fail "review 模板缺少独立性字段: $pattern"
+done
 sgrep '^## Documentation Sync' templates/feature/05-ship.md || fail "ship 模板缺少 Documentation Sync"
 sgrep '^## 基线' templates/feature/06-canary-report.md || fail "canary 模板缺少基线区"
 sgrep '^## 回滚' templates/feature/07-deploy-report.md || fail "deploy 模板缺少回滚区"
@@ -274,15 +278,32 @@ printf '\n== 检查多计划并行契约 ==\n'
 for pattern in 'Plan Topology' 'Subplans' 'Parallel Safety'; do
   sgrep "$pattern" skills/build-workflow-plan/SKILL.md || fail "plan 技能缺少 $pattern"
 done
-for pattern in 'plans/' 'Parallel Execution Matrix' 'Write Scope'; do
+for pattern in 'plans/' 'Parallel Execution Matrix' 'Write Scope' 'Shared Contracts' 'Cross-check Command' 'Semantic Independence Reason'; do
   sgrep "$pattern" templates/feature/03-plan.md || fail "plan 模板缺少 $pattern"
 done
-for pattern in 'Plan Topology' 'Parallel Execution Matrix' 'parallel_safe' 'Write Scope'; do
+for pattern in 'Plan Topology' 'Parallel Execution Matrix' 'parallel_safe' 'Write Scope' 'Shared Contracts' 'Cross-check Command'; do
   sgrep "$pattern" skills/build-workflow-execute/SKILL.md || fail "execute 技能缺少 $pattern"
   sgrep "$pattern" skills/build-cognitive-execution-engine/SKILL.md || fail "execution-engine 技能缺少 $pattern"
 done
+for pattern in 'Shared Contracts' 'Global Invariants' 'Cross-check Command' 'Semantic Independence Reason'; do
+  sgrep "$pattern" skills/build-workflow-plan/SKILL.md || fail "plan 技能缺少语义并行字段: $pattern"
+  sgrep "$pattern" skills/build-workflow-plan/task-templates.md || fail "task-templates 缺少语义并行字段: $pattern"
+done
 sgrep 'plans/\*\.md' README.md || fail "README 缺少 plans/*.md 文档产出链"
 sgrep 'plans/\*\.md' AGENTS.md || fail "AGENTS 缺少 plans/*.md 文档产出链"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查 review 独立性与 pre-review 边界 ==\n'
+for pattern in 'trivial exemption' 'Independence status' 'Built by' 'pre-review / implementation gate'; do
+  sgrep "$pattern" skills/verify-workflow-review/SKILL.md || fail "review 技能缺少独立性/边界合同: $pattern"
+done
+for pattern in 'Stage 2 必须独立' 'Independence status' 'Exemption reason'; do
+  sgrep "$pattern" commands/review.md || fail "review 命令缺少独立性合同: $pattern"
+done
+for pattern in 'pre-review' 'formal `/review`' '04-review.md'; do
+  sgrep "$pattern" skills/build-cognitive-execution-engine/SKILL.md || fail "execution-engine 缺少 build/review 边界: $pattern"
+  sgrep "$pattern" commands/build.md || fail "build 命令缺少 build/review 边界: $pattern"
+done
 [ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查 build task-by-task 合同 ==\n'

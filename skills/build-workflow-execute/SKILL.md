@@ -25,7 +25,7 @@ argument-hint: "[artifact-type] [--parallel-safe]"
 1. 读取 `docs/features/<name>/03-plan.md` 总控计划
 2. 如果存在 `docs/features/<name>/plans/*.md`，按文件编号逐份读取子计划
 3. 从总控计划确认 `Plan Topology`、`Subplans`、`Parallel Execution Matrix`、`Integration Order`
-4. 验证每个子计划都有 `Write Scope`、`Read Scope`、`Parallel Safety`、`Verification Evidence`、`Merge Checkpoint`
+4. 验证每个子计划都有 `Write Scope`、`Read Scope`、`Shared Contracts`、`Global Invariants`、`Parallel Safety`、`Verification Evidence`、`Cross-check Command`、`Merge Checkpoint`
 
 ## Task-by-task Execution Contract
 
@@ -36,6 +36,7 @@ For execution: **implement this plan task-by-task**.
 - 当前 Task N 的验证步骤未通过前，不进入下一个 Task N。
 - 只有 `Parallel Execution Matrix` 明确证明 `parallel_safe: yes` 时，才允许并行执行多个 task 或 subplan。
 - `/build` 不重新创建任务列表。执行中发现任务缺失、验收标准缺失或切片无法执行时，记录 `PLAN GAP`，必要时回到 `/plan` 修补。
+- build 阶段任何 pre-review / implementation gate 结果只用于内部质量门，不能替代 formal `/review`
 
 执行模式：
 - **inline** — 当前会话直接执行
@@ -54,7 +55,7 @@ For execution: **implement this plan task-by-task**.
 - `agents/data-architect.md`：当 Task N 涉及 schema、migration、索引、约束或数据迁移策略时先执行；输出数据契约后交给 `software-engineer` 实现。
 - `agents/content-writer.md`：`document` / `article` / `deck` 的内容切片 implementer。
 - `agents/visual-designer.md`：`visual` 和 `deck` 的版式/视觉切片 implementer；deck 必须等 `content-writer` 完成叙事骨架后再进入 layout。
-- 并行分派只允许给 `Parallel Execution Matrix` 证明 `parallel_safe` 的 Task N 或子计划；每个 persona 的 changed_files 必须落在 Write Scope 内。
+- 并行分派只允许给 `Parallel Execution Matrix` 证明 `parallel_safe` 的 Task N 或子计划；每个 persona 的 changed_files 必须落在 Write Scope 内，并满足 `Shared Contracts` / `Global Invariants` / `Cross-check Command` 合同。
 
 再读取 spec 的 `artifact_type`，按需加载领域技能：
 - `software`（默认）→ 确认 `02-design.md` 已批准；加载 `build-quality-tdd` + 按子领域加载 `build-frontend-*` / `build-backend-api-design` / `build-backend-database` / `build-backend-service-patterns`
@@ -70,13 +71,13 @@ For execution: **implement this plan task-by-task**.
 ### `gated-parallel`
 1. 先串行执行 `contracts` / `serial` / `gated` 子计划
 2. 验证共享契约通过（API、schema、design、content、brand 或导出规格已稳定）
-3. 确认 Write Scope 不重叠后，调用 `build-cognitive-execution-engine` fan-out
-4. 并行子计划全部完成并通过验证后，按 `Integration Order` 串行合并和全量验证
+3. 确认 Write Scope 不重叠、共享契约已冻结后，调用 `build-cognitive-execution-engine` fan-out
+4. 并行子计划全部完成并通过验证后，先运行各自 `Cross-check Command`，再按 `Integration Order` 串行合并和全量验证
 
 ### `parallel`
-fan-out 必须同时满足：`Parallel Execution Matrix` 列出 `parallel_safe: yes`、依赖已完成、有明确 Write Scope、任意两个子计划 Write Scope 不重叠、验证可独立完成。
+fan-out 必须同时满足：`Parallel Execution Matrix` 列出 `parallel_safe: yes`、依赖已完成、有明确 Write Scope、任意两个子计划 Write Scope 不重叠、共享契约已冻结、全局不变量可被 `Cross-check Command` 独立验证。
 
-不满足时：缺 Write Scope → STOP 回 `/plan`；共享写入 → 降级串行；release/export/ship 标 `parallel_safe` → STOP 收口任务必须串行；共享契约未完成 → 按 `gated-parallel` 先执行契约。
+不满足时：缺 Write Scope / Cross-check Command / Semantic Independence Reason → STOP 回 `/plan`；共享写入 → 降级串行；release/export/ship 标 `parallel_safe` → STOP 收口任务必须串行；共享契约未完成 → 按 `gated-parallel` 先执行契约。
 
 ## 增量循环
 
@@ -137,9 +138,10 @@ fan-out 必须同时满足：`Parallel Execution Matrix` 列出 `parallel_safe: 
 | 测试失败 | 新代码 → 修复直到通过；已有测试 → 检查回归并修复 |
 | 构建失败 | 检查错误信息，修复编译/类型错误，不跳过 |
 | 检查点门未通过 | STOP。标记未通过项 → 回到对应任务修复 → 重新运行检查点 → 全部绿色才继续 |
-| 子计划缺 Write Scope | STOP。不能分派 subagent，回到 `/plan` 修补 |
+| 子计划缺 Write Scope / Cross-check Command / Semantic Independence Reason | STOP。不能分派 subagent，回到 `/plan` 修补 |
 | PLAN GAP | STOP。记录缺口，回到 `/plan` 修补 |
 | 两个 parallel_safe 子计划写同一路径 | 降级串行或回到 `/plan` 重新切分 |
+| shared contract / global invariant cross-check 失败 | 降级串行，必要时回到 `/plan` 重切分 |
 | release/export/ship 标 parallel_safe | STOP。收口任务必须串行 |
 | 切片比预期复杂 | 评估分解。预计耗时翻倍时与用户沟通 |
 | 架构决策阻塞 | 停止实现，记录 ADR，执行备选方案 |
@@ -196,6 +198,7 @@ fan-out 必须同时满足：`Parallel Execution Matrix` 列出 `parallel_safe: 
 - [ ] `Plan Topology` 已决定执行模式
 - [ ] 每个子计划内的 `### Task N` 已逐项完成并记录证据
 - [ ] `Parallel Execution Matrix` 支持所有 fan-out 决策
+- [ ] 每个并行子计划的 `Cross-check Command` 已通过
 - [ ] 每个 subagent 的 changed_files 没有越过 Write Scope
 - [ ] 合并后全量验证通过
 

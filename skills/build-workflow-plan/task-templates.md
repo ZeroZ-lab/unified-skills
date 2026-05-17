@@ -77,7 +77,11 @@
 - **Depends On:** `plans/01-contracts.md` 或其他子计划；没有则写 none
 - **Write Scope:** 允许创建/修改的文件、目录或产物路径
 - **Read Scope:** 需要读取的 spec、契约、现有文件或外部材料
+- **Shared Contracts:** 本子计划依赖但不能隐式改写的共享 API / schema / type / token / flag / config / test 契约
+- **Global Invariants:** 本子计划必须保持成立的全局不变量
 - **Verification Evidence:** 独立验证命令、审查方式、导出预览或人工确认
+- **Cross-check Command:** 合并前验证共享契约和全局不变量的命令
+- **Semantic Independence Reason:** 为什么即使文件不重叠，语义上也能独立推进
 - **Merge Checkpoint:** 合并前必须满足的条件
 ```
 
@@ -86,7 +90,8 @@
 `parallel_safe: yes` 只允许在同时满足以下条件时使用：
 - 无共享文件
 - 无顺序依赖
-- 接口契约已定
+- 共享契约已定并冻结
+- 全局不变量可被独立验证
 - 验证可独立完成
 
-共享 schema、共享 API 契约未定、同一文件写入、迁移、发布、全局样式、全局配置默认 `parallel_safe: no`。
+共享 schema、共享 API 契约未定、共享 type、共享 feature flag 语义、共享测试基线、同一文件写入、迁移、发布、全局样式、全局配置默认 `parallel_safe: no`。

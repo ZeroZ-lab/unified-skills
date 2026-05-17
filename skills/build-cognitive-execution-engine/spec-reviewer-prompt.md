@@ -1,6 +1,6 @@
-# Spec Reviewer Subagent 提示词模板
+# Spec Gate Subagent 提示词模板
 
-> 用于模式 C Phase 2：验证实现是否符合 spec。独立于 Implementer 运行，不信任前一个 subagent 的报告。
+> 用于模式 C Phase 2：验证实现是否符合 spec。独立于 Implementer 运行，不信任前一个 subagent 的报告。此结果是 build 内部 pre-review gate，不是 formal `/review` 通过结论。
 
 ---
 
@@ -89,7 +89,7 @@ spec 明确要求的内容，实现中完全不存在。
 ## 输出格式
 
 ```
-结论: <PASS | FAIL>
+结论: <PRE_REVIEW_PASS | PRE_REVIEW_FAIL>
 
 问题列表:
   [MISSING] <spec 条目>: <描述>
@@ -101,5 +101,5 @@ spec 明确要求的内容，实现中完全不存在。
 
 ### 结论判定规则
 
-- **PASS:** 覆盖率 100%，无 MISSING 或 MISUNDERSTOOD 问题（EXTRA 可接受但需列出）
-- **FAIL:** 存在任何 MISSING 或 MISUNDERSTOOD 问题
+- **PRE_REVIEW_PASS:** 覆盖率 100%，无 MISSING 或 MISUNDERSTOOD 问题（EXTRA 可接受但需列出）
+- **PRE_REVIEW_FAIL:** 存在任何 MISSING 或 MISUNDERSTOOD 问题

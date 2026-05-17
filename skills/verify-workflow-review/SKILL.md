@@ -26,14 +26,19 @@ argument-hint: "[--full | --focus: spec|code-quality|security|performance]"
 没有两阶段审查证据就不能批准合并。
 `software` 必须覆盖 Spec Compliance + 五轴质量评估；非软件产物必须覆盖目标受众、内容/视觉质量、完整性和导出证据。
 spec 或 plan 要求同步 project docs 时，`04-review.md` 必须显式记录 `Documentation Compliance`。项目级文档合同未兑现，不得批准合并。
+实现者与审查者默认独立。除非命中 `trivial exemption`，否则标准变更起 Stage 2 必须由独立 reviewer persona 执行；高风险或 `--full` 时 Stage 1 和 Stage 2 都必须独立于 build implementer。
 </HARD-GATE>
 
 ## Agent Dispatch Contract
 
-`/review` 默认由 current agent 直接执行两阶段审查；高风险或 `--full` 时才分派 reviewer persona。阶段顺序不能被 persona 选择改变。
+`/review` 按独立性分为三档，阶段顺序不能被 persona 选择改变。
 
-- Stage 1 Spec Compliance：current agent 或 `agents/review-spec-compliance-auditor.md`；必须加载 `verify-workflow-spec-compliance`
-- Stage 2 Code Quality：Stage 1 通过后执行，current agent 或 `agents/review-code-quality-auditor.md`；必须加载 `verify-quality-code-quality`
+- `trivial exemption`：仅限单文件、纯文案/格式/注释或机械性重命名、无 UI/安全/schema/public API 风险的微小变更；允许 current agent 完成两阶段，但必须在 `04-review.md` 记录 `Exemption reason`
+- `standard`：Stage 1 可由 current agent 或 `agents/review-spec-compliance-auditor.md` 执行；Stage 2 必须由独立的 `agents/review-code-quality-auditor.md` 执行
+- `high-risk/full`：Stage 1 必须由 `agents/review-spec-compliance-auditor.md` 执行；Stage 2 必须由独立的 `agents/review-code-quality-auditor.md` 执行
+- 如果当前 session 在本 feature 的 `/build` 中承担过 implementer，则除 `trivial exemption` 外，不能同时完成 Stage 1 和 Stage 2
+- Stage 1 Spec Compliance：必须加载 `verify-workflow-spec-compliance`
+- Stage 2 Code Quality：Stage 1 通过后执行；必须加载 `verify-quality-code-quality`
 - 安全敏感追加 `agents/review-security-auditor.md`；测试覆盖不确定追加 `agents/review-test-engineer.md`；UI/a11y 风险追加 `agents/review-accessibility-auditor.md`
 - 未被选中的 reviewer 不产出占位反馈；所有已选 reviewer 输出 Blocking / Important / Suggestion
 
@@ -54,6 +59,11 @@ spec 或 plan 要求同步 project docs 时，`04-review.md` 必须显式记录 
 - `document` / `article` / `deck` → 加载 `verify-content-review`
 - `visual` → 加载 `verify-visual-review`
 
+再判定独立性档位：
+- `trivial exemption`：必须满足 Agent Dispatch Contract 的全部条件，并记录豁免理由
+- `standard`：默认档位
+- `high-risk/full`：敏感数据、认证授权、UI/a11y、公共 API、schema/migration、发布前审查或用户指定 `--full`
+
 #### Step 3.1: Spec Compliance（第一关）
 
 **REQUIRED SUB-SKILL:** `verify-workflow-spec-compliance`
@@ -72,6 +82,7 @@ spec 或 plan 要求同步 project docs 时，`04-review.md` 必须显式记录 
 - `visual` → `verify-visual-review`
 
 Software 执行五轴审查：Correctness / Readability / Architecture / Security / Performance。详细标准见 `verify-team-code-review-standards`。出口：五轴全部覆盖，无 Blocking，Important ≤2。
+build 阶段产生的 pre-review / implementation gate 结果只能作为输入线索，不能替代本阶段正式 Stage 1 / Stage 2 证据。
 
 ### Step 4：分类意见
 
@@ -87,6 +98,20 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 
 检查提交者的验证证据：跑了什么测试？构建通过了吗？UI 变更截图了？前后对比？
 
+### Step 5.2：检查审查独立性
+
+在 `04-review.md` 明确记录：
+- `Built by`
+- `Stage 1 reviewed by`
+- `Stage 2 reviewed by`
+- `Independence status`
+- `Exemption reason`
+
+判定规则：
+- `PASS`：满足当前独立性档位要求
+- `FAIL`：标准或高风险变更未满足独立性要求
+- `EXEMPT`：命中 `trivial exemption`，且理由具体可审计
+
 ### Step 5.5：检查文档合同兑现
 
 如果 `01-spec.md` 的 `Documentation Impact` 声明 `project_truth_changed: yes` 或 `doc_intent != feature_only`：
@@ -99,10 +124,10 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 ## 两种审查模式
 
 ### 标准模式（默认）
-当前会话直接执行两阶段审查。产出 `docs/features/<name>/04-review.md`。
+按独立性档位执行两阶段审查。标准变更默认由 current agent 执行 Stage 1，再由独立 reviewer persona 执行 Stage 2。产出 `docs/features/<name>/04-review.md`。
 
 ### 并行发散模式（高风险 --full）
-敏感数据、UI 变更、>50 行变更或 `--full` 时分派专业审查 agent。详细规则见 `review-guidance.md`。
+敏感数据、UI 变更、>50 行变更或 `--full` 时分派独立的 Spec / Quality / specialist reviewer。详细规则见 `review-guidance.md`。
 
 ## 审查标准
 
@@ -122,6 +147,7 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 | 作者拒绝修改 | 升级到技术主管 |
 | 测试不充分 | 要求补充边界/错误路径测试后再审 |
 | 验证证据不足 | 要求补全测试结果、构建输出、UI 截图 |
+| 独立性不满足 | `04-review.md` 标记 FAIL，补派独立 reviewer 后重审 |
 | spec 要求同步 project docs 但未兑现 | 阻塞合并；回到 build 或 ship 前同步文档并重审 |
 
 ## 常见说辞
@@ -151,6 +177,7 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 - 审查意见没有严重级别标签
 - 接受"之后清理"
 - spec 说要同步 project docs，但 `04-review.md` 没有 `Documentation Compliance`
+- 标准变更由 build implementer 独自完成 formal review 两阶段
 </HARD-GATE>
 
 ## 验证清单
@@ -162,6 +189,7 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 - [ ] Blocking 问题已解决
 - [ ] 测试通过
 - [ ] 构建成功
+- [ ] 审查独立性已记录；非 trivial exemption 时满足独立 reviewer 要求
 - [ ] 文档同步合同已检查；需要同步 project docs 时已写 `Documentation Compliance`
 - [ ] 验证故事已记录
 - [ ] 审查产出存到 `docs/features/<name>/04-review.md`
@@ -177,6 +205,13 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 
 ## Artifact Type
 artifact_type: [software/document/article/deck/visual]
+
+## Review Independence
+- Built by: [session / agent / person]
+- Stage 1 reviewed by: [session / agent / person]
+- Stage 2 reviewed by: [session / agent / person]
+- Independence status: PASS / FAIL / EXEMPT
+- Exemption reason: [specific reason or n/a]
 
 ## Stage 1: Spec Compliance
 - Status: PASS / FAIL
