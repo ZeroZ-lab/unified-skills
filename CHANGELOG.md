@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.24.3] - 2026-05-17
+
+### Changed
+- runtime: make Unified skill loading opt-in so ordinary repo questions, direct coding, and direct debugging stay in direct mode until the user explicitly enters a Unified stage or workflow.
+- commands/docs: mark stage commands as explicit Unified entrypoints and align AGENTS, README, Boot Kernel, and the using-unified guide with the new activation gate.
+- hooks: keep destructive-command blocking on Codex, but allow scoped cleanup commands for generated directories instead of denying all cleanup by default.
+- validation: enforce the new opt-in runtime contract in `maintain-workflow-using-unified`, command Runtime Preflight text, SessionStart guidance, and hook behavior tests.
+
 ## [2.24.2] - 2026-05-17
 
 ### Changed

@@ -2,7 +2,8 @@
 # Unified Skills — careful hook
 # Intercepts destructive Bash commands.
 # On Claude Code: prompts user (permissionDecision: "ask")
-# On Codex: blocks by default (permissionDecision: "deny") — fail-closed, safer
+# On Codex: blocks irreversible commands by default and only allows
+# tightly-scoped cleanup commands when targets stay inside generated dirs.
 set -u
 
 # Read JSON from stdin
@@ -24,6 +25,7 @@ if [ -z "$cmd" ]; then
 fi
 
 # Destructive patterns (regex-safe: dots and special chars escaped)
+# Keep this list focused on commands that are hard to recover from.
 destructive_patterns=(
   'rm -rf'
   'rm -r /'
@@ -31,8 +33,6 @@ destructive_patterns=(
   'git push -f'
   'git reset --hard'
   'git checkout \.'
-  'git clean -f'
-  'git branch -D'
   'git push origin --delete'
   'DROP TABLE'
   'TRUNCATE'
@@ -65,8 +65,8 @@ destructive_patterns=(
 )
 
 # Safe generated directories that may be removed without confirmation when used
-# as rm targets. Absolute paths and parent traversal are never bypassed.
-is_safe_rm_command() {
+# as cleanup targets. Absolute paths and parent traversal are never bypassed.
+is_safe_cleanup_targets() {
   python3 - "$1" <<'PY'
 import os
 import shlex
@@ -82,21 +82,44 @@ try:
 except ValueError:
     sys.exit(1)
 
-if not parts or parts[0] != "rm":
+if not parts:
     sys.exit(1)
 
-recursive = False
 targets = []
-for part in parts[1:]:
-    if part == "--":
-        targets.extend(parts[parts.index(part) + 1:])
-        break
-    if part.startswith("-"):
-        recursive = recursive or "r" in part or "R" in part
-        continue
-    targets.append(part)
-
-if not recursive or not targets:
+if parts[0] == "rm":
+    recursive = False
+    saw_double_dash = False
+    for index, part in enumerate(parts[1:], start=1):
+        if saw_double_dash:
+            targets.append(part)
+            continue
+        if part == "--":
+            saw_double_dash = True
+            continue
+        if part.startswith("-"):
+            recursive = recursive or "r" in part or "R" in part
+            continue
+        targets.append(part)
+    if not recursive or not targets:
+        sys.exit(1)
+elif parts[0] == "git" and len(parts) >= 3 and parts[1] == "clean":
+    has_force = False
+    saw_double_dash = False
+    for part in parts[2:]:
+        if saw_double_dash:
+            targets.append(part)
+            continue
+        if part == "--":
+            saw_double_dash = True
+            continue
+        if part.startswith("-"):
+            has_force = has_force or "f" in part
+            continue
+        targets.append(part)
+    # Unscoped git clean remains destructive and must be denied.
+    if not has_force or not targets:
+        sys.exit(1)
+else:
     sys.exit(1)
 
 for target in targets:
@@ -121,12 +144,22 @@ fi
 
 for pattern in "${destructive_patterns[@]}"; do
   if printf '%s' "$cmd" | grep -qE "$pattern"; then
-    if printf '%s' "$pattern" | grep -qE '^rm -r' && is_safe_rm_command "$cmd"; then
+    if printf '%s' "$pattern" | grep -qE '^rm -r' && is_safe_cleanup_targets "$cmd"; then
       continue
     fi
     printf '{"permissionDecision":"%s","permissionDecisionReason":"[careful] 检测到破坏性命令: %s。"}\n' "$decision" "$pattern"
     exit 0
   fi
 done
+
+# Scoped git clean on generated directories is allowed; broad git clean is denied.
+if printf '%s' "$cmd" | grep -qE '^git clean -'; then
+  if is_safe_cleanup_targets "$cmd"; then
+    printf '{}\n'
+  else
+    printf '{"permissionDecision":"%s","permissionDecisionReason":"[careful] 检测到未限定范围的 git clean。请只清理生成目录并显式传入路径。"}\n' "$decision"
+  fi
+  exit 0
+fi
 
 printf '{}\n'

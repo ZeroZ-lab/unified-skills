@@ -25,22 +25,23 @@ fi
 
 # Build command syntax hint based on platform
 if [ "$is_codex" -eq 1 ]; then
-  platform_hint='Codex 直接读取 AGENTS.md、skills-router.json 与 skills/ 中的真实技能；不依赖 repo 内 $command 薄包装入口。'
+  platform_hint='Codex 可在显式进入 Unified 工作流时直接读取 AGENTS.md、skills-router.json 与 skills/ 中的真实技能；不依赖 repo 内 $command 薄包装入口。'
 else
-  platform_hint='Claude Code 使用 /refine、/design、/plan、/build、/review、/ship 进入阶段；技能正文按需读取。'
+  platform_hint='Claude Code 用 commands/ 作为显式 Unified 工作流入口；技能正文按需读取。'
 fi
 
 full_message="Unified Skills Boot Kernel
 
-Unified 已加载。AGENTS.md 是项目入口合同；CANON.md 是行为宪法。
+Unified 可用。AGENTS.md 是项目入口合同；CANON.md 是行为宪法。
 
-Context Runtime:
-- 先用 skills-router.json 做轻量路由，再按需读取完整 SKILL.md。
-- 每次任务声明 loading tier 和选中技能原因：light / standard / expanded / full。
-- light: router-only 或少量当前事实；standard: 1 个主技能 + 最多 1 个专项；expanded: 1 个主技能 + 最多 2 个专项；full: 仅限 --full、对抗性审核、全身体检、高风险发版或用户明确要求。
-- 高风险、安全、UI、性能、发布等扩展必须说明触发原因。
-- 修改技能前读完整技能和 CANON.md；修改后同步 skills-index.json / skills-lock.json，并运行 ./validate。
-- 保留 hard gates、Iron Laws、human partner 措辞、AGENTS 单入口和真实 skills/ 树。
+Default runtime:
+- 普通 repo 问答、普通 coding 请求、未提 Unified 的直接任务，不自动激活 Unified runtime。
+- 只有用户显式输入 /brainstorm /refine /design /plan /build /review /ship /save /restore /learn /help，或明确要求使用 Unified 工作流时，才进入 compact router + loading tier 流程。
+- 激活后先用 skills-router.json 做轻量路由；只有 router 无法回答、需要完整库存、或进入 full 模式时，才读取 skills-index.json。
+
+If editing Unified skills/contracts:
+- 读完整技能和 CANON.md。
+- 同步 skills-index.json / skills-lock.json，并运行 ./validate。
 
 $platform_hint
 

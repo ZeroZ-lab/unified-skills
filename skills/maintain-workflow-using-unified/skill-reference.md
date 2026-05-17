@@ -1,6 +1,6 @@
 # Using Unified — Skill Reference
 
-本文件是 `maintain-workflow-using-unified/SKILL.md` 的辅助材料。主技能保留 compact-router-first 发现流程、loading tier、硬门和验证清单；需要完整技能速查、优先级、类型和平台适配时读取本文件。
+本文件是 `maintain-workflow-using-unified/SKILL.md` 的辅助材料。主技能保留 Unified 激活门、compact-router-first 发现流程、loading tier、硬门和验证清单；需要完整技能速查、优先级、类型和平台适配时读取本文件。
 
 ## 技能分类速查
 
@@ -72,7 +72,7 @@
 - `maintain-workflow-context-save` — 保存工作上下文供后续恢复
 - `maintain-workflow-context-restore` — 新 session 继续之前的工作
 - `maintain-workflow-learn` — 发现项目模式/踩坑/偏好需要持久化
-- `maintain-workflow-using-unified` — Session 启动引导和主动技能发现
+- `maintain-workflow-using-unified` — Unified runtime 激活门和按需技能发现
 
 ### Reflect 阶段（事后回顾、文档工程）
 
@@ -102,4 +102,4 @@
 技能使用 Claude Code 的工具名和约定。在其他平台上的等效方式：
 
 - **Claude Code**：使用 `Skill` 工具调用技能。当技能被调用时，其内容会被加载并呈现——直接遵循。不要用 Read 工具读技能文件。
-- **Codex CLI**：直接读取 `AGENTS.md`、`skills-router.json` 与 `skills/` 中的真实技能；如果宿主暴露技能入口，优先使用宿主入口，否则读取对应 `skills/<name>/SKILL.md`。Codex 不依赖 repo 内旧的命令薄包装或 wrapper skill 目录。
+- **Codex CLI**：普通 direct mode 不自动进入 Unified。只有显式进入 Unified 工作流时，才读取 `AGENTS.md`、`skills-router.json` 与 `skills/` 中的真实技能；如果宿主暴露技能入口，优先使用宿主入口，否则读取对应 `skills/<name>/SKILL.md`。Codex 不依赖 repo 内旧的命令薄包装或 wrapper skill 目录。

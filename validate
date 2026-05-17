@@ -799,6 +799,12 @@ if "`AGENTS.md`" not in guide:
     errors.append(f"{guide_path} missing AGENTS.md single-entry wording")
 if "CLAUDE.md、直接请求" in guide or "CLAUDE.md / spec" in guide:
     errors.append(f"{guide_path} contains stale CLAUDE.md entry wording")
+for phrase in ("显式进入 Unified 工作流", "direct mode", "skills-router.json"):
+    if phrase not in guide:
+        errors.append(f"{guide_path} missing opt-in runtime phrase: {phrase}")
+for stale in ("每个任务都先过 `skills-router.json`。没有例外。", "在响应用户消息或采取任何行动之前，你必须执行技能发现流程。"):
+    if stale in guide:
+        errors.append(f"{guide_path} still contains stale mandatory runtime wording: {stale}")
 
 reference_text = guide
 reference_path = Path("skills/maintain-workflow-using-unified/skill-reference.md")
@@ -988,10 +994,18 @@ for phrase in ("skills-router.json", "`light`", "`standard`", "`expanded`", "`fu
         errors.append(f"{guide_path} missing Context Runtime phrase: {phrase}")
 if "1% 可能相关" in guide:
     errors.append(f"{guide_path} still contains old 1% loading rule")
+for phrase in ("显式进入 Unified 工作流", "direct mode"):
+    if phrase not in guide:
+        errors.append(f"{guide_path} missing opt-in Context Runtime phrase: {phrase}")
+
+agents = Path("AGENTS.md").read_text(encoding="utf-8")
+for phrase in ("opt-in", "只有以下情况才激活 Unified runtime", "direct mode"):
+    if phrase not in agents:
+        errors.append(f"AGENTS.md missing opt-in runtime phrase: {phrase}")
 
 for command_path in sorted(Path("commands").glob("*.md")):
     command = command_path.read_text(encoding="utf-8")
-    for phrase in ("## Runtime Preflight", "skills-router.json", "skills-index.json", "loading tier"):
+    for phrase in ("## Runtime Preflight", "显式 Unified 入口", "skills-router.json", "skills-index.json", "loading tier"):
         if phrase not in command:
             errors.append(f"{command_path} missing command Runtime Preflight phrase: {phrase}")
 
@@ -1001,8 +1015,9 @@ if hook_path.exists():
         input=b'{"permission_mode":"default"}',
     )
     context = json.loads(output.decode("utf-8")).get("hookSpecificOutput", {}).get("additionalContext", "")
-    if "Boot Kernel" not in context or "skills-router.json" not in context:
-        errors.append("SessionStart missing Boot Kernel / skills-router.json guidance")
+    for phrase in ("Boot Kernel", "不自动激活 Unified runtime", "/refine", "skills-router.json"):
+        if phrase not in context:
+            errors.append(f"SessionStart missing opt-in runtime guidance: {phrase}")
     if "## 命令映射" in context:
         errors.append("SessionStart still injects full command map")
     if len(context.splitlines()) > 80:

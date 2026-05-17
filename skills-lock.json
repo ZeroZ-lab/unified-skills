@@ -296,9 +296,9 @@
     "maintain-workflow-using-unified": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "b84e3adeedb646e8ed235308dd6934e1d803eba7d54cc1498e3a0dd1ce04f198",
+      "computedHash": "cc5fa09b878d3bfedb9fd98bbe23b35bcd6ad46a29f1798cab251ccafb0f0654",
       "auxiliaryHashes": {
-        "skill-reference.md": "fb1101935ebf74095226c452c13ca5033ddceb8a6b060d60150c582f3e64ef17"
+        "skill-reference.md": "af030ed592f46739a0fabe9150bca37bd3fa15cbed46d81b01d3fb38009b03e7"
       }
     },
     "design-content-direction": {

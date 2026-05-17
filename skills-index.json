@@ -121,7 +121,7 @@
     "maintain-workflow-context-restore": "恢复保存的工作上下文。当新 session 需要继续之前的工作，或提到\"恢复\"\"restore\"\"继续上次\"",
     "maintain-workflow-context-save": "保存工作上下文。当需要保存当前工作状态供后续 session 恢复，或提到\"保存\"\"save\"\"checkpoint\"\"挂起\"",
     "maintain-workflow-learn": "跨会话学习记忆。当发现项目模式、踩坑经验、偏好需要持久化，或提到\"学习\"\"记忆\"\"记住\"\"下次注意\"",
-    "maintain-workflow-using-unified": "Session 启动引导——建立主动技能发现机制。每个 session 开始时加载，或提到\"Unified\"\"启动\"\"初始化\"",
+    "maintain-workflow-using-unified": "Unified runtime 激活门——只在用户显式进入 Unified 工作流、调用阶段命令或提到\"Unified 启动/路由/初始化\"时使用；不用于普通 repo 问答或未提 Unified 的直接任务",
     "reflect-team-documentation": "文档工程——记录决策、API、代码约定。当需要写文档、记录架构决策或维护项目知识，或提到\"文档\"\"README\"\"API 文档\"",
     "reflect-team-retro": "事后回顾——提取经验和改进行动。当功能完成、里程碑达成、事故处理后需要系统性复盘，或提到\"回顾\"\"复盘\"\"retro\"\"postmortem\"",
     "ship-artifact-export": "非软件产物导出与交付。适用于 artifact_type 为 document/article/deck/visual，当需要导出 PDF/DOCX/PPTX/PNG，或提到\"导出\"\"交付\"\"PDF\"\"PPTX\"",

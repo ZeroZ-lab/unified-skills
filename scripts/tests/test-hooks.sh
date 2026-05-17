@@ -21,9 +21,10 @@ session_output=$(printf '%s' '{"permission_mode":"default"}' | bash hooks/sessio
 session_context=$(printf '%s' "$session_output" | json_get "hookSpecificOutput.additionalContext")
 
 if [[ "$session_context" != *"Boot Kernel"* ]] ||
-   [[ "$session_context" != *"skills-router.json"* ]] ||
+   [[ "$session_context" != *"不自动激活 Unified runtime"* ]] ||
+   [[ "$session_context" != *"/refine"* ]] ||
    [[ "$session_context" != *"AGENTS.md"* ]] ||
-   [[ "$session_context" != *"loading tier"* ]]; then
+   [[ "$session_context" != *"skills-router.json"* ]]; then
     echo "FAIL: SessionStart output missing Boot Kernel runtime guidance"
     echo "$session_context"
     exit 1
@@ -57,7 +58,32 @@ fi
 
 echo "PASS: careful denies destructive Codex command"
 
-echo "Test 3: freeze allows files inside boundary and blocks outside"
+echo "Test 3: careful allows scoped cleanup in generated directories"
+safe_rm_output=$(printf '%s' '{"permission_mode":"default","tool_input":{"command":"rm -rf dist .next"}}' | bash hooks/careful.sh)
+if [ "$safe_rm_output" != "{}" ]; then
+  echo "FAIL: careful should allow scoped rm cleanup in generated directories"
+  echo "$safe_rm_output"
+  exit 1
+fi
+
+safe_clean_output=$(printf '%s' '{"permission_mode":"default","tool_input":{"command":"git clean -fd -- dist coverage"}}' | bash hooks/careful.sh)
+if [ "$safe_clean_output" != "{}" ]; then
+  echo "FAIL: careful should allow scoped git clean in generated directories"
+  echo "$safe_clean_output"
+  exit 1
+fi
+
+unsafe_clean_output=$(printf '%s' '{"permission_mode":"default","tool_input":{"command":"git clean -fdx"}}' | bash hooks/careful.sh)
+unsafe_clean_decision=$(printf '%s' "$unsafe_clean_output" | json_get "permissionDecision")
+if [ "$unsafe_clean_decision" != "deny" ]; then
+  echo "FAIL: careful should deny unscoped git clean"
+  echo "$unsafe_clean_output"
+  exit 1
+fi
+
+echo "PASS: careful cleanup behavior is balanced"
+
+echo "Test 4: freeze allows files inside boundary and blocks outside"
 tmp=$(mktemp -d)
 cleanup() {
   rm -rf "$tmp"
