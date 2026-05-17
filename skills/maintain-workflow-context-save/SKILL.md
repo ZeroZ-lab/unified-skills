@@ -61,6 +61,8 @@ git log --oneline -5
 
 文件格式：
 
+模板起点：`templates/maintain/checkpoint.md`
+
 ```markdown
 ---
 status: active|paused|blocked

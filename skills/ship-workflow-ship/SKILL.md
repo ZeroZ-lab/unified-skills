@@ -23,6 +23,7 @@ argument-hint: "[artifact-type] [--canary]"
 
 <HARD-GATE>
 没有已验证、可交付、可追溯的发布计划就不上线。`software` 需要 Staging、Go/No-Go、回滚计划；非软件产物需要导出验证、最终文件路径、版本归档和验收记录。
+spec / plan / review 已要求同步的项目级文档，必须在 ship 阶段写入 `Documentation Sync` 并明确状态；缺少状态不得收口。
 </HARD-GATE>
 
 ## 流程
@@ -134,6 +135,13 @@ Pre-launch checks (Phase A passed)
 - 变更统计（文件数 + 行数）
 - 事后总结（功能负责人 + 观察 + 改进项）
 
+同时检查并记录 `Documentation Sync`：
+- `Updated project docs`
+- `Deferred project docs`
+- `CHANGELOG.md updated`
+- `README verified`
+- 其他 review / plan 标记为必须同步的项目级文档状态
+
 ### Phase E：发布后闭环（推荐）
 
 发布完成后，必须执行发布后闭环：
@@ -168,6 +176,10 @@ Pre-launch checks (Phase A passed)
 
 ## 输出模板
 
+模板起点：
+- `templates/feature/05-ship.md`
+- `templates/feature/README.md`（聚合 README）
+
 ```markdown
 # Ship Report — <feature-name>
 
@@ -196,6 +208,12 @@ Pre-launch checks (Phase A passed)
 - 已知风险: [列出]
 - 回滚计划: [已准备 / 未准备]
 - 决策: GO / NO-GO
+
+## Documentation Sync
+- Updated project docs: [paths or none]
+- Deferred project docs: [paths + reasons or none]
+- CHANGELOG.md updated: yes / no / n/a
+- README verified: yes / no / n/a
 
 ## Phase E: 发布后闭环
 - 健康检查: [PASS/FAIL]
@@ -275,6 +293,7 @@ Pre-launch checks (Phase A passed)
 - [ ] 预发检查清单完成（全部绿色）
 - [ ] Feature flag 已配置（如适用）
 - [ ] 回滚计划已文档化
+- [ ] Documentation Sync 已完成；必须同步的 project docs 状态明确
 - [ ] 团队已通知上线
 
 上线后：

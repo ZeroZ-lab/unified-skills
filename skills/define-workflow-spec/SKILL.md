@@ -51,7 +51,12 @@ ASSUMPTIONS I'M MAKING:
 5. **Project Structure / Artifact Paths** — 源码、测试、文档或最终产物路径
 6. **Style / Quality Bar** — 代码风格、文风、版式、视觉风格或演示标准
 7. **Verification Strategy** — 测试、事实核查、版式检查、导出检查或人工验收方式
-8. **Boundaries（三级系统）**:
+8. **Documentation Impact** — 文档槽位和项目级同步意图：
+   - `doc_intent: feature_only | feature_plus_project | project_only`
+   - `project_truth_changed: yes | no`
+   - `affected_project_docs`: 明确列出 `README.md`、`AGENTS.md`、`CHANGELOG.md`、`DESIGN.md` 或 `docs/architecture/*.md`
+   - `rationale`: 为什么只写 feature docs，或为什么必须同步 project docs
+9. **Boundaries（三级系统）**:
    - **Always do:** 提交前跑测试、遵循命名约定、验证输入
    - **Ask first:** 数据库 schema 变更、加依赖、改 CI 配置
    - **Never do:** 提交密钥、编辑 vendor 目录、未经批准删除失败测试
@@ -89,6 +94,13 @@ Allowed: software / document / article / deck / visual
 - [ ] 需要改变 API / 权限 / 数据结构 / 生产配置
 - [ ] 实际范围明显大于当前 Goal
 
+## Documentation Impact
+- doc_intent: feature_only
+- project_truth_changed: no
+- affected_project_docs:
+  - none
+- rationale:
+
 ## Tech Stack
 [software 时填写框架、语言、关键依赖；非 software 时填写工具链、格式、模板或品牌约束]
 
@@ -103,6 +115,9 @@ Allowed: software / document / article / deck / visual
 
 ## Verification Strategy
 [自动测试、事实核查、人工审查、版式检查、导出验证]
+
+## Documentation Impact
+[默认 `feature_only`。当公共 API / CLI / 启动方式 / 部署配置 / 跨 feature 设计约束 / 系统边界 / 监控安全规则变化时，升级为 `feature_plus_project` 或 `project_only`，并明确列出受影响的项目级文档路径。]
 
 ## Boundaries
 - Always: [...]
@@ -149,6 +164,7 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 | 用户要求大幅修改 | 直接在 spec 文件上修改，重走用户审查步骤。修改后仍需用户批准。 |
 | 需求变更 | 更新 spec，不需要重新 refine。但变更涉及 Goal Alignment 时需重新做 Goal Review。 |
 | spec 缺少 Success Criteria | 强制补充具体可测试的验收条件。抽象描述（如"更好""更快")不能替代量化标准。 |
+| `project_truth_changed: yes` 但缺少 `affected_project_docs` | 阻塞。必须显式写出要同步的项目级文档路径，不能写“之后补文档”。 |
 | Goal Alignment 与 Success Criteria 冲突 | 标记为 Blocking，优先修正 Done When 或 Success Criteria 使其一致。 |
 | 隐藏假设未被 Surface Assumptions 列出 | 回到 Step 1 补列假设。不带着未列出的假设进入 spec 编写。 |
 
@@ -173,7 +189,9 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 - 在 Surface Assumptions 之前就开始写 spec 内容
 - spec 缺少 Success Criteria（成功标准不具体=无法验收）
 - spec 缺少 Goal Alignment（无法追溯目标来源或完成定义）
+- spec 缺少 Documentation Impact（无法判断文档该落哪一层）
 - Goal Alignment 与 Success Criteria 冲突
+- `project_truth_changed: yes` 但没有 `affected_project_docs`
 - "不做清单"没有明确 trade-off
 - 用户已批准的 spec 在实现过程中静默变更
 - 跳过用户审查直接进入 design / plan
@@ -181,9 +199,10 @@ spec 写完 → 请用户审查 spec 文件 → 确认或修改 → 用户批准
 
 ## 验证清单
 
-- [ ] spec 覆盖全部 8 个核心区域
+- [ ] spec 覆盖全部 9 个核心区域
 - [ ] artifact_type 已声明；未声明时明确按 `software` 处理
 - [ ] Goal Alignment 已声明，且 Done When 与 Success Criteria 一致
+- [ ] Documentation Impact 已声明；需要同步 project docs 时已列出明确路径
 - [ ] Stop Conditions 已声明
 - [ ] 隐藏假设已列出（Surface Assumptions）
 - [ ] 用户已审查并批准 spec
@@ -239,11 +258,13 @@ spec: "优化仪表盘性能，让页面更快"
 **Goal Alignment**: [来源 / 状态 / 评分]
 **Done When**: [具体可验证条件]
 **Stop Conditions**: [具体阻断条件]
+**Documentation Impact**: [doc_intent / project_truth_changed / affected_project_docs]
 
 **核心区域覆盖**:
 - Objective: ✓ / ✗
 - Artifact Type: ✓ / ✗
 - Goal Alignment: ✓ / ✗
+- Documentation Impact: ✓ / ✗
 - Commands / Tools: ✓ / ✗
 - Project Structure: ✓ / ✗
 - Style / Quality Bar: ✓ / ✗

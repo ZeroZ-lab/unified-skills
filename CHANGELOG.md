@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.24.1] - 2026-05-17
+
+### Added
+- templates: add explicit markdown templates for brainstorm, review, ship, canary, deploy, checkpoint, and the root/project-level documentation family.
+- validation: add `templates/TEMPLATE-GUIDE.md` as the shared enterprise template contract for the full template family.
+- validation: add `scripts/check-doc-sync-contract.py` plus negative fixtures to verify project-doc sync obligations across spec/plan/review/ship outputs.
+
+### Changed
+- workflow docs: teach `AGENTS.md` and stage skills to classify generated docs into root, project, feature, and bug slots before choosing file paths.
+- templates: upgrade spec and plan templates with `Documentation Impact` and `Project Doc Sync Plan` fields for project-level doc synchronization.
+- review/ship contracts: require `Documentation Compliance` and `Documentation Sync` tracking when feature work changes project truth.
+- validation: enforce the expanded template family, the template guide, and the doc-sync contract inside `./validate`.
+
 ## [2.18.1] - 2026-05-15
 
 ### Added

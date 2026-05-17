@@ -2,6 +2,12 @@
 
 > For execution: implement this plan task-by-task. Treat each `### Task N` block as one execution unit, and do not start the next task until the current task has passing verification evidence unless `Parallel Execution Matrix` explicitly proves `parallel_safe: yes`.
 
+## Plan Status
+- Status: draft / approved / blocked
+- Scope Size: XS / S / M / L
+- Risk Level: low / medium / high
+- Project Doc Sync Plan Status: not-needed / planned / completed
+
 ## Artifact Type
 artifact_type: software
 
@@ -57,6 +63,19 @@ Task 4（依赖 2 + 3）
 3. 主 agent 合并结果，检查 changed files 不冲突。
 4. 运行全量验证。
 5. 串行执行 release/export/ship 收口任务。
+
+## Project Doc Sync Plan
+
+- Must update:
+  - `README.md`
+- Optional update:
+  - 无
+- Stage owner:
+  - Task N / phase name
+- Verification method:
+  - review checklist / validate rule / manual confirmation
+- Deferred docs with reason:
+  - 无
 
 ### Task N: <功能描述>
 

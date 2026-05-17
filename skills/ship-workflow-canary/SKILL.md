@@ -238,6 +238,8 @@ Canary Report — payment-v2
 
 ## 输出模板
 
+模板起点：`templates/feature/06-canary-report.md`
+
 ```markdown
 ### Canary Report 交付记录 — <feature-name>
 

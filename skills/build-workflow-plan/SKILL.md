@@ -77,6 +77,8 @@ argument-hint: "[--parallel-safe | --sequential]"
 
 映射出哪些文件会被创建或修改。每个文件一个明确职责；一起变化的放一起；遵循现有模式。
 
+如果 `01-spec.md` 的 `Documentation Impact` 不是 `feature_only`，这里还必须映射 project doc 写入面：哪些是 `root docs`，哪些是 `project docs`，哪些继续留在 `feature docs`。
+
 ### Step 4：垂直切片（锚点执行）
 
 ### Step 5：写 bite-sized 任务（锚点执行）
@@ -88,6 +90,18 @@ argument-hint: "[--parallel-safe | --sequential]"
 排列任务使依赖满足、系统保持可工作、高风险任务放前面、每 2-3 个任务设验证检查点。
 
 多计划模式下 `03-plan.md` 必须包含：Subplans + Parallel Execution Matrix + Integration Order + Shared Contracts。任何子计划没有 `Write Scope` 不能分派；两个 `parallel_safe` 子计划 Write Scope 不能重叠。
+
+### Step 6.5：写 `Project Doc Sync Plan`
+
+如果 spec 声明 `project_truth_changed: yes` 或 `doc_intent != feature_only`，`03-plan.md` 必须额外写：
+
+- `Must update`：本次必须同步的项目级文档路径
+- `Optional update`：可选同步，但不是发布门
+- `Stage owner`：由 `/build`、`/review` 或 `/ship` 哪个阶段收口
+- `Verification method`：如何判断这些文档已兑现
+- `Deferred docs with reason`：明确延后项和原因
+
+即使 `doc_intent: feature_only`，也要显式写 `Project Doc Sync Plan`，并说明 `not-needed`。
 
 ### Step 7：自审
 
@@ -103,6 +117,7 @@ argument-hint: "[--parallel-safe | --sequential]"
 - [ ] 验证完整性：每个验证步骤有具体命令 + 预期输出 + 失败诊断
 - [ ] 代码示例风格：最小示例 + 意图注释，无完整实现逻辑
 - [ ] 任务粒度：≤5 文件、3-7 步、标题无 "and"
+- [ ] 文档同步：如果 spec 要求同步 project docs，plan 已写 `Project Doc Sync Plan`
 
 ### Step 7.5：Plan Review Army
 
@@ -120,6 +135,7 @@ argument-hint: "[--parallel-safe | --sequential]"
 | 任务过大 | 分解到 ≤5 文件；标题出现 "and" = 拆分 |
 | 验收条件缺失 | 强制补充；无验收条件的任务不能进入 build |
 | parallel_safe 写入重叠 | 标记为串行，调整 Integration Order |
+| spec 要求同步 project docs 但 plan 未写 owner / verification | 阻塞。补 `Project Doc Sync Plan` 后再进入 build |
 
 ## 常见说辞
 
@@ -135,6 +151,7 @@ argument-hint: "[--parallel-safe | --sequential]"
 - 没有书面任务清单就开始实现
 - 任务说"实现功能"但没有验收条件
 - plan 中没有验证步骤
+- spec 里说要同步 project docs，但 plan 没写 `Project Doc Sync Plan`
 - 所有任务都是 L 或 XL 大小
 - 阶段之间没有检查点
 - 依赖顺序没有执行
@@ -148,6 +165,7 @@ argument-hint: "[--parallel-safe | --sequential]"
 - [ ] 主要阶段间设了检查点
 - [ ] plan 没有占位符
 - [ ] spec 每个需求在 plan 中都有对应任务
+- [ ] `Project Doc Sync Plan` 已存在；需要同步时包含 owner / verification / deferred reason
 - [ ] 多计划任务有 Subplans、Parallel Execution Matrix、Integration Order
 - [ ] `parallel_safe` 子计划之间没有重叠写入
 - [ ] 用户已审查并批准 plan
@@ -181,6 +199,13 @@ Task 3: 建所有 UI
 ### Plan — <feature-name>
 
 Plan Topology: [serial / parallel / gated-parallel] | artifact_type: [software/...]
+
+Project Doc Sync Plan:
+- Must update: [paths or none]
+- Optional update: [paths or none]
+- Stage owner: [phase / task]
+- Verification method: [review / validate / manual]
+- Deferred docs with reason: [items or none]
 
 Task 清单:
 | Task N | 标题 | 文件数 | 验收条件 | 验证命令 | 依赖 |

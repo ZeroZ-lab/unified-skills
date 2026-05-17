@@ -178,11 +178,22 @@ if [ "$skill_count" != "$EXPECTED_SKILL_COUNT" ]; then
 fi
 
 template_count=$(find templates -type f | wc -l | tr -d ' ')
-if [ "$template_count" != "8" ]; then
-  fail "模板数量应为 8，实际为 $template_count"
+if [ "$template_count" != "22" ]; then
+  fail "模板数量应为 22，实际为 $template_count"
 fi
 
-for file in templates/feature/01-spec.md templates/feature/02-design.md templates/feature/03-plan.md skills/define-workflow-spec/SKILL.md README.md AGENTS.md; do
+for file in \
+  templates/feature/00-brainstorm.md \
+  templates/feature/01-spec.md \
+  templates/feature/02-design.md \
+  templates/feature/03-plan.md \
+  templates/feature/04-review.md \
+  templates/feature/05-ship.md \
+  templates/feature/06-canary-report.md \
+  templates/feature/07-deploy-report.md \
+  skills/define-workflow-spec/SKILL.md \
+  README.md AGENTS.md
+do
   sgrep 'artifact_type' "$file" || fail "缺少 artifact_type 说明: $file"
 done
 
@@ -190,6 +201,74 @@ for type in software document article deck visual; do
   sgrep "$type" templates/feature/01-spec.md || fail "spec 模板缺少 artifact_type 取值: $type"
 done
 [ "$status" -eq 0 ] && printf '通过（跳过已删除技能检查，当前处于迁移中）\n'
+
+printf '\n== 检查文档模板族完整性 ==\n'
+[ -f "templates/feature/00-brainstorm.md" ] || fail "缺少 brainstorm 模板"
+[ -f "templates/feature/04-review.md" ] || fail "缺少 review 模板"
+[ -f "templates/feature/05-ship.md" ] || fail "缺少 ship 模板"
+[ -f "templates/feature/06-canary-report.md" ] || fail "缺少 canary 模板"
+[ -f "templates/feature/07-deploy-report.md" ] || fail "缺少 deploy 模板"
+[ -f "templates/maintain/checkpoint.md" ] || fail "缺少 checkpoint 模板"
+sgrep '^## 假设' templates/feature/00-brainstorm.md || fail "brainstorm 模板缺少假设区"
+sgrep '^## Documentation Compliance' templates/feature/04-review.md || fail "review 模板缺少 Documentation Compliance"
+sgrep '^## Documentation Sync' templates/feature/05-ship.md || fail "ship 模板缺少 Documentation Sync"
+sgrep '^## 基线' templates/feature/06-canary-report.md || fail "canary 模板缺少基线区"
+sgrep '^## 回滚' templates/feature/07-deploy-report.md || fail "deploy 模板缺少回滚区"
+sgrep '^## Summary' templates/maintain/checkpoint.md || fail "checkpoint 模板缺少 Summary"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查项目级模板族完整性 ==\n'
+[ -f "templates/TEMPLATE-GUIDE.md" ] || fail "缺少 TEMPLATE-GUIDE.md"
+[ -f "templates/root/README.md" ] || fail "缺少 root README 模板"
+[ -f "templates/root/AGENTS.md" ] || fail "缺少 root AGENTS 模板"
+[ -f "templates/root/CHANGELOG.md" ] || fail "缺少 root CHANGELOG 模板"
+[ -f "templates/project/system-overview.md" ] || fail "缺少 system-overview 模板"
+[ -f "templates/project/module-boundaries.md" ] || fail "缺少 module-boundaries 模板"
+[ -f "templates/project/deployment-and-runtime.md" ] || fail "缺少 deployment-and-runtime 模板"
+[ -f "templates/project/observability-and-runbook.md" ] || fail "缺少 observability-and-runbook 模板"
+sgrep '^## Quick Start' templates/root/README.md || fail "root README 模板缺少 Quick Start"
+sgrep '^## Workflow Contract' templates/root/AGENTS.md || fail "root AGENTS 模板缺少 Workflow Contract"
+sgrep '^## \[Unreleased\]' templates/root/CHANGELOG.md || fail "root CHANGELOG 模板缺少 Unreleased"
+sgrep '^## System Boundaries' templates/project/system-overview.md || fail "system-overview 模板缺少 System Boundaries"
+sgrep '^## Allowed Dependencies' templates/project/module-boundaries.md || fail "module-boundaries 模板缺少 Allowed Dependencies"
+sgrep '^## Rollback Entry' templates/project/deployment-and-runtime.md || fail "deployment-and-runtime 模板缺少 Rollback Entry"
+sgrep '^## Incident Actions' templates/project/observability-and-runbook.md || fail "observability-and-runbook 模板缺少 Incident Actions"
+sgrep '^## Enterprise Template Standard' templates/TEMPLATE-GUIDE.md || fail "TEMPLATE-GUIDE 缺少 Enterprise Template Standard"
+sgrep '^## Reviewer Checklist' templates/TEMPLATE-GUIDE.md || fail "TEMPLATE-GUIDE 缺少 Reviewer Checklist"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+printf '\n== 检查文档同步合同 ==\n'
+for pattern in \
+  'doc_intent' \
+  'project_truth_changed' \
+  'affected_project_docs' \
+  'Project Doc Sync Plan' \
+  'Documentation Compliance' \
+  'Documentation Sync'
+do
+  case "$pattern" in
+    doc_intent|project_truth_changed|affected_project_docs)
+      sgrep "$pattern" AGENTS.md || fail "AGENTS 缺少文档同步合同字段: $pattern"
+      sgrep "$pattern" templates/feature/01-spec.md || fail "spec 模板缺少文档同步合同字段: $pattern"
+      sgrep "$pattern" skills/define-workflow-spec/SKILL.md || fail "spec 技能缺少文档同步合同字段: $pattern"
+      ;;
+    'Project Doc Sync Plan')
+      sgrep "$pattern" AGENTS.md || fail "AGENTS 缺少 $pattern"
+      sgrep "$pattern" templates/feature/03-plan.md || fail "plan 模板缺少 $pattern"
+      sgrep "$pattern" skills/build-workflow-plan/SKILL.md || fail "plan 技能缺少 $pattern"
+      ;;
+    'Documentation Compliance')
+      sgrep "$pattern" AGENTS.md || fail "AGENTS 缺少 $pattern"
+      sgrep "$pattern" skills/verify-workflow-review/SKILL.md || fail "review 技能缺少 $pattern"
+      ;;
+    'Documentation Sync')
+      sgrep "$pattern" AGENTS.md || fail "AGENTS 缺少 $pattern"
+      sgrep "$pattern" skills/ship-workflow-ship/SKILL.md || fail "ship 技能缺少 $pattern"
+      ;;
+  esac
+done
+python3 scripts/check-doc-sync-contract.py || fail "文档同步合同检查失败"
+[ "$status" -eq 0 ] && printf '通过\n'
 
 printf '\n== 检查多计划并行契约 ==\n'
 for pattern in 'Plan Topology' 'Subplans' 'Parallel Safety'; do

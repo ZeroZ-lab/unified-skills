@@ -1,6 +1,13 @@
 # Unified Docs
 
-`docs/` 只保留 3 类内容，避免当前合同和运行产物混在一起：
+`docs/` 只保留 3 类仓库内目录内容；项目级入口真相继续放在根目录。组合起来，Unified 的文档槽位是 4 类：
+
+- `root docs`: `README.md`、`AGENTS.md`、`CHANGELOG.md`、`DESIGN.md`
+- `project docs`: `docs/architecture/`
+- `feature docs`: `docs/features/`
+- `bug docs`: `docs/bugs/`
+
+`docs/` 目录自身只承载后 3 类中的仓库内部分，避免当前合同和运行产物混在一起：
 
 ## 目录约定
 

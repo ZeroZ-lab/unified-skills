@@ -146,6 +146,8 @@ curl 健康检查端点（`/health`、`/api/status`、`/api/readyz`、`/version`
 
 ## 输出模板
 
+模板起点：`templates/feature/07-deploy-report.md`
+
 ```markdown
 ### Land 交付记录 — <feature-name>
 

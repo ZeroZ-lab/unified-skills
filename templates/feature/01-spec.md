@@ -1,5 +1,10 @@
 # <Feature Name> — Spec
 
+## Status Summary
+- Owner:
+- Date:
+- Status: draft / approved / blocked
+
 ## Artifact Type
 `artifact_type: software`
 
@@ -24,6 +29,14 @@
 - [ ] 需要修改明确排除范围
 - [ ] 需要改变 API / 权限 / 数据结构 / 生产配置
 - [ ] 实际范围明显大于当前 Goal
+
+## Documentation Impact
+- `doc_intent: feature_only`
+- `project_truth_changed: no`
+- `affected_project_docs:`
+  - 无
+- `rationale:`
+  - 默认只更新当前 feature 文档链；只有长期项目真相变化时才升级为 `feature_plus_project` 或 `project_only`
 
 ## 问题
 [为什么要做？解决了什么痛点？现状是什么？]
@@ -62,6 +75,11 @@
 ## 验收标准
 - [ ] 可验证的标准 1
 - [ ] 可验证的标准 2
+
+## Risks and Mitigations
+| 风险 | 概率 | 影响 | 应对方案 |
+|------|------|------|---------|
+| <风险> | 高/中/低 | 高/中/低 | <应对策略> |
 
 ## Scope 边界
 - **做:** 功能 A、功能 B

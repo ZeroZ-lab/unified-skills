@@ -104,6 +104,8 @@ argument-hint: "[模糊想法或开放性问题]"
 
 ## 脑暴输出模板
 
+模板起点：`templates/feature/00-brainstorm.md`
+
 ```markdown
 # 设计: [主题]
 

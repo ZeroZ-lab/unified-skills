@@ -25,6 +25,7 @@ argument-hint: "[--full | --focus: spec|code-quality|security|performance]"
 功能不完整的代码不进入质量审查。
 没有两阶段审查证据就不能批准合并。
 `software` 必须覆盖 Spec Compliance + 五轴质量评估；非软件产物必须覆盖目标受众、内容/视觉质量、完整性和导出证据。
+spec 或 plan 要求同步 project docs 时，`04-review.md` 必须显式记录 `Documentation Compliance`。项目级文档合同未兑现，不得批准合并。
 </HARD-GATE>
 
 ## Agent Dispatch Contract
@@ -86,6 +87,15 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 
 检查提交者的验证证据：跑了什么测试？构建通过了吗？UI 变更截图了？前后对比？
 
+### Step 5.5：检查文档合同兑现
+
+如果 `01-spec.md` 的 `Documentation Impact` 声明 `project_truth_changed: yes` 或 `doc_intent != feature_only`：
+
+- 检查 `03-plan.md` 是否包含 `Project Doc Sync Plan`
+- 检查受影响的项目级文档是否已更新，或是否有明确的 defer 理由
+- 在 `04-review.md` 写 `Documentation Compliance`
+- `Required project docs updated: FAIL` 时，整体 verdict 不能是 APPROVED
+
 ## 两种审查模式
 
 ### 标准模式（默认）
@@ -112,6 +122,7 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 | 作者拒绝修改 | 升级到技术主管 |
 | 测试不充分 | 要求补充边界/错误路径测试后再审 |
 | 验证证据不足 | 要求补全测试结果、构建输出、UI 截图 |
+| spec 要求同步 project docs 但未兑现 | 阻塞合并；回到 build 或 ship 前同步文档并重审 |
 
 ## 常见说辞
 
@@ -139,6 +150,7 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 - Bug fix PR 没有回归测试
 - 审查意见没有严重级别标签
 - 接受"之后清理"
+- spec 说要同步 project docs，但 `04-review.md` 没有 `Documentation Compliance`
 </HARD-GATE>
 
 ## 验证清单
@@ -150,12 +162,15 @@ Software 执行五轴审查：Correctness / Readability / Architecture / Securit
 - [ ] Blocking 问题已解决
 - [ ] 测试通过
 - [ ] 构建成功
+- [ ] 文档同步合同已检查；需要同步 project docs 时已写 `Documentation Compliance`
 - [ ] 验证故事已记录
 - [ ] 审查产出存到 `docs/features/<name>/04-review.md`
 
 ## 输出模板
 
 审查完成后，`04-review.md` 必须包含：
+
+模板起点：`templates/feature/04-review.md`
 
 ```markdown
 # [功能名称] — Review
@@ -179,6 +194,12 @@ artifact_type: [software/document/article/deck/visual]
 | # | Severity | Category | Description | File:Line | Status |
 |---|----------|----------|-------------|-----------|--------|
 | 1 | Blocking | Security | SQL injection in query | src/api.ts:42 | Open |
+
+## Documentation Compliance
+- Feature artifact chain complete: PASS / FAIL
+- Project doc sync required by spec: yes / no
+- Required project docs updated: PASS / FAIL
+- Missing sync: [list or none]
 
 ## Verdict
 - Overall: APPROVED / APPROVED_WITH_CONCERNS / REJECTED
