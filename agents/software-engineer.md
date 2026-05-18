@@ -25,7 +25,9 @@ isolation: worktree
 - 数据建模（由 data-architect 完成，你负责操作）
 - 代码审查（由 review-spec-compliance-auditor 和 review-code-quality-auditor 完成）
 
-## 加载的 Skills
+## 依赖的阶段技能上下文
+
+以下 skill 由对应 stage workflow 预先加载或授权，表示本 persona 典型会在这些上下文里被消费；**不表示 software-engineer 可以自主选择、追加或加载这些 skill。**
 
 - `build-quality-tdd`（必须，TDD Iron Law）
 - `build-backend-api-design`

@@ -6,8 +6,12 @@
 - runtime: add feature-scoped `docs/features/<feature>/state.json` so new sessions can recover the active Unified feature stage and next command without manual `/restore`.
 - hooks: update phase document tracking to maintain feature state and teach SessionStart to surface a compact resume hint.
 - validation: verify committed feature state files and block local runtime-only state such as `dirty_status` from project truth.
+- roles: add 4 new personas (`refine-content-scout`, `review-content-auditor`, `review-visual-auditor`, `ship-artifact-export-auditor`) to close content/visual gaps in refine, review and ship stages.
 
 ### Changed
+- delivery model: converge `artifact_type` semantics into 3 canonical delivery classes (`software` / `content` / `visual`) with backward-compatible `artifact_type` migration; update AGENTS.md, refine/review/ship skills, commands, templates and help entry.
+- review: rename Stage 2 from "Code Quality" to "Artifact Quality" and route by `artifact_type` — software gets five-axis code review, document/article gets content review, deck gets content + visual, visual gets visual review.
+- ship: add non-software staging path (final delivery verification), add `ship-artifact-export-auditor` to Audit Army, make Phase B.5 staging mandatory only for software.
 - context checkpoints: clarify that `/save` and `/restore` preserve decision-rich context, while automatic feature state handles basic stage continuity.
 - hooks: make Stop reminders distinguish automatic feature state from optional decision checkpoints.
 

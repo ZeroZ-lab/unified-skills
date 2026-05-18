@@ -21,7 +21,9 @@ isolation: worktree
 - 剧本定稿（由 `/design` 阶段完成）
 - 内容审查（由 verify-workflow-review 完成）
 
-## 加载的 Skills
+## 依赖的阶段技能上下文
+
+以下 skill 由对应 stage workflow 预先加载或授权，表示本 persona 典型会在这些上下文里被消费；**不表示 content-writer 可以自主选择、追加或加载这些 skill。**
 
 ### Design 阶段
 - `design-workflow-design`
