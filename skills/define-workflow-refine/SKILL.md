@@ -32,7 +32,12 @@ argument-hint: "[feature-name 或模糊想法]"
 `/refine` 主执行 persona 是 `agents/requirements-analyst.md`。
 
 - External Scan 可由独立 subagent 执行，但必须受本技能的 Fact / Pattern / Inference / Unknown / Adopt / Reject 输出合同约束
-- Idea Scout Army 按 Phase 1.6 最少触发条件选择 `agents/refine-ceo-scout.md`、`agents/refine-eng-scout.md`、`agents/refine-design-scout.md`：标准功能 → CEO + Eng；涉及 UI/合规 → 三视角全开；小型变更 → 跳过
+- Idea Scout Army 按 Phase 1.6 最少触发条件选择 `agents/refine-ceo-scout.md`、`agents/refine-eng-scout.md`、`agents/refine-design-scout.md`、`agents/refine-content-scout.md`
+  - `artifact_type: software` → 默认 CEO + Eng；涉及 UI / 合规 → 加 Design
+  - `artifact_type: document` / `article` → 默认 CEO + Content
+  - `artifact_type: deck` → 默认 CEO + Content；涉及明显视觉/版式方向时加 Design
+  - `artifact_type: visual` → 默认 CEO + Design
+  - 小型变更 → 可跳过
 - 未被选中的 scout 不产出占位反馈；所有已选 scout 的反馈由主 session 分级合并
 
 ## 核心锚点
@@ -42,7 +47,8 @@ argument-hint: "[feature-name 或模糊想法]"
 逐一询问澄清问题，一次一个，不列清单。优先用结构化提问工具（如 `AskUserQuestion`）；不可用时退化为简短纯文本。
 
 **执行规则：**
-- 6 个必问维度：问题/背景、目标用户、成功标准、产物类型（默认 `software`）、约束、上下文
+- 6 个必问维度：问题/背景、目标用户、成功标准、产物类型（runtime `artifact_type`，默认 `software`）、约束、上下文
+- 当需求是在重构项目级工作流合同、角色矩阵或 pipeline 语义时，补充标记 canonical 一级交付类：`software` / `content` / `visual`
 - 在问问题前先 Glob/Grep/Read 扫描项目上下文——引用具体文件，不在无知状态下提问
 
 ### External Scan Protocol
@@ -61,7 +67,7 @@ argument-hint: "[feature-name 或模糊想法]"
 Phase 1 完成后、提出方案前，并行分派 scout 验证可行性。
 
 **执行规则：**
-- 输入：用户澄清 + artifact_type + External Scan 摘要 + 项目上下文 + 不做/待确认边界
+- 输入：用户澄清 + artifact_type +（如适用）canonical 一级交付类 + External Scan 摘要 + 项目上下文 + 不做/待确认边界
 - 输出统一结构（模板见 `refine-artifacts.md`）：Verdict + Evidence + Findings + Spec Impact
 - 反馈三级：Blocking（必须解决）、Important（不采纳需记录原因）、Suggestion（自主判断）
 
@@ -139,6 +145,7 @@ Phase 1 完成后、提出方案前，并行分派 scout 验证可行性。
 - [ ] "为谁、解决什么问题"已定义
 - [ ] Goal Review 已完成或明确跳过（理由成立）
 - [ ] artifact_type 已明确
+- [ ] 如讨论长期工作流合同：canonical 一级交付类已明确
 - [ ] External Scan 已完成/跳过/标记不可用，并记录原因
 - [ ] 搜索结果已区分 Fact / Pattern / Inference / Unknown / Adopt / Reject
 - [ ] 必要 scout 已分派并反馈已合并
@@ -154,6 +161,7 @@ Phase 1 完成后、提出方案前，并行分派 scout 验证可行性。
 # [功能名称] — Spec
 
 artifact_type: [software/document/article/deck/visual]
+delivery_class: [software/content/visual]  # 仅在需要表达长期项目真相时使用
 Goal Review Score: [score]/12 | Status: [accepted/needs-refinement/blocked]
 One-line Goal: [一句话]
 Done When: [Functional + Technical + Regression + Output]

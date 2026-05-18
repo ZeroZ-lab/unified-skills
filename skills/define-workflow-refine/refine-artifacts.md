@@ -92,7 +92,10 @@ Blocking / Important / Suggestion
 ## Artifact Type
 artifact_type: software
 
-Allowed: software / document / article / deck / visual
+Runtime allowed values: software / document / article / deck / visual
+Canonical delivery classes: software / content / visual
+Optional for workflow-contract / project-truth refactors:
+delivery_class: software
 
 ## Goal Alignment
 - Source Goal: conversation / `GOAL.md`
@@ -127,6 +130,7 @@ Allowed: software / document / article / deck / visual
 - CEO:
 - Eng:
 - Design:
+- Content:
 - Blocking resolved:
 - Important adopted:
 - Suggestions deferred:
@@ -147,12 +151,12 @@ Allowed: software / document / article / deck / visual
 
 ## External Scan 按产物类型搜索
 
-| artifact_type | 搜索目标 |
-|---------------|----------|
-| `software` | 竞品功能、现有库/框架能力、技术最佳实践、已知坑 |
-| `document` / `article` | 目标读者、同类文章/报告结构、事实来源、写作范式 |
-| `deck` | 同类演示结构、叙事模式、页面信息密度、数据表达方式 |
-| `visual` | 竞品视觉、品牌/媒介规范、布局模式、可读性要求 |
+| artifact_type | canonical delivery class | 搜索目标 |
+|---------------|--------------------------|----------|
+| `software` | `software` | 竞品功能、现有库/框架能力、技术最佳实践、已知坑 |
+| `document` / `article` | `content` | 目标读者、同类文章/报告结构、事实来源、写作范式 |
+| `deck` | `content` | 同类演示结构、叙事模式、页面信息密度、数据表达方式 |
+| `visual` | `visual` | 竞品视觉、品牌/媒介规范、布局模式、可读性要求 |
 
 ## 好坏 Spec 示例
 

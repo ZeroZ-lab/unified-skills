@@ -72,7 +72,7 @@ IF UNIFIED IS EXPLICITLY ACTIVATED AND A SKILL APPLIES, YOU DO NOT HAVE A CHOICE
 识别以下 6 个维度：
 
 - **阶段** — 这是 define/design/build/verify/ship/maintain/reflect 个阶段？
-- **产物类型** — artifact_type 是什么？（software/document/article/deck/visual）
+- **产物类型** — 先识别 runtime `artifact_type`（software/document/article/deck/visual），再在需要解释项目级真相时映射 canonical `delivery_class`（software/content/visual）
 - **触发词** — 用户消息包含哪些关键词？
 - **上下文信号** — 当前状态是什么？（有 spec 无 plan？有 code 无 review？）
 - **风险因素** — 涉及用户输入？认证？UI 变更？性能关键？
@@ -114,6 +114,13 @@ IF UNIFIED IS EXPLICITLY ACTIVATED AND A SKILL APPLIES, YOU DO NOT HAVE A CHOICE
 - `expanded` → 加载 1 个主 workflow skill；最多 2 个专项 skill；每个专项必须有命名 trigger / risk。
 - `full` → 按阶段技能和 Risk-Based Role Escalation 选择全部相关技能；未被选中的角色不产出占位反馈。
 
+加载权与调度权边界：
+
+- `router / command` 决定进入哪个 stage workflow
+- stage workflow 决定加载哪些主 skill / specialist skill
+- 只有在 stage workflow 明确要求时，才分派 `agents/*.md` persona
+- persona 消费的是已被选定的阶段上下文，不得自主追加 skill、跳到新 stage 或扩大 scope
+
 用户可见产物规则仍然成立：
 
 - `document` / `article` / `deck` / `visual` → 先加载 `design-workflow-design`。
@@ -127,6 +134,18 @@ Using [tier] tier: [skill-name] to [purpose] because [trigger/risk]
 ```
 
 然后在当前平台加载技能：Claude Code 调用 Skill 工具；Codex 读取对应 `skills/<name>/SKILL.md` 或使用宿主暴露的技能入口。
+
+如果后续 stage workflow 需要 persona：
+
+```text
+router / command
+  -> stage skill
+  -> dispatch decision
+  -> current agent or persona
+  -> main session merge
+```
+
+persona 没有 `self-load` / `self-route` 权；它只能执行被 stage workflow 赋予的职责。
 
 **Checkpoint:** 宣告输出已生成，格式为 `Using [tier] tier: [skill-name] to [purpose] because [trigger/risk]`。
 

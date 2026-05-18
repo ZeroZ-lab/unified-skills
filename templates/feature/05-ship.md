@@ -21,10 +21,11 @@
 - performance:
 - accessibility:
 - docs:
+- artifact-export:
 
-## Phase B.5: Staging 验证
-- 冒烟测试: PASS / FAIL
-- 集成验证: PASS / FAIL
+## Phase B.5: Final Verification
+- software staging: PASS / FAIL / n/a
+- artifact export verification: PASS / FAIL / pending human partner / n/a
 
 ## Phase C: Go / No-Go
 - 阻塞项:

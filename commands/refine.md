@@ -24,13 +24,14 @@ Transform vague idea into structured spec with risk-based multi-perspective vali
 1. **Step 1.1 探索项目上下文** — 扫描相关代码、架构、模式、约束、已有实践。在问问题前先理解项目现状
 2. **Step 1.2 Scope 检查** — 多子系统时立即标记，先帮用户分解成子项目
 3. **Step 1.2.5 Goal Review** — 目标质量检查（/12 评分）：10-12 accepted / 7-9 needs-refinement / 0-6 blocked
-4. **Step 1.3 逐一询问澄清问题** — 5W1H 方法论，一次一个问题，不列清单
+4. **Step 1.3 逐一询问澄清问题** — 5W1H 方法论，一次一个问题，不列清单；如在讨论长期工作流合同、角色矩阵或 pipeline，额外标记 canonical 一级交付类 `software / content / visual`
 **Output:** docs/features/YYYYMMDD-<name>/01-spec.md（draft）
 **Validation:**
 - [ ] 项目现状已了解（引用了具体文件）
 - [ ] Scope 合理（非多子系统未拆分）
 - [ ] Goal Review 评分 ≥ 7
 - [ ] artifact_type 已声明
+- [ ] 如本次在重构长期工作流真相：canonical 一级交付类已明确
 - [ ] 5W1H 全部回答
 
 ### Phase 2: External Scan + Scout Review
@@ -39,10 +40,12 @@ Transform vague idea into structured spec with risk-based multi-perspective vali
 **Skills:** define-workflow-refine（Phase 1 Step 1.4~1.6）
 **Input:** 01-spec.md（draft）
 **Process:**
-1. **Step 1.4 External Scan** — 按 artifact_type 搜索外部方案，结果分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject
+1. **Step 1.4 External Scan** — 按 artifact_type 搜索外部方案；如在做合同重构，再按 canonical 一级交付类解释应该看哪类模式和风险。结果分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject
 2. **Step 1.6 Scout Army** — 按 `define-workflow-refine` minimum trigger rules 选择 Scout 并行分派：
-   - 标准功能 → 至少 CEO + Eng
-   - 大型功能（涉及 UI 或合规）→ 三视角全开
+   - `software` → 默认 CEO + Eng；涉及 UI 或合规 → 加 Design
+   - `document` / `article` → 默认 CEO + Content
+   - `deck` → 默认 CEO + Content；涉及明显视觉/版式方向 → 加 Design
+   - `visual` → 默认 CEO + Design
    - 小型变更 → 可跳过
 3. Scout 反馈分级合并为 Blocking / Important / Suggestion
 **Output:** docs/features/YYYYMMDD-<name>/external-scan.md（External Scan 结果）
@@ -81,6 +84,7 @@ Transform vague idea into structured spec with risk-based multi-perspective vali
 **Validation:**
 - [ ] 所有 Blocking issues 已解决
 - [ ] artifact_type 与需求匹配
+- [ ] 如本次在重构长期工作流真相：canonical 一级交付类与方案匹配
 - [ ] spec 为最终版
 
 ---

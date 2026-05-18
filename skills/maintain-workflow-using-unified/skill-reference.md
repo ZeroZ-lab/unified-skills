@@ -2,6 +2,24 @@
 
 本文件是 `maintain-workflow-using-unified/SKILL.md` 的辅助材料。主技能保留 Unified 激活门、compact-router-first 发现流程、loading tier、硬门和验证清单；需要完整技能速查、优先级、类型和平台适配时读取本文件。
 
+## 交付类兼容说明
+
+- 当前 runtime `artifact_type` 仍使用：`software` / `document` / `article` / `deck` / `visual`
+- 项目级 canonical 一级交付类收敛为：`software` / `content` / `visual`
+- 兼容映射：
+  - `software` → `software`
+  - `document` / `article` / `deck` → `content`
+- `visual` → `visual`
+- 阶段技能继续读取 `artifact_type` 做实际路由；当讨论角色矩阵、pipeline 语义或长期项目真相时，用 canonical 一级交付类表达
+
+## 加载权与调度权
+
+- `router / command / stage skill` 拥有 skills 加载权
+- `agents/*.md` persona 只拥有执行权，不拥有 `self-load` / `self-route` / `self-expand-scope` 权
+- 唯一合法链路：
+  - `router / command -> stage skill -> current agent or persona -> main session merge`
+- agent 文档里列出的 skill 仅表示它依赖的阶段上下文，不是 agent 自主加载入口
+
 ## 技能分类速查
 
 ### Define 阶段（想法模糊、需要方案对比、收敛到规格）

@@ -28,6 +28,8 @@ agent 按职责分组，用于 define、design、build、review、refine 和 shi
 |-------|------|---------|
 | review-spec-compliance-auditor | Spec 合规性审查（需求覆盖、验收标准、scope creep） | review 高风险或 `--full` Phase 1 |
 | review-code-quality-auditor | 五轴审查（正确性、可读性、架构、安全、性能） | review 标准质量审查或 `--full` Phase 2 |
+| review-content-auditor | 内容审计（受众、逻辑、事实、语气、完整性） | review `document` / `article` / `deck` |
+| review-visual-auditor | 视觉审计（层级、对齐、可读性、导出质量） | review `deck` / `visual` |
 | review-security-auditor | 安全审计（OWASP、威胁建模、密钥扫描） | 安全敏感或 `--full` |
 | review-test-engineer | 测试覆盖分析（happy path、边界、错误路径、并发） | 测试覆盖不确定或 `--full` |
 | review-accessibility-auditor | 无障碍审查（WCAG、屏幕阅读器、表单错误、动态内容） | UI 变更或 `--full` |
@@ -48,6 +50,7 @@ agent 按职责分组，用于 define、design、build、review、refine 和 shi
 | refine-ceo-scout | CEO视角：问题真实度、方案杠杆、优先级、成功标准、范围纪律 | /refine Phase 1.6 |
 | refine-eng-scout | 工程视角：可行性、复杂度、已有方案、依赖风险、替代路径 | /refine Phase 1.6 |
 | refine-design-scout | 设计视角：用户路径、心智模型、关键交互/结构、设计范围、外部模式适配 | /refine Phase 1.6 |
+| refine-content-scout | 内容视角：目标读者、叙事结构、证据形态、媒介选择、范围纪律 | /refine Phase 1.6 |
 
 ## Ship Audit Army（发布阶段）
 
@@ -57,6 +60,7 @@ agent 按职责分组，用于 define、design、build、review、refine 和 shi
 | ship-performance-auditor | 性能审计：关键路径、N+1查询、内存资源、Bundle影响 | /ship Phase B |
 | ship-accessibility-auditor | 无障碍审计：WCAG合规、屏幕阅读器、表单错误 | /ship Phase B |
 | ship-docs-auditor | 文档审计：CHANGELOG、README、迁移指南、API文档 | /ship Phase B |
+| ship-artifact-export-auditor | 非软件交付 QA：source/final 对齐、格式、归档、交付包验证 | /ship Phase B（非 software） |
 
 ## 使用方式
 

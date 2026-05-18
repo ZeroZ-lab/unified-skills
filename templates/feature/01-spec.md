@@ -8,7 +8,18 @@
 ## Artifact Type
 `artifact_type: software`
 
-可选值：`software` / `document` / `article` / `deck` / `visual`。默认 `software`。
+当前 runtime 可执行值：`software` / `document` / `article` / `deck` / `visual`。默认 `software`。
+
+canonical 一级交付类：
+- `software` ← `software`
+- `content` ← `document` / `article` / `deck`
+- `visual` ← `visual`
+
+如本次 feature 会改变长期工作流真相、角色矩阵或 pipeline 语义，可额外声明：
+
+```md
+delivery_class: software | content | visual
+```
 
 ## Goal Alignment
 - Source Goal: conversation / `GOAL.md`
@@ -64,6 +75,7 @@
 - CEO:
 - Eng:
 - Design:
+- Content:
 - Blocking resolved:
 - Important adopted:
 - Suggestions deferred:

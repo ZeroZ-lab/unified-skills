@@ -33,6 +33,7 @@ Pre-release audit and artifact export/publishing.
 - ship-performance-auditor（关键路径、N+1查询、内存资源）
 - ship-accessibility-auditor（WCAG合规、屏幕阅读器）
 - ship-docs-auditor（CHANGELOG、README、API文档）
+- ship-artifact-export-auditor（非 software 的最终导出、归档、交付包 QA）
 **Skills:** ship-workflow-ship（审计部分）
 **Input:** 产物文件 + 04-review.md
 **Output:** 已选 Auditor 审计报告

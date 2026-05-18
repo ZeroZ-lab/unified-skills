@@ -41,7 +41,7 @@ npm test && npm run build && npm run lint && npx tsc --noEmit
 
 ### Phase B：质量门 — Ship Audit Army（发布审计军团）
 
-预发检查通过后，**并行分派** 4 个 auditor 做发布前专项审计：
+预发检查通过后，按产物类型并行分派相应 auditor 做发布前专项审计：
 
 ```
 Pre-launch checks (Phase A passed)
@@ -49,7 +49,8 @@ Pre-launch checks (Phase A passed)
     ├── agents/ship-security-auditor.md      → 安全审计: OWASP、输入边界、认证授权、数据暴露、依赖
     ├── agents/ship-performance-auditor.md   → 性能审计: 关键路径、N+1查询、内存资源、Bundle影响、退化
     ├── agents/ship-accessibility-auditor.md → 无障碍审计: WCAG合规、屏幕阅读器、表单错误、动态内容
-    └── agents/ship-docs-auditor.md          → 文档审计: CHANGELOG、README、迁移指南、API文档、错误信息
+    ├── agents/ship-docs-auditor.md          → 文档审计: CHANGELOG、README、迁移指南、API文档、错误信息
+    └── agents/ship-artifact-export-auditor.md → 非 software 导出 QA: source/final 对齐、格式、归档、交付包验证
             │
             ▼
     收集审计结果 → 分级合并 → 修正 → 进入 Staging（Phase B.5）
@@ -66,19 +67,20 @@ Pre-launch checks (Phase A passed)
 
 **最少触发条件：**
 - 小型变更（单文件、无安全/UI 敏感）→ 可跳过 Audit Army
-- 标准变更 → 至少 security + docs 双审计
+- `software` 标准变更 → 至少 security + docs 双审计
+- 非 software 标准变更 → 至少 artifact-export + docs 双审计
 - 有 UI 变更 → 加 accessibility
 - 有性能敏感变更（数据处理、查询、前端 bundle）→ 加 performance
-- 用户指定 `--full` → 4 角色全开
+- 用户指定 `--full` → 当前产物类型相关角色全开
 
 **保留向后兼容：** 高风险变更也可加载专项审查技能：
 - `verify-quality-security/SKILL.md` — 深度安全专项
 - `verify-quality-performance/SKILL.md` — 深度性能专项
 - `verify-frontend-accessibility/SKILL.md` — 深度无障碍专项
 
-### Phase B.5：Staging 验证（强制）
+### Phase B.5：Staging 验证（仅 `software` 强制）
 
-上线前必须经过 staging 环境验证：
+`software` 上线前必须经过 staging 环境验证：
 
 **验证步骤：**
 1. 部署到 staging 环境
@@ -88,7 +90,13 @@ Pre-launch checks (Phase A passed)
 5. 确认数据 migration 向前兼容
 6. 确认回滚脚本可用
 
-**staging 不完全 == 不上线。** 所有验证必须全部绿色才能进入 Go/No-Go。
+**staging 不完全 == 不上线。** 所有 `software` 验证必须全部绿色才能进入 Go/No-Go。
+
+非 software 产物在这一阶段改为执行最终交付包验证：
+1. 打开 final 文件或预览
+2. 检查 source / final / review / ship 记录是否能互相追踪
+3. 核对文件名、格式、路径、版本说明
+4. 标记 human partner / CI 的最终打开验证结果
 
 ### Phase C：Go/No-Go 决策
 
@@ -198,10 +206,11 @@ Pre-launch checks (Phase A passed)
 - performance: [同上]
 - accessibility: [同上]
 - docs: [同上]
+- artifact-export: [同上]
 
-## Phase B.5: Staging 验证
-- 冒烟测试: [PASS/FAIL]
-- 集成验证: [PASS/FAIL]
+## Phase B.5: Final Verification
+- software staging: [PASS / FAIL / n/a]
+- artifact export verification: [PASS / FAIL / pending human partner / n/a]
 
 ## Phase C: Go/No-Go
 - 阻塞项: [无 / 列出]
@@ -216,9 +225,9 @@ Pre-launch checks (Phase A passed)
 - README verified: yes / no / n/a
 
 ## Phase E: 发布后闭环
-- 健康检查: [PASS/FAIL]
-- 错误率: [正常 / 异常]
-- 下一步: canary / land / doc-sync
+- 健康检查: [PASS/FAIL/n/a]
+- 错误率: [正常 / 异常 / n/a]
+- 下一步: canary / land / doc-sync / delivery handoff
 ```
 
 ## 监控与可观测性

@@ -43,19 +43,26 @@ Show what Unified Skills can do: available commands, artifact types, workflow st
 | /learn | Maintain | 跨 session 学习记录 | learnings.jsonl |
 | /help | — | 显示本概览 | — |
 
-### 制品类型（artifact_type）
+### 一级交付类 + 兼容 `artifact_type`
 
-| 类型 | 适用场景 | 关键技能 |
-|------|----------|----------|
-| software | 代码、API、数据库、UI | TDD、调试、安全审查 |
-| document | 技术文档、规范 | 内容写作、版式 |
-| article | 文章、博客 | 内容写作 + 内容审查 |
-| deck | PPT、演示文稿 | 内容写作 → 版式（顺序不可逆）|
-| visual | 视觉稿、设计稿 | 版式 + 视觉审查 |
+| 一级交付类 | 当前 runtime `artifact_type` | 适用场景 | 关键技能 |
+|------------|-----------------------------|----------|----------|
+| software | software | 代码、API、数据库、UI | TDD、调试、安全审查 |
+| content | document / article / deck | 文档、文章、PPT、讲述型产物 | 内容写作、内容审查、版式 |
+| visual | visual | 视觉稿、设计稿、导出视觉产物 | 版式、视觉审查、导出 QA |
+
+说明：
+- 第一阶段兼容迁移里，实际路由字段仍是 `artifact_type`
+- 项目级工作流语义用 `software / content / visual` 三类解释角色和 pipeline
+- `deck` 属于 `content`，但在 `/review` 中通常叠加视觉审查
 
 ### 典型工作流
 
 想法模糊 → /brainstorm → /refine → /design → /plan → /build → /review → /ship
+
+唯一合法加载链路：
+
+`router / command -> stage skill -> current agent or persona -> main session merge`
 
 ### 项目级设计约束
 

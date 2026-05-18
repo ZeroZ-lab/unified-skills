@@ -23,12 +23,24 @@ artifact_type: software
 - Blocking gaps:
   - 无
 
-## Stage 2: Code Quality / Content Quality / Visual Quality
-- Correctness:
-- Readability:
-- Architecture:
-- Security:
-- Performance:
+## Stage 2: Artifact Quality
+- software:
+  - Correctness:
+  - Readability:
+  - Architecture:
+  - Security:
+  - Performance:
+- document / article / deck:
+  - Audience Fit:
+  - Logic:
+  - Accuracy:
+  - Voice:
+  - Completeness:
+- deck / visual:
+  - Hierarchy:
+  - Grouping / Alignment:
+  - Readability:
+  - Export Quality:
 
 ## Findings Summary
 | # | Severity | Category | Description | File:Line | Status |
