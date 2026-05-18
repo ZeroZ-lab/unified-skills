@@ -64,6 +64,8 @@ git log --oneline -5
 
 路径：`.claude/checkpoints/YYYYMMDD-HHMMSS-{title-slug}.md`
 
+若 `.claude/checkpoints/` 目录不存在，先创建：`mkdir -p .claude/checkpoints`
+
 示例文件名：`20260424-143052-refactor-auth-module.md`
 
 文件格式：
