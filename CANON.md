@@ -33,9 +33,33 @@
 ## 第 10 条：Every Feature Leaves a Trace
 每个想法留下完整档案：spec + plan + ADR + review + ship + 事后总结。
 
+## 第 11 条：Representation Clarity
+
+面向人类的图示应零渲染依赖、即时可读。
+面向 AI 的结构化数据应零歧义、可直接遍历。
+
+具体表示形式（ASCII vs 缩进文本、JSON vs YAML vs TOML）由各文件或项目自定，但必须满足对应受众的清晰性要求。
+
+### AI 理解结构选择规则
+
+为 AI 准备信息时，优先显式化结构，而不是追求视觉好看。
+
+- 约束输出：JSON Schema + Example
+- 表达关系 / 依赖 / 流向 / 拓扑：三元组 / Edge List / Node List / 邻接表
+- 表达流程：Step Table
+- 表达状态变化：状态转移表
+- 表达规则 / 条件选择：决策表
+- 表达系统架构：模块表 + Edge List
+- 表达语义 / 背景 / 判断 / 取舍 / 边界：Markdown 层级结构 + 表格
+
+禁止：
+- 只依赖视觉布局让 AI 猜关系
+- 用 JSON Schema 替代语义解释
+- 在可结构化表达时写成长段自然语言
+
 ## 产物类型映射
 
-第 1–3、5、7–10 条是产物无关的通用行为纪律，对所有 `artifact_type` 等效适用。
+第 1–3、5、7–11 条是产物无关的通用行为纪律，对所有 `artifact_type` 等效适用。
 
 第 4 条（TDD Iron Law）适用于 `software`。`document` / `article` / `deck` / `visual` 的等效纪律由各产物技能的 Iron Law 定义——如 `build-content-writing` 的 "读者任务先于表达"、`build-content-layout` 的 "信息层级先于视觉形式"。
 
@@ -44,4 +68,4 @@
 ---
 
 **快速参考：**
-1️⃣ Surface Assumptions → 2️⃣ Simple First → 3️⃣ Scope Discipline → 4️⃣ TDD Iron Law → 5️⃣ Verify Don't Assume → 6️⃣ 4-Phase Debugging → 7️⃣ Push Back → 8️⃣ Manage Confusion → 9️⃣ Structured Questions With Portable Fallback → 🔟 Every Feature Leaves a Trace
+1️⃣ Surface Assumptions → 2️⃣ Simple First → 3️⃣ Scope Discipline → 4️⃣ TDD Iron Law → 5️⃣ Verify Don't Assume → 6️⃣ 4-Phase Debugging → 7️⃣ Push Back → 8️⃣ Manage Confusion → 9️⃣ Structured Questions With Portable Fallback → 🔟 Every Feature Leaves a Trace → 1️⃣1️⃣ Representation Clarity
