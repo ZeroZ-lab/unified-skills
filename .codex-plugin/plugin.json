@@ -18,6 +18,22 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Unified Skills",
-    "shortDescription": "宪法驱动、AGENTS 单入口的多产物开发工作流"
+    "shortDescription": "面向 AI Agent 的宪法驱动多产物开发工作流",
+    "longDescription": "Unified Skills 为 Claude Code 和 Codex 提供宪法驱动、按阶段加载的多产物开发工作流，把阶段协议、角色责任、技能方法论和文档产物链收口到一个可验证的统一入口。",
+    "developerName": "ZeroZ-lab",
+    "category": "Engineering",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/ZeroZ-lab/unified-skills",
+    "defaultPrompt": [
+      "Use Unified Skills to drive a feature from brainstorm to ship"
+    ],
+    "brandColor": "#176B5D",
+    "composerIcon": "./docs/assets/unified-skills-icon.png",
+    "logo": "./docs/assets/unified-skills-icon.png",
+    "screenshots": []
   }
 }
