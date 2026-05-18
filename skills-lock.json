@@ -135,13 +135,13 @@
     "maintain-workflow-context-restore": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "0ddf04ef753576340d585cbd4ad3ee17a89a44e8be73ee937e4957ea7c8abcc2",
+      "computedHash": "e4b583f1249c8036349a8124f0258567249d9e6bb18bdb1e7e1724ff311188c1",
       "auxiliaryHashes": {}
     },
     "maintain-workflow-context-save": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "84fb1e459e1fbc7eca6f19c26352b84576b57ffbfca5208ca2d7993e933ff7a4",
+      "computedHash": "a0297dbf9c23bbcfe88c074d4bff14abecd058d0836edc29a1cc6fc6c0d83245",
       "auxiliaryHashes": {}
     },
     "maintain-workflow-learn": {

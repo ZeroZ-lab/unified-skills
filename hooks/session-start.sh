@@ -13,6 +13,7 @@ fi
 # Detect platform: Codex sends permission_mode in stdin JSON, Claude Code does not
 is_codex=0
 stdin_data=""
+cwd=""
 if [ -t 0 ]; then
   # No stdin (interactive) — assume Claude Code
   is_codex=0
@@ -21,13 +22,26 @@ else
   if printf '%s' "$stdin_data" | python3 -c 'import sys,json; d=json.loads(sys.stdin.read()); print(d.get("permission_mode",""))' 2>/dev/null | grep -q .; then
     is_codex=1
   fi
+  cwd=$(printf '%s' "$stdin_data" | python3 -c 'import sys,json; d=json.loads(sys.stdin.read()); print(d.get("cwd",""))' 2>/dev/null || echo "")
 fi
+project_dir="${cwd:-${CLAUDE_PROJECT_DIR:-$plugin_root}}"
 
 # Build command syntax hint based on platform
 if [ "$is_codex" -eq 1 ]; then
   platform_hint='Codex 可在显式进入 Unified 工作流时直接读取 AGENTS.md、skills-router.json 与 skills/ 中的真实技能；不依赖 repo 内 $command 薄包装入口。'
 else
   platform_hint='Claude Code 用 commands/ 作为显式 Unified 工作流入口；技能正文按需读取。'
+fi
+
+resume_hint=""
+if [ -f "$plugin_root/scripts/unified-state.py" ]; then
+  resume_output=$(python3 "$plugin_root/scripts/unified-state.py" format-resume "$project_dir" 2>/dev/null || true)
+  if [ -n "$resume_output" ]; then
+    resume_hint="
+Active feature resume:
+- $resume_output
+- 这是恢复提示，不会自动激活 Unified runtime；继续前仍按用户命令或明确阶段入口执行。"
+  fi
 fi
 
 full_message="Unified Skills Boot Kernel
@@ -42,6 +56,7 @@ Default runtime:
 If editing Unified skills/contracts:
 - 读完整技能和 CANON.md。
 - 同步 skills-index.json / skills-lock.json，并运行 ./validate。
+$resume_hint
 
 $platform_hint
 

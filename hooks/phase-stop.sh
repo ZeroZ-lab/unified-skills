@@ -4,6 +4,8 @@
 # Emits additionalContext reminder if there are checkpoint-worthy unsaved changes.
 set -u
 
+plugin_root="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+
 # Read stdin JSON
 input=$(cat)
 
@@ -13,6 +15,13 @@ reason=$(printf '%s' "$input" | python3 -c 'import sys,json; d=json.loads(sys.st
 # Find project directory from cwd or environment
 cwd=$(printf '%s' "$input" | python3 -c 'import sys,json; d=json.loads(sys.stdin.read()); print(d.get("cwd",""))' 2>/dev/null || echo "")
 project_dir="${cwd:-${CLAUDE_PROJECT_DIR:-.}}"
+
+active_state=0
+if [ -f "$plugin_root/scripts/unified-state.py" ]; then
+  if python3 "$plugin_root/scripts/unified-state.py" latest "$project_dir" >/dev/null 2>&1; then
+    active_state=1
+  fi
+fi
 
 # Check for unsaved work indicators
 # 1. Check if .claude/checkpoints/ has any recent files (within current session)
@@ -69,7 +78,11 @@ fi
 # There is unsaved work — emit systemMessage reminder
 # Stop hooks support: systemMessage, decision, reason, continue, suppressOutput, stopReason
 # NOT hookSpecificOutput.additionalContext (that's only for PreToolUse/UserPromptSubmit/PostToolUse)
-message="[reminder] 本 session 有可保存的工作上下文，建议 /save 后再离开"
+if [ "$active_state" -eq 1 ]; then
+  message="[reminder] feature state 已自动记录；如本 session 有关键决策，可执行 /save 记录决策 checkpoint"
+else
+  message="[reminder] 本 session 有可保存的工作上下文，建议 /save 后再离开"
+fi
 
 escaped=$(printf '%s' "$message" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))')
 printf '{"systemMessage":%s}\n' "$escaped"

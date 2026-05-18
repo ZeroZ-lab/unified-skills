@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.24.4] - 2026-05-18
+
+### Added
+- runtime: add feature-scoped `docs/features/<feature>/state.json` so new sessions can recover the active Unified feature stage and next command without manual `/restore`.
+- hooks: update phase document tracking to maintain feature state and teach SessionStart to surface a compact resume hint.
+- validation: verify committed feature state files and block local runtime-only state such as `dirty_status` from project truth.
+
+### Changed
+- context checkpoints: clarify that `/save` and `/restore` preserve decision-rich context, while automatic feature state handles basic stage continuity.
+- hooks: make Stop reminders distinguish automatic feature state from optional decision checkpoints.
+
 ## [2.24.3] - 2026-05-17
 
 ### Changed

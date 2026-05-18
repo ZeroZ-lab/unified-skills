@@ -14,9 +14,16 @@ argument-hint: "[--latest | checkpoint-title]"
 - **前置加载**: CANON.md、`maintain-workflow-context-save`（上游生产方，了解 checkpoint 格式契约）
 - **输出路径**: 读取 `.claude/checkpoints/YYYYMMDD-HHMMSS-{title-slug}.md` → 恢复后继续对应阶段技能
 
+## 与自动 feature state 的边界
+
+新 session 会通过 `docs/features/<feature>/state.json` 获得阶段级恢复提示：当前 feature、当前阶段、最后阶段文档、下一步命令。这个提示不等于 `/restore`，也不会自动开始写代码。
+
+`/restore` 用于恢复 decision-rich checkpoint：已做决策、取舍原因、注意事项、阻塞、剩余工作。只需要知道"做到哪一步"时，优先使用 SessionStart 的 feature state 提示。
+
 ## 何时不使用
 - 当前会话上下文完整，不需要从 checkpoint 恢复
 - 用户只是询问历史信息，不准备继续之前的工作
+- SessionStart 已提供足够的 feature state，且不需要恢复决策上下文
 - checkpoint 内容来源不明或与当前 repo 明显不匹配
 
 ## 硬门

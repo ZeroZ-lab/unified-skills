@@ -14,9 +14,16 @@ argument-hint: "[checkpoint-title]"
 - **前置加载**: CANON.md、`maintain-workflow-context-restore`（下游消费方）
 - **输出路径**: `.claude/checkpoints/YYYYMMDD-HHMMSS-{title-slug}.md` → 恢复时由 `maintain-workflow-context-restore` 消费
 
+## 与自动 feature state 的边界
+
+`docs/features/<feature>/state.json` 由 hooks 自动维护，用于阶段级恢复：当前 feature、当前阶段、最后阶段文档、下一步命令。
+
+`/save` 不负责基础阶段连续性。它负责保存 `state.json` 无法表达的内容：为什么选 A 不选 B、重要取舍、注意事项、阻塞原因、非显而易见的剩余工作。
+
 ## 何时不使用
 - 当前任务尚未形成可恢复的状态或明确 checkpoint 价值
 - 用户只是要求提交、发布或验证，不需要保存上下文
+- 用户只需要知道当前 feature 阶段和下一步命令；此时先看 SessionStart 的 feature state 提示
 - 需要修改代码来“整理状态”时，先回到对应 build/verify 技能
 
 ## 硬门
