@@ -169,6 +169,8 @@ flowchart TD
 - 每个 `### Task N` 是最小执行单元，当前任务验证未过不得进入下一个。
 - 并行必须来自 `Parallel Execution Matrix` 的显式 `parallel_safe` 证据。
 - subagent 的 `changed_files` 必须落在对应 `Write Scope` 内。
+- subagent 首要用途是隔离高噪音上下文、专项执行和压缩结论；不是为了默认多开 worker。
+- 每个 subagent 派发必须声明 Goal / Scope / Forbidden Actions / Allowed Tools / Output Limit / Completion Criteria，返回不得包含原始日志、完整 diff 或长篇推理。
 
 ## `/review` 展开
 
@@ -279,6 +281,7 @@ flowchart TD
 - `commands/*.md` 是否仍镜像阶段技能。
 - `skills/*/SKILL.md` 的 Agent Dispatch Contract 是否是权威来源。
 - `agents/README.md` 是否只描述 persona 和调用时机，不新增独立规则。
+- `agents/README.md` 的 subagent 规则是否仍保持执行层约束，不替代 stage skill 路由权。
 - `skills-router.json` 是否仍覆盖入口触发和 loading tier。
 - `AGENTS.md` 是否仍保持 AGENTS 单入口模型。
 - 运行 `./validate`，但不要把绿色结果等同于语义完全一致；仍需人工审查以上合同面。

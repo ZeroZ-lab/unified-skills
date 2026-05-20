@@ -14,6 +14,18 @@
 
 **涉及文件:** {{FILES}}
 
+**Read Scope:** {{READ_SCOPE}}
+
+**Write Scope:** {{WRITE_SCOPE}}
+
+**Allowed Tools:** {{ALLOWED_TOOLS}}
+
+**Forbidden Actions:** {{FORBIDDEN_ACTIONS}}
+
+**Output Limit:** 最多 1200 字；只返回主 agent 下一步决策需要的信息。
+
+**Completion Criteria:** {{COMPLETION_CRITERIA}}
+
 ---
 
 ## 前置自检
@@ -84,6 +96,19 @@
 
 ---
 
+## 压缩返回合同
+
+禁止返回：
+- 原始日志
+- 完整 diff
+- 大段代码
+- 长篇推理过程
+- 无关背景说明
+
+测试或命令输出只写摘要、命令名和通过/失败状态。最后一行必须是单行 JSON，供主 agent 合并时机器读取。
+
+---
+
 ## 输出格式
 
 ```
@@ -98,4 +123,8 @@
 关切: <仅 DONE_WITH_CONCERNS 时填写，列出保留意见>
 
 升级: <仅 BLOCKED 或 NEEDS_CONTEXT 时填写，说明原因或缺失信息>
+
+验证: <命令或检查 + PASS/FAIL 摘要>
+
+{"status":"<DONE|DONE_WITH_CONCERNS|BLOCKED|NEEDS_CONTEXT>","changed_files":["<path>"],"test_results":["<command: PASS|FAIL>"],"artifact_paths":["<path>"]}
 ```

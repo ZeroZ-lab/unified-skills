@@ -10,6 +10,15 @@ from pathlib import Path
 
 
 DISALLOWED_WRITE_TOOLS = {"Bash", "Edit", "MultiEdit", "NotebookEdit", "Write"}
+DISALLOWED_AUDIT_NOISE_TOOLS = {
+    "Agent",
+    "WebSearch",
+    "WebFetch",
+    "mcp__plugin_context7_context7__resolve-library-id",
+    "mcp__plugin_context7_context7__query-docs",
+    "mcp__plugin_playwright_playwright__browser_snapshot",
+    "mcp__plugin_playwright_playwright__browser_take_screenshot",
+}
 
 REQUIRED_SKILL_CONSUMERS = {
     "agents/requirements-analyst.md": [
@@ -104,6 +113,19 @@ def parse_frontmatter_tools(agent_path: Path) -> list[str]:
     return tools
 
 
+def parse_frontmatter_scalar(agent_path: Path, key: str) -> str | None:
+    text = read_text(agent_path)
+    frontmatter_match = re.match(r"---\n(.*?)\n---", text, re.S)
+    if not frontmatter_match:
+        return None
+
+    prefix = f"{key}:"
+    for line in frontmatter_match.group(1).splitlines():
+        if line.startswith(prefix):
+            return line[len(prefix):].strip()
+    return None
+
+
 def validate(root: Path) -> list[str]:
     errors: list[str] = []
     agents_dir = root / "agents"
@@ -144,11 +166,19 @@ def validate(root: Path) -> list[str]:
 
     audit_agents = sorted(list(agents_dir.glob("review-*.md")) + list(agents_dir.glob("ship-*.md")))
     for agent_path in audit_agents:
-        forbidden = sorted(set(parse_frontmatter_tools(agent_path)) & DISALLOWED_WRITE_TOOLS)
+        tools = parse_frontmatter_tools(agent_path)
+        forbidden = sorted(set(tools) & DISALLOWED_WRITE_TOOLS)
         if forbidden:
             errors.append(
                 f"{agent_path.relative_to(root)} declares write-capable tools: {', '.join(forbidden)}"
             )
+        noisy = sorted(set(tools) & DISALLOWED_AUDIT_NOISE_TOOLS)
+        if noisy:
+            errors.append(
+                f"{agent_path.relative_to(root)} declares broad/noisy tools by default: {', '.join(noisy)}"
+            )
+        if parse_frontmatter_scalar(agent_path, "maxTurns") is None:
+            errors.append(f"{agent_path.relative_to(root)} missing maxTurns limit")
 
     brainstorm_path = skills_dir / "define-cognitive-brainstorm/SKILL.md"
     brainstorm = read_text(brainstorm_path)

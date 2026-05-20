@@ -12,6 +12,16 @@
 
 **产物类型:** {{ARTIFACT_TYPE}}
 
+**Read Scope:** {{READ_SCOPE}}
+
+**Allowed Tools:** {{ALLOWED_TOOLS}}
+
+**Forbidden Actions:** {{FORBIDDEN_ACTIONS}}
+
+**Output Limit:** 最多 1200 字；只返回覆盖结论、关键证据和阻塞 gap。
+
+**Completion Criteria:** 每条 spec 原子要求都有 PASS / MISSING / EXTRA / MISUNDERSTOOD 判定。
+
 ---
 
 ## 对抗性立场
@@ -97,9 +107,15 @@ spec 明确要求的内容，实现中完全不存在。
   [MISUNDERSTOOD] <spec 条目>: <实现与 spec 的差异>
 
 规格覆盖率: <百分比>% （已满足的 spec 条目数 / 总条目数）
+
+{"status":"<PRE_REVIEW_PASS|PRE_REVIEW_FAIL>","changed_files":[],"test_results":["<evidence check: PASS|FAIL>"],"artifact_paths":[]}
 ```
 
 ### 结论判定规则
 
 - **PRE_REVIEW_PASS:** 覆盖率 100%，无 MISSING 或 MISUNDERSTOOD 问题（EXTRA 可接受但需列出）
 - **PRE_REVIEW_FAIL:** 存在任何 MISSING 或 MISUNDERSTOOD 问题
+
+### 压缩返回规则
+
+禁止返回原始日志、完整 diff、大段代码、长篇推理或无关背景。只列会影响主 agent 下一步决策的 spec gap；没有问题时写 `问题列表: none`。

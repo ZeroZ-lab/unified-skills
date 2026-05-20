@@ -6,13 +6,6 @@ tools:
   - Grep
   - Read
   - LSP
-  - Agent
-  - WebSearch
-  - WebFetch
-  - mcp__plugin_context7_context7__resolve-library-id
-  - mcp__plugin_context7_context7__query-docs
-  - mcp__plugin_playwright_playwright__browser_snapshot
-  - mcp__plugin_playwright_playwright__browser_take_screenshot
   - mcp__ide__getDiagnostics
 model: sonnet
 maxTurns: 15

@@ -12,7 +12,8 @@
 > 
 > **当前实现状态：**
 > - `load-manifest.json` 已在 v2.14.0 删除，统一使用 `skills-index.json` 作为技能索引
-> - 请以 `AGENTS.md`、`skills/`、`./validate` 为当前实现合同
+> - 请以 `AGENTS.md`、`docs/architecture/current-skill-call-graph.md`、`agents/README.md`、`skills/*/SKILL.md` 和 `./validate` 为当前实现合同
+> - 当前实现中 `agents/` 不通过 `skills:` frontmatter 自主加载技能；合法链路是 `router / command -> stage skill -> persona/subagent -> main session merge`
 > - 本文档保留作为架构背景和设计讨论记录
 > 
 > **如需了解当前架构，请先阅读：**
@@ -160,7 +161,7 @@ Phase 3: Refine Plan → Agent: task-planner → Output: 03-plan.md (final)
 # Agent: software-engineer
 职责：软件开发（TDD、API 设计、数据库、前后端）
 加载 Skills: build-quality-tdd, build-backend-*, build-frontend-*
-不负责：需求分析（requirements-analyst）、任务分解（task-planner）、代码审查（review-code-reviewer）
+不负责：需求分析（requirements-analyst）、任务分解（task-planner）、代码审查（review-code-quality-auditor）
 ```
 
 ---
@@ -268,7 +269,7 @@ Unified Skills 的三层架构基于以下核心哲学：
 **解决：** 每个 Agent 只负责一种专业视角：
 - requirements-analyst 只做需求分析
 - software-engineer 只做代码实现
-- review-code-reviewer 只做代码审查
+- review-code-quality-auditor 只做代码审查
 
 #### 哲学 3：依赖倒置原则（Dependency Inversion Principle）
 
@@ -517,7 +518,7 @@ Command: /save
 ```
 Command: /review
   Phase 1: Multi-Role Review (Parallel)
-    Agents: [review-code-reviewer, review-security-auditor,
+    Agents: [review-code-quality-auditor, review-security-auditor,
              review-test-engineer, review-accessibility-auditor]
     （已选 Agent 在同一个 assistant turn 中并行调用）
   Phase 2: Merge Feedback
@@ -597,7 +598,7 @@ workflow-* 是万能 Agent   专业角色 Agent            Agent 自动发现和
 |------|----------------|-------------------|
 | Command 文件 | 1 行代码 | 完整的 Phase 编排协议 |
 | Agent 分类 | 只有审查角色 | 审查角色 + 核心工程角色 |
-| Agent 命名 | 不一致（code-reviewer vs plan-ceo-reviewer） | 统一 phase-lens-role 命名 |
+| Agent 命名 | 不一致（review-code-quality-auditor vs plan-ceo-reviewer） | 统一 phase-lens-role 命名 |
 | workflow-* Agent | 万能路由（根据 artifact_type 加载不同技能） | 拆分为专业角色 |
 | artifact_type 路由 | 分散在 4 个 workflow skills | 保持现状（设计决策） |
 | 可扩展性 | 新增产物类型需改 workflow Agent | 新增产物类型只需新增 Agent |
@@ -806,7 +807,7 @@ description: 跨 session 学习记录管理
 
 | Agent | 文件 | 职责 | 命名规范 |
 |-------|------|------|---------|
-| code-reviewer | `agents/code-reviewer.md` | 五轴审查（正确性、可读性、架构、安全、性能） | ❌ 缺少 phase 前缀 |
+| review-code-quality-auditor | `agents/review-code-quality-auditor.md` | 五轴审查（正确性、可读性、架构、安全、性能） | ❌ 缺少 phase 前缀 |
 | security-auditor | `agents/security-auditor.md` | 安全审计（OWASP、威胁建模、密钥扫描） | ❌ 缺少 phase 前缀 |
 | test-engineer | `agents/test-engineer.md` | 测试覆盖分析（happy path、边界、错误路径） | ❌ 缺少 phase 前缀 |
 | review-accessibility-checker | `agents/review-accessibility-checker.md` | 无障碍审查（WCAG、屏幕阅读器） | ⚠️ 有 phase 但 role-type 不统一（checker vs auditor） |
@@ -1042,7 +1043,7 @@ artifact_type
 Command: /review
   └── Skill: verify-workflow-review
         └── 按风险选择并行分派 Agents:
-              ├── code-reviewer        → 正确性、可读性、架构、安全、性能
+              ├── review-code-quality-auditor        → 正确性、可读性、架构、安全、性能
               ├── security-auditor     → OWASP、威胁建模、密钥扫描
               ├── test-engineer        → Happy path、边界、错误路径
               └── review-accessibility-checker → WCAG、屏幕阅读器
@@ -1175,7 +1176,7 @@ Command: /ship
 **现状：**
 - Plan Review Army: `plan-ceo-reviewer` ✅（有 phase 前缀）
 - Ship Audit Army: `ship-security-auditor` ✅（有 phase 前缀）
-- Review Army: `code-reviewer` ❌（缺少 `review-` 前缀）
+- Review Army: `review-code-quality-auditor` ❌（缺少 `review-` 前缀）
 - `review-accessibility-checker` ⚠️（role-type 不统一）
 
 **后果：**
@@ -1199,6 +1200,8 @@ Command: /ship
 # 第三部分：重构方案
 
 ## 3.1 新 Agent 体系设计
+
+> Historical note: 本节保留早期重构方案的设计草图。当前可执行合同以 `agents/README.md` 和 `skills/*/SKILL.md` 为准：`agents/` 不使用 `skills:` frontmatter 自主加载技能；stage skill 决定是否派发 persona、授权哪些技能和工具。
 
 ### 3.1.1 核心工程角色（7 个新 Agents）
 
@@ -1290,7 +1293,7 @@ output: 代码产物 + tests + adr/
 **不负责：**
 - 需求分析（由 requirements-analyst 完成）
 - 任务分解（由 task-planner 完成）
-- 代码审查（由 review-code-reviewer 完成）
+- 代码审查（由 review-code-quality-auditor 完成）
 
 ---
 
@@ -1414,7 +1417,7 @@ output: 视觉设计稿 / 布局方案
 
 | 旧名 | 新名 | 变更说明 |
 |------|------|---------|
-| `code-reviewer` | `review-code-reviewer` | 添加 `review-` phase 前缀 |
+| `review-code-quality-auditor` | `review-code-quality-auditor` | 添加 `review-` phase 前缀 |
 | `security-auditor` | `review-security-auditor` | 添加 `review-` phase 前缀 |
 | `test-engineer` | `review-test-engineer` | 添加 `review-` phase 前缀 |
 | `review-accessibility-checker` | `review-accessibility-auditor` | 统一 role-type 为 `auditor` |
@@ -1423,7 +1426,7 @@ output: 视觉设计稿 / 布局方案
 
 ```
 Review Army:
-  review-code-reviewer          ← phase-lens-role
+  review-code-quality-auditor          ← phase-lens-role
   review-security-auditor       ← phase-lens-role
   review-test-engineer          ← phase-lens-role
   review-accessibility-auditor  ← phase-lens-role
@@ -1524,7 +1527,7 @@ output: <输出产物路径>
 │  核心工程角色 (7)                    审查角色 (15)                │
 │  ─────────────────                 ──────────────               │
 │  requirements-analyst              Review Army (4)              │
-│  task-planner                        review-code-reviewer       │
+│  task-planner                        review-code-quality-auditor       │
 │  software-engineer                   review-security-auditor    │
 │  data-architect                      review-test-engineer       │
 │  api-designer                        review-accessibility-auditor│
@@ -1977,13 +1980,13 @@ Validation:
 
 ### Phase 2: Risk-Based Review
 Agents (selected by verify-workflow-review/review-guidance risk triggers, software 类型):
-  - review-code-reviewer（正确性、可读性、架构、安全、性能）
+  - review-code-quality-auditor（正确性、可读性、架构、安全、性能）
   - review-security-auditor（OWASP、威胁建模、密钥扫描）
   - review-test-engineer（happy path、边界、错误路径、并发）
   - review-accessibility-auditor（WCAG、屏幕阅读器，有 UI 变更时）
 Skills:
   - verify-workflow-review
-  - verify-code-review-standards（code-reviewer）
+  - verify-code-review-standards（review-code-quality-auditor）
   - verify-security（security-auditor）
   - verify-accessibility（accessibility-auditor）
 Input:
@@ -2465,7 +2468,7 @@ unified/
 │   ├── visual-designer.md            ← 新增
 │   │
 │   ├── # Review Army（重命名）───────────────────
-│   ├── review-code-reviewer.md       ← 重命名（原 code-reviewer.md）
+│   ├── review-code-quality-auditor.md       ← 重命名（原 review-code-quality-auditor.md）
 │   ├── review-security-auditor.md    ← 重命名（原 security-auditor.md）
 │   ├── review-test-engineer.md       ← 重命名（原 test-engineer.md）
 │   ├── review-accessibility-auditor.md ← 重命名（原 review-accessibility-checker.md）
@@ -2530,7 +2533,7 @@ unified/
 
 /review
   Phase 1 → (主 session)         → verify-workflow-review (路由)
-  Phase 2 → [review-code-reviewer, review-security-auditor,
+  Phase 2 → [review-code-quality-auditor, review-security-auditor,
               review-test-engineer, review-accessibility-auditor] (parallel)
   Phase 3 → (主 session)         → verify-workflow-review (merge)
 
@@ -2595,8 +2598,8 @@ agents/
 ### 操作步骤
 
 1. 为每个 Agent 创建 `.md` 文件，遵循 3.1.4 节的模板
-2. 填写 frontmatter（name, description, phase, invoked_by, skills, output）
-3. 编写职责范围、不负责、加载的 Skills、输入/输出、并行安全性
+2. 填写 frontmatter（name, description, model / maxTurns / tools 或 isolation）
+3. 编写职责范围、不负责、依赖的阶段技能上下文、输入/输出、并行安全性；不要写 `skills:` preload 规则
 4. 更新 `agents/README.md`，添加"核心工程角色"分组
 
 ### 验证
@@ -2621,7 +2624,7 @@ agents/
 ### 文件操作
 
 ```
-agents/code-reviewer.md              → agents/review-code-reviewer.md
+agents/review-code-quality-auditor.md              → agents/review-code-quality-auditor.md
 agents/security-auditor.md           → agents/review-security-auditor.md
 agents/test-engineer.md              → agents/review-test-engineer.md
 agents/review-accessibility-checker.md → agents/review-accessibility-auditor.md
@@ -2640,7 +2643,7 @@ agents/review-accessibility-checker.md → agents/review-accessibility-auditor.m
 ### 受影响的引用搜索
 
 需要搜索以下关键词并更新：
-- `code-reviewer` → `review-code-reviewer`
+- `review-code-quality-auditor` → `review-code-quality-auditor`
 - `security-auditor` → `review-security-auditor`
 - `test-engineer` → `review-test-engineer`
 - `review-accessibility-checker` → `review-accessibility-auditor`
@@ -3096,7 +3099,7 @@ git tag after-phase-2
 
 | 旧名 | 新名 | Phase |
 |------|------|-------|
-| `code-reviewer` | `review-code-reviewer` | verify |
+| `review-code-quality-auditor` | `review-code-quality-auditor` | verify |
 | `security-auditor` | `review-security-auditor` | verify |
 | `test-engineer` | `review-test-engineer` | verify |
 | `review-accessibility-checker` | `review-accessibility-auditor` | verify |
@@ -3104,7 +3107,7 @@ git tag after-phase-2
 ### 文件重命名
 
 ```
-agents/code-reviewer.md              → agents/review-code-reviewer.md
+agents/review-code-quality-auditor.md              → agents/review-code-quality-auditor.md
 agents/security-auditor.md           → agents/review-security-auditor.md
 agents/test-engineer.md              → agents/review-test-engineer.md
 agents/review-accessibility-checker.md → agents/review-accessibility-auditor.md
@@ -3116,7 +3119,7 @@ agents/review-accessibility-checker.md → agents/review-accessibility-auditor.m
 
 | 旧引用 | 新引用 |
 |--------|--------|
-| `code-reviewer` | `review-code-reviewer` |
+| `review-code-quality-auditor` | `review-code-quality-auditor` |
 | `security-auditor` | `review-security-auditor` |
 | `test-engineer` | `review-test-engineer` |
 | `review-accessibility-checker` | `review-accessibility-auditor` |
@@ -3124,6 +3127,8 @@ agents/review-accessibility-checker.md → agents/review-accessibility-auditor.m
 ---
 
 ## 附录 B：新 Agent 定义清单
+
+> Historical sketch: 以下 YAML 示例展示早期设计意图，不是当前 agent frontmatter 规范。当前 agent 不能用 `skills:` 自主路由或 preload；它只能说明依赖的阶段技能上下文，实际派发链路仍是 `router / command -> stage skill -> persona -> main session merge`。
 
 ### B.1 requirements-analyst
 

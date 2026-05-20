@@ -61,6 +61,8 @@ argument-hint: "[feature-name 或模糊想法]"
 - 输出必须分层为 Fact / Pattern / Inference / Unknown / Adopt / Reject（模板见 `refine-artifacts.md`）
 - 搜索结果不能直接变成需求；只有进入 Adopt 且和目标/约束一致的内容才能进入方案
 - 超过 30 天的 Scan 结果标记 `[可能过时]`；按产物类型搜索目标见 `refine-artifacts.md`
+- 如果由 subagent 执行，必须 read-only，返回不超过 1200 字；禁止返回原始搜索结果、长引用、完整网页摘录或无关背景
+- External Scan subagent 只交付 Fact / Pattern / Inference / Unknown / Adopt / Reject 摘要和来源链接；主 session 负责把 Adopt 项转化为需求判断
 
 ### Scout Army Dispatch
 

@@ -40,8 +40,13 @@ For execution: **implement this plan task-by-task**.
 
 执行模式：
 - **inline** — 当前会话直接执行
-- **subagent** — 每任务或每个复杂子计划一个新 subagent + 两阶段审查
+- **subagent** — 每任务或每个复杂子计划一个新 subagent，用于隔离高噪音上下文、专项执行和压缩结论 + 两阶段审查
 - **parallel** — 仅对 `parallel_safe` 子计划并行 subagent
+
+选择模式时必须记录原因：
+- 大量搜索、测试日志、diff、文件读取或专项审查会污染主 session → 可选择 subagent
+- 多个子计划 `parallel_safe: yes` 且 Write Scope 不重叠 → 可选择 parallel
+- 小修改、同一文件连续编辑、强共享上下文或需要频繁确认 → 保持 inline
 
 没有 `Parallel Execution Matrix` 或没有 `parallel_safe` 证据时，降级为 `serial` 执行。降级原因必须写入 build 记录。
 
@@ -217,6 +222,7 @@ Task 1: 用户注册 API → RED（写失败测试）→ GREEN（最小实现让
 
 **Plan 来源**: [03-plan.md / plans/*.md 子计划名]
 **执行模式**: [inline / subagent / parallel]
+**模式选择原因**: [噪音隔离 / 独立验证 / parallel_safe / inline 简单连续执行]
 **artifact_type**: [software / document / article / deck / visual]
 
 **Task 完成状态**:

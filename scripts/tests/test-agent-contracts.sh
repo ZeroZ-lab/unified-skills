@@ -97,3 +97,30 @@ path.write_text(text.replace("tools:\n", "tools:\n  - Write\n", 1), encoding="ut
 PY
 expect_failure "$fixture" "agents/review-security-auditor.md declares write-capable tools: Write"
 printf 'PASS write-tool auditor negative fixture\n'
+
+fixture="$(make_fixture noisy-tool-auditor)"
+python3 - "$fixture/agents/review-security-auditor.md" <<'PY'
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+path.write_text(text.replace("tools:\n", "tools:\n  - Agent\n", 1), encoding="utf-8")
+PY
+expect_failure "$fixture" "agents/review-security-auditor.md declares broad/noisy tools by default: Agent"
+printf 'PASS noisy-tool auditor negative fixture\n'
+
+fixture="$(make_fixture missing-maxturns-auditor)"
+python3 - "$fixture/agents/review-security-auditor.md" <<'PY'
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+lines = [
+    line for line in path.read_text(encoding="utf-8").splitlines()
+    if not line.startswith("maxTurns:")
+]
+path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+PY
+expect_failure "$fixture" "agents/review-security-auditor.md missing maxTurns limit"
+printf 'PASS missing-maxTurns auditor negative fixture\n'

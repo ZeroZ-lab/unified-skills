@@ -4,6 +4,20 @@ agent 按职责分组，用于 define、design、build、review、refine 和 shi
 
 `/brainstorm` 当前没有专属 persona；它由 current agent 直接执行 `define-cognitive-brainstorm`。
 
+## Subagent 使用规则
+
+Subagent 是上下文隔离器 + 专项工人 + 信息压缩器，不是独立路由器。`agents/` 只声明 persona、工具边界和输出责任；是否分派、分派给谁、加载哪些技能，仍由对应 stage skill 决定。
+
+只有满足以下条件之一时才分派 subagent：
+- 会产生大量搜索结果、日志、diff、测试输出或文件内容
+- 可以独立完成，主 session 只需要压缩结论
+- 需要限制工具权限、Read Scope 或 Write Scope
+- 适合并行探索不同模块、假设或风险点
+
+不要为小修改、简单格式化、同一文件内连续编辑、频繁确认任务或强共享上下文任务分派 subagent。
+
+派发前必须明确 Goal、Scope、Forbidden Actions、Allowed Tools、Output Limit、Completion Criteria。默认优先 read-only；只有实现或调试类任务允许写工具。返回只允许包含结论、关键证据、相关文件、风险和下一步建议；禁止返回原始日志、完整 diff、大段代码、长篇推理、无关背景和重复信息。
+
 ## Design Review（设计阶段）
 
 | Agent | 职责 | 调用时机 |

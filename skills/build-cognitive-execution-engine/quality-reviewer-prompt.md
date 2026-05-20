@@ -14,6 +14,16 @@
 
 **变更文件:** {{FILES}}
 
+**Read Scope:** {{READ_SCOPE}}
+
+**Allowed Tools:** {{ALLOWED_TOOLS}}
+
+**Forbidden Actions:** {{FORBIDDEN_ACTIONS}}
+
+**Output Limit:** 最多 1200 字；只返回会影响合并候选资格的发现。
+
+**Completion Criteria:** 五轴均有结论；Critical / Important 必须有文件、行号、证据和建议。
+
 ---
 
 ## 审查范围
@@ -121,4 +131,10 @@
 结论: <PRE_REVIEW_PASS | PRE_REVIEW_ISSUES>
   PRE_REVIEW_PASS — 无 Critical 发现，可以进入 formal `/review`
   PRE_REVIEW_ISSUES — 存在 Critical 或 Important 发现，需修正后重新运行 build gate
+
+{"status":"<PRE_REVIEW_PASS|PRE_REVIEW_ISSUES>","changed_files":[],"test_results":["<review: PASS|ISSUES>"],"artifact_paths":[]}
 ```
+
+### 压缩返回规则
+
+禁止返回原始日志、完整 diff、大段代码、长篇推理或无关背景。Suggestion / Nit 只在会影响后续 formal `/review` 判断时保留；否则汇总计数即可。
