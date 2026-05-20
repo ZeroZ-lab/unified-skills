@@ -129,63 +129,75 @@ while IFS= read -r file; do
 done < <(find skills -name 'SKILL.md' | sort)
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 6. CLAUDE 指针文件
+## 6. 技能 frontmatter
+printf '\n== 检查技能 frontmatter ==\n'
+python3 scripts/check-skill-frontmatter.py || fail "SKILL.md frontmatter 不符合 Codex loader 要求"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+## 7. CLAUDE 指针文件
 printf '\n== 检查 CLAUDE 指针文件 ==\n'
 sgrep 'AGENTS\.md' CLAUDE.md || fail "CLAUDE.md 必须指向 AGENTS.md"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 7. skills-index.json 一致性
+## 8. skills-index.json 一致性
 printf '\n== 检查 skills-index.json ==\n'
 python3 scripts/check-skills-index.py || fail "skills-index.json 与真实技能集不一致"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 8. skills-lock.json 哈希
+## 9. skills-lock.json 哈希
 printf '\n== 检查 skills-lock.json 完整性 ==\n'
 python3 scripts/check-skills-lock.py || fail "skills-lock.json 完整性检查失败"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 9. hooks.json schema
+## 10. hooks.json schema
 printf '\n== 检查 hooks.json ==\n'
 python3 scripts/check-hooks-schema.py || fail "hooks/hooks.json schema 无效"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 10. Claude Code skill-load monitors
+## 11. Claude Code skill-load monitors
 printf '\n== 检查 Claude Code skill-load monitors ==\n'
 python3 scripts/check-monitors.py || fail "Claude Code skill-load monitors 配置无效"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 11. Context Runtime / Router
+## 12. Context Runtime / Router
 printf '\n== 检查 Context Runtime 合同 ==\n'
 python3 scripts/check-router.py || fail "Context Runtime 合同不一致"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 12. Unified feature state
+## 13. Unified feature state
 printf '\n== 检查 Unified feature state ==\n'
 python3 scripts/check-feature-state.py || fail "Unified feature state 合同不一致"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 13. Pipeline 序列 + 路由
+## 14. Pipeline 序列 + 路由
 printf '\n== 检查 pipeline 路由与序列 ==\n'
 python3 scripts/check-pipelines.py || fail "pipeline 路由或序列不正确"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 14. 技能加载合同
+## 15. 技能加载合同
 printf '\n== 检查技能加载合同 ==\n'
 python3 scripts/check-skill-load-contracts.py || fail "技能加载合同不一致"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 15. Codex 平台
+## 16. Codex 平台
 printf '\n== 检查 Codex plugin manifest ==\n'
 python3 scripts/check-codex-platform.py || fail "Codex 平台检查失败"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 16. 自动化脚本存在 + 可执行
+## 17. Codex plugin cache（可选）
+if [ "${CHECK_CODEX_CACHE:-0}" = "1" ]; then
+  printf '\n== 检查 Codex plugin cache ==\n'
+  bash scripts/check-codex-plugin-cache.sh || fail "Codex plugin cache 不一致"
+  [ "$status" -eq 0 ] && printf '通过\n'
+fi
+
+## 18. 自动化脚本存在 + 可执行
 printf '\n== 检查自动化脚本 ==\n'
 for script in scripts/sync-version.sh scripts/generate-index.sh scripts/notify-skill-loaded.sh scripts/generate-skill-load-monitors.sh; do
   [ -f "$script" ] || fail "缺少脚本: $script"
   [ -x "$script" ] || fail "脚本不可执行: chmod +x $script"
 done
-for script in scripts/check-agent-contracts.py scripts/check-doc-sync-contract.py; do
+for script in scripts/check-agent-contracts.py scripts/check-doc-sync-contract.py scripts/check-skill-frontmatter.py; do
   [ -f "$script" ] || fail "缺少脚本: $script"
 done
 [ -d "scripts/tests" ] || fail "缺少脚本测试目录: scripts/tests"
@@ -194,16 +206,16 @@ for test in test-sync-version.sh test-generate-index.sh test-hooks.sh test-agent
 done
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 17. Agent 合同负向测试
+## 19. Agent 合同负向测试
 printf '\n== 检查 Agent 合同负向测试 ==\n'
 bash scripts/tests/test-agent-contracts.sh || fail "Agent 合同负向测试失败"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-## 18. Hook 行为测试
+## 20. Hook 行为测试
 printf '\n== 检查 hook 行为 ==\n'
 bash scripts/tests/test-hooks.sh || fail "hook 行为测试失败"
 
-## 19. 技能行数统计
+## 21. 技能行数统计
 printf '\n== 技能行数统计 ==\n'
 find skills -name 'SKILL.md' | sort | while IFS= read -r f; do
   printf '%6d %s\n' "$(wc -l < "$f")" "$f"

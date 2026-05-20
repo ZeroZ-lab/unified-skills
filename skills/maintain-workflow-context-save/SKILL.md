@@ -1,4 +1,4 @@
-------
+---
 name: maintain-workflow-context-save
 description: 保存工作上下文。当需要保存当前工作状态供后续 session 恢复，或提到"保存""save""checkpoint""挂起"
 argument-hint: "[checkpoint-title]"

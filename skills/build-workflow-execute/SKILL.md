@@ -1,4 +1,4 @@
-------
+---
 name: build-workflow-execute
 description: 按计划增量生成软件或内容产物。当 plan 已批准需要开始实现，或提到"实现""编码""开始做"
 argument-hint: "[artifact-type] [--parallel-safe]"

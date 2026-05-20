@@ -48,10 +48,47 @@ compare_file() {
   fi
 }
 
+compare_source_file() {
+  source_root="$1"
+  rel="$2"
+  repo_file="$repo_root/$rel"
+  source_file="$source_root/$rel"
+
+  if [ ! -f "$source_file" ]; then
+    fail "marketplace source 缺少文件: $source_file"
+    return
+  fi
+
+  if ! cmp -s "$repo_file" "$source_file"; then
+    fail "Codex marketplace source stale: $rel differs from repo"
+  fi
+}
+
 compare_file ".codex-plugin/plugin.json"
 compare_file ".claude-plugin/marketplace.json"
 compare_file "skills-index.json"
-compare_file "skills/maintain-workflow-using-unified/SKILL.md"
+compare_file "skills-router.json"
+while IFS= read -r repo_skill; do
+  rel="${repo_skill#"$repo_root"/}"
+  compare_file "$rel"
+done < <(find "$repo_root/skills" -mindepth 2 -maxdepth 2 -name SKILL.md | sort)
+
+python3 "$repo_root/scripts/check-skill-frontmatter.py" "$cache_root" || fail "Codex cache SKILL.md frontmatter 无效"
+
+marketplace_root="${CODEX_UNIFIED_MARKETPLACE_DIR:-$codex_home/.tmp/marketplaces/unified-skills}"
+if [ -d "$marketplace_root" ]; then
+  printf 'Codex marketplace source: %s\n' "$marketplace_root"
+  compare_source_file "$marketplace_root" ".codex-plugin/plugin.json"
+  compare_source_file "$marketplace_root" ".claude-plugin/marketplace.json"
+  compare_source_file "$marketplace_root" "skills-index.json"
+  compare_source_file "$marketplace_root" "skills-router.json"
+  while IFS= read -r repo_skill; do
+    rel="${repo_skill#"$repo_root"/}"
+    compare_source_file "$marketplace_root" "$rel"
+  done < <(find "$repo_root/skills" -mindepth 2 -maxdepth 2 -name SKILL.md | sort)
+
+  python3 "$repo_root/scripts/check-skill-frontmatter.py" "$marketplace_root" || fail "Codex marketplace source SKILL.md frontmatter 无效"
+fi
 
 python3 - "$cache_root" "$version" <<'PY' || fail "Codex cache 元数据仍含过期版本或动态数量"
 import json

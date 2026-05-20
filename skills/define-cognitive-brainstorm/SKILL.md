@@ -1,4 +1,4 @@
-------
+---
 name: define-cognitive-brainstorm
 description: 结构化脑暴——发散探索 + 收敛评估。当想法模糊、面临开放性问题或需要方案对比，或提到"脑暴""想法""方案对比""怎么办"
 argument-hint: "[模糊想法或开放性问题]"
