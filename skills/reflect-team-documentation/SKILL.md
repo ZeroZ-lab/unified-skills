@@ -132,7 +132,7 @@ async function createTask(input: CreateTaskInput): Promise<Task> { ... }
 
 **项目级文档最小集合：**
 - `README.md` — 项目入口、启动、命令、结构、部署入口
-- `AGENTS.md` — agent 合同、验证方式、项目约束
+- `AGENTS.md` — 入口合同、激活门、项目约束（运行时详细规则在 `docs/contracts/` 按需加载）
 - `CHANGELOG.md` — 用户可感知变化 / release 记录
 - `DESIGN.md` — 跨 feature 设计 token 和长期设计约束
 - `docs/architecture/system-overview.md`

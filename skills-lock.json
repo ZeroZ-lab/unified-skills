@@ -22,7 +22,7 @@
     "build-cognitive-context": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "4ebf4d40d2a769bd04ed3c5c65da19ee308119f8d884425381a5805b4ca673e9",
+      "computedHash": "b65505c5fef27d0102b2b4351941032e461fa1d88a37a94d29cf9e58be070a8a",
       "auxiliaryHashes": {}
     },
     "build-cognitive-decision-record": {
@@ -153,7 +153,7 @@
     "reflect-team-documentation": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "f4178899622f96ef1e493de7407c4ca6b5f168e6f548c69ece80f050143d3bc4",
+      "computedHash": "9242f06d170dd9548140552c12094d5633b8e4000d72349a29510e5e622a3e0c",
       "auxiliaryHashes": {}
     },
     "reflect-team-retro": {
@@ -189,7 +189,7 @@
     "ship-workflow-doc-sync": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "4dbf1dda3f7806b5d37660032172cfa15e976ae494c4e4837fe76e0abd63ecef",
+      "computedHash": "2a1dd6de0ee0a884160c95102a0f6f380b173fc07dfccc0670f89875137d042b",
       "auxiliaryHashes": {}
     },
     "ship-workflow-land": {

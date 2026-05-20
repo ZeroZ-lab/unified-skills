@@ -1,27 +1,17 @@
 #!/usr/bin/env bash
 set -u
 
+STRICT=0
+if [ "${1:-}" = "--strict" ]; then
+  STRICT=1
+fi
+
 status=0
 
 fail() {
   printf 'FAIL: %s\n' "$1"
   status=1
 }
-
-_count_output=$(python3 -c "
-import json
-idx = json.load(open('skills-index.json'))
-skills = set()
-for phase_skills in idx['by_phase'].values():
-    skills.update(phase_skills['skills'])
-print(len(skills))
-" 2>/dev/null) || true
-if [ -z "$_count_output" ]; then
-  fail "无法从 skills-index.json 计算技能数量"
-  EXPECTED_SKILL_COUNT=0
-else
-  EXPECTED_SKILL_COUNT=$_count_output
-fi
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || fail "缺少命令: $1"
@@ -33,18 +23,17 @@ require_cmd python3
 
 # rg 优先，不可用时降级为 grep -E
 if command -v rg >/dev/null 2>&1; then
-  # rg: 支持正则、-q 静默、-n 行号
   sgrep() { rg -q "$@"; }
-  sgrep_n() { rg -n "$@"; }
 else
-  # grep -E: 扩展正则兼容 rg 的正则语法
   sgrep() { grep -Eq "$@"; }
-  sgrep_n() { grep -En "$@"; }
 fi
 
-printf '== 检查版本号 ==\n'
+# ──────────────────────────────────────────
+# Tier 1: 运行时正确性检查
+# ──────────────────────────────────────────
 
-# 从 package.json 和 plugin.json 提取当前版本
+## 1. 版本一致性
+printf '\n== 检查版本号 ==\n'
 pkg_ver=$(python3 -c "import json; print(json.load(open('package.json'))['version'])" 2>/dev/null)
 plugin_ver=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])" 2>/dev/null)
 codex_plugin_ver=$(python3 -c "import json; print(json.load(open('.codex-plugin/plugin.json'))['version'])" 2>/dev/null)
@@ -55,26 +44,21 @@ else
   printf 'package.json:         %s\n' "$pkg_ver"
   printf '.claude-plugin:       %s\n' "$plugin_ver"
   printf '.codex-plugin:        %s\n' "$codex_plugin_ver"
-
-  # 检查三个版本是否一致
   if [ "$pkg_ver" != "$plugin_ver" ]; then
     fail "版本号不一致: package.json=$pkg_ver, .claude-plugin/plugin.json=$plugin_ver"
   fi
   if [ "$pkg_ver" != "$codex_plugin_ver" ]; then
     fail "版本号不一致: package.json=$pkg_ver, .codex-plugin/plugin.json=$codex_plugin_ver"
   fi
-
-  # 检查 HEAD 是否有未推送的版本变更
   latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
   if [ "$latest_tag" != "none" ]; then
     tag_ver="${latest_tag#v}"
     printf '最新 tag:             %s\n' "$latest_tag"
-
     if [ "$pkg_ver" = "$tag_ver" ]; then
       if git diff --quiet "$latest_tag"..HEAD -- package.json .claude-plugin/plugin.json .codex-plugin/plugin.json 2>/dev/null; then
         printf '版本保持 %s，版本文件未变更: 通过\n' "$pkg_ver"
       else
-        printf '版本文件有变更但版本号未变，通过（仅允许无版本号的紧急修复）\n'
+        printf '版本文件有变更但版本号未变，通过\n'
       fi
     elif [ "$(printf '%s\n%s' "$tag_ver" "$pkg_ver" | sort -V | tail -1)" = "$pkg_ver" ]; then
       printf '版本已从 %s bump 到 %s: 通过\n' "$tag_ver" "$pkg_ver"
@@ -86,84 +70,14 @@ else
   fi
 fi
 
+## 2. 插件元数据描述
 printf '\n== 检查插件元数据描述 ==\n'
-python3 - "$pkg_ver" <<'PY' || fail "插件元数据描述与版本/动态数量规则不一致"
-import json
-import re
-import sys
-from pathlib import Path
-
-version = sys.argv[1]
-
-metadata_fields = [
-    (".claude-plugin/plugin.json", ("description",), True),
-    (".codex-plugin/plugin.json", ("description",), True),
-    (".codex-plugin/plugin.json", ("interface", "shortDescription"), False),
-    (".claude-plugin/marketplace.json", ("description",), True),
-    (".claude-plugin/marketplace.json", ("plugins", 0, "description"), True),
-    ("package.json", ("description",), False),
-]
-
-dynamic_count_re = re.compile(r"(^|[^0-9.])\d+\s*(?:个)?(?:技能|命令|角色|SKILL)")
-errors = []
-package_description = None
-description_bodies = []
-
-def get_field(data, path):
-    current = data
-    for key in path:
-        current = current[key]
-    return current
-
-for file, path, require_version_prefix in metadata_fields:
-    p = Path(file)
-    if not p.exists():
-        errors.append(f"missing metadata file: {file}")
-        continue
-    data = json.loads(p.read_text(encoding="utf-8"))
-    try:
-        value = get_field(data, path)
-    except Exception as exc:
-        errors.append(f"{file} missing field {'.'.join(map(str, path))}: {exc}")
-        continue
-    if not isinstance(value, str):
-        errors.append(f"{file} field {'.'.join(map(str, path))} is not a string")
-        continue
-    if dynamic_count_re.search(value):
-        errors.append(f"{file} field {'.'.join(map(str, path))} contains dynamic inventory count")
-    if "v2.14.0" in value:
-        errors.append(f"{file} field {'.'.join(map(str, path))} contains stale metadata")
-    if require_version_prefix and not value.startswith(f"v{version}"):
-        errors.append(f"{file} field {'.'.join(map(str, path))} must start with v{version}")
-    if path[-1] == "description":
-        body = value
-        prefix = f"v{version} — "
-        if require_version_prefix and body.startswith(prefix):
-            body = body[len(prefix):]
-        if file == "package.json":
-            package_description = body
-        else:
-            description_bodies.append((file, path, body))
-
-if package_description:
-    for file, path, body in description_bodies:
-        if body != package_description:
-            errors.append(f"{file} field {'.'.join(map(str, path))} does not match package.json description body")
-
-if errors:
-    raise SystemExit("\n".join(errors))
-PY
+python3 scripts/check-version.py "$pkg_ver" || fail "插件元数据描述与版本/动态数量规则不一致"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-printf '\n== 检查 Codex 插件 cache ==\n'
-if [ "${CHECK_CODEX_CACHE:-0}" = "1" ]; then
-  bash scripts/check-codex-plugin-cache.sh || fail "Codex 插件 cache 与当前仓库不一致"
-else
-  printf '跳过（设置 CHECK_CODEX_CACHE=1 启用本机宿主 cache 严格检查）\n'
-fi
-
+## 3. 占位符检测
 printf '\n== 检查占位符 ==\n'
-placeholder_output=$(sgrep_n 'STUB|PLACEHOLDER|待补充|尚未实现' skills commands agents templates docs references README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
+placeholder_output=$(rg -n 'STUB|PLACEHOLDER|待补充|尚未实现' skills commands agents templates docs references README.md CLAUDE.md AGENTS.md 2>/dev/null || true)
 if [ -n "$placeholder_output" ]; then
   printf '%s\n' "$placeholder_output"
   fail '发现占位符标记'
@@ -171,17 +85,20 @@ else
   printf '通过\n'
 fi
 
+## 4. 技能计数 vs 索引
 printf '\n== 检查多产物扩展 ==\n'
+EXPECTED_SKILL_COUNT=$(python3 -c "
+import json
+idx = json.load(open('skills-index.json'))
+skills = set()
+for phase_skills in idx['by_phase'].values():
+    skills.update(phase_skills['skills'])
+print(len(skills))
+" 2>/dev/null) || EXPECTED_SKILL_COUNT=0
 skill_count=$(ls -d skills/*/ 2>/dev/null | while IFS= read -r d; do basename "$d"; done | grep -cE '^(define|design|build|verify|ship|maintain|reflect)-')
 if [ "$skill_count" != "$EXPECTED_SKILL_COUNT" ]; then
   fail "技能数量应为 $EXPECTED_SKILL_COUNT，实际为 $skill_count"
 fi
-
-template_count=$(find templates -type f | wc -l | tr -d ' ')
-if [ "$template_count" != "22" ]; then
-  fail "模板数量应为 22，实际为 $template_count"
-fi
-
 for file in \
   templates/feature/00-brainstorm.md \
   templates/feature/01-spec.md \
@@ -196,256 +113,12 @@ for file in \
 do
   sgrep 'artifact_type' "$file" || fail "缺少 artifact_type 说明: $file"
 done
-
 for type in software document article deck visual; do
   sgrep "$type" templates/feature/01-spec.md || fail "spec 模板缺少 artifact_type 取值: $type"
 done
-[ "$status" -eq 0 ] && printf '通过（跳过已删除技能检查，当前处于迁移中）\n'
-
-printf '\n== 检查文档模板族完整性 ==\n'
-[ -f "templates/feature/00-brainstorm.md" ] || fail "缺少 brainstorm 模板"
-[ -f "templates/feature/04-review.md" ] || fail "缺少 review 模板"
-[ -f "templates/feature/05-ship.md" ] || fail "缺少 ship 模板"
-[ -f "templates/feature/06-canary-report.md" ] || fail "缺少 canary 模板"
-[ -f "templates/feature/07-deploy-report.md" ] || fail "缺少 deploy 模板"
-[ -f "templates/maintain/checkpoint.md" ] || fail "缺少 checkpoint 模板"
-sgrep '^## 假设' templates/feature/00-brainstorm.md || fail "brainstorm 模板缺少假设区"
-sgrep '^## Documentation Compliance' templates/feature/04-review.md || fail "review 模板缺少 Documentation Compliance"
-sgrep '^## Review Independence' templates/feature/04-review.md || fail "review 模板缺少 Review Independence"
-for pattern in 'Built by:' 'Stage 1 reviewed by:' 'Stage 2 reviewed by:' 'Independence status:' 'Exemption reason:'; do
-  sgrep "$pattern" templates/feature/04-review.md || fail "review 模板缺少独立性字段: $pattern"
-done
-sgrep '^## Documentation Sync' templates/feature/05-ship.md || fail "ship 模板缺少 Documentation Sync"
-sgrep '^## 基线' templates/feature/06-canary-report.md || fail "canary 模板缺少基线区"
-sgrep '^## 回滚' templates/feature/07-deploy-report.md || fail "deploy 模板缺少回滚区"
-sgrep '^## Summary' templates/maintain/checkpoint.md || fail "checkpoint 模板缺少 Summary"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-printf '\n== 检查项目级模板族完整性 ==\n'
-[ -f "templates/TEMPLATE-GUIDE.md" ] || fail "缺少 TEMPLATE-GUIDE.md"
-[ -f "templates/root/README.md" ] || fail "缺少 root README 模板"
-[ -f "templates/root/AGENTS.md" ] || fail "缺少 root AGENTS 模板"
-[ -f "templates/root/CHANGELOG.md" ] || fail "缺少 root CHANGELOG 模板"
-[ -f "templates/project/system-overview.md" ] || fail "缺少 system-overview 模板"
-[ -f "templates/project/module-boundaries.md" ] || fail "缺少 module-boundaries 模板"
-[ -f "templates/project/deployment-and-runtime.md" ] || fail "缺少 deployment-and-runtime 模板"
-[ -f "templates/project/observability-and-runbook.md" ] || fail "缺少 observability-and-runbook 模板"
-sgrep '^## Quick Start' templates/root/README.md || fail "root README 模板缺少 Quick Start"
-sgrep '^## 终端观察护栏｜Terminal Observation Guardrail' templates/root/AGENTS.md || fail "root AGENTS 模板缺少终端观察护栏"
-sgrep '未知输出先限流，复杂信息先采样' templates/root/AGENTS.md || fail "root AGENTS 模板缺少终端观察核心原则"
-sgrep 'COMMAND 2>&1 \| head -c 4000' templates/root/AGENTS.md || fail "root AGENTS 模板缺少默认输出限流命令"
-sgrep '^## Workflow Contract' templates/root/AGENTS.md || fail "root AGENTS 模板缺少 Workflow Contract"
-sgrep '^## \[Unreleased\]' templates/root/CHANGELOG.md || fail "root CHANGELOG 模板缺少 Unreleased"
-sgrep '^## System Boundaries' templates/project/system-overview.md || fail "system-overview 模板缺少 System Boundaries"
-sgrep '^## Allowed Dependencies' templates/project/module-boundaries.md || fail "module-boundaries 模板缺少 Allowed Dependencies"
-sgrep '^## Rollback Entry' templates/project/deployment-and-runtime.md || fail "deployment-and-runtime 模板缺少 Rollback Entry"
-sgrep '^## Incident Actions' templates/project/observability-and-runbook.md || fail "observability-and-runbook 模板缺少 Incident Actions"
-sgrep '^## Enterprise Template Standard' templates/TEMPLATE-GUIDE.md || fail "TEMPLATE-GUIDE 缺少 Enterprise Template Standard"
-sgrep '^## Reviewer Checklist' templates/TEMPLATE-GUIDE.md || fail "TEMPLATE-GUIDE 缺少 Reviewer Checklist"
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查文档同步合同 ==\n'
-for pattern in \
-  'doc_intent' \
-  'project_truth_changed' \
-  'affected_project_docs' \
-  'Project Doc Sync Plan' \
-  'Documentation Compliance' \
-  'Documentation Sync'
-do
-  case "$pattern" in
-    doc_intent|project_truth_changed|affected_project_docs)
-      sgrep "$pattern" AGENTS.md || fail "AGENTS 缺少文档同步合同字段: $pattern"
-      sgrep "$pattern" templates/feature/01-spec.md || fail "spec 模板缺少文档同步合同字段: $pattern"
-      sgrep "$pattern" skills/define-workflow-spec/SKILL.md || fail "spec 技能缺少文档同步合同字段: $pattern"
-      ;;
-    'Project Doc Sync Plan')
-      sgrep "$pattern" AGENTS.md || fail "AGENTS 缺少 $pattern"
-      sgrep "$pattern" templates/feature/03-plan.md || fail "plan 模板缺少 $pattern"
-      sgrep "$pattern" skills/build-workflow-plan/SKILL.md || fail "plan 技能缺少 $pattern"
-      ;;
-    'Documentation Compliance')
-      sgrep "$pattern" AGENTS.md || fail "AGENTS 缺少 $pattern"
-      sgrep "$pattern" skills/verify-workflow-review/SKILL.md || fail "review 技能缺少 $pattern"
-      ;;
-    'Documentation Sync')
-      sgrep "$pattern" AGENTS.md || fail "AGENTS 缺少 $pattern"
-      sgrep "$pattern" skills/ship-workflow-ship/SKILL.md || fail "ship 技能缺少 $pattern"
-      ;;
-  esac
-done
-python3 scripts/check-doc-sync-contract.py || fail "文档同步合同检查失败"
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查多计划并行契约 ==\n'
-for pattern in 'Plan Topology' 'Subplans' 'Parallel Safety'; do
-  sgrep "$pattern" skills/build-workflow-plan/SKILL.md || fail "plan 技能缺少 $pattern"
-done
-for pattern in 'plans/' 'Parallel Execution Matrix' 'Write Scope' 'Shared Contracts' 'Cross-check Command' 'Semantic Independence Reason'; do
-  sgrep "$pattern" templates/feature/03-plan.md || fail "plan 模板缺少 $pattern"
-done
-for pattern in 'Plan Topology' 'Parallel Execution Matrix' 'parallel_safe' 'Write Scope' 'Shared Contracts' 'Cross-check Command'; do
-  sgrep "$pattern" skills/build-workflow-execute/SKILL.md || fail "execute 技能缺少 $pattern"
-  sgrep "$pattern" skills/build-cognitive-execution-engine/SKILL.md || fail "execution-engine 技能缺少 $pattern"
-done
-for pattern in 'Shared Contracts' 'Global Invariants' 'Cross-check Command' 'Semantic Independence Reason'; do
-  sgrep "$pattern" skills/build-workflow-plan/SKILL.md || fail "plan 技能缺少语义并行字段: $pattern"
-  sgrep "$pattern" skills/build-workflow-plan/task-templates.md || fail "task-templates 缺少语义并行字段: $pattern"
-done
-sgrep 'plans/\*\.md' README.md || fail "README 缺少 plans/*.md 文档产出链"
-sgrep 'plans/\*\.md' AGENTS.md || fail "AGENTS 缺少 plans/*.md 文档产出链"
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 review 独立性与 pre-review 边界 ==\n'
-for pattern in 'trivial exemption' 'Independence status' 'Built by' 'pre-review / implementation gate'; do
-  sgrep "$pattern" skills/verify-workflow-review/SKILL.md || fail "review 技能缺少独立性/边界合同: $pattern"
-done
-for pattern in 'Stage 2 必须独立' 'Independence status' 'Exemption reason'; do
-  sgrep "$pattern" commands/review.md || fail "review 命令缺少独立性合同: $pattern"
-done
-for pattern in 'pre-review' 'formal `/review`' '04-review.md'; do
-  sgrep "$pattern" skills/build-cognitive-execution-engine/SKILL.md || fail "execution-engine 缺少 build/review 边界: $pattern"
-  sgrep "$pattern" commands/build.md || fail "build 命令缺少 build/review 边界: $pattern"
-done
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 build task-by-task 合同 ==\n'
-for file in \
-  skills/build-workflow-execute/SKILL.md \
-  skills/build-cognitive-execution-engine/SKILL.md \
-  commands/build.md \
-  templates/feature/03-plan.md
-do
-  sgrep 'task-by-task' "$file" || fail "缺少 task-by-task 合同: $file"
-done
-sgrep 'Task N' skills/build-workflow-execute/SKILL.md || fail "execute 技能缺少 Task N 执行单元"
-sgrep 'Task N' templates/feature/03-plan.md || fail "plan 模板缺少 Task N 执行单元"
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查命令数量 ==\n'
-_cmd_count=$(ls commands/*.md 2>/dev/null | wc -l | tr -d ' ')
-_expected_cmd_count=11
-if [ "$_cmd_count" != "$_expected_cmd_count" ]; then
-  fail "commands/ 目录应包含 $_expected_cmd_count 个命令，实际为 $_cmd_count"
-fi
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 refine External Scan ==\n'
-sgrep 'Phase 1\.4：External Scan' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 Phase 1.4 External Scan"
-sgrep 'Fact / Pattern / Inference / Unknown / Adopt / Reject' skills/define-workflow-refine/SKILL.md || fail "refine 技能缺少 External Scan 分层契约"
-sgrep '^## External References' templates/feature/01-spec.md || fail "spec 模板缺少 External References"
-sgrep '^## Scout Review Summary' templates/feature/01-spec.md || fail "spec 模板缺少 Scout Review Summary"
-
-for file in agents/refine-ceo-scout.md agents/refine-eng-scout.md agents/refine-design-scout.md; do
-  [ -f "$file" ] || fail "缺少 refine scout agent: $file"
-  for section in "Verdict" "Evidence Used" "Findings" "Spec Impact"; do
-    sgrep "^## $section" "$file" || fail "refine scout 缺少章节 $section: $file"
-  done
-done
-
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 design evidence gate ==\n'
-[ -f references/design-best-practices.md ] || fail "缺少设计最佳实践来源合同: references/design-best-practices.md"
-for pattern in \
-  'Enterprise Product Patterns' \
-  'Official Systems / Platform Rules' \
-  'Methods / Theory / Style Schools' \
-  'Anti-patterns / Verification' \
-  'Local Project Truth'
-do
-  sgrep "$pattern" references/design-best-practices.md || fail "design-best-practices 缺少来源层: $pattern"
-done
-
-sgrep 'Design Best-Practice Scan' commands/design.md || fail "/design 缺少 Design Best-Practice Scan phase"
-sgrep 'Sources / Patterns / Inferences / Adopt / Reject / Unknown' commands/design.md || fail "/design 缺少 scan 输出契约"
-sgrep 'Design References' commands/design.md || fail "/design 缺少 Design References gate"
-
-for pattern in \
-  '^## Design References' \
-  '^## Pattern Synthesis' \
-  '^## Design Inferences' \
-  '^## Adopt / Reject' \
-  '^## Design Evidence Quality'
-do
-  sgrep "$pattern" templates/feature/02-design.md || fail "02-design 模板缺少 $pattern"
-done
-
-sgrep '设计证据质量' agents/design-reviewer.md || fail "design-reviewer 缺少设计证据质量审查"
-sgrep '缺少 Design References' agents/design-reviewer.md || fail "design-reviewer 缺少 Design References blocking"
-sgrep '缺少 Design Inferences' agents/design-reviewer.md || fail "design-reviewer 缺少 Design Inferences blocking"
-sgrep '缺少 Adopt / Reject' agents/design-reviewer.md || fail "design-reviewer 缺少 Adopt / Reject blocking"
-
-python3 - <<'PY' || fail "非 software 用户可见产物未强制加载 design-workflow-design"
-import json
-idx = json.load(open("skills-index.json"))
-for artifact in ("document", "article", "deck", "visual"):
-    required = idx["by_artifact_type"][artifact]["required"]
-    if "design-workflow-design" not in required:
-        raise SystemExit(f"{artifact}.required missing design-workflow-design")
-for trigger in ("document|文档|article|文章", "deck|PPT|演示|slides", "visual|视觉稿|海报|版式|layout"):
-    skills = idx["by_trigger"]["user_says"][trigger]
-    if not skills or skills[0] != "design-workflow-design":
-        raise SystemExit(f"{trigger} does not start with design-workflow-design")
-PY
-
-for file in skills/design-*/SKILL.md; do
-  sgrep 'references/design-best-practices\.md' "$file" || fail "design 技能缺少 best-practices reference: $file"
-  sgrep 'Adopt / Reject' "$file" || fail "design 技能缺少 Adopt / Reject 合同: $file"
-  sgrep 'Local Project Truth' "$file" || fail "design 技能缺少 Local Project Truth: $file"
-done
-
-sgrep '不替代 `/design` 的设计扫描' AGENTS.md || fail "AGENTS 缺少 refine scan 与 design scan 的边界"
-sgrep '不替代 `/design` 的创作与呈现层扫描' docs/architecture/command-agent-skill-architecture.md || fail "架构文档缺少 refine/design scan 边界"
-
-printf '\n== 检查 DESIGN.md 模板 ==\n'
-[ -f "templates/root/DESIGN.md" ] || fail "缺少项目级设计约束模板: templates/root/DESIGN.md"
-sgrep 'colors:' templates/root/DESIGN.md || fail "DESIGN.md 模板缺少 YAML colors token"
-sgrep 'typography:' templates/root/DESIGN.md || fail "DESIGN.md 模板缺少 YAML typography token"
-sgrep 'components:' templates/root/DESIGN.md || fail "DESIGN.md 模板缺少 YAML components token"
-sgrep 'Sync Log' templates/root/DESIGN.md || fail "DESIGN.md 模板缺少 Sync Log 章节"
-sgrep 'DESIGN\.md' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 DESIGN.md 引用"
-sgrep 'DESIGN\.md' commands/design.md || fail "design 命令缺少 DESIGN.md 引用"
-sgrep 'DESIGN\.md' references/design-best-practices.md || fail "design-best-practices 缺少 DESIGN.md 说明"
-sgrep 'design-inspiration-catalog' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 design-inspiration-catalog 引用"
-sgrep 'design-pattern-extract' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 design-pattern-extract 引用"
-sgrep 'Step 3\.5：Codex' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 Step 3.5 Codex 视觉生成"
-sgrep 'design-tokens-extracted' skills/design-workflow-design/SKILL.md || fail "design-workflow-design 缺少 design-tokens-extracted 产物"
-sgrep 'Phase 2\.5: Codex' commands/design.md || fail "design 命令缺少 Phase 2.5 Codex 视觉生成"
-sgrep 'mockup-direction' commands/design.md || fail "design 命令缺少 mockup 产物说明"
-sgrep 'codex-rescue' AGENTS.md || fail "AGENTS 缺少 codex-rescue 引用"
-sgrep 'design-tokens-extracted' AGENTS.md || fail "AGENTS 缺少 design-tokens-extracted 产物说明"
-[ -f "references/design-inspiration-catalog.md" ] || fail "缺少设计灵感目录: references/design-inspiration-catalog.md"
-[ -f "references/design-pattern-extract.md" ] || fail "缺少设计模式提取: references/design-pattern-extract.md"
-[ "$status" -eq 0 ] && printf '通过\n'
-
-if sgrep_n '(^|[^0-9.])[0-9]+[[:space:]]*(个)?(技能|命令|角色|SKILL)' \
-  README.md AGENTS.md docs/architecture/command-agent-skill-architecture.md package.json .claude-plugin .codex-plugin >/tmp/unified-validate-dynamic-count.$$ 2>/dev/null; then
-  cat /tmp/unified-validate-dynamic-count.$$
-  rm -f /tmp/unified-validate-dynamic-count.$$
-  fail '当前描述不应包含动态库存数量；具体数量由目录、索引、锁文件和 validate 计算'
-else
-  rm -f /tmp/unified-validate-dynamic-count.$$
-fi
-
-for type in software document article deck visual; do
-  sgrep "$type" templates/feature/01-spec.md || fail "spec 模板缺少 artifact_type 取值: $type"
-done
-
-for file in \
-  skills/build-content-writing/SKILL.md \
-  skills/build-content-layout/SKILL.md \
-  skills/verify-content-review/SKILL.md \
-  skills/verify-visual-review/SKILL.md \
-  skills/ship-artifact-export/SKILL.md
-do
-  [ -f "$file" ] || fail "缺少多产物扩展技能: $file"
-  for section in "角色定位" "核心原则" "决策框架" "反模式修复表" "好/坏示例" "验证证据"; do
-    sgrep "^## $section" "$file" || fail "多产物方法论技能缺少章节 $section: $file"
-  done
-done
-[ "$status" -eq 0 ] && printf '通过\n'
-
+## 5. 技能命名规范
 printf '\n== 检查技能命名 ==\n'
 while IFS= read -r file; do
   dir=$(basename "$(dirname "$file")")
@@ -456,938 +129,108 @@ while IFS= read -r file; do
 done < <(find skills -name 'SKILL.md' | sort)
 [ "$status" -eq 0 ] && printf '通过\n'
 
-printf '\n== 检查技能核心章节 ==\n'
-while IFS= read -r file; do
-  dir=$(basename "$(dirname "$file")")
-  sgrep '^## .*入口/出口' "$file" || fail "缺少入口/出口章节: $file"
-  sgrep '^## .*何时不使用' "$file" || fail "缺少何时不使用章节: $file"
-  sgrep '^## .*常见说辞' "$file" || fail "缺少常见说辞章节: $file"
-  sgrep '^## .*红旗' "$file" || fail "缺少红旗章节: $file"
-  sgrep '^## .*验证清单' "$file" || fail "缺少验证清单章节: $file"
-done < <(find skills -name 'SKILL.md' | sort)
-[ "$status" -eq 0 ] && printf '通过\n'
-
+## 6. CLAUDE 指针文件
 printf '\n== 检查 CLAUDE 指针文件 ==\n'
 sgrep 'AGENTS\.md' CLAUDE.md || fail "CLAUDE.md 必须指向 AGENTS.md"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-printf '\n== 检查 Agent 定义结构 ==\n'
-# 审查类 agent：必须有审查维度 + 输出格式 + Blocking/Important/Suggestion
-for file in agents/review-*.md agents/plan-*.md agents/refine-*.md agents/ship-*.md; do
-  [ -f "$file" ] || continue
-  sgrep '^name: ' "$file" || fail "缺少 name frontmatter: $file"
-  sgrep '^description: ' "$file" || fail "缺少 description frontmatter: $file"
-  sgrep '^# ' "$file" || fail "缺少 H1 标题: $file"
-  sgrep '审查维度|审计维度' "$file" || fail "缺少审查维度/审计维度章节: $file"
-  sgrep '输出格式' "$file" || fail "缺少输出格式章节: $file"
-  sgrep 'Blocking.*Important.*Suggestion' "$file" || fail "缺少 Blocking/Important/Suggestion 分级: $file"
-done
-# 工程类 agent：必须有职责 + 输出格式
-for file in agents/requirements-*.md agents/task-*.md agents/software-*.md agents/data-*.md agents/api-*.md agents/content-*.md agents/visual-*.md; do
-  [ -f "$file" ] || continue
-  sgrep '^name: ' "$file" || fail "缺少 name frontmatter: $file"
-  sgrep '^description: ' "$file" || fail "缺少 description frontmatter: $file"
-  sgrep '^# ' "$file" || fail "缺少 H1 标题: $file"
-  sgrep '职责' "$file" || fail "缺少职责章节: $file"
-  sgrep '输出格式' "$file" || fail "缺少输出格式章节: $file"
-done
-
-python3 scripts/check-agent-contracts.py || fail "Agent 调用合同检查失败"
+## 7. skills-index.json 一致性
+printf '\n== 检查 skills-index.json ==\n'
+python3 scripts/check-skills-index.py || fail "skills-index.json 与真实技能集不一致"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-printf '\n== 检查过期内容 ==\n'
-if sgrep_n '第 9 条（Every Feature Leaves a Trace|CANON\.md 9 条|9 条不可变|宪法的 9 条|Use AskUserQuestion, Never Plain Text|禁止.*纯文本' \
-  CANON.md README.md CLAUDE.md AGENTS.md skills >/tmp/unified-validate-stale-canon.$$ 2>/dev/null; then
-  cat /tmp/unified-validate-stale-canon.$$
-  rm -f /tmp/unified-validate-stale-canon.$$
-  fail '发现过期宪法编号或不可移植提问规则'
-else
-  rm -f /tmp/unified-validate-stale-canon.$$
-fi
-
-if sgrep_n '30 技能|30 SKILL|30 个技能|35 技能|35 SKILL|43 技能|43 SKILL|44 技能|44 SKILL|46 技能|46 SKILL|47 技能|47 SKILL|11 命令|构建 \| 13|构建（13）|verify 验证 \| [79]|验证（[79]\）|ship 发布 \| [34]|发布（[34]\）|维护 \| 2|维护（2）|维护（5）|5 命令|10 命令' \
-  README.md CLAUDE.md AGENTS.md package.json .claude-plugin/plugin.json >/tmp/unified-validate-stale-count.$$ 2>/dev/null; then
-  cat /tmp/unified-validate-stale-count.$$
-  rm -f /tmp/unified-validate-stale-count.$$
-  fail '发现过期技能数量说明'
-else
-  rm -f /tmp/unified-validate-stale-count.$$
-fi
-
-if sgrep_n '6 模板|templates/feature/review\.md|templates/feature/ship\.md' \
-  README.md CLAUDE.md AGENTS.md >/tmp/unified-validate-stale-template.$$ 2>/dev/null; then
-  cat /tmp/unified-validate-stale-template.$$
-  rm -f /tmp/unified-validate-stale-template.$$
-  fail '发现过期模板说明'
-else
-  rm -f /tmp/unified-validate-stale-template.$$
-fi
-
-if sgrep_n 'fail-open|permissionDecision: "ask".*Codex|Codex.*permissionDecision: "ask"|docs/features/.*/ship\.md|docs/features/<name>/ship\.md|docs/features/YYYYMMDD-<name>/ship\.md|verify-quality-code-review-standards|scripts/install-codex\.sh|\.agents/skills/' \
-  README.md CLAUDE.md AGENTS.md skills >/tmp/unified-validate-stale-contract.$$ 2>/dev/null; then
-  cat /tmp/unified-validate-stale-contract.$$
-  rm -f /tmp/unified-validate-stale-contract.$$
-  fail '发现过期合同说明'
-else
-  rm -f /tmp/unified-validate-stale-contract.$$
-fi
-
-if sgrep_n '\bcodex_hooks\b|\[features\]\.codex_hooks' \
-  README.md CLAUDE.md AGENTS.md .codex/config.toml .codex/hooks.json .codex-plugin .claude-plugin docs commands agents skills templates references >/tmp/unified-validate-stale-codex-hooks.$$ 2>/dev/null; then
-  cat /tmp/unified-validate-stale-codex-hooks.$$
-  rm -f /tmp/unified-validate-stale-codex-hooks.$$
-  fail '发现已废弃 Codex hooks feature flag'
-else
-  rm -f /tmp/unified-validate-stale-codex-hooks.$$
-fi
-
-if sgrep_n '写入 CLAUDE\.md|CLAUDE\.md/spec|CLAUDE\.md / spec|CLAUDE\.md / AGENTS\.md|调用 \.agents/skills/' \
-  skills/build-cognitive-context/SKILL.md \
-  skills/reflect-team-documentation/SKILL.md \
-  skills/define-cognitive-brainstorm/SKILL.md \
-  docs/architecture/command-agent-skill-architecture.md >/tmp/unified-validate-stale-entry.$$ 2>/dev/null; then
-  cat /tmp/unified-validate-stale-entry.$$
-  rm -f /tmp/unified-validate-stale-entry.$$
-  fail '发现旧入口模型残留'
-else
-  rm -f /tmp/unified-validate-stale-entry.$$
-fi
+## 8. skills-lock.json 哈希
+printf '\n== 检查 skills-lock.json 完整性 ==\n'
+python3 scripts/check-skills-lock.py || fail "skills-lock.json 完整性检查失败"
 [ "$status" -eq 0 ] && printf '通过\n'
 
+## 9. hooks.json schema
+printf '\n== 检查 hooks.json ==\n'
+python3 scripts/check-hooks-schema.py || fail "hooks/hooks.json schema 无效"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+## 10. Claude Code skill-load monitors
+printf '\n== 检查 Claude Code skill-load monitors ==\n'
+python3 scripts/check-monitors.py || fail "Claude Code skill-load monitors 配置无效"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+## 11. Context Runtime / Router
+printf '\n== 检查 Context Runtime 合同 ==\n'
+python3 scripts/check-router.py || fail "Context Runtime 合同不一致"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+## 12. Unified feature state
+printf '\n== 检查 Unified feature state ==\n'
+python3 scripts/check-feature-state.py || fail "Unified feature state 合同不一致"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+## 13. Pipeline 序列 + 路由
+printf '\n== 检查 pipeline 路由与序列 ==\n'
+python3 scripts/check-pipelines.py || fail "pipeline 路由或序列不正确"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+## 14. 技能加载合同
+printf '\n== 检查技能加载合同 ==\n'
+python3 scripts/check-skill-load-contracts.py || fail "技能加载合同不一致"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+## 15. Codex 平台
+printf '\n== 检查 Codex plugin manifest ==\n'
+python3 scripts/check-codex-platform.py || fail "Codex 平台检查失败"
+[ "$status" -eq 0 ] && printf '通过\n'
+
+## 16. 自动化脚本存在 + 可执行
 printf '\n== 检查自动化脚本 ==\n'
-
-# 检查版本同步脚本
-if [ ! -f "scripts/sync-version.sh" ]; then
-  fail "缺少版本同步脚本: scripts/sync-version.sh"
-else
-  [ -x "scripts/sync-version.sh" ] || fail "版本同步脚本不可执行: chmod +x scripts/sync-version.sh"
-fi
-
-# 检查索引生成脚本
-if [ ! -f "scripts/generate-index.sh" ]; then
-  fail "缺少索引生成脚本: scripts/generate-index.sh"
-else
-  [ -x "scripts/generate-index.sh" ] || fail "索引生成脚本不可执行: chmod +x scripts/generate-index.sh"
-fi
-
-# 检查 Claude Code skill-load monitor 脚本
-if [ ! -f "scripts/notify-skill-loaded.sh" ]; then
-  fail "缺少 skill-load 通知脚本: scripts/notify-skill-loaded.sh"
-else
-  [ -x "scripts/notify-skill-loaded.sh" ] || fail "skill-load 通知脚本不可执行: chmod +x scripts/notify-skill-loaded.sh"
-fi
-
-if [ ! -f "scripts/generate-skill-load-monitors.sh" ]; then
-  fail "缺少 skill-load monitor 生成脚本: scripts/generate-skill-load-monitors.sh"
-else
-  [ -x "scripts/generate-skill-load-monitors.sh" ] || fail "skill-load monitor 生成脚本不可执行: chmod +x scripts/generate-skill-load-monitors.sh"
-fi
-
-if [ ! -f "scripts/check-agent-contracts.py" ]; then
-  fail "缺少 agent 合同检查脚本: scripts/check-agent-contracts.py"
-fi
-
-# 检查测试目录
-if [ ! -d "scripts/tests" ]; then
-  fail "缺少脚本测试目录: scripts/tests"
-fi
-
-# 检查测试文件
-if [ ! -f "scripts/tests/test-sync-version.sh" ]; then
-  fail "缺少版本同步测试: scripts/tests/test-sync-version.sh"
-fi
-
-if [ ! -f "scripts/tests/test-generate-index.sh" ]; then
-  fail "缺少索引生成测试: scripts/tests/test-generate-index.sh"
-fi
-
-if [ ! -f "scripts/tests/test-hooks.sh" ]; then
-  fail "缺少 hook 行为测试: scripts/tests/test-hooks.sh"
-fi
-
-if [ ! -f "scripts/tests/test-agent-contracts.sh" ]; then
-  fail "缺少 agent 合同测试: scripts/tests/test-agent-contracts.sh"
-fi
-
+for script in scripts/sync-version.sh scripts/generate-index.sh scripts/notify-skill-loaded.sh scripts/generate-skill-load-monitors.sh; do
+  [ -f "$script" ] || fail "缺少脚本: $script"
+  [ -x "$script" ] || fail "脚本不可执行: chmod +x $script"
+done
+for script in scripts/check-agent-contracts.py scripts/check-doc-sync-contract.py; do
+  [ -f "$script" ] || fail "缺少脚本: $script"
+done
+[ -d "scripts/tests" ] || fail "缺少脚本测试目录: scripts/tests"
+for test in test-sync-version.sh test-generate-index.sh test-hooks.sh test-agent-contracts.sh test-unified-state.sh; do
+  [ -f "scripts/tests/$test" ] || fail "缺少测试: scripts/tests/$test"
+done
 [ "$status" -eq 0 ] && printf '通过\n'
 
+## 17. Agent 合同负向测试
 printf '\n== 检查 Agent 合同负向测试 ==\n'
 bash scripts/tests/test-agent-contracts.sh || fail "Agent 合同负向测试失败"
 [ "$status" -eq 0 ] && printf '通过\n'
 
-printf '\n== 检查强纪律技能 Iron Law ==\n'
-for file in \
-  skills/build-quality-tdd/SKILL.md \
-  skills/verify-workflow-debug/SKILL.md \
-  skills/verify-workflow-review/SKILL.md \
-  skills/ship-workflow-ship/SKILL.md \
-  skills/verify-quality-security/SKILL.md \
-  skills/ship-infrastructure-deploy/SKILL.md \
-  skills/verify-quality-performance/SKILL.md \
-  skills/build-infrastructure-git/SKILL.md \
-  skills/ship-infrastructure-ci-cd/SKILL.md \
-  skills/ship-workflow-canary/SKILL.md \
-  skills/ship-workflow-land/SKILL.md \
-  skills/verify-content-review/SKILL.md \
-  skills/verify-quality-simplify/SKILL.md \
-  skills/verify-team-skill-quality/SKILL.md \
-  skills/verify-team-code-review-standards/SKILL.md \
-  skills/verify-visual-review/SKILL.md \
-  skills/verify-workflow-receiving-review/SKILL.md \
-  skills/build-frontend-browser-testing/SKILL.md \
-  skills/verify-frontend-accessibility/SKILL.md \
-  skills/verify-quality-integration-testing/SKILL.md
-do
-  sgrep '^## Iron Law' "$file" || fail "缺少 Iron Law: $file"
-done
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 Agent Skill 质量合同 ==\n'
-python3 <<'PY' || fail "Agent Skill 质量合同不完整"
-import json
-from pathlib import Path
-
-skill_path = Path("skills/verify-team-skill-quality/SKILL.md")
-index_path = Path("skills-index.json")
-errors = []
-
-if not skill_path.exists():
-    errors.append("missing skills/verify-team-skill-quality/SKILL.md")
-else:
-    text = skill_path.read_text(encoding="utf-8")
-    required_phrases = [
-        "什么时候触发",
-        "触发后怎么做",
-        "什么时候停止",
-        "如何判断做对",
-        "description",
-        "near-miss",
-        "Progressive Disclosure",
-        "STOP 条件",
-        "输出契约",
-        "Done When",
-        "Trigger Eval",
-        "Task Eval",
-    ]
-    for phrase in required_phrases:
-        if phrase not in text:
-            errors.append(f"verify-team-skill-quality missing phrase: {phrase}")
-
-if index_path.exists():
-    index = json.loads(index_path.read_text(encoding="utf-8"))
-    triggers = index.get("by_trigger", {}).get("user_says", {})
-    if not any("verify-team-skill-quality" in skills for skills in triggers.values()):
-        errors.append("skills-index.json missing trigger route for verify-team-skill-quality")
-    if "verify-team-skill-quality" not in index.get("skill_descriptions", {}):
-        errors.append("skills-index.json skill_descriptions missing verify-team-skill-quality")
-else:
-    errors.append("missing skills-index.json")
-
-if errors:
-    raise SystemExit("\n".join(errors))
-PY
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 HARD-GATE 覆盖 ==\n'
-for file in \
-  skills/build-quality-tdd/SKILL.md \
-  skills/verify-workflow-debug/SKILL.md \
-  skills/verify-workflow-review/SKILL.md \
-  skills/ship-workflow-ship/SKILL.md \
-  skills/verify-quality-security/SKILL.md \
-  skills/ship-infrastructure-deploy/SKILL.md \
-  skills/verify-quality-performance/SKILL.md \
-  skills/build-infrastructure-git/SKILL.md \
-  skills/ship-infrastructure-ci-cd/SKILL.md \
-  skills/ship-workflow-canary/SKILL.md \
-  skills/ship-workflow-land/SKILL.md \
-  skills/verify-content-review/SKILL.md \
-  skills/verify-quality-simplify/SKILL.md \
-  skills/verify-team-skill-quality/SKILL.md \
-  skills/verify-team-code-review-standards/SKILL.md \
-  skills/verify-visual-review/SKILL.md \
-  skills/verify-workflow-receiving-review/SKILL.md \
-  skills/build-frontend-browser-testing/SKILL.md \
-  skills/maintain-workflow-using-unified/SKILL.md \
-  skills/verify-frontend-accessibility/SKILL.md \
-  skills/verify-quality-integration-testing/SKILL.md
-do
-  sgrep '<HARD-GATE>' "$file" || fail "缺少 HARD-GATE: $file"
-done
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 skills-index.json ==\n'
-if [ ! -f "skills-index.json" ]; then
-  fail "缺少 skills-index.json"
-else
-  python3 - <<'PY' || fail "skills-index.json 与真实技能集不一致"
-import json
-from pathlib import Path
-
-index = json.load(open("skills-index.json"))
-root_skills = sorted(p.parent.name for p in Path("skills").glob("*/SKILL.md"))
-root_set = set(root_skills)
-
-phase_refs = set()
-for entry in index.get("by_phase", {}).values():
-    phase_refs.update(entry.get("skills", []))
-
-desc_refs = set(index.get("skill_descriptions", {}).keys())
-
-all_refs = set()
-for entry in index.get("by_phase", {}).values():
-    all_refs.update(entry.get("skills", []))
-for entry in index.get("by_artifact_type", {}).values():
-    for value in entry.values():
-        if isinstance(value, list):
-            all_refs.update(value)
-for group in index.get("by_trigger", {}).values():
-    for value in group.values():
-        if isinstance(value, list):
-            all_refs.update(value)
-for value in index.get("by_risk", {}).values():
-    if isinstance(value, list):
-        all_refs.update(value)
-
-errors = []
-if root_set != desc_refs:
-    missing = sorted(root_set - desc_refs)
-    extra = sorted(desc_refs - root_set)
-    if missing:
-        errors.append("skill_descriptions 缺少: " + ", ".join(missing))
-    if extra:
-        errors.append("skill_descriptions 多余: " + ", ".join(extra))
-if root_set != phase_refs:
-    missing = sorted(root_set - phase_refs)
-    extra = sorted(phase_refs - root_set)
-    if missing:
-        errors.append("by_phase 缺少: " + ", ".join(missing))
-    if extra:
-        errors.append("by_phase 多余: " + ", ".join(extra))
-missing_ref_desc = sorted(all_refs - desc_refs)
-if missing_ref_desc:
-    errors.append("skill_descriptions 未覆盖引用技能: " + ", ".join(missing_ref_desc))
-missing_ref_root = sorted(all_refs - root_set)
-if missing_ref_root:
-    errors.append("索引引用了不存在的技能: " + ", ".join(missing_ref_root))
-legacy_names = sorted(name for name in all_refs | desc_refs if name == "verify-quality-code-review-standards")
-if legacy_names:
-    errors.append("仍存在旧技能命名: " + ", ".join(legacy_names))
-
-if errors:
-    raise SystemExit("\n".join(errors))
-PY
-	  [ "$status" -eq 0 ] && printf '通过\n'
-fi
-
-printf '\n== 检查技能加载合同 ==\n'
-python3 <<'PY' || fail "技能加载合同不一致"
-import json
-import re
-from pathlib import Path
-
-index = json.load(open("skills-index.json"))
-guide_path = Path("skills/maintain-workflow-using-unified/SKILL.md")
-guide = guide_path.read_text(encoding="utf-8")
-
-phase_skills = []
-for entry in index.get("by_phase", {}).values():
-    phase_skills.extend(entry.get("skills", []))
-
-errors = []
-
-if re.search(r"(^|[^0-9.])\d+\s*(?:个)?技能", guide):
-    errors.append(f"{guide_path} contains dynamic skill count")
-if "`AGENTS.md`" not in guide:
-    errors.append(f"{guide_path} missing AGENTS.md single-entry wording")
-if "CLAUDE.md、直接请求" in guide or "CLAUDE.md / spec" in guide:
-    errors.append(f"{guide_path} contains stale CLAUDE.md entry wording")
-for phrase in ("显式进入 Unified 工作流", "direct mode", "skills-router.json"):
-    if phrase not in guide:
-        errors.append(f"{guide_path} missing opt-in runtime phrase: {phrase}")
-for stale in ("每个任务都先过 `skills-router.json`。没有例外。", "在响应用户消息或采取任何行动之前，你必须执行技能发现流程。"):
-    if stale in guide:
-        errors.append(f"{guide_path} still contains stale mandatory runtime wording: {stale}")
-
-reference_text = guide
-reference_path = Path("skills/maintain-workflow-using-unified/skill-reference.md")
-if reference_path.exists():
-    reference_text += "\n" + reference_path.read_text(encoding="utf-8")
-for skill in sorted(set(phase_skills)):
-    if f"`{skill}`" not in reference_text:
-        errors.append(f"{guide_path} quick reference missing {skill}")
-
-triggers = index.get("by_trigger", {}).get("user_says", {})
-preview_routes = [
-    skills for pattern, skills in triggers.items()
-    if any(token in pattern for token in ("preview", "预览", "mockup", "设计方向", "对比", "interactive"))
-]
-if not any(skills[:2] == ["design-workflow-design", "design-interactive-preview"] for skills in preview_routes):
-    errors.append("skills-index.json missing preview route to design-workflow-design + design-interactive-preview")
-
-expected_deck_sequence = [
-    "design-workflow-design",
-    "design-content-script",
-    "design-content-direction",
-    "design-content-layout",
-    "design-interactive-preview",
-    "build-content-writing",
-    "build-content-layout",
-]
-deck_sequence = index.get("by_artifact_type", {}).get("deck", {}).get("sequence")
-if deck_sequence != expected_deck_sequence:
-    errors.append("deck.sequence does not match required interactive-preview order")
-
-expected_visual_sequence = [
-    "design-workflow-design",
-    "design-visual-direction",
-    "design-content-layout",
-    "design-interactive-preview",
-    "build-content-layout",
-    "verify-visual-review",
-]
-visual_sequence = index.get("by_artifact_type", {}).get("visual", {}).get("sequence")
-if visual_sequence != expected_visual_sequence:
-    errors.append("visual.sequence does not match required interactive-preview order")
-
-brainstorm = Path("commands/brainstorm.md").read_text(encoding="utf-8")
-if "CLAUDE.md / spec" in brainstorm:
-    errors.append("commands/brainstorm.md still references CLAUDE.md / spec")
-
-build = Path("commands/build.md").read_text(encoding="utf-8")
-if "build-infrastructure-git" not in build:
-    errors.append("commands/build.md missing software required build-infrastructure-git")
-
-review = Path("commands/review.md").read_text(encoding="utf-8")
-for required in ("document / article", "deck", "verify-content-review", "verify-visual-review"):
-    if required not in review:
-        errors.append(f"commands/review.md missing artifact review route: {required}")
-for required in ("Spec Compliance", "Code Quality"):
-    if required not in review:
-        errors.append(f"commands/review.md missing two-stage review gate: {required}")
-
-contract_files = [
-    Path("AGENTS.md"),
-    Path("agents/README.md"),
-    Path("commands/refine.md"),
-    Path("commands/plan.md"),
-    Path("commands/review.md"),
-    Path("commands/ship.md"),
-    Path("docs/architecture/command-agent-skill-architecture.md"),
-]
-for path in contract_files:
-    text = path.read_text(encoding="utf-8")
-    forbidden = [
-        r"[34]\s*个\s*(?:Scouts|Reviewers|Auditors)\s*全部完成",
-        r"经\s*[34]\s*个视角审查",
-        r"报告包含所有\s*Reviewer\s*(?:的)?反馈",
-        r"所有\s*(?:Reviewers|Auditors)\s*(?:已)?完成",
-        r"所有\s*Auditors\s*通过",
-        r"必须同时并行派发",
-        r"(?:Review Army|Plan Review Army|Refine Scout Army|Ship Audit Army)[^\n]*（\s*[34]\s*个\s*）",
-    ]
-    for pattern in forbidden:
-        if re.search(pattern, text, re.IGNORECASE):
-            errors.append(f"{path} contains fixed all-role review wording: {pattern}")
-
-required_role_contracts = {
-    "AGENTS.md": ["Risk-Based Role Escalation", "`--full`", "最小必要角色", "并行只用于已被阶段技能选中的角色"],
-    "agents/README.md": ["风险升级", "`--full`", "并行只用于已选角色"],
-    "commands/refine.md": ["按风险升级", "minimum trigger rules", "已选 Scouts"],
-    "commands/plan.md": ["按风险升级", "minimum trigger rules", "已选 Reviewers"],
-    "commands/review.md": ["按风险升级", "risk triggers", "已选 Reviewer"],
-    "commands/ship.md": ["按风险升级", "minimum trigger rules", "已选 Auditor"],
-}
-for file, phrases in required_role_contracts.items():
-    text = Path(file).read_text(encoding="utf-8")
-    for phrase in phrases:
-        if phrase not in text:
-            errors.append(f"{file} missing risk-based role escalation phrase: {phrase}")
-
-if errors:
-    raise SystemExit("\n".join(errors))
-PY
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 Context Runtime 合同 ==\n'
-python3 <<'PY' || fail "Context Runtime 合同不一致"
-import json
-import re
-import subprocess
-from pathlib import Path
-
-errors = []
-
-package = json.load(open("package.json", encoding="utf-8"))
-index = json.load(open("skills-index.json", encoding="utf-8"))
-router_path = Path("skills-router.json")
-guide_path = Path("skills/maintain-workflow-using-unified/SKILL.md")
-hook_path = Path("hooks/session-start.sh")
-
-root_skills = {p.parent.name for p in Path("skills").glob("*/SKILL.md")}
-
-for script in ("scripts/generate-router.sh", "scripts/report-context-budget.sh", "scripts/tests/test-generate-router.sh"):
-    path = Path(script)
-    if not path.exists():
-        errors.append(f"missing Context Runtime script: {script}")
-    elif script.startswith("scripts/") and not script.startswith("scripts/tests/") and not path.stat().st_mode & 0o111:
-        errors.append(f"Context Runtime script is not executable: {script}")
-
-if not router_path.exists():
-    errors.append("missing skills-router.json")
-else:
-    router = json.load(open(router_path, encoding="utf-8"))
-    if router.get("version") != package.get("version"):
-        errors.append("skills-router.json version does not match package.json")
-    if router_path.stat().st_size >= Path("skills-index.json").stat().st_size:
-        errors.append("skills-router.json must be smaller than skills-index.json")
-
-    budgets = router.get("default_budget", {})
-    expected_budgets = {
-        "light": {"primary_skills": 0, "specialist_skills": 0},
-        "standard": {"primary_skills": 1, "specialist_skills": 1},
-        "expanded": {"primary_skills": 1, "specialist_skills": 2},
-    }
-    for tier, expected in expected_budgets.items():
-        if budgets.get(tier) != expected:
-            errors.append(f"skills-router.json budget mismatch for {tier}")
-
-    router_skills = set(router.get("skills", {}).keys())
-    if router_skills != root_skills:
-        missing = sorted(root_skills - router_skills)
-        extra = sorted(router_skills - root_skills)
-        errors.append(f"skills-router.json skills mismatch missing={missing} extra={extra}")
-
-    for skill, meta in router.get("skills", {}).items():
-        for field in ("phase", "role", "summary", "default_tier"):
-            if field not in meta:
-                errors.append(f"skills-router.json {skill} missing {field}")
-        if meta.get("default_tier") not in {"standard", "expanded", "full", "light"}:
-            errors.append(f"skills-router.json {skill} invalid default_tier")
-
-    route_limits = {"light": 0, "standard": 2, "expanded": 3}
-    for group_name, routes in router.get("routes", {}).items():
-        if not isinstance(routes, dict):
-            errors.append(f"skills-router.json routes.{group_name} must be object")
-            continue
-        for pattern, route in routes.items():
-            tier = route.get("tier")
-            if tier not in route_limits:
-                errors.append(f"skills-router.json route {group_name}.{pattern} invalid tier")
-                continue
-            route_skills = route.get("skills")
-            if not isinstance(route_skills, list):
-                errors.append(f"skills-router.json route {group_name}.{pattern} missing skills list")
-                continue
-            if len(route_skills) > route_limits[tier]:
-                errors.append(f"skills-router.json route {group_name}.{pattern} exceeds {tier} budget")
-            missing = sorted(set(route_skills) - root_skills)
-            if missing:
-                errors.append(f"skills-router.json route {group_name}.{pattern} references missing skills: {', '.join(missing)}")
-            if "full_skills" in route:
-                missing_full = sorted(set(route["full_skills"]) - root_skills)
-                if missing_full:
-                    errors.append(f"skills-router.json route {group_name}.{pattern} full_skills references missing skills: {', '.join(missing_full)}")
-                if "full_when" not in route:
-                    errors.append(f"skills-router.json route {group_name}.{pattern} has full_skills without full_when")
-
-guide = guide_path.read_text(encoding="utf-8")
-for phrase in ("skills-router.json", "`light`", "`standard`", "`expanded`", "`full`"):
-    if phrase not in guide:
-        errors.append(f"{guide_path} missing Context Runtime phrase: {phrase}")
-if "1% 可能相关" in guide:
-    errors.append(f"{guide_path} still contains old 1% loading rule")
-for phrase in ("显式进入 Unified 工作流", "direct mode"):
-    if phrase not in guide:
-        errors.append(f"{guide_path} missing opt-in Context Runtime phrase: {phrase}")
-
-agents = Path("AGENTS.md").read_text(encoding="utf-8")
-for phrase in ("opt-in", "只有以下情况才激活 Unified runtime", "direct mode"):
-    if phrase not in agents:
-        errors.append(f"AGENTS.md missing opt-in runtime phrase: {phrase}")
-
-for command_path in sorted(Path("commands").glob("*.md")):
-    command = command_path.read_text(encoding="utf-8")
-    for phrase in ("## Runtime Preflight", "显式 Unified 入口", "skills-router.json", "skills-index.json", "loading tier"):
-        if phrase not in command:
-            errors.append(f"{command_path} missing command Runtime Preflight phrase: {phrase}")
-
-if hook_path.exists():
-    output = subprocess.check_output(
-        ["bash", str(hook_path)],
-        input=b'{"permission_mode":"default"}',
-    )
-    context = json.loads(output.decode("utf-8")).get("hookSpecificOutput", {}).get("additionalContext", "")
-    for phrase in ("Boot Kernel", "不自动激活 Unified runtime", "/refine", "skills-router.json"):
-        if phrase not in context:
-            errors.append(f"SessionStart missing opt-in runtime guidance: {phrase}")
-    if "## 命令映射" in context:
-        errors.append("SessionStart still injects full command map")
-    if len(context.splitlines()) > 80:
-        errors.append("SessionStart Boot Kernel exceeds 80 lines")
-else:
-    errors.append("missing hooks/session-start.sh")
-
-if errors:
-    raise SystemExit("\n".join(errors))
-PY
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 Unified feature state ==\n'
-python3 <<'PY' || fail "Unified feature state 合同不一致"
-import subprocess
-from pathlib import Path
-
-errors = []
-
-helper = Path("scripts/unified-state.py")
-state_test = Path("scripts/tests/test-unified-state.sh")
-doc_tracker = Path("hooks/doc-tracker.sh")
-session_start = Path("hooks/session-start.sh")
-
-if not helper.exists():
-    errors.append("missing scripts/unified-state.py")
-if not state_test.exists():
-    errors.append("missing scripts/tests/test-unified-state.sh")
-if helper.exists() and doc_tracker.exists():
-    if "unified-state.py" not in doc_tracker.read_text(encoding="utf-8"):
-        errors.append("hooks/doc-tracker.sh must update feature state through scripts/unified-state.py")
-if helper.exists() and session_start.exists():
-    if "unified-state.py" not in session_start.read_text(encoding="utf-8"):
-        errors.append("hooks/session-start.sh must read feature state through scripts/unified-state.py")
-
-for forbidden_path in (".claude/runtime-state.json", ".claude/unified-state.json"):
-    if Path(forbidden_path).exists():
-        errors.append(f"local runtime state file must not exist: {forbidden_path}")
-
-if helper.exists():
-    for state in sorted(Path("docs/features").glob("*/state.json")):
-        result = subprocess.run(
-            ["python3", str(helper), "validate", str(state)],
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        if result.returncode != 0:
-            errors.append(f"{state} failed validation: {result.stderr.strip() or result.stdout.strip()}")
-
-if state_test.exists():
-    result = subprocess.run(
-        ["bash", str(state_test)],
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    if result.returncode != 0:
-        errors.append(f"{state_test} failed: {result.stderr.strip() or result.stdout.strip()}")
-
-if errors:
-    raise SystemExit("\n".join(errors))
-PY
-[ "$status" -eq 0 ] && printf '通过\n'
-
-printf '\n== 检查 skills-lock.json 完整性 ==\n'
-if [ -f "skills-lock.json" ]; then
-  lock_counts=$(
-python3 <<'PY'
-import hashlib
-import json
-import re
-from pathlib import Path
-
-def sha256(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-lock = json.load(open("skills-lock.json", encoding="utf-8"))
-entries = lock.get("skills", {})
-if not isinstance(entries, dict):
-    raise SystemExit("skills-lock.json 缺少 skills 对象")
-
-skill_dirs = []
-for skill_file in sorted(Path("skills").glob("*/SKILL.md")):
-    skill_dir = skill_file.parent.name
-    if re.match(r"^(define|design|build|verify|ship|maintain|reflect)-", skill_dir):
-        skill_dirs.append(skill_dir)
-
-checked_skills = 0
-checked_auxiliary = 0
-
-for skill_dir in skill_dirs:
-    skill_path = Path("skills") / skill_dir / "SKILL.md"
-    skill_text = skill_path.read_text(encoding="utf-8")
-    entry = entries.get(skill_dir)
-    if not isinstance(entry, dict):
-        raise SystemExit(f"skills-lock.json 缺少技能: {skill_dir}")
-
-    expected = entry.get("computedHash")
-    if not expected:
-        raise SystemExit(f"skills-lock.json 缺少 computedHash: {skill_dir}")
-    actual = sha256(skill_path)
-    if actual != expected:
-        raise SystemExit(f"skills-lock.json 哈希不匹配: {skill_dir}")
-    checked_skills += 1
-
-    skill_root = Path("skills") / skill_dir
-    actual_auxiliary = sorted(
-        p.name for p in skill_root.glob("*.md") if p.name != "SKILL.md"
-    )
-    declared_auxiliary = entry.get("auxiliaryHashes", {})
-    if declared_auxiliary is None:
-        declared_auxiliary = {}
-    if not isinstance(declared_auxiliary, dict):
-        raise SystemExit(f"skills-lock.json auxiliaryHashes 必须是对象: {skill_dir}")
-
-    missing = sorted(set(actual_auxiliary) - set(declared_auxiliary))
-    extra = sorted(set(declared_auxiliary) - set(actual_auxiliary))
-    if missing:
-        raise SystemExit(f"skills-lock.json 缺少辅助文件哈希: {skill_dir}: {', '.join(missing)}")
-    if extra:
-        raise SystemExit(f"skills-lock.json 声明了不存在的辅助文件: {skill_dir}: {', '.join(extra)}")
-
-    for name in actual_auxiliary:
-        if "/" in name or name == "SKILL.md":
-            raise SystemExit(f"skills-lock.json 辅助文件名无效: {skill_dir}: {name}")
-        if name not in skill_text:
-            raise SystemExit(f"辅助文件未被主 SKILL.md 引用: {skill_dir}/{name}")
-        expected_aux = declared_auxiliary.get(name)
-        actual_aux = sha256(skill_root / name)
-        if actual_aux != expected_aux:
-            raise SystemExit(f"skills-lock.json 辅助文件哈希不匹配: {skill_dir}/{name}")
-        checked_auxiliary += 1
-
-if checked_skills == 0:
-    raise SystemExit("skills-lock.json 中没有有效的技能哈希")
-
-print(f"{checked_skills} {checked_auxiliary}")
-PY
-  ) || fail "skills-lock.json 完整性检查失败"
-  lock_valid=$(printf '%s' "$lock_counts" | awk '{print $1}')
-  auxiliary_valid=$(printf '%s' "$lock_counts" | awk '{print $2}')
-  [ "$status" -eq 0 ] && printf '通过（%d 个技能哈希校验，%d 个辅助文件哈希校验）\n' "$lock_valid" "$auxiliary_valid"
-else
-  fail "缺少 skills-lock.json"
-fi
-
-printf '\n== 检查 hooks.json ==\n'
-if [ ! -f "hooks/hooks.json" ]; then
-  fail "缺少 hooks/hooks.json"
-else
-  python3 - <<'PY' || fail "hooks/hooks.json schema 无效"
-import json
-import sys
-
-data = json.load(open("hooks/hooks.json"))
-if not isinstance(data, dict):
-    raise SystemExit("top-level must be object")
-hooks = data.get("hooks")
-if not isinstance(hooks, dict):
-    raise SystemExit("missing hooks object")
-for event in ("SessionStart", "PreToolUse", "PostToolUse", "Stop"):
-    entries = hooks.get(event)
-    if not isinstance(entries, list) or not entries:
-        raise SystemExit(f"missing {event} hooks")
-    for entry in entries:
-        if not isinstance(entry, dict):
-            raise SystemExit(f"{event} entry must be object")
-        nested = entry.get("hooks")
-        if not isinstance(nested, list) or not nested:
-            raise SystemExit(f"{event} entry missing nested hooks")
-        for hook in nested:
-            if hook.get("type") != "command" or not hook.get("command"):
-                raise SystemExit(f"{event} hook must be command with command string")
-# Verify PostToolUse has Agent and Write|Edit matchers
-ptu_entries = hooks.get("PostToolUse", [])
-ptu_matchers = [e.get("matcher", "") for e in ptu_entries]
-if "Agent" not in ptu_matchers:
-    raise SystemExit("PostToolUse must have Agent matcher for agent-dispatch")
-if not any(m in ("Write|Edit", "Write", "Edit") for m in ptu_matchers):
-    raise SystemExit("PostToolUse must have Write|Edit matcher for doc-tracker")
-# Verify Stop hook exists
-stop_entries = hooks.get("Stop", [])
-if not stop_entries:
-    raise SystemExit("Stop hook required for phase-stop")
-PY
-  [ "$status" -eq 0 ] && printf '通过\n'
-fi
-
-printf '\n== 检查 Claude Code skill-load monitors ==\n'
-if [ ! -f ".claude-plugin/monitors/monitors.json" ]; then
-  fail "缺少 .claude-plugin/monitors/monitors.json"
-else
-  python3 <<'PY' || fail "Claude Code skill-load monitors 配置无效"
-import json
-import re
-from pathlib import Path
-
-monitors_path = Path(".claude-plugin/monitors/monitors.json")
-monitors = json.loads(monitors_path.read_text(encoding="utf-8"))
-if not isinstance(monitors, list):
-    raise SystemExit("monitors.json must be a list")
-
-skills = sorted(p.parent.name for p in Path("skills").glob("*/SKILL.md"))
-skill_set = set(skills)
-names = []
-skill_monitors = {}
-errors = []
-
-for monitor in monitors:
-    if not isinstance(monitor, dict):
-        errors.append("monitor entry must be object")
-        continue
-    name = monitor.get("name")
-    when = monitor.get("when")
-    command = monitor.get("command")
-    description = monitor.get("description")
-    if not isinstance(name, str) or not name:
-        errors.append("monitor missing name")
-        continue
-    names.append(name)
-    if name.startswith("skill-load-"):
-        skill = name[len("skill-load-"):]
-        skill_monitors[skill] = monitor
-        expected = {
-            "command": f'bash "${{CLAUDE_PLUGIN_ROOT}}/scripts/notify-skill-loaded.sh" "{skill}"',
-            "description": f"🔧 [skill] loaded {skill}",
-            "when": f"on-skill-invoke:{skill}",
-        }
-        for key, value in expected.items():
-            if monitor.get(key) != value:
-                errors.append(f"{name} has invalid {key}: {monitor.get(key)!r}")
-        if skill not in skill_set:
-            errors.append(f"{name} references missing skill: {skill}")
-
-if len(names) != len(set(names)):
-    errors.append("monitor names must be unique")
-
-missing = sorted(skill_set - set(skill_monitors))
-extra = sorted(set(skill_monitors) - skill_set)
-if missing:
-    errors.append("missing skill-load monitor(s): " + ", ".join(missing))
-if extra:
-    errors.append("extra skill-load monitor(s): " + ", ".join(extra))
-
-business_monitors = {m.get("name") for m in monitors if isinstance(m, dict)}
-for required in ("deploy-status", "error-watcher"):
-    if required not in business_monitors:
-        errors.append(f"missing existing business monitor: {required}")
-
-notify = Path("scripts/notify-skill-loaded.sh")
-if not notify.exists():
-    errors.append("missing scripts/notify-skill-loaded.sh")
-elif "🔧 [skill] loaded" not in notify.read_text(encoding="utf-8"):
-    errors.append("notify script must emit emoji skill-load message")
-
-if errors:
-    raise SystemExit("\n".join(errors))
-PY
-  bash scripts/generate-skill-load-monitors.sh --check || fail "skill-load monitors 未由生成脚本同步"
-  [ "$status" -eq 0 ] && printf '通过\n'
-fi
-
-printf '\n== 检查 Codex plugin manifest ==\n'
-if [ ! -f ".codex-plugin/plugin.json" ]; then
-  fail "缺少 .codex-plugin/plugin.json"
-else
-  codex_plugin_ver=$(python3 -c "import json; print(json.load(open('.codex-plugin/plugin.json'))['version'])" 2>/dev/null)
-  if [ -z "$codex_plugin_ver" ]; then
-    fail "无法解析 .codex-plugin/plugin.json 版本号"
-  else
-    printf '.codex-plugin/plugin.json: %s\n' "$codex_plugin_ver"
-    if [ "$pkg_ver" != "$codex_plugin_ver" ]; then
-      fail "版本号不一致: package.json=$pkg_ver, .codex-plugin/plugin.json=$codex_plugin_ver"
-    fi
-    sgrep 'skills' .codex-plugin/plugin.json || fail ".codex-plugin/plugin.json 缺少 skills 字段"
-    sgrep 'interface' .codex-plugin/plugin.json || fail ".codex-plugin/plugin.json 缺少 interface 字段"
-    sgrep '"skills": "\./skills/"' .codex-plugin/plugin.json || fail ".codex-plugin/plugin.json 必须指向 ./skills/"
-  fi
-  [ "$status" -eq 0 ] && printf '通过\n'
-fi
-
-printf '\n== 检查 Codex hooks.json ==\n'
-if [ ! -f ".codex/hooks.json" ]; then
-  fail "缺少 .codex/hooks.json"
-else
-  python3 - <<'PY' || fail ".codex/hooks.json schema 无效"
-import json
-import sys
-
-data = json.load(open(".codex/hooks.json"))
-if not isinstance(data, dict):
-    raise SystemExit("top-level must be object")
-hooks = data.get("hooks")
-if not isinstance(hooks, dict):
-    raise SystemExit("missing hooks object")
-for event in ("SessionStart", "PreToolUse"):
-    entries = hooks.get(event)
-    if not isinstance(entries, list) or not entries:
-        raise SystemExit(f"missing {event} hooks")
-    for entry in entries:
-        if not isinstance(entry, dict):
-            raise SystemExit(f"{event} entry must be object")
-        nested = entry.get("hooks")
-        if not isinstance(nested, list) or not nested:
-            raise SystemExit(f"{event} entry missing nested hooks")
-        for hook in nested:
-            if hook.get("type") != "command" or not hook.get("command"):
-                raise SystemExit(f"{event} hook must be command with command string")
-            if not hook.get("statusMessage"):
-                raise SystemExit(f"{event} hook missing statusMessage")
-PY
-  [ "$status" -eq 0 ] && printf '通过\n'
-fi
-
-printf '\n== 检查 Codex config.toml ==\n'
-if [ ! -f ".codex/config.toml" ]; then
-  fail "缺少 .codex/config.toml"
-else
-  python3 - <<'PY' || fail ".codex/config.toml 必须在 [features] 中设置 hooks = true，且不能使用已废弃的 codex_hooks"
-import re
-
-section = None
-hooks_true = False
-deprecated_lines = []
-
-for lineno, raw in enumerate(open(".codex/config.toml", encoding="utf-8"), 1):
-    line = raw.split("#", 1)[0].strip()
-    if not line:
-        continue
-    if line.startswith("[") and line.endswith("]"):
-        section = line.strip("[]").strip()
-        continue
-    if section != "features" or "=" not in line:
-        continue
-    key, value = [part.strip() for part in line.split("=", 1)]
-    if key == "codex_hooks":
-        deprecated_lines.append(lineno)
-    if key == "hooks" and value.lower() == "true":
-        hooks_true = True
-
-if deprecated_lines:
-    lines = ", ".join(str(line) for line in deprecated_lines)
-    raise SystemExit(f"deprecated codex_hooks flag at line(s): {lines}")
-if not hooks_true:
-    raise SystemExit("missing [features] hooks = true")
-PY
-  [ "$status" -eq 0 ] && printf '通过\n'
-fi
-
-printf '\n== 检查 Codex wrapper ==\n'
-if [ ! -f "hooks/codex-wrapper.sh" ]; then
-  fail "缺少 hooks/codex-wrapper.sh"
-else
-  [ -x "hooks/codex-wrapper.sh" ] || fail "hooks/codex-wrapper.sh 不可执行"
-  sgrep 'CLAUDE_PLUGIN_ROOT' hooks/codex-wrapper.sh || fail "hooks/codex-wrapper.sh 缺少 CLAUDE_PLUGIN_ROOT 导出"
-  sgrep 'AGENTS.md' hooks/codex-wrapper.sh || fail "hooks/codex-wrapper.sh 缺少 AGENTS.md 验证"
-  [ "$status" -eq 0 ] && printf '通过\n'
-fi
-
+## 18. Hook 行为测试
 printf '\n== 检查 hook 行为 ==\n'
-if [ -f "scripts/tests/test-hooks.sh" ]; then
-  bash scripts/tests/test-hooks.sh || fail "hook 行为测试失败"
-fi
-[ "$status" -eq 0 ] && printf '通过\n'
+bash scripts/tests/test-hooks.sh || fail "hook 行为测试失败"
 
+## 19. 技能行数统计
 printf '\n== 技能行数统计 ==\n'
-find skills -name 'SKILL.md' -exec wc -l {} + | sort -n
+find skills -name 'SKILL.md' | sort | while IFS= read -r f; do
+  printf '%6d %s\n' "$(wc -l < "$f")" "$f"
+done
+echo "---"
+total=$(find skills -name 'SKILL.md' -exec cat {} + | wc -l | tr -d ' ')
+echo "$total total"
 
-exit "$status"
+# ──────────────────────────────────────────
+# Tier 2: 结构约定检查（--strict）
+# ──────────────────────────────────────────
+
+if [ "$STRICT" -eq 1 ]; then
+  printf '\n══════════════════════════════════════════\n'
+  printf '  --strict: 结构约定检查\n'
+  printf '══════════════════════════════════════════\n'
+  python3 scripts/check-strict.py || fail "结构约定检查失败"
+fi
+
+# ──────────────────────────────────────────
+# 退出
+# ──────────────────────────────────────────
+
+if [ "$status" -ne 0 ]; then
+  printf '\n存在 FAIL，请修复后再提交。\n'
+  exit 1
+fi
+
+printf '\n全部通过。\n'
+exit 0

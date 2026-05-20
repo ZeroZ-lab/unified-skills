@@ -9,6 +9,7 @@
 - 先读 `skills-router.json`
 - 声明 loading tier
 - 只按需加载 `SKILL.md`
+- 运行时详细规则在 `docs/contracts/` 按需加载
 
 ## 终端观察护栏｜Terminal Observation Guardrail
 Agent 在终端中执行命令时，必须保护上下文预算。终端输出会进入模型上下文，任何大规模、重复、无关或不可控输出，都会污染后续推理。

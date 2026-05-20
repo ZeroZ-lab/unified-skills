@@ -34,4 +34,5 @@ node_modules/
 .zencoder/
 .playwright-mcp/
 output/
+__pycache__/
 
