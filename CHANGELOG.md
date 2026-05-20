@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.25.2] - 2026-05-20
+
+### Fixed
+- codex: restore strict YAML frontmatter delimiters for workflow skills so Codex no longer skips 9 Unified stage skills at startup.
+- validation: add a `SKILL.md` frontmatter gate and extend Codex cache checks to catch stale marketplace source and cache copies before release.
+
 ## [2.24.4] - 2026-05-18
 
 ### Added
