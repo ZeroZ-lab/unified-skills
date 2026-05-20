@@ -2,11 +2,35 @@
 
 > 宪法 + 阶段协议 + 角色责任 + 技能方法论 = 按阶段加载的多产物开发技能套件。支持 Claude Code 和 Codex CLI。
 
+## Token 压缩描述
+
+Unified Skills = `AGENTS.md`/`CANON.md` 单入口纪律 + `commands/` 阶段协议 + `skills-router.json` 紧凑路由 + `skills/` 行为技能 + `agents/` 角色责任 + hooks 护栏 + `docs/features/*` 证据链。默认 direct mode；只有显式进入 `/brainstorm` → `/ship` 等 Unified 阶段时，才先读 compact router，并按 `light` / `standard` / `expanded` / `full` 选择最小必要技能。修改 `SKILL.md` 或技能辅助文件时，必须同步索引/锁文件并运行 `./validate`。
+
 ## 如果你是一个 AI Agent
 
 停。先读完这一节再做任何事。
 
 Unified 是一套行为塑造技能——每个 SKILL.md 里的流程、红旗表、常见说辞表都是经过设计的，不是随意写的散文。随意修改措辞会改变 agent 行为，产生无法预料的后果。
+
+## 终端观察护栏｜Terminal Observation Guardrail
+
+Agent 在终端中执行命令时，必须保护上下文预算。终端输出会进入模型上下文，任何大规模、重复、无关或不可控输出，都会污染后续推理。
+
+核心原则：
+
+> 未知输出先限流，复杂信息先采样；终端观察要服务判断，而不是淹没判断。
+
+任何输出规模未知、递归型、日志型、测试型、构建型、生成型或可能产生大量文本的命令，都必须默认限制输出：
+
+```bash
+COMMAND 2>&1 | head -c 4000
+```
+
+如果必须保留命令真实退出码，先把完整输出写入临时日志，再采样展示：
+
+```bash
+COMMAND > /tmp/command.log 2>&1; rc=$?; head -c 4000 /tmp/command.log; exit $rc
+```
 
 **修改技能之前：**
 1. 先通读整个技能。理解每个章节为什么存在。
@@ -405,7 +429,7 @@ docs/bugs/<name>/
 
 | 问题类型 | 手动修复 | 自动化工具 |
 |----------|----------|------------|
-| 版本号不一致 | 手动编辑 3 个文件 | `sync-version.sh` |
+| 版本号不一致 | 手动编辑 package / plugin metadata / router | `sync-version.sh` |
 | 索引漂移 | 手动更新 skills-index.json | `generate-index.sh` |
 | 技能缺失 | 人工检查 | `validate` 自动检测 |
 

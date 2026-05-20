@@ -1,35 +1,27 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 echo "Testing version sync..."
 
-# 设置测试版本
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 TEST_VERSION="2.15.0-test"
-BACKUP_DIR=$(mktemp -d)
+TMPROOT="${TMPDIR:-/tmp}/unified-sync-version-test.$$"
 
-# 备份原文件
-backup_files() {
-  mkdir -p "$BACKUP_DIR/.claude-plugin" "$BACKUP_DIR/.codex-plugin"
-  cp package.json "$BACKUP_DIR/package.json" 2>/dev/null || true
-  cp .claude-plugin/plugin.json "$BACKUP_DIR/.claude-plugin/plugin.json" 2>/dev/null || true
-  cp .codex-plugin/plugin.json "$BACKUP_DIR/.codex-plugin/plugin.json" 2>/dev/null || true
-  cp .claude-plugin/marketplace.json "$BACKUP_DIR/.claude-plugin/marketplace.json" 2>/dev/null || true
-}
+trap 'rm -rf "$TMPROOT"' EXIT
 
-restore_files() {
-  cp "$BACKUP_DIR/package.json" package.json 2>/dev/null || true
-  cp "$BACKUP_DIR/.claude-plugin/plugin.json" .claude-plugin/plugin.json 2>/dev/null || true
-  cp "$BACKUP_DIR/.codex-plugin/plugin.json" .codex-plugin/plugin.json 2>/dev/null || true
-  cp "$BACKUP_DIR/.claude-plugin/marketplace.json" .claude-plugin/marketplace.json 2>/dev/null || true
-  rm -rf "$BACKUP_DIR"
-}
+mkdir -p "$TMPROOT/.claude-plugin" "$TMPROOT/.codex-plugin" "$TMPROOT/scripts"
+cp "$ROOT/package.json" "$TMPROOT/package.json"
+cp "$ROOT/skills-index.json" "$TMPROOT/skills-index.json"
+cp "$ROOT/skills-router.json" "$TMPROOT/skills-router.json"
+cp "$ROOT/.claude-plugin/plugin.json" "$TMPROOT/.claude-plugin/plugin.json"
+cp "$ROOT/.claude-plugin/marketplace.json" "$TMPROOT/.claude-plugin/marketplace.json"
+cp "$ROOT/.codex-plugin/plugin.json" "$TMPROOT/.codex-plugin/plugin.json"
+cp "$ROOT/scripts/sync-version.sh" "$TMPROOT/scripts/sync-version.sh"
+cp "$ROOT/scripts/generate-router.sh" "$TMPROOT/scripts/generate-router.sh"
+cp -R "$ROOT/skills" "$TMPROOT/skills"
 
-# 测试结束时恢复文件
-trap restore_files EXIT
+cd "$TMPROOT"
 
-backup_files
-
-# 测试 1: 正常同步
 echo "Test 1: Normal sync"
 python3 -c "import json; d=json.load(open('package.json')); d['version']='$TEST_VERSION'; json.dump(d, open('package.json', 'w'), indent=2)"
 
@@ -38,6 +30,7 @@ bash scripts/sync-version.sh
 pkg_ver=$(python3 -c "import json; print(json.load(open('package.json'))['version'])")
 claude_ver=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
 codex_ver=$(python3 -c "import json; print(json.load(open('.codex-plugin/plugin.json'))['version'])")
+router_ver=$(python3 -c "import json; print(json.load(open('skills-router.json'))['version'])")
 metadata_check=$(python3 - <<'PY'
 import json
 import re
@@ -63,44 +56,41 @@ print("ok")
 PY
 )
 
-if [ "$pkg_ver" != "$TEST_VERSION" ] || [ "$claude_ver" != "$TEST_VERSION" ] || [ "$codex_ver" != "$TEST_VERSION" ] || [ "$metadata_check" != "ok" ]; then
+if [ "$pkg_ver" != "$TEST_VERSION" ] || [ "$claude_ver" != "$TEST_VERSION" ] || [ "$codex_ver" != "$TEST_VERSION" ] || [ "$router_ver" != "$TEST_VERSION" ] || [ "$metadata_check" != "ok" ]; then
   echo "FAIL: Version mismatch"
   echo "  package.json: $pkg_ver (expected $TEST_VERSION)"
   echo "  .claude-plugin: $claude_ver (expected $TEST_VERSION)"
   echo "  .codex-plugin: $codex_ver (expected $TEST_VERSION)"
+  echo "  skills-router.json: $router_ver (expected $TEST_VERSION)"
   exit 1
 fi
 
 echo "PASS: Version sync test 1"
 
-# 测试 2: Dry-run 模式
 echo "Test 2: Dry-run mode"
 python3 -c "import json; d=json.load(open('package.json')); d['version']='2.16.0'; json.dump(d, open('package.json', 'w'), indent=2)"
 
 bash scripts/sync-version.sh --dry-run
 
-# 验证文件未被修改
 claude_ver=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
 marketplace_snapshot=$(python3 -c "import json; print(json.load(open('.claude-plugin/marketplace.json'))['description'])")
-if [ "$claude_ver" != "$TEST_VERSION" ] || [[ "$marketplace_snapshot" != v"$TEST_VERSION"* ]]; then
+router_ver=$(python3 -c "import json; print(json.load(open('skills-router.json'))['version'])")
+if [ "$claude_ver" != "$TEST_VERSION" ] || [ "$router_ver" != "$TEST_VERSION" ] || [[ "$marketplace_snapshot" != v"$TEST_VERSION"* ]]; then
   echo "FAIL: Dry-run modified files"
   exit 1
 fi
 
 echo "PASS: Dry-run test"
 
-# 测试 3: 错误处理
 echo "Test 3: Error handling"
-if [ -f "package.json" ]; then
-  mv package.json "$BACKUP_DIR/package.json.hidden"
-fi
+mv package.json package.json.hidden
 
 if bash scripts/sync-version.sh 2>/dev/null; then
   echo "FAIL: Should fail when package.json missing"
   exit 1
 fi
 
-mv "$BACKUP_DIR/package.json.hidden" package.json
+mv package.json.hidden package.json
 
 echo "PASS: Error handling test"
 

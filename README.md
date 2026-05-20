@@ -8,6 +8,10 @@
 
 它不是某一个技能的说明书，而是一个跨 Claude Code 与 Codex CLI 的整体架构：**宪法 + 命令阶段协议 + 角色责任边界 + 技能方法论 + Hooks 护栏 + 文档产物链**共同组成一套可验证、可扩展、可迁移的多产物开发系统。
 
+## Token 压缩描述
+
+Unified Skills = `AGENTS.md`/`CANON.md` 单入口纪律 + `commands/` 阶段协议 + `skills-router.json` 紧凑路由 + `skills/` 行为技能 + `agents/` 角色责任 + hooks 护栏 + `docs/features/*` 证据链。默认 direct mode；只有显式进入 `/brainstorm` → `/ship` 等 Unified 阶段时，才先读 compact router，并按 `light` / `standard` / `expanded` / `full` 选择最小必要技能。修改 `SKILL.md` 或技能辅助文件时，必须同步索引/锁文件并运行 `./validate`。
+
 ## 安装与接入
 
 ### Claude Code Plugin
@@ -326,7 +330,7 @@ Unified 提供以下自动化工具减少手动同步负担：
 
 ### 版本同步
 
-发版时使用版本同步脚本自动更新所有版本号：
+发版时使用版本同步脚本自动更新 package、插件元数据和 compact router 版本：
 
 ```bash
 # 1. 更新 package.json 版本号
@@ -335,7 +339,7 @@ vim package.json  # 修改为新版本号
 # 2. 运行同步脚本
 bash scripts/sync-version.sh
 
-# 3. 验证同步成功
+# 3. 验证同步成功（包含 skills-router.json 版本一致性）
 ./validate
 ```
 
@@ -375,6 +379,9 @@ bash scripts/tests/test-sync-version.sh
 
 # 测试索引生成
 bash scripts/tests/test-generate-index.sh
+
+# 测试 compact router 生成
+bash scripts/tests/test-generate-router.sh
 ```
 
 ### 验证脚本
@@ -393,6 +400,7 @@ CHECK_CODEX_CACHE=1 ./validate
 
 验证脚本会自动检查：
 - 版本号一致性
+- compact router 版本与结构
 - 索引与技能目录一致性
 - 自动化脚本存在性
 - 其他项目健康检查

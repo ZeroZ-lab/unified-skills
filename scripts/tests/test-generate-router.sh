@@ -3,8 +3,10 @@ set -e
 
 echo "Testing router generation..."
 
+BACKUP_DIR=$(mktemp -d)
+
 if [ -f skills-router.json ]; then
-  cp skills-router.json skills-router.json.bak
+  cp skills-router.json "$BACKUP_DIR/skills-router.json"
   had_router=1
 else
   had_router=0
@@ -12,10 +14,11 @@ fi
 
 cleanup() {
   if [ "$had_router" -eq 1 ]; then
-    mv skills-router.json.bak skills-router.json
+    cp "$BACKUP_DIR/skills-router.json" skills-router.json
   else
     rm -f skills-router.json
   fi
+  rm -rf "$BACKUP_DIR"
 }
 trap cleanup EXIT
 
@@ -90,13 +93,13 @@ print(f"PASS: {len(router_skills)} router skills valid")
 PY
 
 echo "Test 2: Dry-run mode"
-cp skills-router.json skills-router.json.bak2
+dry_run_snapshot="$BACKUP_DIR/skills-router.dry-run.json"
+cp skills-router.json "$dry_run_snapshot"
 bash scripts/generate-router.sh --dry-run > /dev/null
-if ! diff -q skills-router.json skills-router.json.bak2 > /dev/null; then
+if ! diff -q skills-router.json "$dry_run_snapshot" > /dev/null; then
   echo "FAIL: dry-run modified skills-router.json"
   exit 1
 fi
-rm -f skills-router.json.bak2
 echo "PASS: dry-run test"
 
 echo ""

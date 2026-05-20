@@ -13,6 +13,7 @@ show_help() {
   echo "  - .claude-plugin/plugin.json"
   echo "  - .codex-plugin/plugin.json"
   echo "  - .claude-plugin/marketplace.json"
+  echo "  - skills-router.json"
 }
 
 DRY_RUN=false
@@ -70,6 +71,7 @@ if [ "$DRY_RUN" = true ]; then
   echo "[DRY-RUN] Would update .claude-plugin/plugin.json"
   echo "[DRY-RUN] Would update .codex-plugin/plugin.json"
   echo "[DRY-RUN] Would update .claude-plugin/marketplace.json"
+  echo "[DRY-RUN] Would regenerate skills-router.json"
   exit 0
 fi
 
@@ -120,5 +122,11 @@ update_json(".claude-plugin/plugin.json", update_plugin)
 update_json(".codex-plugin/plugin.json", update_plugin)
 update_json(".claude-plugin/marketplace.json", update_marketplace)
 PY
+
+if [ -f "scripts/generate-router.sh" ]; then
+  bash scripts/generate-router.sh
+else
+  echo "Warning: scripts/generate-router.sh not found, skipping skills-router.json"
+fi
 
 echo "Version synced to $VERSION"
