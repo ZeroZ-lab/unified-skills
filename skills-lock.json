@@ -201,7 +201,7 @@
     "ship-workflow-ship": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "d322f1f3ac217b53b374fdc3b7db1263943bd6f686e8a9fbb8486dcfcdf177e7",
+      "computedHash": "72cc9ba3f9e554a44182cc1281d6cd510feec5c7e553c014a900a9bb3dfb0a85",
       "auxiliaryHashes": {}
     },
     "verify-content-review": {

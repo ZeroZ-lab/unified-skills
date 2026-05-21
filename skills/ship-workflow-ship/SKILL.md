@@ -9,7 +9,7 @@ argument-hint: "[artifact-type] [--canary]"
 
 ## 入口/出口
 - **入口**: 通过 review 的代码
-- **出口**: `docs/features/<name>/05-ship.md` + `docs/features/<name>/README.md`（事后总结）
+- **出口**: `docs/features/<name>/05-ship.md` + `docs/features/<name>/README.md`（聚合 README + 事后总结）
 - **指向**: 完成后进入 `reflect-team-retro`（可选）
 - **输出路径**: → ship-workflow-land
 - **前置加载**: CANON.md + `verify-workflow-review/SKILL.md`
@@ -138,10 +138,15 @@ Pre-launch checks (Phase A passed)
 ### Phase D：文档聚合
 
 自动生成 `docs/features/<name>/README.md`，包含：
-- 时间线（refine → plan → build → review → ship 日期）
-- 决策记录索引（ADR）
-- 变更统计（文件数 + 行数）
-- 事后总结（功能负责人 + 观察 + 改进项）
+- `Feature Summary`：owner、日期、状态、artifact_type、最终结果、来源目标
+- `Document Index`：`00-brainstorm.md` 到 `07-deploy-report.md` 的阶段证据状态
+- `Timeline`：关键阶段日期、证据路径和备注
+- `Key Decisions`：ADR / design / ship 决策索引、理由和当前状态
+- `Delivery Outcome`：已交付、未交付、最终产物、用户可见变化、项目文档和变更统计
+- `Verification Evidence`：review / ship / canary / deploy 门禁证据、结果和 owner
+- `Residual Risks`：剩余风险、影响、owner 和 tracking
+- `Follow-up Actions`：后续动作、owner、due date 和 tracking
+- `Retro Notes`：做得好、应改变、可复用经验
 
 同时检查并记录 `Documentation Sync`：
 - `Updated project docs`
@@ -260,6 +265,17 @@ Pre-launch checks (Phase A passed)
 - Owner:
 ```
 
+聚合 README 必须使用 `templates/feature/README.md`，并至少保留：
+- `Feature Summary`
+- `Document Index`
+- `Timeline`
+- `Key Decisions`
+- `Delivery Outcome`
+- `Verification Evidence`
+- `Residual Risks`
+- `Follow-up Actions`
+- `Retro Notes`
+
 ## 监控与可观测性
 
 ### 应用级指标
@@ -339,6 +355,8 @@ Pre-launch checks (Phase A passed)
 - [ ] Documentation Sync 已完成；必须同步的 project docs 状态明确
 - [ ] Post-ship Monitoring 已写清观察窗口、指标、阈值和 owner
 - [ ] Handoff / Archive 已写清最终路径和下一命令
+- [ ] 聚合 README 已覆盖 `00-brainstorm.md` 到 `07-deploy-report.md` 的证据状态
+- [ ] 聚合 README 已写清剩余风险、后续动作、owner 和 tracking
 - [ ] 团队已通知上线
 
 上线后：

@@ -1,17 +1,63 @@
-# <Feature Name> — 事后回顾
+# <Feature Name> — Feature Summary
 
-> 生成时间: YYYY-MM-DD
+## Feature Summary
+- Owner:
+- Date:
+- Status: draft / shipped / rolled-back / archived
+- Artifact Type: software / document / article / deck / visual
+- Final outcome:
+- Source goal:
 
-## 时间线
-YYYY-MM-DD: refine | design | plan | build(N 切片) | debug(N bug) | review | ship
+## Document Index
+| Stage | Document | Status | Notes |
+|-------|----------|--------|-------|
+| Brainstorm | `00-brainstorm.md` | pending / current / n/a | |
+| Spec | `01-spec.md` | pending / current / n/a | |
+| Design | `02-design.md` | pending / current / n/a | |
+| Plan | `03-plan.md` | pending / current / n/a | |
+| Review | `04-review.md` | pending / current / n/a | |
+| Ship | `05-ship.md` | pending / current / n/a | |
+| Canary | `06-canary-report.md` | pending / current / n/a | |
+| Deploy | `07-deploy-report.md` | pending / current / n/a | |
+| Retro | `README.md` | current | This file |
 
-## 关键决策
-- [ADR 01](adr/01-xxx.md): <摘要>
-- [ADR 02](adr/02-xxx.md): <摘要>
+## Timeline
+| Date | Stage | Evidence | Notes |
+|------|-------|----------|-------|
+| YYYY-MM-DD | refine / design / plan / build / review / ship | `<path>` | |
 
-## 变更统计
-+N/-M 行 | N 文件 | N 测试
+## Key Decisions
+| Decision | Source | Rationale | Status |
+|----------|--------|-----------|--------|
+| | `adr/01-xxx.md` / `02-design.md` / `05-ship.md` | | active / superseded / deferred |
 
-## 事后总结
-- 做得好:
-- 可以更好:
+## Delivery Outcome
+- Delivered:
+- Not delivered:
+- Production / final artifact:
+- User-visible change:
+- Project docs touched:
+- Change stats: +N/-M lines | N files | N tests
+
+## Verification Evidence
+| Gate | Evidence | Result | Owner |
+|------|----------|--------|-------|
+| Review | `04-review.md` | pass / fail / n/a | |
+| Ship | `05-ship.md` | pass / fail / n/a | |
+| Canary | `06-canary-report.md` | pass / fail / n/a | |
+| Deploy | `07-deploy-report.md` | pass / fail / n/a | |
+
+## Residual Risks
+| Risk | Impact | Owner | Tracking |
+|------|--------|-------|----------|
+| | low / medium / high | | issue / doc / accepted |
+
+## Follow-up Actions
+| Action | Owner | Due | Tracking |
+|--------|-------|-----|----------|
+| | | YYYY-MM-DD / n/a | |
+
+## Retro Notes
+- What worked:
+- What should change:
+- Reusable lessons:

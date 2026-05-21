@@ -4,7 +4,7 @@
 
 ## ⚡ 概要
 
-`AGENTS.md`/`CANON.md` 单入口纪律 · `commands/` 阶段协议 · `skills-router.json` 紧凑路由 · `skills/` 行为技能 · `agents/` 角色责任 · hooks 护栏 · `docs/features/*` 证据链。默认 direct mode；显式进入 `/brainstorm`→`/ship` 等 Unified 阶段时 → 读 compact router → 按 loading tier 选最小必要技能。修改 SKILL.md 或辅助文件 → 同步索引/锁文件 + `./validate`。运行时合同按需加载 → `docs/contracts/{artifact-types,doc-slots,role-escalation,hooks-platform,persona-rules}.md`。贡献指南 → `CONTRIBUTING.md`。
+`AGENTS.md`/`CANON.md` 单入口纪律 · `commands/` 阶段协议 · `skills-router.json` 紧凑路由 · `skills/` 行为技能 · `agents/` 角色责任 · hooks 护栏 · `docs/features/*` 证据链。默认 direct mode；显式进入 `/brainstorm`→`/ship` 等 Unified 阶段时 → 读 compact router → 按 loading tier 选最小必要技能。`/plan` 可产出 `03-plan.md` + `plans/*.md` 子计划；`/design` 可产出 `02-design.md` + `assets/design-tokens-extracted.*`。修改 SKILL.md 或辅助文件 → 同步索引/锁文件 + `./validate`。运行时合同按需加载 → `docs/contracts/{artifact-types,doc-slots,role-escalation,hooks-platform,persona-rules}.md`。贡献指南 → `CONTRIBUTING.md`。
 
 ## ⚠ Agent 纪律
 
@@ -67,8 +67,8 @@ docs/features/
 {
   "/brainstorm": {"skill": "define-cognitive-brainstorm", "doc": "00-brainstorm.md"},
   "/refine":     {"skill": "define-workflow-refine",      "doc": "01-spec.md"},
-  "/design":     {"skill": "design-workflow-design + artifact技能 + codex-rescue(可选)", "doc": "02-design.md + assets/ + DESIGN.md"},
-  "/plan":       {"skill": "build-workflow-plan",          "doc": "03-plan.md"},
+  "/design":     {"skill": "design-workflow-design + artifact技能 + codex-rescue(可选)", "doc": "02-design.md + assets/ + DESIGN.md + assets/design-tokens-extracted.*"},
+  "/plan":       {"skill": "build-workflow-plan",          "doc": "03-plan.md + plans/*.md"},
   "/build":      {"skill": "build-workflow-execute + artifact技能", "doc": "adr/"},
   "/review":     {"skill": "verify-workflow-review + artifact审查", "doc": "04-review.md"},
   "/ship":       {"skill": "ship-workflow-ship + artifact-export(非software)", "doc": "05-ship.md"},

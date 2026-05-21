@@ -49,6 +49,7 @@ print("\n== 检查文档模板族完整性 ==")
 
 template_checks = [
     ("templates/feature/00-brainstorm.md", "brainstorm 模板"),
+    ("templates/feature/README.md", "feature README 模板"),
     ("templates/feature/04-review.md", "review 模板"),
     ("templates/feature/05-ship.md", "ship 模板"),
     ("templates/feature/06-canary-report.md", "canary 模板"),
@@ -66,6 +67,23 @@ if brainstorm_path.exists():
     t = read(brainstorm_path)
     if not sgrep_line("## 假设", t):
         errors.append("brainstorm 模板缺少假设区")
+
+feature_readme_path = ROOT / "templates/feature/README.md"
+if feature_readme_path.exists():
+    t = read(feature_readme_path)
+    for section in (
+        "## Feature Summary",
+        "## Document Index",
+        "## Timeline",
+        "## Key Decisions",
+        "## Delivery Outcome",
+        "## Verification Evidence",
+        "## Residual Risks",
+        "## Follow-up Actions",
+        "## Retro Notes",
+    ):
+        if not sgrep_line(section, t):
+            errors.append(f"feature README 模板缺少章节: {section}")
 
 review_path = ROOT / "templates/feature/04-review.md"
 if review_path.exists():
