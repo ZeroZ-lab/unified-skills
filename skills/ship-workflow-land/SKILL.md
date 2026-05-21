@@ -88,7 +88,7 @@ curl 健康检查端点（`/health`、`/api/status`、`/api/readyz`、`/version`
 
 ### 输出
 
-生成 `docs/features/<name>/07-deploy-report.md`，包含合并信息、CI 状态、部署信息、健康验证表、回滚命令和下一步（必须执行 canary）。
+生成 `docs/features/<name>/07-deploy-report.md`，作为 production deployment closure record，包含部署范围、ship/canary 带入状态、CI / merge 状态、部署策略、生产验证证据、回滚就绪、最终部署状态和 follow-up owner。
 
 ## 验证证据
 
@@ -142,6 +142,10 @@ curl 健康检查端点（`/health`、`/api/status`、`/api/readyz`、`/version`
 - [ ] 健康检查端点全部通过
 - [ ] 新版本号已确认
 - [ ] 回滚路径已验证
+- [ ] Ship / Canary Carryover 已带入 `05-ship.md` 和 `06-canary-report.md` 状态
+- [ ] Production Verification 已记录健康、版本、关键路径和监控证据
+- [ ] Final Deployment Status 已记录 deployed / rolled-back / paused / failed
+- [ ] Follow-up / Ownership 已记录剩余动作和下一命令
 - [ ] 07-deploy-report.md 已生成
 
 ## 输出模板
@@ -149,18 +153,65 @@ curl 健康检查端点（`/health`、`/api/status`、`/api/readyz`、`/version`
 模板起点：`templates/feature/07-deploy-report.md`
 
 ```markdown
-### Land 交付记录 — <feature-name>
+# <Feature Name> — Deploy Report
 
-**合并信息**: PR #[N] / squash merge / SHA [hash] / 时间 [timestamp]
-**CI 状态**: [全部 PASSED / 具体未通过项] — 耗时 [X min]
-**部署策略**: [GitHub Actions / Vercel / Fly.io / 手动]
-**新版本**: [版本号 — 已确认 / 未确认]
+## Deploy Summary
+- Owner:
+- Date:
+- PR:
+- Merge SHA:
+- Status: pending / merged / deployed / rolled-back / blocked
 
-**健康验证**:
-| 端点 | Status | 响应时间 | 结果 |
-|------|--------|---------|------|
-| /health | [200] | [Xms] | PASS / FAIL |
+## Deploy Scope
+- Environment:
+- Service / app / artifact:
+- Version / commit / release:
+- Target users / traffic:
+- Explicitly out of scope:
 
-**回滚**: [命令] — 预计耗时 < 5 min
-**下一步**: 必须执行 ship-workflow-canary 进行 [2h / 24h] 持续监控
+## Ship / Canary Carryover
+- Ship decision:
+- Ship source:
+- Canary result:
+- Canary source:
+- Conditions carried into deploy:
+
+## CI / Merge Status
+- Review status:
+- CI result:
+- Duration:
+- Expired approvals:
+- Merge method:
+- Branch cleanup:
+
+## Deployment Strategy
+- Strategy:
+- Deployment target:
+- Version confirmed:
+- Rollout mode:
+- Deployment evidence:
+
+## Production Verification
+| Check | Source | Expected | Actual | Result |
+|-------|--------|----------|--------|--------|
+
+## Rollback Readiness
+- Command:
+- Trigger conditions:
+- Estimated time:
+- Data / migration handling:
+- Owner:
+
+## Final Deployment Status
+- Final status: deployed / rolled-back / paused / failed
+- Decision reason:
+- Production URL / artifact path:
+- Completed at:
+
+## Follow-up / Ownership
+- Canary requirement:
+- Monitoring owner:
+- Remaining actions:
+- Tracking:
+- Next command: `/canary` / `/retro` / `/doc-sync` / none
 ```

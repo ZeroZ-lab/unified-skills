@@ -123,8 +123,18 @@ if canary_path.exists():
 deploy_path = ROOT / "templates/feature/07-deploy-report.md"
 if deploy_path.exists():
     t = read(deploy_path)
-    if not sgrep_line("## 回滚", t):
-        errors.append("deploy 模板缺少回滚区")
+    for section in (
+        "## Deploy Scope",
+        "## Ship / Canary Carryover",
+        "## CI / Merge Status",
+        "## Deployment Strategy",
+        "## Production Verification",
+        "## Rollback Readiness",
+        "## Final Deployment Status",
+        "## Follow-up / Ownership",
+    ):
+        if not sgrep_line(section, t):
+            errors.append(f"deploy 模板缺少章节: {section}")
 
 root_cause_path = ROOT / "templates/bug/01-root-cause.md"
 if root_cause_path.exists():

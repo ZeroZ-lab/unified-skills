@@ -5,32 +5,66 @@
 - Date:
 - PR:
 - Merge SHA:
-- Status: merged / deployed / blocked
+- Status: pending / merged / deployed / rolled-back / blocked
+- Deployment owner:
+- Production verification source:
 
 ## Artifact Type
 `artifact_type: software`
 
-## CI 状态
+## Deploy Scope
+- Environment:
+- Service / app / artifact:
+- Version / commit / release:
+- Target users / traffic:
+- Explicitly out of scope:
+
+## Ship / Canary Carryover
+- Ship decision: GO / NO-GO / n/a
+- Ship source: `docs/features/<name>/05-ship.md`
+- Canary result: HEALTHY / DEGRADED / BROKEN / n/a
+- Canary source: `docs/features/<name>/06-canary-report.md`
+- Conditions carried into deploy:
+
+## CI / Merge Status
 - Review status:
 - CI result:
 - Duration:
 - Expired approvals:
+- Merge method:
+- Branch cleanup:
 
-## 部署策略
+## Deployment Strategy
 - Strategy: GitHub Actions / Vercel / Fly.io / Manual / Other
 - Deployment target:
 - Version confirmed:
+- Rollout mode: full / canary / blue-green / rolling / manual export
+- Deployment evidence:
 
-## 健康验证
-| Endpoint | Status | Response Time | Result |
-|----------|--------|---------------|--------|
-| /health | 200 | 45ms | PASS |
+## Production Verification
+| Check | Source | Expected | Actual | Result |
+|-------|--------|----------|--------|--------|
+| health endpoint | <url/command> | 200 / <threshold> | <status/time> | PASS / FAIL |
+| version endpoint | <url/command> | <version> | <version> | PASS / FAIL |
+| key user journey | <manual/script> | works | <result> | PASS / FAIL |
+| monitoring signal | <dashboard/query> | within threshold | <value> | PASS / FAIL |
 
-## 回滚
+## Rollback Readiness
 - Command:
-- Trigger:
+- Trigger conditions:
 - Estimated time:
+- Data / migration handling:
+- Owner:
 
-## 下一步
-- Canary requirement:
+## Final Deployment Status
+- Final status: deployed / rolled-back / paused / failed
+- Decision reason:
+- Production URL / artifact path:
+- Completed at:
+
+## Follow-up / Ownership
+- Canary requirement: required / complete / not applicable
 - Monitoring owner:
+- Remaining actions:
+- Tracking:
+- Next command: `/canary` / `/retro` / `/doc-sync` / none
