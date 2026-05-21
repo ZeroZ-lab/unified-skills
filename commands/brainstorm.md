@@ -54,12 +54,13 @@ Transform open-ended question or vague idea into 2-3 structured proposals with c
 2. 输出 2-3 个对比方案
 3. 给出明确推荐 + 理由
 4. 列出"不做清单"
-**Output:** 设计文档（2-3 方案 + 推荐 + 不做清单）
+**Output:** 设计文档（决策标准 + 关键假设验证 + 2-3 方案 + 推荐 + 不做清单 + 下一阶段交接）
 **Validation:**
 - [ ] 2-3 个清晰对比的方案
 - [ ] 每个方案有优点、缺点、风险
 - [ ] 明确推荐 + 理由
 - [ ] "不做清单"有内容
+- [ ] 下一阶段交接已写清
 
 ---
 
