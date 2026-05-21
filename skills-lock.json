@@ -282,7 +282,7 @@
     "verify-workflow-review": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "68483eba79c74e6dd7b2563f9904f854f970388a5f3b4454c7ddf78ac9308cd7",
+      "computedHash": "ade33bbe1cc7ea97d3d9310117177d31dcc2c61bd576b1318163707c3bf0cccd",
       "auxiliaryHashes": {
         "review-guidance.md": "3a68de5628de438e741c9b0726033bf57c94661dff691e4a696f6ce1c2c700c8"
       }

@@ -70,10 +70,18 @@ if brainstorm_path.exists():
 review_path = ROOT / "templates/feature/04-review.md"
 if review_path.exists():
     t = read(review_path)
-    if not sgrep_line("## Documentation Compliance", t):
-        errors.append("review 模板缺少 Documentation Compliance")
-    if not sgrep_line("## Review Independence", t):
-        errors.append("review 模板缺少 Review Independence")
+    for section in (
+        "## Review Scope",
+        "## Review Independence",
+        "## Evidence Reviewed",
+        "## Findings Detail",
+        "## Resolution & Re-review",
+        "## Residual Risk",
+        "## Documentation Compliance",
+        "## Verdict",
+    ):
+        if not sgrep_line(section, t):
+            errors.append(f"review 模板缺少章节: {section}")
     for pattern in ("Built by:", "Stage 1 reviewed by:", "Stage 2 reviewed by:", "Independence status:", "Exemption reason:"):
         if not sgrep(pattern, t):
             errors.append(f"review 模板缺少独立性字段: {pattern}")
