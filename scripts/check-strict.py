@@ -54,6 +54,7 @@ template_checks = [
     ("templates/feature/05-ship.md", "ship 模板"),
     ("templates/feature/06-canary-report.md", "canary 模板"),
     ("templates/feature/07-deploy-report.md", "deploy 模板"),
+    ("templates/feature/adr/template.md", "ADR 模板"),
     ("templates/bug/01-root-cause.md", "root-cause 模板"),
     ("templates/bug/02-fix-plan.md", "fix-plan 模板"),
     ("templates/maintain/checkpoint.md", "checkpoint 模板"),
@@ -84,6 +85,29 @@ if feature_readme_path.exists():
     ):
         if not sgrep_line(section, t):
             errors.append(f"feature README 模板缺少章节: {section}")
+
+adr_template_path = ROOT / "templates/feature/adr/template.md"
+if adr_template_path.exists():
+    t = read(adr_template_path)
+    for section in (
+        "## Status",
+        "## Decision Summary",
+        "## Context",
+        "## Decision Drivers",
+        "## Constraints",
+        "## Options Considered",
+        "## Decision",
+        "## Rationale",
+        "## Consequences",
+        "## Reversibility",
+        "## Follow-up",
+        "## Evidence Links",
+    ):
+        if not sgrep_line(section, t):
+            errors.append(f"ADR 模板缺少章节: {section}")
+    for pattern in ("Supersedes:", "Superseded By:", "Fit Against Drivers", "Reversal trigger:"):
+        if not sgrep(pattern, t):
+            errors.append(f"ADR 模板缺少字段: {pattern}")
 
 review_path = ROOT / "templates/feature/04-review.md"
 if review_path.exists():

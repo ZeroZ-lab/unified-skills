@@ -28,7 +28,7 @@
     "build-cognitive-decision-record": {
       "source": "ZeroZ-lab/unified-skills",
       "sourceType": "github",
-      "computedHash": "7af9e89a00f1c68d401d78f157b2abe0e3289a6e73ca7ad199b15e506ecbe392",
+      "computedHash": "b799957564ad96f79681c25cbe853427185b518836a81e09a9f91c379b7b34d2",
       "auxiliaryHashes": {}
     },
     "build-cognitive-execution-engine": {
