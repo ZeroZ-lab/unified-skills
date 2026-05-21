@@ -195,8 +195,24 @@ if fix_plan_path.exists():
 checkpoint_path = ROOT / "templates/maintain/checkpoint.md"
 if checkpoint_path.exists():
     t = read(checkpoint_path)
-    if not sgrep_line("## Summary", t):
-        errors.append("checkpoint 模板缺少 Summary")
+    for section in (
+        "## Summary",
+        "## Current Objective",
+        "## Git Snapshot",
+        "## Progress State",
+        "## Decisions Made",
+        "## Validation State",
+        "## Remaining Work",
+        "## Blockers",
+        "## Next Command",
+        "## Handoff Risks",
+        "## Notes",
+    ):
+        if not sgrep_line(section, t):
+            errors.append(f"checkpoint 模板缺少章节: {section}")
+    for pattern in ("current_objective:", "next_command:", "last_commits:"):
+        if not sgrep(pattern, t):
+            errors.append(f"checkpoint 模板缺少 frontmatter 字段: {pattern}")
 
 print("通过" if not errors else "FAIL")
 
