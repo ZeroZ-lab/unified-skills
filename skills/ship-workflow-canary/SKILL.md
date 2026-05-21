@@ -129,25 +129,67 @@ check_endpoint() {
 ```markdown
 # Canary Report — <name>
 
-## 摘要
-- 监控时长: X 小时
-- 检查次数: N
-- 结果: HEALTHY / DEGRADED / BROKEN
+## Canary Summary
+- Owner:
+- Date:
+- Monitoring window:
+- Change size: small / standard / major
+- Result: HEALTHY / DEGRADED / BROKEN
+- Decision: continue / pause / rollback
+- Ship source: `docs/features/<name>/05-ship.md`
 
-## 端点状态
+## Canary Scope
+- Environment / region / ring:
+- Canary population / traffic percentage:
+- Version / commit / artifact:
+- Critical user journeys:
+- Out of scope:
 
-| 端点 | 状态 | 基线响应 | 平均响应 | 异常次数 |
-|------|------|---------|---------|---------|
-| /health | HEALTHY | 45ms | 48ms | 0 |
-| /api/status | DEGRADED | 120ms | 310ms | 3 (MEDIUM) |
+## Baseline
+- Baseline source:
+- Baseline collected at:
+- Endpoint count:
+- Samples per endpoint:
+- Baseline owner:
 
-## 异常详情
-[按时间线列出所有非 OK 检查]
+## Health Signals
+| Signal | Source | Baseline | Current | Threshold | Status |
+|--------|--------|----------|---------|-----------|--------|
 
-## 建议
-- HEALTHY → 更新基线，必须进入 /retro
-- DEGRADED → 继续监控，调查退化端点
-- BROKEN → 立即回滚，参考回滚计划
+## Endpoint Status
+
+| Endpoint | Status | Baseline Response | Current / Average Response | Error Count | Notes |
+|----------|--------|-------------------|----------------------------|-------------|-------|
+
+## Analysis Policy
+- Interval:
+- Count / duration:
+- Failure threshold:
+- Debounce rule:
+- Promotion rule:
+- Rollback rule:
+
+## Anomalies
+| Time | Signal / Endpoint | Severity | Evidence | Action |
+|------|-------------------|----------|----------|--------|
+
+## Decision
+- Final status: HEALTHY / DEGRADED / BROKEN
+- Decision: continue / pause / rollback
+- Decision reason:
+- Decision owner:
+- Decision time:
+
+## Baseline Update
+- Updated: yes / no
+- Reason:
+- Previous baseline archived at:
+
+## Follow-up
+- Owner:
+- Tracking:
+- Next check:
+- Next command: `/retro` / continue monitoring / rollback / investigate
 ```
 
 ### Phase 4：基线更新
@@ -241,20 +283,18 @@ Canary Report — payment-v2
 模板起点：`templates/feature/06-canary-report.md`
 
 ```markdown
-### Canary Report 交付记录 — <feature-name>
+# <Feature Name> — Canary Report
 
-**监控时长**: [X 小时]
-**检查次数**: [N]
-**变更规模**: [小型 30min / 标准 2h / 重大 24h]
-
-**端点状态**:
-| 端点 | 状态 | 基线响应 | 平均响应 | 异常次数 |
-|------|------|---------|---------|---------|
-| /health | HEALTHY / DEGRADED / BROKEN | [Xms] | [Yms] | [N] |
-
-**异常详情**: [时间线 — 所有非 OK 检查 + 防抖确认]
-**基线更新**: [全部 HEALTHY → 已更新 / 有 DEGRADED → 未更新]
-**下一步**: [HEALTHY → /retro / DEGRADED → 继续监控 / BROKEN → 回滚]
+## Canary Summary
+## Canary Scope
+## Baseline
+## Health Signals
+## Endpoint Status
+## Analysis Policy
+## Anomalies
+## Decision
+## Baseline Update
+## Follow-up
 ```
 
 ## 验证失败处理
@@ -270,9 +310,14 @@ Canary Report — payment-v2
 ## 验证清单
 
 - [ ] baseline.json 已采集（至少 3 次取中位数）
+- [ ] Canary Scope 已写清环境、ring、流量比例、版本和关键用户路径
+- [ ] Health Signals 已覆盖可用性、延迟、错误率和必要业务信号
+- [ ] Analysis Policy 已写清 interval、count/duration、failure threshold、防抖、promotion 和 rollback 规则
 - [ ] 所有关键端点在监控列表中
 - [ ] 防抖机制生效（连续 2+ 次才告警）
 - [ ] 监控持续时间与变更规模匹配
-- [ ] 05-canary-report.md 已生成
+- [ ] 06-canary-report.md 已生成
+- [ ] Decision 已记录 continue / pause / rollback 及 owner
+- [ ] Follow-up 已记录下一步和 tracking
 - [ ] 所有端点状态为 HEALTHY（或 DEGRADED/BROKEN 有对应行动）
 - [ ] HEALTHY 端点基线已更新

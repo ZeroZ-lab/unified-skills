@@ -89,14 +89,36 @@ if review_path.exists():
 ship_path = ROOT / "templates/feature/05-ship.md"
 if ship_path.exists():
     t = read(ship_path)
-    if not sgrep_line("## Documentation Sync", t):
-        errors.append("ship 模板缺少 Documentation Sync")
+    for section in (
+        "## Delivery Scope",
+        "## Review Carryover",
+        "## Pre-ship Evidence",
+        "## Ship Audit Results",
+        "## Go / No-Go Decision",
+        "## Rollback / Recovery Plan",
+        "## Documentation Sync",
+        "## Post-ship Monitoring",
+        "## Handoff / Archive",
+    ):
+        if not sgrep_line(section, t):
+            errors.append(f"ship 模板缺少章节: {section}")
 
 canary_path = ROOT / "templates/feature/06-canary-report.md"
 if canary_path.exists():
     t = read(canary_path)
-    if not sgrep_line("## 基线", t):
-        errors.append("canary 模板缺少基线区")
+    for section in (
+        "## Canary Scope",
+        "## Baseline",
+        "## Health Signals",
+        "## Endpoint Status",
+        "## Analysis Policy",
+        "## Anomalies",
+        "## Decision",
+        "## Baseline Update",
+        "## Follow-up",
+    ):
+        if not sgrep_line(section, t):
+            errors.append(f"canary 模板缺少章节: {section}")
 
 deploy_path = ROOT / "templates/feature/07-deploy-report.md"
 if deploy_path.exists():

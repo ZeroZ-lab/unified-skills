@@ -196,27 +196,48 @@ Pre-launch checks (Phase A passed)
 - 版本: <version>
 - 发布时间: YYYY-MM-DD HH:MM
 
-## Phase A: 预发检查
-- 测试: [PASS/FAIL] — 命令 + 结果
-- 构建: [PASS/FAIL]
-- Lint + type check: [PASS/FAIL]
+## Delivery Scope
+- Deliverables:
+- Commit / version / artifact path:
+- Target users / audience:
+- Explicitly out of scope:
 
-## Phase B: Audit Army 结果
-- security: [Blocking/Important/Suggestion 条目]
-- performance: [同上]
-- accessibility: [同上]
-- docs: [同上]
-- artifact-export: [同上]
+## Review Carryover
+- Review verdict:
+- Blocking remaining:
+- Important / deferred risks:
+- Review conditions:
 
-## Phase B.5: Final Verification
-- software staging: [PASS / FAIL / n/a]
-- artifact export verification: [PASS / FAIL / pending human partner / n/a]
+## Pre-ship Evidence
+| Check | Command / Evidence | Result | Owner |
+|-------|--------------------|--------|-------|
 
-## Phase C: Go/No-Go
-- 阻塞项: [无 / 列出]
-- 已知风险: [列出]
-- 回滚计划: [已准备 / 未准备]
-- 决策: GO / NO-GO
+## Ship Audit Results
+| Audit | Required | Auditor | Result | Blocking findings | Accepted risks |
+|-------|----------|---------|--------|-------------------|----------------|
+
+## Final Verification
+- software staging:
+- smoke / integration verification:
+- migration / data compatibility:
+- feature flag / kill switch:
+- artifact export verification:
+- final file / delivery package path:
+
+## Go / No-Go Decision
+| Criterion | Required | Status | Evidence |
+|-----------|----------|--------|----------|
+- Decision: GO / NO-GO
+- Decision owner:
+- Decision time:
+
+## Rollback / Recovery Plan
+- Trigger conditions:
+- Recovery steps:
+- Data handling:
+- Expected recovery time:
+- Owner:
+- Non-software replacement / re-export plan:
 
 ## Documentation Sync
 - Updated project docs: [paths or none]
@@ -224,10 +245,19 @@ Pre-launch checks (Phase A passed)
 - CHANGELOG.md updated: yes / no / n/a
 - README verified: yes / no / n/a
 
-## Phase E: 发布后闭环
-- 健康检查: [PASS/FAIL/n/a]
-- 错误率: [正常 / 异常 / n/a]
-- 下一步: canary / land / doc-sync / delivery handoff
+## Post-ship Monitoring
+- Observation window:
+- Health checks / metrics:
+- Alert thresholds:
+- Monitoring owner:
+- First check time:
+
+## Handoff / Archive
+- Final artifact / release path:
+- Release notes / changelog path:
+- Archived evidence path:
+- Next command: canary / land / doc-sync / export
+- Owner:
 ```
 
 ## 监控与可观测性
@@ -300,9 +330,15 @@ Pre-launch checks (Phase A passed)
 
 上线前：
 - [ ] 预发检查清单完成（全部绿色）
+- [ ] Delivery Scope 已写清交付物、目标环境和不做范围
+- [ ] Review Carryover 已带入 `04-review.md` verdict、条件和残余风险
+- [ ] Pre-ship Evidence 已记录命令、路径、结果和 owner
+- [ ] Go/No-Go Decision 已记录 criterion、evidence、owner 和时间
 - [ ] Feature flag 已配置（如适用）
-- [ ] 回滚计划已文档化
+- [ ] Rollback / Recovery Plan 已文档化，包含触发条件、步骤、数据处理和 owner
 - [ ] Documentation Sync 已完成；必须同步的 project docs 状态明确
+- [ ] Post-ship Monitoring 已写清观察窗口、指标、阈值和 owner
+- [ ] Handoff / Archive 已写清最终路径和下一命令
 - [ ] 团队已通知上线
 
 上线后：
