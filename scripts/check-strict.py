@@ -53,6 +53,8 @@ template_checks = [
     ("templates/feature/05-ship.md", "ship 模板"),
     ("templates/feature/06-canary-report.md", "canary 模板"),
     ("templates/feature/07-deploy-report.md", "deploy 模板"),
+    ("templates/bug/01-root-cause.md", "root-cause 模板"),
+    ("templates/bug/02-fix-plan.md", "fix-plan 模板"),
     ("templates/maintain/checkpoint.md", "checkpoint 模板"),
 ]
 for rel, label in template_checks:
@@ -93,6 +95,20 @@ if deploy_path.exists():
     t = read(deploy_path)
     if not sgrep_line("## 回滚", t):
         errors.append("deploy 模板缺少回滚区")
+
+root_cause_path = ROOT / "templates/bug/01-root-cause.md"
+if root_cause_path.exists():
+    t = read(root_cause_path)
+    for section in ("## Status Summary", "## 复现证据", "## 时间线", "## 根因", "## 非根因排除", "## Done When"):
+        if not sgrep_line(section, t):
+            errors.append(f"root-cause 模板缺少章节: {section}")
+
+fix_plan_path = ROOT / "templates/bug/02-fix-plan.md"
+if fix_plan_path.exists():
+    t = read(fix_plan_path)
+    for section in ("## Status Summary", "## 修复目标", "## 复现测试", "## 验证计划", "## Follow-up Actions", "## Done When"):
+        if not sgrep_line(section, t):
+            errors.append(f"fix-plan 模板缺少章节: {section}")
 
 checkpoint_path = ROOT / "templates/maintain/checkpoint.md"
 if checkpoint_path.exists():
