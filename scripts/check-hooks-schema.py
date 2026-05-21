@@ -34,8 +34,27 @@ def main():
                 print(f"{event} entry missing nested hooks", file=sys.stderr)
                 sys.exit(1)
             for hook in nested:
-                if hook.get("type") != "command" or not hook.get("command"):
+                command = hook.get("command", "")
+                if hook.get("type") != "command" or not command:
                     print(f"{event} hook must be command with command string", file=sys.stderr)
+                    sys.exit(1)
+                if "${CLAUDE_PLUGIN_ROOT}" in command:
+                    print(
+                        f"{event} hook command must not shell-expand CLAUDE_PLUGIN_ROOT",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+                if "installed_plugins.json" not in command or "os.execvp" not in command:
+                    print(
+                        f"{event} hook command must use the portable plugin-root bootstrap",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+                if event == "PreToolUse" and '"permissionDecision":"deny"' not in command:
+                    print(
+                        "PreToolUse hook command must fail closed when plugin root is unresolved",
+                        file=sys.stderr,
+                    )
                     sys.exit(1)
     # Verify PostToolUse has Agent and Write|Edit matchers
     ptu_entries = hooks.get("PostToolUse", [])

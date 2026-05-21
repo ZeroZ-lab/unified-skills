@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh\"",
+            "command": "python3 -c 'import json,os,sys;from pathlib import Path;hook=sys.argv[1];home=Path.home();roots=[Path(os.environ[v]) for v in (\"CLAUDE_PLUGIN_ROOT\",\"CODEX_PLUGIN_ROOT\") if os.environ.get(v)];cwd=Path.cwd();roots += [cwd]+list(cwd.parents);p=home/\".claude/plugins/installed_plugins.json\";data=json.loads(p.read_text()) if p.is_file() else {\"plugins\":{}};roots += [Path(e[\"installPath\"]) for e in data.get(\"plugins\",{}).get(\"unified@unified-skills\",[]) if e.get(\"installPath\")];roots += [d for base in (home/\".claude/plugins/cache/unified-skills/unified\",home/\".codex/plugins/cache/unified-skills/unified\") for d in sorted(base.glob(\"*\"),key=lambda x:x.stat().st_mtime,reverse=True)];roots += sorted((home/\".codex/plugins/.marketplace-plugin-source-staging\").glob(\"marketplace-plugin-source-*\"),key=lambda x:x.stat().st_mtime,reverse=True);roots += [home/\".claude/plugins/marketplaces/unified-skills\",home/\".codex/.tmp/marketplaces/unified-skills\"];script=next((r/\"hooks\"/hook for r in roots if (r/\"AGENTS.md\").is_file() and (r/\"hooks\"/hook).is_file()),None);script and (os.environ.__setitem__(\"CLAUDE_PLUGIN_ROOT\",str(script.parents[1])) or os.execvp(\"bash\",[\"bash\",str(script)]));print(json.dumps({\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"[unified] cannot resolve plugin root for \"+hook} if hook in (\"careful.sh\",\"freeze.sh\") else {},ensure_ascii=False))' session-start.sh",
             "async": false
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/careful.sh\""
+            "command": "python3 -c 'import json,os,sys;from pathlib import Path;hook=sys.argv[1];home=Path.home();roots=[Path(os.environ[v]) for v in (\"CLAUDE_PLUGIN_ROOT\",\"CODEX_PLUGIN_ROOT\") if os.environ.get(v)];cwd=Path.cwd();roots += [cwd]+list(cwd.parents);p=home/\".claude/plugins/installed_plugins.json\";data=json.loads(p.read_text()) if p.is_file() else {\"plugins\":{}};roots += [Path(e[\"installPath\"]) for e in data.get(\"plugins\",{}).get(\"unified@unified-skills\",[]) if e.get(\"installPath\")];roots += [d for base in (home/\".claude/plugins/cache/unified-skills/unified\",home/\".codex/plugins/cache/unified-skills/unified\") for d in sorted(base.glob(\"*\"),key=lambda x:x.stat().st_mtime,reverse=True)];roots += sorted((home/\".codex/plugins/.marketplace-plugin-source-staging\").glob(\"marketplace-plugin-source-*\"),key=lambda x:x.stat().st_mtime,reverse=True);roots += [home/\".claude/plugins/marketplaces/unified-skills\",home/\".codex/.tmp/marketplaces/unified-skills\"];script=next((r/\"hooks\"/hook for r in roots if (r/\"AGENTS.md\").is_file() and (r/\"hooks\"/hook).is_file()),None);script and (os.environ.__setitem__(\"CLAUDE_PLUGIN_ROOT\",str(script.parents[1])) or os.execvp(\"bash\",[\"bash\",str(script)]));print(json.dumps({\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"[unified] cannot resolve plugin root for \"+hook} if hook in (\"careful.sh\",\"freeze.sh\") else {},ensure_ascii=False))' careful.sh"
           }
         ]
       },
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/freeze.sh\""
+            "command": "python3 -c 'import json,os,sys;from pathlib import Path;hook=sys.argv[1];home=Path.home();roots=[Path(os.environ[v]) for v in (\"CLAUDE_PLUGIN_ROOT\",\"CODEX_PLUGIN_ROOT\") if os.environ.get(v)];cwd=Path.cwd();roots += [cwd]+list(cwd.parents);p=home/\".claude/plugins/installed_plugins.json\";data=json.loads(p.read_text()) if p.is_file() else {\"plugins\":{}};roots += [Path(e[\"installPath\"]) for e in data.get(\"plugins\",{}).get(\"unified@unified-skills\",[]) if e.get(\"installPath\")];roots += [d for base in (home/\".claude/plugins/cache/unified-skills/unified\",home/\".codex/plugins/cache/unified-skills/unified\") for d in sorted(base.glob(\"*\"),key=lambda x:x.stat().st_mtime,reverse=True)];roots += sorted((home/\".codex/plugins/.marketplace-plugin-source-staging\").glob(\"marketplace-plugin-source-*\"),key=lambda x:x.stat().st_mtime,reverse=True);roots += [home/\".claude/plugins/marketplaces/unified-skills\",home/\".codex/.tmp/marketplaces/unified-skills\"];script=next((r/\"hooks\"/hook for r in roots if (r/\"AGENTS.md\").is_file() and (r/\"hooks\"/hook).is_file()),None);script and (os.environ.__setitem__(\"CLAUDE_PLUGIN_ROOT\",str(script.parents[1])) or os.execvp(\"bash\",[\"bash\",str(script)]));print(json.dumps({\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"[unified] cannot resolve plugin root for \"+hook} if hook in (\"careful.sh\",\"freeze.sh\") else {},ensure_ascii=False))' freeze.sh"
           }
         ]
       }
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/agent-dispatch.sh\""
+            "command": "python3 -c 'import json,os,sys;from pathlib import Path;hook=sys.argv[1];home=Path.home();roots=[Path(os.environ[v]) for v in (\"CLAUDE_PLUGIN_ROOT\",\"CODEX_PLUGIN_ROOT\") if os.environ.get(v)];cwd=Path.cwd();roots += [cwd]+list(cwd.parents);p=home/\".claude/plugins/installed_plugins.json\";data=json.loads(p.read_text()) if p.is_file() else {\"plugins\":{}};roots += [Path(e[\"installPath\"]) for e in data.get(\"plugins\",{}).get(\"unified@unified-skills\",[]) if e.get(\"installPath\")];roots += [d for base in (home/\".claude/plugins/cache/unified-skills/unified\",home/\".codex/plugins/cache/unified-skills/unified\") for d in sorted(base.glob(\"*\"),key=lambda x:x.stat().st_mtime,reverse=True)];roots += sorted((home/\".codex/plugins/.marketplace-plugin-source-staging\").glob(\"marketplace-plugin-source-*\"),key=lambda x:x.stat().st_mtime,reverse=True);roots += [home/\".claude/plugins/marketplaces/unified-skills\",home/\".codex/.tmp/marketplaces/unified-skills\"];script=next((r/\"hooks\"/hook for r in roots if (r/\"AGENTS.md\").is_file() and (r/\"hooks\"/hook).is_file()),None);script and (os.environ.__setitem__(\"CLAUDE_PLUGIN_ROOT\",str(script.parents[1])) or os.execvp(\"bash\",[\"bash\",str(script)]));print(json.dumps({\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"[unified] cannot resolve plugin root for \"+hook} if hook in (\"careful.sh\",\"freeze.sh\") else {},ensure_ascii=False))' agent-dispatch.sh"
           }
         ]
       },
@@ -47,7 +47,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/doc-tracker.sh\""
+            "command": "python3 -c 'import json,os,sys;from pathlib import Path;hook=sys.argv[1];home=Path.home();roots=[Path(os.environ[v]) for v in (\"CLAUDE_PLUGIN_ROOT\",\"CODEX_PLUGIN_ROOT\") if os.environ.get(v)];cwd=Path.cwd();roots += [cwd]+list(cwd.parents);p=home/\".claude/plugins/installed_plugins.json\";data=json.loads(p.read_text()) if p.is_file() else {\"plugins\":{}};roots += [Path(e[\"installPath\"]) for e in data.get(\"plugins\",{}).get(\"unified@unified-skills\",[]) if e.get(\"installPath\")];roots += [d for base in (home/\".claude/plugins/cache/unified-skills/unified\",home/\".codex/plugins/cache/unified-skills/unified\") for d in sorted(base.glob(\"*\"),key=lambda x:x.stat().st_mtime,reverse=True)];roots += sorted((home/\".codex/plugins/.marketplace-plugin-source-staging\").glob(\"marketplace-plugin-source-*\"),key=lambda x:x.stat().st_mtime,reverse=True);roots += [home/\".claude/plugins/marketplaces/unified-skills\",home/\".codex/.tmp/marketplaces/unified-skills\"];script=next((r/\"hooks\"/hook for r in roots if (r/\"AGENTS.md\").is_file() and (r/\"hooks\"/hook).is_file()),None);script and (os.environ.__setitem__(\"CLAUDE_PLUGIN_ROOT\",str(script.parents[1])) or os.execvp(\"bash\",[\"bash\",str(script)]));print(json.dumps({\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"[unified] cannot resolve plugin root for \"+hook} if hook in (\"careful.sh\",\"freeze.sh\") else {},ensure_ascii=False))' doc-tracker.sh"
           }
         ]
       }
@@ -58,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/phase-stop.sh\""
+            "command": "python3 -c 'import json,os,sys;from pathlib import Path;hook=sys.argv[1];home=Path.home();roots=[Path(os.environ[v]) for v in (\"CLAUDE_PLUGIN_ROOT\",\"CODEX_PLUGIN_ROOT\") if os.environ.get(v)];cwd=Path.cwd();roots += [cwd]+list(cwd.parents);p=home/\".claude/plugins/installed_plugins.json\";data=json.loads(p.read_text()) if p.is_file() else {\"plugins\":{}};roots += [Path(e[\"installPath\"]) for e in data.get(\"plugins\",{}).get(\"unified@unified-skills\",[]) if e.get(\"installPath\")];roots += [d for base in (home/\".claude/plugins/cache/unified-skills/unified\",home/\".codex/plugins/cache/unified-skills/unified\") for d in sorted(base.glob(\"*\"),key=lambda x:x.stat().st_mtime,reverse=True)];roots += sorted((home/\".codex/plugins/.marketplace-plugin-source-staging\").glob(\"marketplace-plugin-source-*\"),key=lambda x:x.stat().st_mtime,reverse=True);roots += [home/\".claude/plugins/marketplaces/unified-skills\",home/\".codex/.tmp/marketplaces/unified-skills\"];script=next((r/\"hooks\"/hook for r in roots if (r/\"AGENTS.md\").is_file() and (r/\"hooks\"/hook).is_file()),None);script and (os.environ.__setitem__(\"CLAUDE_PLUGIN_ROOT\",str(script.parents[1])) or os.execvp(\"bash\",[\"bash\",str(script)]));print(json.dumps({\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"[unified] cannot resolve plugin root for \"+hook} if hook in (\"careful.sh\",\"freeze.sh\") else {},ensure_ascii=False))' phase-stop.sh"
           }
         ]
       }

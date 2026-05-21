@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.25.3] - 2026-05-21
+
+### Fixed
+- hooks: make Claude Code and Codex hook commands resolve the Unified plugin root through environment, cwd/parents, installed plugin metadata, or cache fallback instead of shell-expanding or relying on repo-relative paths.
+- validation: reject hook registrations that depend on fragile shell expansion or repo-relative wrapper paths, and test missing-root paths with fail-closed `PreToolUse` behavior.
+
 ## [2.25.2] - 2026-05-20
 
 ### Fixed

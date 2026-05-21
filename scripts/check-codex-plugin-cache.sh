@@ -65,7 +65,9 @@ compare_source_file() {
 }
 
 compare_file ".codex-plugin/plugin.json"
+compare_file ".codex/hooks.json"
 compare_file ".claude-plugin/marketplace.json"
+compare_file "hooks/hooks.json"
 compare_file "skills-index.json"
 compare_file "skills-router.json"
 while IFS= read -r repo_skill; do
@@ -79,7 +81,9 @@ marketplace_root="${CODEX_UNIFIED_MARKETPLACE_DIR:-$codex_home/.tmp/marketplaces
 if [ -d "$marketplace_root" ]; then
   printf 'Codex marketplace source: %s\n' "$marketplace_root"
   compare_source_file "$marketplace_root" ".codex-plugin/plugin.json"
+  compare_source_file "$marketplace_root" ".codex/hooks.json"
   compare_source_file "$marketplace_root" ".claude-plugin/marketplace.json"
+  compare_source_file "$marketplace_root" "hooks/hooks.json"
   compare_source_file "$marketplace_root" "skills-index.json"
   compare_source_file "$marketplace_root" "skills-router.json"
   while IFS= read -r repo_skill; do

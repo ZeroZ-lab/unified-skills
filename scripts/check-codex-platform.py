@@ -87,10 +87,23 @@ def check_hooks_json():
                 errors.append(f".codex/hooks.json {event} entry missing nested hooks")
                 continue
             for hook in nested:
-                if hook.get("type") != "command" or not hook.get("command"):
+                command = hook.get("command", "")
+                if hook.get("type") != "command" or not command:
                     errors.append(f".codex/hooks.json {event} hook must be command with command string")
                 if not hook.get("statusMessage"):
                     errors.append(f".codex/hooks.json {event} hook missing statusMessage")
+                if "hooks/codex-wrapper.sh" in command:
+                    errors.append(
+                        f".codex/hooks.json {event} hook must not depend on repo-relative hooks/codex-wrapper.sh"
+                    )
+                if "os.execvp" not in command or ".codex/plugins/cache/unified-skills/unified" not in command:
+                    errors.append(
+                        f".codex/hooks.json {event} hook must use the portable Codex plugin-root bootstrap"
+                    )
+                if event == "PreToolUse" and '"permissionDecision":"deny"' not in command:
+                    errors.append(
+                        ".codex/hooks.json PreToolUse hook must fail closed when plugin root is unresolved"
+                    )
 
     return errors
 

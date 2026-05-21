@@ -16,6 +16,36 @@ print(data)
   ' "$1"
 }
 
+hook_command() {
+  python3 - "$1" "$2" <<'PY'
+import json
+import sys
+
+event, matcher = sys.argv[1:3]
+hooks = json.load(open("hooks/hooks.json", encoding="utf-8"))["hooks"][event]
+for entry in hooks:
+    if entry.get("matcher", "") == matcher:
+        print(entry["hooks"][0]["command"])
+        raise SystemExit(0)
+raise SystemExit(f"missing hook command for {event} {matcher}")
+PY
+}
+
+codex_hook_command() {
+  python3 - "$1" "$2" <<'PY'
+import json
+import sys
+
+event, matcher = sys.argv[1:3]
+hooks = json.load(open(".codex/hooks.json", encoding="utf-8"))["hooks"][event]
+for entry in hooks:
+    if entry.get("matcher", "") == matcher:
+        print(entry["hooks"][0]["command"])
+        raise SystemExit(0)
+raise SystemExit(f"missing Codex hook command for {event} {matcher}")
+PY
+}
+
 echo "Test 1: SessionStart injects Boot Kernel"
 session_output=$(printf '%s' '{"permission_mode":"default"}' | bash hooks/session-start.sh)
 session_context=$(printf '%s' "$session_output" | json_get "hookSpecificOutput.additionalContext")
@@ -83,7 +113,102 @@ fi
 
 echo "PASS: careful cleanup behavior is balanced"
 
-echo "Test 4: freeze allows files inside boundary and blocks outside"
+echo "Test 4: Codex hook command resolves outside repo root"
+codex_careful_command=$(codex_hook_command "PreToolUse" "Bash")
+codex_tmp=$(mktemp -d)
+codex_outside="$codex_tmp/outside"
+mkdir -p "$codex_outside"
+codex_output=$(
+  cd "$codex_outside"
+  printf '%s' '{"permission_mode":"default","tool_input":{"command":"ls"}}' |
+    env -u CLAUDE_PLUGIN_ROOT bash -c "$codex_careful_command"
+)
+if [ "$codex_output" != "{}" ]; then
+  echo "FAIL: Codex careful command should resolve the repo from parent/cache candidates outside repo root"
+  echo "$codex_output"
+  exit 1
+fi
+
+codex_missing_home="$codex_tmp/home"
+mkdir -p "$codex_missing_home"
+codex_missing_output=$(
+  cd "$codex_outside"
+  printf '%s' '{"permission_mode":"default","tool_input":{"command":"ls"}}' |
+    HOME="$codex_missing_home" env -u CLAUDE_PLUGIN_ROOT bash -c "$codex_careful_command"
+)
+codex_missing_decision=$(printf '%s' "$codex_missing_output" | json_get "permissionDecision")
+if [ "$codex_missing_decision" != "deny" ]; then
+  echo "FAIL: Codex careful command should fail closed when plugin root cannot be resolved"
+  echo "$codex_missing_output"
+  exit 1
+fi
+rm -rf "$codex_tmp"
+
+echo "PASS: Codex hook command resolves outside repo root"
+
+echo "Test 5: Claude hook command resolves without CLAUDE_PLUGIN_ROOT"
+claude_careful_command=$(hook_command "PreToolUse" "Bash")
+claude_output=$(printf '%s' '{"permission_mode":"default","tool_input":{"command":"ls"}}' | env -u CLAUDE_PLUGIN_ROOT bash -c "$claude_careful_command")
+if [ "$claude_output" != "{}" ]; then
+  echo "FAIL: Claude careful command should fall back to repo cwd when CLAUDE_PLUGIN_ROOT is missing"
+  echo "$claude_output"
+  exit 1
+fi
+
+claude_tmp=$(mktemp -d)
+fake_home="$claude_tmp/home"
+mkdir -p "$fake_home/.claude/plugins"
+python3 - "$fake_home" "$PWD" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+home, root = sys.argv[1:3]
+data = {
+    "version": 2,
+    "plugins": {
+        "unified@unified-skills": [
+            {"installPath": root, "version": "test"}
+        ]
+    },
+}
+Path(home, ".claude/plugins/installed_plugins.json").write_text(
+    json.dumps(data),
+    encoding="utf-8",
+)
+PY
+
+outside_cwd="$claude_tmp/outside"
+mkdir -p "$outside_cwd"
+claude_installed_output=$(
+  cd "$outside_cwd"
+  printf '%s' '{"permission_mode":"default","tool_input":{"command":"ls"}}' |
+    HOME="$fake_home" env -u CLAUDE_PLUGIN_ROOT bash -c "$claude_careful_command"
+)
+if [ "$claude_installed_output" != "{}" ]; then
+  echo "FAIL: Claude careful command should fall back to installed_plugins.json when cwd is not the plugin root"
+  echo "$claude_installed_output"
+  exit 1
+fi
+
+missing_home="$claude_tmp/missing-home"
+mkdir -p "$missing_home"
+missing_output=$(
+  cd "$outside_cwd"
+  printf '%s' '{"permission_mode":"default","tool_input":{"command":"ls"}}' |
+    HOME="$missing_home" env -u CLAUDE_PLUGIN_ROOT bash -c "$claude_careful_command"
+)
+missing_decision=$(printf '%s' "$missing_output" | json_get "permissionDecision")
+if [ "$missing_decision" != "deny" ]; then
+  echo "FAIL: Claude careful command should fail closed when plugin root cannot be resolved"
+  echo "$missing_output"
+  exit 1
+fi
+rm -rf "$claude_tmp"
+
+echo "PASS: Claude hook command resolves without CLAUDE_PLUGIN_ROOT"
+
+echo "Test 6: freeze allows files inside boundary and blocks outside"
 tmp=$(mktemp -d)
 cleanup() {
   rm -rf "$tmp"
@@ -110,7 +235,7 @@ fi
 
 echo "PASS: freeze boundary behavior"
 
-echo "Test 5: doc-tracker updates feature state"
+echo "Test 7: doc-tracker updates feature state"
 feature_dir="$tmp/docs/features/20260518-sample"
 mkdir -p "$feature_dir"
 touch "$feature_dir/00-brainstorm.md" "$feature_dir/03-plan.md" "$feature_dir/05-ship.md"
@@ -171,7 +296,7 @@ fi
 
 echo "PASS: doc-tracker updates feature state"
 
-echo "Test 6: SessionStart surfaces active feature state"
+echo "Test 8: SessionStart surfaces active feature state"
 resume_tmp=$(mktemp -d)
 mkdir -p "$resume_tmp/docs/features/20260518-resume"
 touch "$resume_tmp/docs/features/20260518-resume/03-plan.md"
@@ -199,7 +324,7 @@ fi
 
 echo "PASS: SessionStart surfaces active feature state"
 
-echo "Test 7: phase-stop distinguishes automatic state from decision checkpoints"
+echo "Test 9: phase-stop distinguishes automatic state from decision checkpoints"
 stop_tmp=$(mktemp -d)
 mkdir -p "$stop_tmp/docs/features/20260518-stop"
 touch "$stop_tmp/docs/features/20260518-stop/03-plan.md"
