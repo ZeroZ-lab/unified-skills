@@ -9,7 +9,7 @@
 - 唯一合法加载链路：`router / command -> stage skill -> current agent 或 persona -> 主 session 汇总`
 - `skills` 加载权属于 `router / command / stage skill`
 - `agent persona` 只有执行权，没有 `self-load` / `self-route` / `self-expand-scope` 权
-- 简单认知型阶段（如 `/brainstorm`）可以由 current agent 直接执行，不需要专属 persona。
+- 简单认知型阶段默认可由 current agent 直接执行；`/brainstorm` 例外，阶段技能可按 profile/seats 选择 brainstorm scout persona，并由 current agent 汇总。
 - 阶段技能决定是否按 `artifact_type`、canonical 一级交付类、风险或任务性质选择 persona。
 - persona 可以声明常用/必需 skills，但不能绕过阶段技能自行扩大 scope。
 - `agents/README.md` 中声明有调用时机的 persona，必须能在 `skills/` 中找到对应消费点。

@@ -27,7 +27,7 @@ flowchart TD
 
 | Command | 阶段主 skill | 默认 agent | 风险/条件 agent | 下游专项 skills |
 |---------|--------------|------------|-----------------|----------------|
-| `/brainstorm` | `define-cognitive-brainstorm` | current agent | 无专属 persona | 无；清晰后建议进入 `define-workflow-spec` |
+| `/brainstorm` | `define-cognitive-brainstorm` | current agent facilitator | `brainstorm-*-scout`（按 profile/seats 选择；outlier 默认加入） | 清晰后建议进入 `define-workflow-spec` |
 | `/refine` | `define-workflow-refine` | `requirements-analyst` | External Scan subagent；`refine-ceo-scout`、`refine-eng-scout`、`refine-design-scout` | 完成后指向 `define-workflow-spec` |
 | `/design` | `design-workflow-design` | 按 `artifact_type` 选择 | `requirements-analyst`、`content-writer`、`visual-designer`、`design-reviewer`、可选 `codex:codex-rescue` | `design-experience-interaction`、`design-visual-direction`、`design-content-script`、`design-content-direction`、`design-content-layout`、`design-interactive-preview` |
 | `/plan` | `build-workflow-plan` | `task-planner` | `plan-ceo-reviewer`、`plan-eng-reviewer`、`plan-design-reviewer`、`plan-security-reviewer` | `verify-workflow-review` 用于 plan review 模式 |
@@ -267,7 +267,7 @@ flowchart TD
 
 ## 已知非调用关系
 
-- `/brainstorm` 不调用专属 `agents/*.md` persona。
+- `/brainstorm` 可按 `define-cognitive-brainstorm` 的 Agent Dispatch Contract 调用 `brainstorm-*-scout` persona；current agent 仍负责配置解释、汇总和最终推荐。
 - `agents/` 不自发路由；阶段技能没有选中时，agent 不运行。
 - `/review` 不是所有 reviewer 默认全开；默认 current agent 先做两阶段审查。
 - `/build` 不是看到可并行就并行；必须由 `Parallel Execution Matrix` 证明。

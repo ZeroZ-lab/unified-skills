@@ -1,0 +1,90 @@
+{
+  "description": "脑暴席位配置 — 按任务类型选择 scout 组合",
+  "default_seats": ["brainstorm-tech-scout", "brainstorm-design-scout", "brainstorm-business-scout", "brainstorm-outlier-scout"],
+  "task_profiles": {
+    "general": {
+      "name": "通用脑暴",
+      "seats": ["brainstorm-tech-scout", "brainstorm-design-scout", "brainstorm-business-scout", "brainstorm-outlier-scout"],
+      "description": "适用于大多数产品/功能讨论，平衡技术、设计、商业视角"
+    },
+    "tech_architecture": {
+      "name": "技术架构讨论",
+      "seats": ["brainstorm-tech-scout", "brainstorm-data-scout", "brainstorm-security-scout", "brainstorm-outlier-scout"],
+      "description": "适用于系统架构、技术选型、数据库设计等纯技术讨论"
+    },
+    "product_strategy": {
+      "name": "产品战略讨论",
+      "seats": ["brainstorm-business-scout", "brainstorm-design-scout", "brainstorm-content-scout", "brainstorm-outlier-scout"],
+      "description": "适用于产品定位、市场策略、用户增长等商业讨论"
+    },
+    "content_marketing": {
+      "name": "内容营销脑暴",
+      "seats": ["brainstorm-content-scout", "brainstorm-design-scout", "brainstorm-business-scout", "brainstorm-outlier-scout"],
+      "description": "适用于营销文案、内容策略、传播方案等讨论"
+    },
+    "api_design": {
+      "name": "API 设计讨论",
+      "seats": ["brainstorm-tech-scout", "brainstorm-data-scout", "brainstorm-security-scout", "brainstorm-outlier-scout"],
+      "description": "适用于 API 设计、接口契约、版本策略等讨论"
+    },
+    "security_review": {
+      "name": "安全策略讨论",
+      "seats": ["brainstorm-security-scout", "brainstorm-tech-scout", "brainstorm-data-scout", "brainstorm-outlier-scout"],
+      "description": "适用于安全架构、威胁模型、合规策略等讨论"
+    },
+    "user_experience": {
+      "name": "用户体验讨论",
+      "seats": ["brainstorm-design-scout", "brainstorm-content-scout", "brainstorm-business-scout", "brainstorm-outlier-scout"],
+      "description": "适用于交互设计、用户旅程、体验优化等讨论"
+    },
+    "data_strategy": {
+      "name": "数据策略讨论",
+      "seats": ["brainstorm-data-scout", "brainstorm-tech-scout", "brainstorm-security-scout", "brainstorm-outlier-scout"],
+      "description": "适用于数据建模、存储策略、数据治理等讨论"
+    },
+    "custom": {
+      "name": "自定义席位",
+      "seats": [],
+      "description": "用户可以自由选择需要的 scout 组合"
+    }
+  },
+  "available_seats": {
+    "brainstorm-tech-scout": {
+      "name": "技术视角",
+      "focus": "架构方案、技术选型、实现路径、技术风险、创新机会",
+      "frameworks": ["First Principles", "Constraints", "Pre-mortem", "Time-travel"]
+    },
+    "brainstorm-design-scout": {
+      "name": "设计视角",
+      "focus": "用户旅程、交互模式、信息架构、情感设计、边缘场景",
+      "frameworks": ["HMW", "Crazy 8", "Role-play", "Anti-pattern"]
+    },
+    "brainstorm-business-scout": {
+      "name": "商业视角",
+      "focus": "价值主张、市场定位、商业模式、增长路径、验证策略",
+      "frameworks": ["JTBD", "Blue Ocean", "Business Model Canvas", "Pre-mortem"]
+    },
+    "brainstorm-content-scout": {
+      "name": "内容视角",
+      "focus": "叙事结构、受众共鸣、表达方式、传播路径、内容格式",
+      "frameworks": ["Audience Journey", "Message Hierarchy", "Format Experiment", "Viral Mechanics"]
+    },
+    "brainstorm-data-scout": {
+      "name": "数据视角",
+      "focus": "数据建模、存储策略、查询模式、数据一致性、数据治理",
+      "frameworks": ["Data Flow", "Access Patterns", "CAP Theorem", "Data Mesh"]
+    },
+    "brainstorm-security-scout": {
+      "name": "安全视角",
+      "focus": "威胁模型、攻击面、防护策略、合规要求、风险缓解",
+      "frameworks": ["STRIDE", "CIA Triad", "OWASP Top 10", "Attack Trees"]
+    },
+    "brainstorm-outlier-scout": {
+      "name": "边缘视角",
+      "focus": "反向思考、黑天鹅事件、跨界借鉴、激进简化、挑战所有假设",
+      "frameworks": ["Inversion", "10x Thinking", "Constraints → Freedom", "质疑所有共识"],
+      "default": true,
+      "description": "默认自动加入，确保多样性并挑战思维定式；用户显式 --no-outlier 时可排除"
+    }
+  }
+}

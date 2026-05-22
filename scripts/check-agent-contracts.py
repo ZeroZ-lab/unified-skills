@@ -67,6 +67,13 @@ REQUIRED_SKILL_CONSUMERS = {
         "skills/verify-workflow-review/SKILL.md",
         "skills/verify-workflow-review/review-guidance.md",
     ],
+    "agents/brainstorm-tech-scout.md": ["skills/define-cognitive-brainstorm/SKILL.md"],
+    "agents/brainstorm-design-scout.md": ["skills/define-cognitive-brainstorm/SKILL.md"],
+    "agents/brainstorm-business-scout.md": ["skills/define-cognitive-brainstorm/SKILL.md"],
+    "agents/brainstorm-content-scout.md": ["skills/define-cognitive-brainstorm/SKILL.md"],
+    "agents/brainstorm-data-scout.md": ["skills/define-cognitive-brainstorm/SKILL.md"],
+    "agents/brainstorm-security-scout.md": ["skills/define-cognitive-brainstorm/SKILL.md"],
+    "agents/brainstorm-outlier-scout.md": ["skills/define-cognitive-brainstorm/SKILL.md"],
 }
 
 
@@ -180,10 +187,7 @@ def validate(root: Path) -> list[str]:
         if parse_frontmatter_scalar(agent_path, "maxTurns") is None:
             errors.append(f"{agent_path.relative_to(root)} missing maxTurns limit")
 
-    brainstorm_path = skills_dir / "define-cognitive-brainstorm/SKILL.md"
-    brainstorm = read_text(brainstorm_path)
-    if "不调用专属 `agents/*.md` persona" not in brainstorm or "当前 agent 直接执行" not in brainstorm:
-        errors.append("define-cognitive-brainstorm must state current-agent execution with no dedicated persona")
+    # Removed special check for define-cognitive-brainstorm as it now uses multi-agent parallel brainstorming
 
     return errors
 

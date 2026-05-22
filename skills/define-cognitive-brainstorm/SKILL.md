@@ -2,6 +2,14 @@
 name: define-cognitive-brainstorm
 description: 结构化脑暴——发散探索 + 收敛评估。当想法模糊、面临开放性问题或需要方案对比，或提到"脑暴""想法""方案对比""怎么办"
 argument-hint: "[模糊想法或开放性问题]"
+agents:
+  - brainstorm-tech-scout
+  - brainstorm-design-scout
+  - brainstorm-business-scout
+  - brainstorm-content-scout
+  - brainstorm-data-scout
+  - brainstorm-security-scout
+  - brainstorm-outlier-scout
 ---
 
 # Brainstorm — 结构化脑暴
@@ -29,10 +37,49 @@ argument-hint: "[模糊想法或开放性问题]"
 
 ## Agent Dispatch Contract
 
-`/brainstorm` 不调用专属 `agents/*.md` persona。当前 agent 直接执行本技能的探索、发散、收敛和推荐流程。
+`/brainstorm` 使用**按需选座**的多席位并行脑暴模式。
 
-- 不分派 Scout Army；需要多角色可行性审查时，脑暴完成后进入 `define-workflow-refine`。
-- 不把 `requirements-analyst`、`task-planner` 或 build/review persona 提前拉入脑暴阶段。
+**Phase 1**: 当前 agent 直接执行上下文探索。
+
+**Phase 2**: 根据 `--profile` 或 `--seats` 选择 scout 组合，读取 `commands/brainstorm-menu.json` 后使用 `Agent` 工具并行启动。`/brainstorm` 是 Markdown 阶段协议，不是 shell CLI；参数由 current agent 解释。
+
+**参数与配置规则：**
+- `--list-profiles`：只列出 `commands/brainstorm-menu.json` 中 profiles / seats，不启动 scout
+- `--profile <name>`：使用 `task_profiles.<name>.seats`
+- `--seats a,b,c`：短名规范化为 `brainstorm-<name>-scout`
+- 未提供参数：使用 `default_seats`
+- `brainstorm-outlier-scout` 默认自动加入；只有用户明确写 `--no-outlier` 才排除
+- `commands/brainstorm-menu.json` 缺失或无法解析时 STOP，改用本技能内联 profile 列表，并在输出中标记 fallback
+
+**可用 Scout：**
+- `agents/brainstorm-tech-scout.md` — 技术可行性、架构方案、实现路径
+- `agents/brainstorm-design-scout.md` — 用户体验、交互路径、情感连接
+- `agents/brainstorm-business-scout.md` — 产品价值、市场定位、商业模式
+- `agents/brainstorm-content-scout.md` — 叙事结构、受众共鸣、表达方式
+- `agents/brainstorm-data-scout.md` — 数据建模、存储策略、查询优化
+- `agents/brainstorm-security-scout.md` — 威胁模型、防护策略、合规要求
+- `agents/brainstorm-outlier-scout.md` — 边缘视角、激进想法、反向思考（默认参与，用户可显式 `--no-outlier` 排除）
+
+**预设配置（Profile）：**
+- `general`: tech + design + business + outlier（默认）
+- `tech_architecture`: tech + data + security + outlier
+- `product_strategy`: business + design + content + outlier
+- `content_marketing`: content + design + business + outlier
+- `api_design`: tech + data + security + outlier
+- `security_review`: security + tech + data + outlier
+- `user_experience`: design + content + business + outlier
+- `data_strategy`: data + tech + security + outlier
+
+每个 scout 独立执行，互不干扰，使用各自的专业框架发散。宿主不支持 subagent 时，由 current agent 按 seat 串行模拟并明确标记 fallback；不得假装已经并行。
+
+**Phase 3**: 当前 agent 作为 facilitator，执行交叉 fertilization 和辩论：
+- 让 scout 互相阅读报告
+- 标注争议点
+- 识别合并机会
+
+**Phase 4**: 当前 agent 收敛整合，输出最终推荐。
+
+- 不把其他阶段（refine/plan/build/review）的 agent 提前拉入脑暴阶段。
 - 如果脑暴发现需求已经足够清晰，输出推荐方向后交给后续 spec/refine 流程，而不是在本阶段创建实现任务。
 
 ## 流程: 发散 → 收敛 → 打磨
@@ -44,20 +91,43 @@ argument-hint: "[模糊想法或开放性问题]"
 2. 阅读相关代码——避免脱离代码库的空想
 3. 明确约束："技术上 X 已经存在，所以方案不能破坏它"
 
-### Phase 2: 发散探索
+### Phase 2: 多角度并行发散
 
-使用结构化框架而非漫无目的的自由联想：
+读取 `commands/brainstorm-menu.json` 后，使用 `Agent` 工具并行启动已选 scout，每个从不同角度发散：
 
-| 框架 | 问题 | 适用 |
-|------|------|------|
-| **SCAMPER** | Substitute / Combine / Adapt / Modify / Put to other use / Eliminate / Reverse | 改进已有方案 |
-| **HMW (How Might We)** | "我们如何才能让用户不需要离开首页就完成任务？" | 以用户为中心的问题 |
-| **First Principles** | 分解到最基本事实 → 从零重建。假设不存在重来。 | 突破性方案 |
-| **JTBD (Jobs to Be Done)** | 用户"雇佣"这个功能完成什么"工作"？ | 理解真实需求 |
-| **Constraints** | 如果预算减少一半？如果用户增长 10x？如果必须离线？ | 发现创新约束 |
-| **Pre-mortem** | "3 个月后这个方案失败了。为什么？" | 风险发现 |
+**Scout 框架分配：**
 
-### Phase 3: 收敛评估
+| Scout | 核心框架 | 产出 |
+|-------|----------|------|
+| **brainstorm-tech-scout** | First Principles / Constraints / Pre-mortem / Time-travel | 技术提案、架构方案、实现路径、创新机会 |
+| **brainstorm-design-scout** | HMW / Crazy 8 / Role-play / Anti-pattern | 设计提案、用户旅程、交互模式、情感设计 |
+| **brainstorm-business-scout** | JTBD / Blue Ocean / Business Model Canvas / Pre-mortem | 商业提案、价值主张、市场定位、增长路径 |
+| **brainstorm-outlier-scout** | Inversion / 10x Thinking / Constraints → Freedom / 挑战所有假设 | 激进提案、反向思考、黑天鹅事件、跨界借鉴 |
+
+**并行执行要点：**
+- 所有 scout 获得相同的上下文和约束
+- 每个 scout 输出 2-3 个提案 + Wildcards
+- `outlier-scout` 默认参与并必须提出至少 1 个"看起来很荒谬"的想法；用户显式 `--no-outlier` 时必须记录排除理由
+- scout 之间互不干扰，完全独立发散
+
+### Phase 3: 交叉 fertilization & 辩论
+
+**Cross-Pollination（交叉授粉）：**
+- 让所有 scout 互相阅读报告
+- 标注互补点：tech 的创新 + design 的体验 + business 的价值
+- 标注冲突点：技术可行性 vs 用户体验 vs 商业价值
+
+**Debate（辩论）：**
+- 对争议点，让相关 scout 辩论
+- `outlier-scout` 的任务是挑战所有共识
+- 目标不是"说服对方"，而是"暴露隐藏假设"
+
+**Synthesis（综合）：**
+- 找出可以合并的方案（tech + design + business 的交集）
+- 找出必须二选一的分歧（trade-off 清晰化）
+- 识别最有潜力的组合方向
+
+### Phase 4: 收敛评估
 
 ```
 每个方案 vs. 评估标准:
